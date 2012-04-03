@@ -40,9 +40,9 @@ import org.softwareFm.crowdsource.utilities.history.IHistoryListener;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.strings.ReadableTime;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
@@ -105,7 +105,7 @@ public class Explorer implements IExplorer {
 	private MySoftwareFm mySoftwareFm;
 	private final IShowMyPeople showMyPeople;
 
-	public Explorer(final IUserAndGroupsContainer container, final CardConfig cardConfig,  final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, final IServiceExecutor service, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final Callable<Long> timeGetter) {
+	public Explorer(final IUserAndGroupsContainer container, final CardConfig cardConfig,  final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final Callable<Long> timeGetter) {
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		this.showMyPeople = showMyPeople;
@@ -140,7 +140,7 @@ public class Explorer implements IExplorer {
 		browser = masterDetailSocial.createDetail(new IFunction1<Composite, BrowserAndNavBar>() {
 			@Override
 			public BrowserAndNavBar apply(Composite from) throws Exception {
-				BrowserAndNavBar browserAndNavBar = new BrowserAndNavBar(from, SWT.NULL, cardConfig.leftMargin, cardConfig, new NavNextHistoryPrevConfig<PlayItem>(cardConfig.titleHeight, cardConfig.imageFn, new IFunction1<PlayItem, String>() {
+				BrowserAndNavBar browserAndNavBar = new BrowserAndNavBar(from, SWT.NULL, cardConfig.leftMargin, container, cardConfig, new NavNextHistoryPrevConfig<PlayItem>(cardConfig.titleHeight, cardConfig.imageFn, new IFunction1<PlayItem, String>() {
 					@Override
 					public String apply(PlayItem from) throws Exception {
 						return from.toString();
@@ -150,7 +150,7 @@ public class Explorer implements IExplorer {
 					public void process(PlayItem t) throws Exception {
 						browser.processUrl(t.feedType, t.url);
 					}
-				}), service, timeLine);
+				}), timeLine);
 				browserAndNavBar.getComposite().setLayout(new BrowserAndNavBar.BrowserAndNavBarLayout());
 				return browserAndNavBar;
 			}
@@ -848,7 +848,7 @@ public class Explorer implements IExplorer {
 	}
 
 	@Override
-	public Future<String> processUrl(String feedType, String url) {
+	public ITransaction<String> processUrl(String feedType, String url) {
 		masterDetailSocial.hideSocial();
 		masterDetailSocial.setDetail(browser.getControl());
 		return browser.processUrl(feedType, url);

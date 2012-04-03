@@ -11,7 +11,6 @@ import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.IResponse;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -27,7 +26,7 @@ public class RequestGroupReportGeneration implements IRequestGroupReportGenerati
 	public RequestGroupReportGeneration(IContainer container, IResponseCallback callback) {
 		this.container = container;
 		this.callback = callback;
-		this.cache = container.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal> identity(), ICallback.Utils.<IGitLocal> noCallback()).get();
+		this.cache = container.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal> identity()).get();
 	}
 
 	@Override
@@ -47,6 +46,6 @@ public class RequestGroupReportGeneration implements IRequestGroupReportGenerati
 							}
 						});
 			}
-		}, ICallback.Utils.<Future<?>> noCallback()).get();
+		}).get();
 	}
 }

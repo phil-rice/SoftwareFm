@@ -5,19 +5,19 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback3;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallbackWithExceptionHandler;
-import org.softwareFm.crowdsource.utilities.callbacks.MemoryWithThreadCallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.AggregateException;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.Functions.ConstantFunctionWithMemoryOfFroms;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1WithExceptionHandler;
+import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
@@ -30,36 +30,39 @@ public class TransactionManagerTest extends TestCase {
 	private AtomicInteger registered2Count;
 
 	public void testJobsAreExecuted() {
-		MemoryWithThreadCallback<String> callback = ICallback.Utils.<String> memoryWithThread();
+		ConstantFunctionWithMemoryOfFroms<String, String> postFunction = new ConstantFunctionWithMemoryOfFroms<String, String>("value2");
 		ConstantFunctionWithMemoryOfFroms<IMonitor, String> job = Functions.<String> constantWithMemoryOfMonitor("value");
-		assertEquals("value", manager.start(job, callback).get(CommonConstants.testTimeOutMs));
-		assertEquals("value", callback.getOnlyResult());
+		assertEquals("value2", manager.start(job, postFunction).get(CommonConstants.testTimeOutMs));
+		assertEquals("value", Lists.getOnly(postFunction.froms));
 		assertEquals(1, job.froms.size());
 		assertEquals(0, registered1Count.get());
 	}
 
 	public void testJobsAreExecutedOnADifferentThread() {
-		MemoryWithThreadCallback<String> callback = ICallback.Utils.<String> memoryWithThread();
+		ConstantFunctionWithMemoryOfFroms<String, String> postFunction = new ConstantFunctionWithMemoryOfFroms<String, String>("value2");
 		ConstantFunctionWithMemoryOfFroms<IMonitor, String> job = Functions.<String> constantWithMemoryOfMonitor("value");
-		manager.start(job, callback).get(CommonConstants.testTimeOutMs);
-		assertTrue(Thread.currentThread() != callback.getOnlyThread());
-		assertEquals(Lists.getOnly(job.threads), callback.getOnlyThread());
+		manager.start(job, postFunction).get(CommonConstants.testTimeOutMs);
+		Thread postFunctionThread = Lists.getOnly(postFunction.threads);
+		assertTrue(Thread.currentThread() != postFunctionThread);
+		assertEquals(Lists.getOnly(job.threads), postFunctionThread);
 		assertEquals(0, registered1Count.get());
 	}
 
 	public void testCallbackIsExecutedByRegisteredExecutorIfMarkerInterfacePresent() {
 		ConstantFunctionWithMemoryOfFroms<IMonitor, String> job = Functions.<String> constantWithMemoryOfMonitor("value");
-		manager.start(job, new ICallbackWithMarker1<String>() {
+		manager.start(job, new IFunctionWithMarker1<String, String>() {
 			@Override
-			public void process(String t) throws Exception {
+			public String apply(String from) throws Exception {
+				return null;
 			}
 		}).get(CommonConstants.testTimeOutMs);
 		assertEquals(1, registered1Count.get());
 		assertEquals(0, registered2Count.get());
 
-		manager.start(job, new ICallbackWithMarker2<String>() {
+		manager.start(job, new IFunctionWithMarker2<String, String>() {
 			@Override
-			public void process(String t) throws Exception {
+			public String apply(String from) throws Exception {
+				return null;
 			}
 		}).get(CommonConstants.testTimeOutMs);
 		assertEquals(1, registered1Count.get());
@@ -68,7 +71,7 @@ public class TransactionManagerTest extends TestCase {
 
 	public void testIfHasTwoMarkersUsesFirstRegistered() {
 		ConstantFunctionWithMemoryOfFroms<IMonitor, String> job = Functions.<String> constantWithMemoryOfMonitor("value");
-		manager.start(job, new CallbackWithTwoMarkers<String>()).get(CommonConstants.testTimeOutMs);
+		manager.start(job, new FunctionWithTwoMarkers<String, String>()).get(CommonConstants.testTimeOutMs);
 		assertEquals(1, registered1Count.get());
 		assertEquals(0, registered2Count.get());
 	}
@@ -79,7 +82,7 @@ public class TransactionManagerTest extends TestCase {
 			@Override
 			public void run() {
 				try {
-					manager.start(Functions.<IMonitor, Object> expectionIfCalled(expected), ICallback.Utils.exception("")).get(CommonConstants.testTimeOutMs);
+					manager.start(Functions.<IMonitor, Object> expectionIfCalled(expected), Functions.<Object, Object> expectionIfCalled()).get(CommonConstants.testTimeOutMs);
 				} catch (Exception e) {
 					throw WrappedException.wrap(e);
 				}
@@ -95,10 +98,11 @@ public class TransactionManagerTest extends TestCase {
 			@Override
 			public void run() {
 				try {
-					manager.start(Functions.<IMonitor, Object> expectionIfCalled(expected), new ICallbackWithExceptionHandler<Object>() {
+					manager.start(Functions.<IMonitor, Object> expectionIfCalled(expected), new IFunction1WithExceptionHandler<Object, Object>() {
 						@Override
-						public void process(Object t) throws Exception {
+						public Object apply(Object t) throws Exception {
 							fail();
+							return null;
 						}
 
 						@Override
@@ -125,7 +129,7 @@ public class TransactionManagerTest extends TestCase {
 		mock3.commit();
 		EasyMock.replay(mock1, mock2, mock3);
 
-		assertEquals("value", manager.start(Functions.<Object> constantWithMemoryOfMonitor("value"), ICallback.Utils.noCallback(), mock1, mock2, "notTransactional", mock3).get(CommonConstants.testTimeOutMs));
+		assertEquals("value", manager.start(Functions.<Object> constantWithMemoryOfMonitor("value"), Functions.identity(), mock1, mock2, "notTransactional", mock3).get(CommonConstants.testTimeOutMs));
 
 		EasyMock.verify(mock1, mock2, mock3);
 	}
@@ -145,7 +149,7 @@ public class TransactionManagerTest extends TestCase {
 		RuntimeException actual = Tests.assertThrows(RuntimeException.class, new Runnable() {
 			@Override
 			public void run() {
-				manager.start(Functions.<Object> constantWithMemoryOfMonitor("value"), ICallback.Utils.noCallback(), mock1, mock2, mock3).get(CommonConstants.testTimeOutMs);
+				manager.start(Functions.<Object> constantWithMemoryOfMonitor("value"), Functions.identity(), mock1, mock2, mock3).get(CommonConstants.testTimeOutMs);
 			}
 		});
 		assertEquals(expected, actual);
@@ -169,7 +173,7 @@ public class TransactionManagerTest extends TestCase {
 		AggregateException actual = Tests.assertThrows(AggregateException.class, new Runnable() {
 			@Override
 			public void run() {
-				manager.start(Functions.<Object> constantWithMemoryOfMonitor("value"), ICallback.Utils.noCallback(), mock1, mock2, mock3).get(CommonConstants.testTimeOutMs);
+				manager.start(Functions.<Object> constantWithMemoryOfMonitor("value"), Functions.identity(), mock1, mock2, mock3).get(CommonConstants.testTimeOutMs);
 			}
 		});
 		assertEquals(Arrays.asList(expected1, expected2), actual.getExceptions());
@@ -190,7 +194,7 @@ public class TransactionManagerTest extends TestCase {
 		assertEquals(expected, Tests.assertThrows(RuntimeException.class, new Runnable() {
 			@Override
 			public void run() {
-				manager.start(Functions.<IMonitor, Object> expectionIfCalled(expected), ICallback.Utils.noCallback(), mock1, mock2, mock3).get(CommonConstants.testTimeOutMs);
+				manager.start(Functions.<IMonitor, Object> expectionIfCalled(expected), Functions.identity(), mock1, mock2, mock3).get(CommonConstants.testTimeOutMs);
 			}
 		}));
 
@@ -215,7 +219,7 @@ public class TransactionManagerTest extends TestCase {
 		AggregateException actual = Tests.assertThrows(AggregateException.class, new Runnable() {
 			@Override
 			public void run() {
-				manager.start(Functions.<IMonitor, Object> expectionIfCalled(original), ICallback.Utils.noCallback(), mock1, mock2, mock3).get(CommonConstants.testTimeOutMs);
+				manager.start(Functions.<IMonitor, Object> expectionIfCalled(original), Functions.identity(), mock1, mock2, mock3).get(CommonConstants.testTimeOutMs);
 			}
 		});
 		assertEquals(Arrays.asList(original, expected1, expected2), actual.getExceptions());
@@ -226,7 +230,7 @@ public class TransactionManagerTest extends TestCase {
 
 	public void testExceptionInHandlerDoesntStopRollbackAndCausesAggregateException() {
 		final Exception original = new RuntimeException("orig");
-		final RuntimeException callback = new RuntimeException("callback");
+		final RuntimeException callbackException = new RuntimeException("callback");
 		final Exception expected1 = new RuntimeException("one");
 		final Exception expected2 = new RuntimeException();
 
@@ -243,24 +247,24 @@ public class TransactionManagerTest extends TestCase {
 		AggregateException actual = Tests.assertThrows(AggregateException.class, new Runnable() {
 			@Override
 			public void run() {
-				manager.start(Functions.<IMonitor, Object> expectionIfCalled(original), new ICallbackWithExceptionHandler<Object>() {
+				manager.start(Functions.<IMonitor, Object> expectionIfCalled(original), new IFunction1WithExceptionHandler<Object, Object>() {
 					@Override
-					public void process(Object t) throws Exception {
-						fail();
+					public void handle(Exception e) {
+						throw callbackException;
 					}
 
 					@Override
-					public void handle(Exception e) {
-						throw callback;
+					public Object apply(Object from) throws Exception {
+						fail();
+						return null;
 					}
 				}, mock1, mock2, mock3).get(CommonConstants.testTimeOutMs);
 			}
 		});
-		assertEquals(Arrays.asList(original, callback, expected1, expected2), actual.getExceptions());
+		assertEquals(Arrays.asList(original, callbackException, expected1, expected2), actual.getExceptions());
 		assertEquals("class java.lang.RuntimeException/orig,class java.lang.RuntimeException/callback,class java.lang.RuntimeException/one,class java.lang.RuntimeException/null", actual.getMessage());
 
 		EasyMock.verify(mock1, mock2, mock3);
-
 	}
 
 	@Override
@@ -269,19 +273,22 @@ public class TransactionManagerTest extends TestCase {
 		final IServiceExecutor defaultExecutor = IServiceExecutor.Utils.defaultExecutor();
 		registered1Count = new AtomicInteger();
 		registered2Count = new AtomicInteger();
-		manager = new TransactionManager(defaultExecutor).//
-				registerCallbackExecutor(ICallbackWithMarker1.class, new ICallback3<IServiceExecutor, ICallback<?>, Object>() {
+		manager = new TransactionManager(defaultExecutor, new TransactionManager.DefaultFutureToTransactionDn()).//
+				registerCallbackExecutor(IFunctionWithMarker1.class, new IFunction3<IServiceExecutor, IFunction1<Object, Object>, Object, Object>() {
+
 					@Override
-					public void process(IServiceExecutor first, ICallback<?> second, Object third) throws Exception {
+					public Object apply(IServiceExecutor first, IFunction1<Object, Object> from2, Object from3) throws Exception {
 						assertEquals(defaultExecutor, first);
 						registered1Count.getAndIncrement();
+						return null;
 					}
 				}).//
-				registerCallbackExecutor(ICallbackWithMarker2.class, new ICallback3<IServiceExecutor, ICallback<?>, Object>() {
+				registerCallbackExecutor(IFunctionWithMarker2.class, new IFunction3<IServiceExecutor, IFunction1<Object, Object>, Object, Object>() {
 					@Override
-					public void process(IServiceExecutor first, ICallback<?> second, Object third) throws Exception {
-						assertEquals(defaultExecutor, first);
+					public Object apply(IServiceExecutor from1, IFunction1<Object, Object> from2, Object from3) throws Exception {
+						assertEquals(defaultExecutor, from1);
 						registered2Count.getAndIncrement();
+						return null;
 					}
 				});
 	}
@@ -293,18 +300,19 @@ public class TransactionManagerTest extends TestCase {
 			manager.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 	}
 
-	static interface ICallbackWithMarker1<T> extends ICallback<T> {
+	static interface IFunctionWithMarker1<From, To> extends IFunction1<From, To> {
 
 	}
 
-	static interface ICallbackWithMarker2<T> extends ICallback<T> {
+	static interface IFunctionWithMarker2<From, To> extends IFunction1<From, To> {
 
 	}
 
-	static class CallbackWithTwoMarkers<T> implements ICallbackWithMarker1<T>, ICallbackWithMarker2<T> {
+	static class FunctionWithTwoMarkers<From, To> implements IFunctionWithMarker1<From, To>, IFunctionWithMarker2<From, To> {
 		@Override
-		public void process(T t) throws Exception {
-			fail();
+		public To apply(From from) throws Exception {
+			Assert.fail("Shouldn't be called");
+			return null;
 		}
 	}
 }

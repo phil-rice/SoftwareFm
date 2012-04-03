@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 
 abstract public class SwtTest extends TestCase {
 
@@ -41,6 +42,10 @@ abstract public class SwtTest extends TestCase {
 
 	protected void kickAndDispatch(Future<?> future) {
 		Swts.Dispatch.kickAndDispatch(display, future);
+	}
+	
+	protected void kickAndDispatch(ITransaction<?> transaction) {
+		Swts.Dispatch.kickAndDispatch(display, transaction);
 	}
 
 }

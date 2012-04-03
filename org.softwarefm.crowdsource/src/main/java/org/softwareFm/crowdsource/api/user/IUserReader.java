@@ -10,6 +10,7 @@ import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 
 public interface IUserReader {
 	<T> T getUserProperty(String userId, String userCrypto, String property);
@@ -67,13 +68,14 @@ public interface IUserReader {
 		}
 
 		public static void refresh(IUserAndGroupsContainer container, final String softwareFmId) {
-			container.accessUserReader(new IFunction1<IUserReader, Void>() {
+			ITransaction<Void> transaction = container.accessUserReader(new IFunction1<IUserReader, Void>() {
 				@Override
 				public Void apply(IUserReader from) throws Exception {
 					from.refresh(softwareFmId);
 					return null;
 				}
-			},  ICallback.Utils.<Void>noCallback()).get();
+			},  ICallback.Utils.<Void>noCallback());
+			transaction.get();
 		}
 
 	}

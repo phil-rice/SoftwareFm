@@ -5,13 +5,12 @@
 package org.softwareFm.crowdsource.utilities.services;
 
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.internal.ServiceExecutor;
 
-public interface IServiceExecutor extends IShutdown{
+public interface IServiceExecutor extends IShutdown {
 
 	/** The monitor is provided by the IServiceExecutor. The called task should call beginTask, worked and done. etc,Note that the task may not be finished when this service executor is finished (the task could for example end on the SWT thread). The task can be cancelled using future.cancel, or monitor.cancel */
 	<T> Future<T> submit(IFunction1<IMonitor, T> job);
@@ -19,9 +18,6 @@ public interface IServiceExecutor extends IShutdown{
 	void addExceptionListener(IExceptionListener listener);
 
 	void addLifeCycleListener(IServiceExecutorLifeCycleListener listener);
-
-
-	void shutdownAndAwaitTermination(long timeout, TimeUnit unit);
 
 	public static class Utils {
 
@@ -33,8 +29,9 @@ public interface IServiceExecutor extends IShutdown{
 			IServiceExecutor executor = new ServiceExecutor(monitorFactory, threadPoolSize);
 			executor.addExceptionListener(IExceptionListener.Utils.syserr());
 			return executor;
-			
+
 		}
+
 		public static IServiceExecutor executor(final int threadPoolSize) {
 			return executor(threadPoolSize, IMonitorFactory.Utils.noMonitors);
 		}

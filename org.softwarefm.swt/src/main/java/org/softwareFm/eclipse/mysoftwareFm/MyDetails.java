@@ -18,18 +18,18 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.UserData;
+import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback3;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction2;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
-import org.softwareFm.jar.EclipseMessages;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
 import org.softwareFm.jarAndClassPath.api.IUsageReader;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
+import org.softwareFm.swt.ISwtFunction1;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
@@ -41,25 +41,18 @@ import org.softwareFm.swt.swt.Swts;
 
 public class MyDetails implements IHasComposite {
 
-	public static IShowMyData showMyDetails(final IContainer readWriteApi, final IServiceExecutor executor, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial) {
+	public static IShowMyData showMyDetails(final IContainer container, final CardConfig cardConfig, final IMasterDetailSocial masterDetailSocial) {
 		return new IShowMyData() {
 			@Override
 			public void show(final UserData userData) {
-				
-				executor.submit(new IFunction1<IMonitor,Void>() {
+				container.accessWithCallbackFn(IGitReader.class, Functions.<IGitReader, Void>constant(null), new ISwtFunction1<Void, Void>() {
 					@Override
-					public Void apply(IMonitor monitor) throws Exception {
-						monitor.beginTask(EclipseMessages.showMyData, 1);
-						Swts.asyncExec(masterDetailSocial.getControl(), new Runnable() {
+					public Void apply(Void from) throws Exception {
+						masterDetailSocial.hideSocial();
+						masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyDetails>() {
 							@Override
-							public void run() {
-								masterDetailSocial.hideSocial();
-								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyDetails>() {
-									@Override
-									public MyDetails apply(Composite from) throws Exception {
-										return new MyDetails(from, readWriteApi, cardConfig, userData);
-									}
-								});
+							public MyDetails apply(Composite from) throws Exception {
+								return new MyDetails(from, container, cardConfig, userData);
 							}
 						});
 						return null;
@@ -83,11 +76,29 @@ public class MyDetails implements IHasComposite {
 		public MyProjectComposite(Composite parent, int style, final CardConfig cc, final UserData userData, IContainer readWriteApi) {
 			super(parent, cc, CardConstants.loginCardType, JarAndPathConstants.myProjectsTitle, true);
 			this.projectDetails = new Table(getInnerBody(), SWT.FULL_SELECTION);
-			readWriteApi.access(IUserReader.class, IProjectTimeGetter.class, IUsageReader.class, new ICallback3<IUserReader, IProjectTimeGetter, IUsageReader>() {
+			final Iterable<String> lastNMonths = readWriteApi.access(IProjectTimeGetter.class, new IFunction1<IProjectTimeGetter, Iterable<String>>() {
 				@Override
-				public void process(IUserReader user, IProjectTimeGetter timeGetter, IUsageReader project) throws Exception {
+				public Iterable<String> apply(IProjectTimeGetter from) throws Exception {
+					return from.lastNMonths(3);
+				}
+			}).get();
+			readWriteApi.accessWithCallbackFn(IUserReader.class, IUsageReader.class, new IFunction2<IUserReader, IUsageReader, Map<String, Map<String, Map<String, Integer>>>>() {
+				@Override
+				public Map<String, Map<String, Map<String, Integer>>> apply(IUserReader user, IUsageReader project) throws Exception {
 					Map<String, Map<String, Map<String, Integer>>> groupToArtifactToMonthToCount = Maps.newMap();
-					Iterable<String> lastNMonths = timeGetter.lastNMonths(3);
+					String projectCryptoKey = user.getUserProperty(userData.softwareFmId, userData.crypto, JarAndPathConstants.projectCryptoKey);
+
+					for (String month : lastNMonths) {
+						Map<String, Map<String, List<Integer>>> monthDetails = project.getProjectDetails(userData.softwareFmId, projectCryptoKey, month);
+						for (Entry<String, Map<String, List<Integer>>> groupEntry : monthDetails.entrySet())
+							for (Entry<String, List<Integer>> artifactEntry : groupEntry.getValue().entrySet())
+								Maps.addToMapOfMapOfMaps(groupToArtifactToMonthToCount, HashMap.class, groupEntry.getKey(), artifactEntry.getKey(), month, artifactEntry.getValue().size());
+					}
+					return groupToArtifactToMonthToCount;
+				}
+			}, new ISwtFunction1<Map<String, Map<String, Map<String, Integer>>>, Void>() {
+				@Override
+				public Void apply(Map<String, Map<String, Map<String, Integer>>> groupToArtifactToMonthToCount) throws Exception {
 					projectDetails.setHeaderVisible(true);
 					new TableColumn(projectDetails, SWT.NULL).setText("Group ID");
 					new TableColumn(projectDetails, SWT.NULL).setText("Artifact ID");
@@ -95,15 +106,6 @@ public class MyDetails implements IHasComposite {
 						TableColumn column = new TableColumn(projectDetails, SWT.NULL);
 						column.setText(MySoftwareFmFunctions.monthFileNameToPrettyName(month));
 					}
-					String projectCryptoKey = user.getUserProperty(userData.softwareFmId, userData.crypto, JarAndPathConstants.projectCryptoKey);
-					
-					for (String month : lastNMonths) {
-						Map<String, Map<String, List<Integer>>> monthDetails = project.getProjectDetails(userData.softwareFmId, projectCryptoKey, month);
-						for (Entry<String, Map<String, List<Integer>>> groupEntry : monthDetails.entrySet())
-							for (Entry<String, List<Integer>> artifactEntry : groupEntry.getValue().entrySet())
-								Maps.addToMapOfMapOfMaps(groupToArtifactToMonthToCount, HashMap.class, groupEntry.getKey(), artifactEntry.getKey(), month, artifactEntry.getValue().size());
-					}
-					
 					for (String groupId : Lists.sort(groupToArtifactToMonthToCount.keySet())) {
 						Map<String, Map<String, Integer>> groupMap = groupToArtifactToMonthToCount.get(groupId);
 						for (String artifactId : Lists.sort(groupMap.keySet())) {
@@ -119,6 +121,7 @@ public class MyDetails implements IHasComposite {
 						}
 					}
 					Swts.packTables(projectDetails);
+					return null;
 				}
 			}).get();
 		}

@@ -9,8 +9,8 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.httpClient.internal.MemoryResponseCallback;
-import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.jarAndClassPath.api.IUsageStrategy;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
 
@@ -87,10 +87,10 @@ public class CachedUsageStrategyTest extends TestCase {
 
 	protected void addOneSetOfCalls() {
 		delegate.using("sfmId", "digest1", callback);
-		EasyMock.expectLastCall().andReturn(Futures.doneFuture(null));
+		EasyMock.expectLastCall().andReturn(ITransaction.Utils.doneTransaction(null));
 		cachesToClear.clearCaches();
 		delegate.using("sfmId", "digest2", callback);
-		EasyMock.expectLastCall().andReturn(Futures.doneFuture(null));
+		EasyMock.expectLastCall().andReturn(ITransaction.Utils.doneTransaction(null));
 		cachesToClear.clearCaches();
 	}
 

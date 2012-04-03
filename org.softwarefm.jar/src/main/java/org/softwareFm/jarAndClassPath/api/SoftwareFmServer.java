@@ -9,6 +9,7 @@ import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory.Utils;
 
 public class SoftwareFmServer {
@@ -18,7 +19,7 @@ public class SoftwareFmServer {
 		int port = ICrowdSourcedServer.Utils.port(args);
 
 		ServerConfig serverConfig = Utils.getServerConfig(port, CommonConstants.clientTimeOut);
-		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(serverConfig);
+		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard());
 		api.getServer();
 	}
 

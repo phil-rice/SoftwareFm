@@ -11,18 +11,32 @@ import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
+import org.softwareFm.swt.ISwtSoftwareFmFactory;
 import org.softwareFm.swt.swt.Swts;
 
 abstract public class ApiAndSwtTest extends ApiTest {
+
+	
 	protected final static String projectCryptoKey0 = Crypto.makeKey();
 	protected final static String projectCryptoKey1 = Crypto.makeKey();
 	protected final static String projectCryptoKey2 = Crypto.makeKey();
 	protected final static String projectCryptoKey3 = Crypto.makeKey();
 
-
 	protected Shell shell;
 	protected Display display;
+
+	@Override
+	protected ITransactionManager getLocalTransactionManager() {
+		return ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.testTimeOutMs);
+	}
+
+	@Override
+	/** Needed because there are tests that have callbacks running on the server*/
+	protected ITransactionManager getServerTransactionManager() {
+		return ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.testTimeOutMs);
+	}
 
 	@Override
 	protected void setUp() throws Exception {

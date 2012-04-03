@@ -38,13 +38,11 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.functions.IFunction2;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
-import org.softwareFm.jar.EclipseMessages;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
+import org.softwareFm.swt.ISwtFunction1;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -56,37 +54,37 @@ import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyGroups implements IHasComposite {
-	public static IShowMyGroups showMyGroups(final IMasterDetailSocial masterDetailSocial, final IUserAndGroupsContainer container, final IServiceExecutor executor, final boolean showDialogs, final CardConfig cardConfig) {
+	public static IShowMyGroups showMyGroups(final IMasterDetailSocial masterDetailSocial, final IUserAndGroupsContainer container, final boolean showDialogs, final CardConfig cardConfig) {
 		return new IShowMyGroups() {
 			@Override
+			@SuppressWarnings("need to add access method for the container without a function")
 			public void show(final UserData userData, final String groupId) {
-				executor.submit(new IFunction1<IMonitor, Void>() {
+				container.accessWithCallbackFn(IGroupsReader.class, new IFunction1<IGroupsReader, Void>() {
 					@Override
-					public Void apply(IMonitor monitor) throws Exception {
-						monitor.beginTask(EclipseMessages.showMyGroups, 2);
+					public Void apply(IGroupsReader t) throws Exception {
 						IGitReader.Utils.clearCache(container);
-						Swts.asyncExecAndMarkDone(masterDetailSocial.getControl(), monitor, new Runnable() {
+						return null;
+					}
+				}, new ISwtFunction1<Void, Void>() {
+					@Override
+					public Void apply(Void t) throws Exception {
+						masterDetailSocial.hideSocial();
+						masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
 							@Override
-							public void run() {
-								masterDetailSocial.hideSocial();
-								masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
+							public MyGroups apply(Composite from) throws Exception {
+								MyGroups myGroups = new MyGroups(from, masterDetailSocial, container, showDialogs, cardConfig, userData, new ICallback<String>() {
 									@Override
-									public MyGroups apply(Composite from) throws Exception {
-										MyGroups myGroups = new MyGroups(from, masterDetailSocial, container, showDialogs, cardConfig, userData, new ICallback<String>() {
-											@Override
-											public void process(String groupId) throws Exception {
-												showMyGroups(masterDetailSocial, container, executor, showDialogs, cardConfig).show(userData, groupId);
-											}
-										});
-										myGroups.selectAndScrollTo(groupId);
-										return myGroups;
+									public void process(String groupId) throws Exception {
+										showMyGroups(masterDetailSocial, container, showDialogs, cardConfig).show(userData, groupId);
 									}
 								});
+								myGroups.selectAndScrollTo(groupId);
+								return myGroups;
 							}
 						});
 						return null;
 					}
-				});
+				}).get();
 			}
 		};
 	}
@@ -225,9 +223,10 @@ public class MyGroups implements IHasComposite {
 			new TableColumn(summaryTable, SWT.NULL).setText("Members");
 			new TableColumn(summaryTable, SWT.NULL).setText("My Status");
 
-			container.access(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+			final String membershipCountKey = "membershipCount";
+			container.accessWithCallbackFn(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, List<Map<String, Object>>>() {
 				@Override
-				public Void apply(IGroupsReader groupsReader, IUserMembershipReader userMembershipReader) throws Exception {
+				public List<Map<String, Object>> apply(final IGroupsReader groupsReader, IUserMembershipReader userMembershipReader) throws Exception {
 					Iterable<Map<String, Object>> groups = userMembershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
 					List<Map<String, Object>> groupsWithName = Lists.map(groups, new IFunction1<Map<String, Object>, Map<String, Object>>() {
 						@Override
@@ -238,12 +237,17 @@ public class MyGroups implements IHasComposite {
 							String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
 							try {
 								String groupName = IGroupsReader.Utils.getGroupProperty(container, groupId, groupCryptoKey, GroupConstants.groupNameKey);
-								return Maps.with(map, GroupConstants.groupNameKey, groupName);
+								return Maps.with(map, GroupConstants.groupNameKey, groupName, membershipCountKey, groupsReader.membershipCount(groupId, groupCryptoKey));
 							} catch (Exception e) {
 								return Maps.with(map, CommonConstants.errorKey, MessageFormat.format(GroupConstants.cannotDetermineGroupName, groupId, e));
 							}
 						}
 					});
+					return groupsWithName;
+				}
+			}, new ISwtFunction1<List<Map<String, Object>>, Void>() {
+				@Override
+				public Void apply(List<Map<String, Object>> groupsWithName) throws Exception {
 					for (Map<String, Object> map : Lists.sort(groupsWithName, Comparators.mapKey(GroupConstants.groupNameKey))) {
 						if (map.containsKey(CommonConstants.errorKey)) {
 							TableItem item = new TableItem(summaryTable, SWT.NULL);
@@ -251,9 +255,9 @@ public class MyGroups implements IHasComposite {
 						} else {
 							String groupId = (String) map.get(GroupConstants.groupIdKey);
 							String groupCryptoKey = (String) map.get(GroupConstants.groupCryptoKey);
-							String groupName = groupsReader.getGroupProperty(groupId, groupCryptoKey, GroupConstants.groupNameKey);
+							String groupName = (String) map.get(GroupConstants.groupNameKey);
 							TableItem item = new TableItem(summaryTable, SWT.NULL);
-							int membershipCount = groupsReader.membershipCount(groupId, groupCryptoKey);
+							int membershipCount = (Integer) map.get(membershipCountKey);
 							String membershipCountString = Integer.toString(membershipCount);
 							String myStatus = Strings.nullSafeToString(map.get(GroupConstants.membershipStatusKey));
 							IdNameAndStatus data = new IdNameAndStatus(groupId, groupName, myStatus);
@@ -264,7 +268,7 @@ public class MyGroups implements IHasComposite {
 					}
 					return null;
 				}
-			}, ICallback.Utils.<Void> noCallback()).get();
+			}).get();
 
 			rightHand = new Composite(sashForm, SWT.NULL);
 			final StackLayout stackLayout = new StackLayout();
@@ -310,7 +314,6 @@ public class MyGroups implements IHasComposite {
 								tableItem.setText(new String[] { Strings.nullSafeToString(user.get(LoginConstants.emailKey)), Strings.nullSafeToString(user.get(GroupConstants.membershipStatusKey)) });
 							}
 						}
-
 					}
 					Swts.packColumns(membershipTable);
 					rightHand.layout();

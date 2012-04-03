@@ -12,13 +12,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback3;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallbackWithExceptionHandler;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.exceptions.AggregateException;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1WithExceptionHandler;
+import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
@@ -27,28 +26,83 @@ import org.softwareFm.crowdsource.utilities.transaction.ITransactionManagerBuild
 import org.softwareFm.crowdsource.utilities.transaction.ITransactional;
 
 public class TransactionManager implements ITransactionManagerBuilder {
-	private final Map<Class<?>, ICallback3<IServiceExecutor, ICallback<?>, Object>> callbackExecutors = new LinkedHashMap<Class<?>, ICallback3<IServiceExecutor, ICallback<?>, Object>>();
+
+	public static class DefaultFutureToTransactionDn implements IFunction1<Future<?>, ITransaction<?>> {
+
+		@Override
+		public ITransaction<?> apply(final Future<?> future) throws Exception {
+			if (future == null)
+				throw new NullPointerException();
+			return new ITransaction<Object>() {
+				@Override
+				public Object get() {
+					try {
+						return future.get();
+					} catch (InterruptedException e) {
+						throw WrappedException.wrap(e);
+					} catch (ExecutionException e) {
+						throw WrappedException.wrap(e.getCause());
+					}
+				}
+
+				@Override
+				public Object get(long millisecondsToWait) {
+					try {
+						return future.get(millisecondsToWait, TimeUnit.MILLISECONDS);
+					} catch (InterruptedException e) {
+						throw WrappedException.wrap(e);
+					} catch (ExecutionException e) {
+						throw WrappedException.wrap(e.getCause());
+					} catch (TimeoutException e) {
+						throw WrappedException.wrap(e);
+					}
+				}
+
+				@Override
+				public void cancel() {
+					future.cancel(true);
+				}
+
+				@Override
+				public boolean isCancelled() {
+					return future.isCancelled();
+				}
+
+				@Override
+				public boolean isDone() {
+					return future.isDone();
+				}
+			};
+		}
+
+	}
+
+	@SuppressWarnings("rawtypes")
+	private final Map<Class<?>, IFunction3> callbackExecutors = Maps.newMap(LinkedHashMap.class);
 
 	private final IServiceExecutor serviceExecutor;
 
 	private final Map<IFunction1<IMonitor, ?>, ITransaction<?>> fullJobToTransaction = Maps.newSynchronisedMap();
 	private final Map<ITransaction<?>, List<ITransactional>> transactionalMap = Maps.newSynchronisedMap();
 
-	public TransactionManager(IServiceExecutor serviceExecutor) {
+	private final IFunction1<Future<?>, ITransaction<?>> futureToTransactionFn;
+
+	public TransactionManager(IServiceExecutor serviceExecutor, IFunction1<Future<?>, ITransaction<?>> futureToTransactionFn) {
 		this.serviceExecutor = serviceExecutor;
+		this.futureToTransactionFn = futureToTransactionFn;
 	}
 
 	@Override
-	public <T> ITransaction<T> start(final IFunction1<IMonitor, T> job, final ICallback<T> resultCallback, Object... potentialTransactionals) {
+	public <Intermediate, Result> ITransaction<Result> start(final IFunction1<IMonitor, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback, Object... potentialTransactionals) {
 		final CountDownLatch latch = new CountDownLatch(1);
-		IFunction1<IMonitor, T> fullJob = new IFunction1<IMonitor, T>() {
+		IFunction1<IMonitor, Result> fullJob = new IFunction1<IMonitor, Result>() {
 			@Override
-			public T apply(IMonitor monitor) throws Exception {
+			public Result apply(IMonitor monitor) throws Exception {
 				AtomicReference<Exception> exception = new AtomicReference<Exception>();
 				try {
 					latch.await();
-					T result = job.apply(monitor);
-					executeCallback(resultCallback, result);
+					Intermediate intermediate = job.apply(monitor);
+					Result result = executeCallbackFunction(resultCallback, intermediate);
 					return result;
 				} catch (Exception e) {
 					exception.set(e);
@@ -66,11 +120,11 @@ public class TransactionManager implements ITransactionManagerBuilder {
 				}
 			}
 
-			private void rollback(final ICallback<T> resultCallback, AtomicReference<Exception> exception, ITransaction<?> transaction) throws Exception {
+			private void rollback(final IFunction1<Intermediate, Result> resultCallbackFn, AtomicReference<Exception> exception, ITransaction<?> transaction) throws Exception {
 				CopyOnWriteArrayList<Exception> exceptions = new CopyOnWriteArrayList<Exception>();
 				try {
-					if (resultCallback instanceof ICallbackWithExceptionHandler<?>)
-						((ICallbackWithExceptionHandler<?>) resultCallback).handle(exception.get());
+					if (resultCallbackFn instanceof IFunction1WithExceptionHandler<?,?>)
+						((IFunction1WithExceptionHandler<?,?>) resultCallbackFn).handle(exception.get());
 				} catch (Exception e) {
 					exceptions.add(e);
 				}
@@ -102,69 +156,28 @@ public class TransactionManager implements ITransactionManagerBuilder {
 				}
 			}
 
-			private void executeCallback(final ICallback<T> resultCallback, T result) throws Exception {
-				for (Entry<Class<?>, ICallback3<IServiceExecutor, ICallback<?>, Object>> entry : callbackExecutors.entrySet())
+			@SuppressWarnings({ "rawtypes", "unchecked" })
+			private Result executeCallbackFunction(final IFunction1<Intermediate, Result> resultCallback, Intermediate intermediate) throws Exception {
+				for (Entry<Class<?>, IFunction3> entry : callbackExecutors.entrySet())
 					if (entry.getKey().isAssignableFrom(resultCallback.getClass())) {
-						entry.getValue().process(serviceExecutor, resultCallback, result);
-						return;
+						return (Result) entry.getValue().apply(serviceExecutor, resultCallback, intermediate);
 					}
-				resultCallback.process(result);
+				return resultCallback.apply(intermediate);
 			}
 		};
-		Future<T> future = serviceExecutor.submit(fullJob);
-		ITransaction<T> transaction = getTransaction(future);
-		for (Object potential : potentialTransactionals)
-			if (potential instanceof ITransactional)
-				Maps.addToList(transactionalMap, transaction, (ITransactional) potential);
-		fullJobToTransaction.put(fullJob, transaction);
-		latch.countDown();
-		return transaction;
-	}
-
-	<T> ITransaction<T> getTransaction(final Future<T> future) {
-		if (future == null)
-			throw new NullPointerException();
-		return new ITransaction<T>() {
-			@Override
-			public T get() {
-				try {
-					return future.get();
-				} catch (InterruptedException e) {
-					throw WrappedException.wrap(e);
-				} catch (ExecutionException e) {
-					throw WrappedException.wrap(e.getCause());
-				}
-			}
-
-			@Override
-			public T get(long millisecondsToWait) {
-				try {
-					return future.get(millisecondsToWait, TimeUnit.MILLISECONDS);
-				} catch (InterruptedException e) {
-					throw WrappedException.wrap(e);
-				} catch (ExecutionException e) {
-					throw WrappedException.wrap(e.getCause());
-				} catch (TimeoutException e) {
-					throw WrappedException.wrap(e);
-				}
-			}
-
-			@Override
-			public void cancel() {
-				future.cancel(true);
-			}
-
-			@Override
-			public boolean isCancelled() {
-				return future.isCancelled();
-			}
-
-			@Override
-			public boolean isDone() {
-				return future.isDone();
-			}
-		};
-
+		try {
+			Future<Result> future = serviceExecutor.submit(fullJob);
+			@SuppressWarnings("unchecked")
+			ITransaction<Result> transaction = (ITransaction<Result>) futureToTransactionFn.apply(future);
+			for (Object potential : potentialTransactionals)
+				if (potential instanceof ITransactional)
+					Maps.addToList(transactionalMap, transaction, (ITransactional) potential);
+			fullJobToTransaction.put(fullJob, transaction);
+			latch.countDown();
+			return transaction;
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	@Override
@@ -172,7 +185,7 @@ public class TransactionManager implements ITransactionManagerBuilder {
 	}
 
 	@Override
-	public <C extends ICallback<?>> ITransactionManagerBuilder registerCallbackExecutor(Class<C> markerClass, ICallback3<IServiceExecutor, ICallback<?>, Object> executor) {
+	public <Intermediate, Result> ITransactionManagerBuilder registerCallbackExecutor(Class<? > markerClass, IFunction3<IServiceExecutor, IFunction1<Intermediate, Result>, Intermediate, Result> executor) {
 		callbackExecutors.put(markerClass, executor);
 		return this;
 	}

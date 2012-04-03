@@ -22,6 +22,8 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.processors.AbstractLoginDataAccessor;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManagerBuilder;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 abstract public class ApiTest extends GitWithHttpClientTest {
@@ -70,6 +72,8 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	private CrowdSourcedServerApi serverApi;
 	private CrowdSourcedLocalApi localApi;
 	private JdbcTemplate template;
+	private ITransactionManagerBuilder localTransactionManager;
+	private ITransactionManagerBuilder serverTransactionManager;
 
 	protected JdbcTemplate getTemplate() {
 		return template == null ? new JdbcTemplate(dataSource) : template;
@@ -80,11 +84,19 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected ICrowdSourcedApi getServerApi() {
-		return serverApi == null ? serverApi = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(getServerConfig()) : serverApi;
+		return serverApi == null ? serverApi = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(getServerConfig(), getServerTransactionManager()) : serverApi;
+	}
+
+	protected ITransactionManager getServerTransactionManager() {
+		return serverTransactionManager == null ? serverTransactionManager = ITransactionManager.Utils.standard() : serverTransactionManager;
+	}
+
+	protected ITransactionManager getLocalTransactionManager() {
+		return localTransactionManager == null ? localTransactionManager = ITransactionManager.Utils.standard() : localTransactionManager;
 	}
 
 	protected ICrowdSourcedApi getLocalApi() {
-		return localApi == null ? localApi = (CrowdSourcedLocalApi) ICrowdSourcedApi.Utils.forClient(getLocalConfig()) : localApi;
+		return localApi == null ? localApi = (CrowdSourcedLocalApi) ICrowdSourcedApi.Utils.forClient(getLocalConfig(), getLocalTransactionManager()) : localApi;
 	}
 
 	protected ServerConfig getServerConfig() {
@@ -219,7 +231,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 			public String apply(IUserReader from) throws Exception {
 				return from.getUserProperty(softwareFmId, userCrypto, property);
 			}
-		}, ICallback.Utils.<String>noCallback()).get();
+		}, ICallback.Utils.<String> noCallback()).get();
 	}
 
 	protected IContainer getServerContainer() {

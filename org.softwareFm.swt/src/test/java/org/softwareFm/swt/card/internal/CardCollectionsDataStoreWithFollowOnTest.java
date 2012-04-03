@@ -5,51 +5,49 @@
 package org.softwareFm.swt.card.internal;
 
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.card.CardMock;
 import org.softwareFm.swt.card.LineItem;
 
 public class CardCollectionsDataStoreWithFollowOnTest extends AbstractCardCollectionsDataStoreTest {
 
 	public void testMainFutureIsNotDoneWhenInitialQueryReturns() {
-		assertFalse(status.mainFuture.isDone());
-		kickAndDispatch(status.initialFuture);
-		assertFalse(status.mainFuture.isDone());
+		assertFalse(status.mainTransaction.isDone());
+		kickAndDispatch(status.initialTransaction);
+		assertFalse(status.mainTransaction.isDone());
 	}
 
 	public void testFollowOnQueriesAreSentWhenInitialQueryReturns() {
-		assertEquals(0, status.keyValueFutures.size());
-		kickAndDispatch(status.initialFuture);
-		assertEquals(5, status.keyValueFutures.size()); // 1a,2a,1b,2b,2c
+		assertEquals(0, status.keyValueTransactions.size());
+		kickAndDispatch(status.initialTransaction);
+		assertEquals(5, status.keyValueTransactions.size()); // 1a,2a,1b,2b,2c
 	}
 
 	public void testNotFinishedUntilAllFollowOnQueriesHaveFinished() {
-		assertEquals(0, status.keyValueFutures.size());
-		kickAndDispatch(status.initialFuture);
-		assertEquals(5, status.keyValueFutures.size());
-		for (int i = 0; i < status.keyValueFutures.size(); i++)
-			assertFalse(status.keyValueFutures.get(i).isDone());
-		for (int i = 0; i < status.keyValueFutures.size(); i++) {
-			Future<?> f = status.keyValueFutures.get(i);
-			assertFalse("i: " + i, f.isDone());
-			kickAndDispatch(f);
-			assertTrue(f.isDone());
-			assertEquals(i == 4, status.mainFuture.isDone());
+		assertEquals(0, status.keyValueTransactions.size());
+		kickAndDispatch(status.initialTransaction);
+		assertEquals(5, status.keyValueTransactions.size());
+		for (int i = 0; i < status.keyValueTransactions.size(); i++)
+			assertFalse(status.keyValueTransactions.get(i).isDone());
+		for (int i = 0; i < status.keyValueTransactions.size(); i++) {
+			ITransaction<Object> t = status.keyValueTransactions.get(i);
+			assertFalse("i: " + i, t.isDone());
+			kickAndDispatch(t);
+			assertTrue(t.isDone());
+			assertEquals(i == 4, status.mainTransaction.isDone());
 		}
 	}
 
-	public void testEachFollowOnQueryCausesCardToBeMutated() throws InterruptedException, ExecutionException, TimeoutException {
-		kickAndDispatch(status.initialFuture);
+	public void testEachFollowOnQueryCausesCardToBeMutated()  {
+		kickAndDispatch(status.initialTransaction);
 		CardMock card = (CardMock) cardHolder.getCard();
-		for (int i = 0; i < status.keyValueFutures.size(); i++) {
-			Future<?> f = status.keyValueFutures.get(i);
+		for (int i = 0; i < status.keyValueTransactions.size(); i++) {
+			ITransaction<Object> t = status.keyValueTransactions.get(i);
 			int start = card.keys.size();
-			kickAndDispatch(f);
-			LineItem lineItem = (LineItem) f.get(1, TimeUnit.SECONDS);
+			kickAndDispatch(t);
+			LineItem lineItem = (LineItem) t.get(CommonConstants.testTimeOutMs);
 			assertEquals(start + 1, card.keys.size());
 			assertEquals(lineItem.key, card.keys.get(i));
 			// should really test value
@@ -59,11 +57,11 @@ public class CardCollectionsDataStoreWithFollowOnTest extends AbstractCardCollec
 	@Override
 	public void testCallbackNotCalledUntilAnyFollowUpQueriesFinished() {
 		assertEquals(0, memory.initialCardCount);
-		kickAndDispatch(status.initialFuture);
-		for (int i = 0; i < status.keyValueFutures.size(); i++) {
-			Future<?> f = status.keyValueFutures.get(i);
-			kickAndDispatch(f);
-			assertEquals("I: " + i, i != status.keyValueFutures.size() - 1, memory.finishedCount == 0);
+		kickAndDispatch(status.initialTransaction);
+		for (int i = 0; i < status.keyValueTransactions.size(); i++) {
+			ITransaction<Object> t = status.keyValueTransactions.get(i);
+			kickAndDispatch(t);
+			assertEquals("I: " + i, i != status.keyValueTransactions.size() - 1, memory.finishedCount == 0);
 		}
 	}
 

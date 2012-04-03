@@ -13,13 +13,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
-import org.softwareFm.crowdsource.api.LocalConfig;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.eclipse.actions.IActionBar;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
@@ -52,22 +50,19 @@ public class ExplorerView extends ViewPart {
 		final IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(parent);
 		Size.resizeMeToParentsSize(masterDetailSocial.getControl());
 		final CardConfig cardConfig = activator.getCardConfig(parent);
-
-		LocalConfig localConfig = activator.getLocalConfig();
-		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forClient(localConfig);
+		ICrowdSourcedApi api = activator.getApi(parent.getDisplay());
 		final IUserAndGroupsContainer container = api.makeUserAndGroupsContainer();
 
 		IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardConfig.cardDataStore);
-		IServiceExecutor service = activator.getServiceExecutor();
-		IShowMyData showMyDetails = MyDetails.showMyDetails(container, service, cardConfig, masterDetailSocial);
-		IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, container, service, false, cardConfig);
-		IShowMyPeople showMyPeople = MyPeople.showMyPeople(container, service, masterDetailSocial, cardConfig, CommonConstants.clientTimeOut * 2);
+		IShowMyData showMyDetails = MyDetails.showMyDetails(container, cardConfig, masterDetailSocial);
+		IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, container, false, cardConfig);
+		IShowMyPeople showMyPeople = MyPeople.showMyPeople(container, masterDetailSocial, cardConfig, CommonConstants.clientTimeOut * 2);
 		Callable<Long> timeGetter = Callables.time();
 		List<String> rootUrls = getRootUrls();
-		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), activator.getServiceExecutor(), container);
+		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(parent.getDisplay(), container, CommonConstants.clientTimeOut);
 
 		IUserDataManager userDataManager = activator.getUserDataManager();
-		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, container, cardConfig, rootUrls, playListGetter, service, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, timeGetter);
+		final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, container, cardConfig, rootUrls, playListGetter, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, timeGetter);
 		actionBar = makeActionBar(explorer, cardConfig);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		actionBar.populateToolbar(toolBarManager);

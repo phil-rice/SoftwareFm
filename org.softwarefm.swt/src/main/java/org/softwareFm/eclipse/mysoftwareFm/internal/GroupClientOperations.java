@@ -289,7 +289,7 @@ public class GroupClientOperations implements IGroupClientOperations {
 							}
 						});
 					}
-				});
+				}).get();
 			}
 		};
 	}

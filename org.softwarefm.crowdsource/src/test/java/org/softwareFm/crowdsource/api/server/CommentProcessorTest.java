@@ -23,6 +23,7 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.crowdsource.utilities.url.Urls;
 
 public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcessor> {
@@ -106,7 +107,7 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 	@Override
 	protected CommentProcessor makeProcessor() {
 		ServerConfig serverConfig = ServerConfig.serverConfigForTests(remoteRoot, IMailer.Utils.noMailer());
-		api = ICrowdSourcedApi.Utils.forServer(serverConfig);
+		api = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard());
 		comments = new CommentsForServer(api.makeUserAndGroupsContainer(),Callables.valueFromList(1000l, 2000l, 3000l));
 		return new CommentProcessor(api.makeUserAndGroupsContainer(), IUserCryptoAccess.Utils.mock(softwareFmId, userCrypto));
 	}

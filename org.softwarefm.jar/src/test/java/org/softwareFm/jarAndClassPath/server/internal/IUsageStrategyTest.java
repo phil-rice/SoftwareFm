@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
 import org.softwareFm.crowdsource.api.ServerConfig;
@@ -36,7 +35,7 @@ public class IUsageStrategyTest extends AbstractUsageProcessorIntegrationTests {
 	public void testUsingUpdatesProjectData() throws Exception {
 		String sessionSalt = makeSalt();
 		String crypto = signup(email, sessionSalt, "someMoniker", "hash", "someNewSoftwareFmId0");
-		usageStrategy.using("someNewSoftwareFmId0", "digest11", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+		usageStrategy.using("someNewSoftwareFmId0", "digest11", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs);
 		assertTrue(userFile.exists());
 		assertTrue(userProjectFile.exists());
 		Map<String, Object> projectData = getProjectData(crypto);
@@ -46,9 +45,9 @@ public class IUsageStrategyTest extends AbstractUsageProcessorIntegrationTests {
 	public void testMyData() throws Exception {
 		String sessionSalt = makeSalt();
 		String crypto = signup(email, sessionSalt, "someMoniker", "hash", "someNewSoftwareFmId0");
-		usageStrategy.using("someNewSoftwareFmId0", "digest11", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		usageStrategy.using("someNewSoftwareFmId0", "digest12", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-		usageStrategy.using("someNewSoftwareFmId0", "digest23", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+		usageStrategy.using("someNewSoftwareFmId0", "digest11", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs);
+		usageStrategy.using("someNewSoftwareFmId0", "digest12", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs);
+		usageStrategy.using("someNewSoftwareFmId0", "digest23", IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, "")).get(CommonConstants.testTimeOutMs);
 
 		Map<String, Object> projectData = getProjectData(crypto);
 
@@ -101,7 +100,7 @@ public class IUsageStrategyTest extends AbstractUsageProcessorIntegrationTests {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		usageStrategy = IUsageStrategy.Utils.usage(getServiceExecutor(), getLocalApi().makeContainer(), getServerConfig().userUrlGenerator);
+		usageStrategy = IUsageStrategy.Utils.usage(getLocalApi().makeContainer(), getServerConfig().userUrlGenerator, CommonConstants.testTimeOutMs);
 		directory = new File(remoteRoot, getUrlPrefix() + "/users/so/me/someNewSoftwareFmId0");
 		userFile = new File(directory, CommonConstants.dataFileName);
 		userProjectFile = new File(directory, Urls.compose("project", "someMonth"));

@@ -28,15 +28,15 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtTest {
 	public void testNothingHappenBeforeInitialQueryReturns() {
 		assertEquals(1, memory.initialUrlCount);
 		dispatchUntilQueueEmpty();
-		assertFalse(status.mainFuture.isDone());
-		assertEquals(0, status.keyValueFutures.size());
+		assertFalse(status.mainTransaction.isDone());
+		assertEquals(0, status.keyValueTransactions.size());
 		assertEquals(1, status.count.get());
 		assertEquals(0, mockCardFactory.count);
 		assertEquals(0, memory.initialCardCount);
 	}
 
 	public void testCardCreatedAfterInitialQueryReturns() {
-		kickAndDispatch(status.initialFuture);
+		kickAndDispatch(status.initialTransaction);
 		assertEquals(1, mockCardFactory.count);
 		CardMock card = (CardMock) cardHolder.getCard();
 		assertEquals("/" + CardDataStoreFixture.url, card.url());
@@ -44,7 +44,7 @@ public abstract class AbstractCardCollectionsDataStoreTest extends SwtTest {
 	}
 
 	public void testFollowOnQueriesDontSendKeyValuesToCardBeforeAnyFollowOnQueries() {
-		kickAndDispatch(status.initialFuture);
+		kickAndDispatch(status.initialTransaction);
 		CardMock card = (CardMock) cardHolder.getCard();
 		assertEquals(0, card.keys.size());
 	}

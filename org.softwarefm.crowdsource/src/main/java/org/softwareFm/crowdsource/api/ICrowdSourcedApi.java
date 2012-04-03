@@ -24,8 +24,8 @@ public interface ICrowdSourcedApi {
 	void shutdown();
 
 	public static class Utils {
-		public static ICrowdSourcedApi forServer(final ServerConfig serverConfig) {
-			return new CrowdSourcedServerApi(serverConfig, new IFunction1<IUserAndGroupsContainer, IServerDoers>() {
+		public static ICrowdSourcedApi forServer(final ServerConfig serverConfig, ITransactionManager transactionManager) {
+			return new CrowdSourcedServerApi(serverConfig, transactionManager, new IFunction1<IUserAndGroupsContainer, IServerDoers>() {
 				@Override
 				public IServerDoers apply(IUserAndGroupsContainer from) throws Exception {
 					return new ServerDoers(serverConfig, from);
@@ -33,18 +33,18 @@ public interface ICrowdSourcedApi {
 			});
 		}
 
-		public static ICrowdSourcedApi forServer(ServerConfig serverConfig, IFunction1<IUserAndGroupsContainer, IServerDoers> serverDoersCreator) {
-			return new CrowdSourcedServerApi(serverConfig, serverDoersCreator);
+		public static ICrowdSourcedApi forServer(ServerConfig serverConfig, ITransactionManager transactionManager,  IFunction1<IUserAndGroupsContainer, IServerDoers> serverDoersCreator) {
+			return new CrowdSourcedServerApi(serverConfig, transactionManager, serverDoersCreator);
 		}
 
-		public static ICrowdSourcedApi forClient(LocalConfig localConfig) {
-			return new CrowdSourcedLocalApi(localConfig);
+		public static ICrowdSourcedApi forClient(LocalConfig localConfig, ITransactionManager transactionManager) {
+			return new CrowdSourcedLocalApi(localConfig, transactionManager);
 		}
 
-		//TODO This should deal with swt threading in the transaction manager
-		public static ICrowdSourcedApi forTests(IExtraReaderWriterConfigurator<ApiConfig> configurator, final File root) {
+		// TODO This should deal with swt threading in the transaction manager
+		public static ICrowdSourcedApi forTests(IExtraReaderWriterConfigurator<ApiConfig> configurator, ITransactionManager transactionManager, final File root) {
 			final IGitOperations gitOperations = IGitOperations.Utils.gitOperations(root);
-			final Container readWriter = new Container(ITransactionManager.Utils.standard(), gitOperations) {
+			final Container readWriter = new Container(transactionManager, gitOperations) {
 			};
 			configurator.builder(readWriter, null);
 			return new AbstractCrowdSourcesApi() {
@@ -60,7 +60,6 @@ public interface ICrowdSourcedApi {
 				}
 			};
 		}
-
 	}
 
 }

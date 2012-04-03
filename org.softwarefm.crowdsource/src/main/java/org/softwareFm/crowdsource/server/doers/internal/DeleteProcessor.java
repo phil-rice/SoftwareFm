@@ -12,7 +12,6 @@ import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitWriter;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -40,6 +39,6 @@ public class DeleteProcessor implements ICallProcessor {
 				}
 				return null;
 			}
-		}, ICallback.Utils.<IProcessResult> noCallback()).get(timeOutMs);
+		}).get(timeOutMs);
 	}
 }

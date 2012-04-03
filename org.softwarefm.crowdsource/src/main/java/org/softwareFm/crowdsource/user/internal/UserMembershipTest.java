@@ -50,7 +50,7 @@ public class UserMembershipTest extends ApiTest {
 
 				assertEquals(expected, membershipForServer.walkGroupsFor(user1Id, userKey0));
 			}
-		});
+		}).get();
 
 		checkLocalMembership(expected);
 	}
@@ -164,7 +164,7 @@ public class UserMembershipTest extends ApiTest {
 					}
 				}).get();
 			}
-		});
+		}).get();
 
 	}
 
@@ -180,7 +180,7 @@ public class UserMembershipTest extends ApiTest {
 					}
 				});
 			}
-		});
+		}).get();
 
 	}
 

@@ -5,10 +5,10 @@
 package org.softwareFm.swt.dataStore;
 
 import java.util.Map;
-import java.util.concurrent.Future;
 
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.card.RightClickCategoryResult;
 import org.softwareFm.swt.card.dataStore.CardDataStoreAsyncMock;
 import org.softwareFm.swt.constants.CardConstants;
@@ -20,11 +20,11 @@ public interface IMutableCardDataStore extends ICardDataStore {
 	
 	void clearCache(String url);
 
-	Future<?> put(String url, Map<String, Object> map, IAfterEditCallback callback);
+	ITransaction<?> put(String url, Map<String, Object> map, IAfterEditCallback callback);
 
 	void delete(String url,IAfterEditCallback callback);
 
-	Future<?> makeRepo(String url, IAfterEditCallback callback);
+	ITransaction<?> makeRepo(String url, IAfterEditCallback callback);
 
 	public static class Utils {
 		
@@ -32,7 +32,7 @@ public interface IMutableCardDataStore extends ICardDataStore {
 			return new CardDataStoreAsyncMock(urlsAndMaps);
 		}
 
-		public static Future<Void> addCollectionItem(final IMutableCardDataStore store, RightClickCategoryResult result, final String itemUrlFragment, final Map<String, Object> map, final IAfterEditCallback callback) {
+		public static ITransaction<Void> addCollectionItem(final IMutableCardDataStore store, RightClickCategoryResult result, final String itemUrlFragment, final Map<String, Object> map, final IAfterEditCallback callback) {
 			String collectionUrl = result.collectionUrl();
 			switch (result.itemType) {
 			case COLLECTION_NOT_CREATED_YET:
@@ -47,12 +47,12 @@ public interface IMutableCardDataStore extends ICardDataStore {
 
 		}
 
-		public static Future<Void> addCollectionItemToBase(final IMutableCardDataStore store, String baseUrl, String collectionName, final String itemUrlFragment, final Map<String, Object> map, final IAfterEditCallback callback) {
+		public static ITransaction<Void> addCollectionItemToBase(final IMutableCardDataStore store, String baseUrl, String collectionName, final String itemUrlFragment, final Map<String, Object> map, final IAfterEditCallback callback) {
 			final String collectionUrl = baseUrl + "/" + collectionName;
 			return addCollectionItemToCollection(store, collectionUrl, collectionName, itemUrlFragment, map, callback);
 		}
 
-		public static Future<Void> addCollectionItemToCollection(final IMutableCardDataStore store, final String collectionUrl, String collectionName, final String itemUrlFragment, final Map<String, Object> map, final IAfterEditCallback callback) {
+		public static ITransaction<Void> addCollectionItemToCollection(final IMutableCardDataStore store, final String collectionUrl, String collectionName, final String itemUrlFragment, final Map<String, Object> map, final IAfterEditCallback callback) {
 			store.clearCache(collectionUrl);
 			return store.processDataFor(collectionUrl, new ICardDataStoreCallback<Void>() {
 				@Override

@@ -25,25 +25,28 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 
 		IFunction1<ICommentsReader, Integer> commentsFn = Functions.ensureSameParameters();
 		container.accessCommentsReader(commentsFn, ICallback.Utils.<Integer> noCallback()).get();
-		container.access(ICommentsReader.class, commentsFn, ICallback.Utils.<Integer> noCallback()).get();
-		assertEquals(3, container.accessCommentsReader(commentsFn, ICallback.Utils.<Integer> noCallback()).get(CommonConstants.testTimeOutMs).intValue());
+		container.access(ICommentsReader.class, commentsFn).get();
+		container.accessWithCallback(ICommentsReader.class, commentsFn, ICallback.Utils.<Integer> noCallback()).get();
+		assertEquals(4, container.accessCommentsReader(commentsFn, ICallback.Utils.<Integer> noCallback()).get(CommonConstants.testTimeOutMs).intValue());
 
 		IFunction1<IUserReader, Integer> userReaderFn = Functions.ensureSameParameters();
 		container.accessUserReader(userReaderFn, ICallback.Utils.<Integer> noCallback()).get();
-		container.access(IUserReader.class, userReaderFn, ICallback.Utils.<Integer> noCallback()).get();
-		assertEquals(3, container.accessUserReader(userReaderFn, ICallback.Utils.<Integer> noCallback()).get().intValue());
+		container.access(IUserReader.class, userReaderFn).get();
+		container.accessWithCallback(IUserReader.class, userReaderFn, ICallback.Utils.<Integer> noCallback()).get();
+		assertEquals(4, container.accessUserReader(userReaderFn, ICallback.Utils.<Integer> noCallback()).get().intValue());
 
 		IFunction1<IGroupsReader, Integer> groupsReaderFn = Functions.ensureSameParameters();
 		container.accessGroupReader(groupsReaderFn, ICallback.Utils.<Integer> noCallback()).get();
-		container.access(IGroupsReader.class, groupsReaderFn, ICallback.Utils.<Integer> noCallback()).get();
-		assertEquals(3, container.accessGroupReader(groupsReaderFn, ICallback.Utils.<Integer> noCallback()).get().intValue());
+		container.accessWithCallback(IGroupsReader.class, groupsReaderFn, ICallback.Utils.<Integer> noCallback()).get();
+		container.access(IGroupsReader.class, groupsReaderFn).get();
+		assertEquals(4, container.accessGroupReader(groupsReaderFn, ICallback.Utils.<Integer> noCallback()).get().intValue());
 
 		final IFunction2<IGroupsReader, IUserMembershipReader, Void> userMembershipReaderFn = Functions.ensureSameParameters2();
 		container.accessUserMembershipReader(userMembershipReaderFn, ICallback.Utils.<Void> noCallback()).get();
-		container.access(IUserMembershipReader.class, new IFunction1<IUserMembershipReader, Void>() {
+		container.accessWithCallback(IUserMembershipReader.class, new IFunction1<IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(final IUserMembershipReader userMembershipReader) throws Exception {
-				container.access(IGroupsReader.class, new IFunction1<IGroupsReader, Void>() {
+				container.accessWithCallback(IGroupsReader.class, new IFunction1<IGroupsReader, Void>() {
 					@Override
 					public Void apply(IGroupsReader groupsReader) throws Exception {
 						return userMembershipReaderFn.apply(groupsReader, userMembershipReader);
@@ -56,17 +59,18 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 
 		final IFunction1<IGitReader, Integer> gitReaderFn = Functions.ensureSameParameters();
 		container.accessGitReader(gitReaderFn, ICallback.Utils.<Integer> noCallback()).get();
-		container.access(IGitReader.class, gitReaderFn, ICallback.Utils.<Integer> noCallback()).get();
-		assertEquals(3, container.accessGitReader(gitReaderFn, ICallback.Utils.<Integer> noCallback()).get(CommonConstants.testTimeOutMs).intValue());
+		container.access(IGitReader.class, gitReaderFn).get();
+		container.accessWithCallback(IGitReader.class, gitReaderFn, ICallback.Utils.<Integer> noCallback()).get();
+		assertEquals(4, container.accessGitReader(gitReaderFn, ICallback.Utils.<Integer> noCallback()).get(CommonConstants.testTimeOutMs).intValue());
 
-		container.access(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
+		container.accessWithCallback(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groupsReader, IUserMembershipReader userMembershipReader) throws Exception {
 				return userMembershipReaderFn.apply(groupsReader, userMembershipReader);
 			}
 		}, ICallback.Utils.<Void> noCallback()).get();
 
-		container.access(IGroupsReader.class, IUserMembershipReader.class, IGitReader.class, new IFunction3<IGroupsReader, IUserMembershipReader, IGitReader, Void>() {
+		container.accessWithCallback(IGroupsReader.class, IUserMembershipReader.class, IGitReader.class, new IFunction3<IGroupsReader, IUserMembershipReader, IGitReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groupsReader, IUserMembershipReader userMembershipReader, IGitReader gitReader) throws Exception {
 				gitReaderFn.apply(gitReader);
@@ -101,7 +105,7 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 		NullPointerException e = Tests.assertThrows(NullPointerException.class, new Runnable() {
 			@Override
 			public void run() {
-				container.access(class1, expectionIfCalled, ICallback.Utils.<Void> exception("dont call")).get();
+				container.access(class1, expectionIfCalled).get();
 			}
 		});
 		assertTrue(e.getMessage(), e.getMessage().startsWith(expectedMessage));

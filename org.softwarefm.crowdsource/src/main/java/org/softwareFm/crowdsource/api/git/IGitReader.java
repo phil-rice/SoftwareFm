@@ -76,7 +76,7 @@ public interface IGitReader extends IHasCache {
 					gitReader.clearCaches();
 					return null;
 				}
-			}, ICallback.Utils.<Void>noCallback());
+			}, ICallback.Utils.<Void>noCallback()).get();
 		}
 
 		public static Map<String,Object> getFileAndDescendants(IContainer container, final IFileDescription fileDescription) {

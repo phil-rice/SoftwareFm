@@ -172,7 +172,7 @@ public class GitLocal implements IGitLocal {
 			public void process(IRepoFinder repoFinder) throws Exception {
 				repoFinder.clearCaches();
 			}
-		});
+		}).get();
 		aboveRepoCache.clear();
 	}
 

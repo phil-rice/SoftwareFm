@@ -32,9 +32,8 @@ public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
 	private final IClientBuilder httpClient;
 
 	@SuppressWarnings("unchecked")
-	public CrowdSourcedLocalApi(LocalConfig localConfig) {
-		ITransactionManager manager = ITransactionManager.Utils.standard();
-		container = new CrowdSourceLocalReadWriterApi(manager, IGitOperations.Utils.gitOperations(localConfig.root), localConfig.timeOutMs);
+	public CrowdSourcedLocalApi(LocalConfig localConfig, ITransactionManager transactionManager) {
+		container = new CrowdSourceLocalReadWriterApi(transactionManager, IGitOperations.Utils.gitOperations(localConfig.root), localConfig.timeOutMs);
 		httpClient = IHttpClient.Utils.builderWithThreads(localConfig.host, localConfig.port, localConfig.workerThreads);
 		HttpGitWriter gitWriter = new HttpGitWriter(httpClient);
 		GitLocal gitLocal = new GitLocal(container, gitWriter, localConfig.remoteGitPrefix, localConfig.autoRefreshPeriod);

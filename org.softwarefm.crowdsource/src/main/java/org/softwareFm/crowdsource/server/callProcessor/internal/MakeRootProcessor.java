@@ -33,7 +33,7 @@ public class MakeRootProcessor extends AbstractCallProcessor {
 
 	@Override
 	protected IProcessResult execute(final String actualUrl, Map<String, Object> parameters) {
-		return container.access(IGitReader.class, IGitWriter.class, new IFunction2<IGitReader, IGitWriter, IProcessResult>() {
+		return container.accessWithCallback(IGitReader.class, IGitWriter.class, new IFunction2<IGitReader, IGitWriter, IProcessResult>() {
 			@Override
 			public IProcessResult apply(IGitReader reader, IGitWriter writer) throws Exception {
 				IFileDescription fileDescription = IFileDescription.Utils.plain(actualUrl);

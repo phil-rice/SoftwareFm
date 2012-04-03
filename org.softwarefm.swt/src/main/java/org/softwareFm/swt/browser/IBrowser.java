@@ -4,9 +4,9 @@
 
 package org.softwareFm.swt.browser;
 
-import java.util.concurrent.Future;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 
 public interface IBrowser {
-	Future<String> processUrl(String feedType, String url);
+	ITransaction<String> processUrl(String feedType, String url);
 
 }

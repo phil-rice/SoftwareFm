@@ -17,7 +17,7 @@ public interface IGroupOperations {
 
 	public static class Utils{
 		public static IGroupOperations clientGroupOperations(IContainer readWriteApi, long timeOutMs){
-			return new ClientGroupOperations(readWriteApi);
+			return new ClientGroupOperations(readWriteApi, timeOutMs);
 		}
 	}
 	

@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.UserData;
+import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
@@ -33,14 +34,12 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
-import org.softwareFm.jar.EclipseMessages;
 import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
 import org.softwareFm.jarAndClassPath.api.IRequestGroupReportGeneration;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
+import org.softwareFm.swt.ISwtFunction1;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.constants.CardConstants;
@@ -51,18 +50,17 @@ import org.softwareFm.swt.explorer.IShowMyPeople;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyPeople implements IHasComposite {
-	public static IShowMyPeople showMyPeople(final IContainer readWriteApi, final IServiceExecutor executor, final IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig, final long timeoutMs) {
+	public static IShowMyPeople showMyPeople(final IContainer container, final IMasterDetailSocial masterDetailSocial, final CardConfig cardConfig, final long timeoutMs) {
 		return new IShowMyPeople() {
 			@Override
 			public void showMyPeople(final UserData userData, final String groupId, final String artifactId) {
-				executor.submit(new IFunction1<IMonitor, Void>() {
+				container.accessWithCallbackFn(IGitReader.class, Functions.<IGitReader, Void>constant(null), new ISwtFunction1<Void, Void>() {
 					@Override
-					public Void apply(IMonitor monitor) throws Exception {
-						monitor.beginTask(EclipseMessages.showMyPeople, 2);
+					public Void apply(Void from) throws Exception {
 						MyPeople myPeople = masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyPeople>() {
 							@Override
 							public MyPeople apply(Composite from) throws Exception {
-								return new MyPeople(from, readWriteApi, cardConfig, userData);
+								return new MyPeople(from, container, cardConfig, userData);
 							}
 						});
 						myPeople.setData(groupId, artifactId);
@@ -95,7 +93,7 @@ public class MyPeople implements IHasComposite {
 				}
 			});
 			new TableColumn(table, SWT.NULL).setText("Person");
-			months = container.access(IProjectTimeGetter.class, Functions.<IProjectTimeGetter, IProjectTimeGetter> identity(), ICallback.Utils.<IProjectTimeGetter>noCallback()).get().lastNMonths(3);
+			months = container.access(IProjectTimeGetter.class, Functions.<IProjectTimeGetter, IProjectTimeGetter> identity()).get().lastNMonths(3);
 			for (String month : months) {
 				String name = MySoftwareFmFunctions.monthFileNameToPrettyName(month);
 				new TableColumn(table, SWT.NULL).setText(name);

@@ -4,13 +4,15 @@
 
 package org.softwareFm.eclipse.plugin;
 
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.runtime.Preferences;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -22,12 +24,13 @@ import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.eclipse.jdtBinding.IBindingRipper;
 import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory;
 import org.softwareFm.jarAndClassPath.api.IUserDataListener;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
+import org.softwareFm.swt.ISwtSoftwareFmFactory;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.ICardDataStore;
@@ -47,15 +50,13 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 
-	private String uuid;
-	private ISelectedBindingManager selectedArtifactSelectionManager;
-	private IServiceExecutor serviceExecutor;
-
-	private ICrowdSourcedApi api;
 	private final Object lock = new Object();
 
-	private IUserDataManager userDataManager;
+	private String uuid;
+	private ISelectedBindingManager selectedArtifactSelectionManager;
+	private final Map<Display, ICrowdSourcedApi> displayToApiMap = Maps.newMap();
 
+	private IUserDataManager userDataManager;
 	private LocalConfig localConfig;
 
 	public Activator() {
@@ -72,12 +73,9 @@ public class Activator extends AbstractUIPlugin {
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		synchronized (lock) {
-			if (serviceExecutor != null)
-				serviceExecutor.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-			serviceExecutor = null;
-			if (api != null)
-				api.shutdown();
-			api = null;
+			for (Entry<Display, ICrowdSourcedApi> entry : displayToApiMap.entrySet())
+				entry.getValue().shutdown();
+			displayToApiMap.clear();
 			selectedArtifactSelectionManager = null;
 			userDataManager = null;
 			localConfig = null;
@@ -85,14 +83,16 @@ public class Activator extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
-	public ICrowdSourcedApi getApi() {
-		if (api == null)
+	public ICrowdSourcedApi getApi(Display display) {
+		if (!displayToApiMap.containsKey(display)) {
 			synchronized (lock) {
-				if (api == null) {
-					api = ICrowdSourcedApi.Utils.forClient(getLocalConfig());
+				if (!displayToApiMap.containsKey(display)) {
+					ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forClient(getLocalConfig(), ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.clientTimeOut));
+					displayToApiMap.put(display, api);
 				}
 			}
-		return api;
+		}
+		return displayToApiMap.get(display);
 	}
 
 	public LocalConfig getLocalConfig() {
@@ -108,7 +108,7 @@ public class Activator extends AbstractUIPlugin {
 		final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(//
 				parent.getDisplay(), //
 				new CardConfig(ICardFactory.Utils.cardFactory(), //
-						ICardDataStore.Utils.repositoryCardDataStore(parent, getServiceExecutor(), getApi().makeContainer())));
+						ICardDataStore.Utils.repositoryCardDataStore(parent, getApi(parent.getDisplay()).makeContainer())));
 		return cardConfig;
 	}
 
@@ -164,10 +164,6 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
-	}
-
-	public IServiceExecutor getServiceExecutor() {
-		return serviceExecutor == null ? serviceExecutor = IServiceExecutor.Utils.defaultExecutor() : serviceExecutor;
 	}
 
 	public IUserDataManager getUserDataManager() {

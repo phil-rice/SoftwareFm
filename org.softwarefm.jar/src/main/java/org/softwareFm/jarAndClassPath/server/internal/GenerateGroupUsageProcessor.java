@@ -53,7 +53,7 @@ public class GenerateGroupUsageProcessor extends AbstractCallProcessor {
 				}
 				report.set(Strings.nullSafeToString(reportMap));
 			}
-		});
+		}).get();
 		return IProcessResult.Utils.processString(report.get());
 	}
 

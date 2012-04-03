@@ -4,19 +4,17 @@
 
 package org.softwareFm.eclipse.plugin;
 
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IStartup;
+import org.eclipse.ui.PlatformUI;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
-import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.eclipse.jdtBinding.BindingRipperResult;
-import org.softwareFm.jar.EclipseMessages;
 import org.softwareFm.jarAndClassPath.api.IUsageStrategy;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 
@@ -24,33 +22,27 @@ public class Startup implements IStartup {
 
 	@Override
 	public void earlyStartup() {
+		final Display display = PlatformUI.getWorkbench().getDisplay();
 		final Activator activator = Activator.getDefault();
-		final IServiceExecutor serviceExecutor = activator.getServiceExecutor();
-		serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
+		new Thread() {
 			@Override
-			public Void apply(IMonitor monitor) throws Exception {
-				monitor.beginTask(EclipseMessages.startUp, 1);
-				try {
-					ICrowdSourcedApi api = activator.getApi();
-					IContainer container = api.makeContainer();
-					IUsageStrategy rawUsageStrategy = IUsageStrategy.Utils.usage(serviceExecutor, container, activator.getLocalConfig().userUrlGenerator);
-					IHasCache gitLocal = container.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal>identity(), ICallback.Utils.<IGitLocal>noCallback()).get();
-					final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, JarAndPathConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());
-					activator.getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
-						@Override
-						public void selectionOccured(BindingRipperResult ripperResult) {
-							if ("jar".equals(ripperResult.path.getFileExtension())) {
-								String softwareFmId = activator.getUserDataManager().getUserData().softwareFmId;
-								if (softwareFmId != null)
-									cachedUsageStrategy.using(softwareFmId, ripperResult.hexDigest, IResponseCallback.Utils.noCallback());
-							}
+			public void run() {
+				ICrowdSourcedApi api = activator.getApi(display);
+				IContainer container = api.makeContainer();
+				IUsageStrategy rawUsageStrategy = IUsageStrategy.Utils.usage(container, activator.getLocalConfig().userUrlGenerator, CommonConstants.clientTimeOut);
+				IHasCache gitLocal = container.access(IGitLocal.class, Functions.<IGitLocal, IGitLocal> identity()).get();
+				final IUsageStrategy cachedUsageStrategy = IUsageStrategy.Utils.cached(rawUsageStrategy, JarAndPathConstants.usageRefreshTimeMs, gitLocal, activator.getUserDataManager());
+				activator.getSelectedBindingManager().addSelectedArtifactSelectionListener(new ISelectedBindingListener() {
+					@Override
+					public void selectionOccured(BindingRipperResult ripperResult) {
+						if ("jar".equals(ripperResult.path.getFileExtension())) {
+							String softwareFmId = activator.getUserDataManager().getUserData().softwareFmId;
+							if (softwareFmId != null)
+								cachedUsageStrategy.using(softwareFmId, ripperResult.hexDigest, IResponseCallback.Utils.noCallback());
 						}
-					});
-				} finally {
-					monitor.done();
-				}
-				return null;
+					}
+				});
 			}
-		});
+		}.start();
 	}
 }

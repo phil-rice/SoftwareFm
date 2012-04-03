@@ -44,7 +44,6 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 	private String popupMenuId;
 
 	public void testAddingAdvert() throws Exception {
-
 		IAddingCallback<ICard> addingCallback = new IAddingCallback<ICard>() {
 			@Override
 			public void process(boolean added, ICard card, IAdding adding) {
@@ -183,12 +182,11 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 			public void process(IGitLocal gitLocal) throws Exception {
 				gitLocal.put(IFileDescription.Utils.compose(rootArtifactUrl, collectionUrl), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), "makeCollectionUrlAndExistingUrl");
 			}
-		});
+		}).get();
 	}
 
 	protected void addFromCollection(final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback, String collectionUrl) {
 		checkAddingToUrl(collectionUrl, new ICallback<ICard>() {
-
 			@Override
 			public void process(ICard t) throws Exception {
 				final Menu menu1 = new Menu(shell);
@@ -245,7 +243,7 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 				@SuppressWarnings("unchecked")
 				Control okButton = ((IDataCompositeWithOkCancel<Composite>) detailContent1).getFooter().okButton();
 				final CountDownLatch latch = new CountDownLatch(1);
-				ExplorerAdapter listemer = new ExplorerAdapter() {
+				ExplorerAdapter listener = new ExplorerAdapter() {
 
 					@SuppressWarnings("unchecked")
 					@Override
@@ -267,12 +265,13 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 						}
 
 						int index = card.getTable().getSelectionIndex();
+						assertTrue(index != -1);
 						TableItem item = card.getTable().getItem(index);
 						assertEquals(key, item.getData());
 						latch.countDown();
 					}
 				};
-				explorer.addExplorerListener(listemer);
+				explorer.addExplorerListener(listener);
 				Swts.Buttons.press(okButton);
 				dispatchUntilTimeoutOrLatch(latch);
 			}

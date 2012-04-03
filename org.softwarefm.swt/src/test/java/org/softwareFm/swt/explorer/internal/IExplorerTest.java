@@ -42,9 +42,8 @@ public class IExplorerTest extends ApiAndSwtTest {
 			IPlayListGetter playListGetter = IPlayListGetter.Utils.noPlayListGetter();
 
 			Explorer explorer = (Explorer) IExplorer.Utils.explorer(//
-					masterDetailSocial, getLocalApi().makeUserAndGroupsContainer(), cardConfig, rootUrls, playListGetter, service, ILoginStrategy.Utils.noLoginStrategy(), //
-					IShowMyData.Utils.exceptionShowMyData(), //
-					IShowMyGroups.Utils.exceptionShowMyGroups(),//
+					masterDetailSocial, getLocalApi().makeUserAndGroupsContainer(), cardConfig, rootUrls, playListGetter, ILoginStrategy.Utils.noLoginStrategy(), IShowMyData.Utils.exceptionShowMyData(), //
+					IShowMyGroups.Utils.exceptionShowMyGroups(), //
 					IShowMyPeople.Utils.exceptionShowMyPeople(),//
 					IUserDataManager.Utils.userDataManager(),//
 					Callables.<Long> exceptionIfCalled());

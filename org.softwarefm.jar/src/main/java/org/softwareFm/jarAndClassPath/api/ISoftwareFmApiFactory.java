@@ -29,6 +29,7 @@ import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.processors.AbstractLoginDataAccessor;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.jarAndClassPath.server.internal.GenerateGroupUsageProcessor;
 import org.softwareFm.jarAndClassPath.server.internal.GenerateUsageProjectGenerator;
@@ -40,12 +41,12 @@ import org.softwareFm.jarAndClassPath.server.internal.UsageReaderForServer;
 public interface ISoftwareFmApiFactory {
 
 	public static class Utils {
-		public static ICrowdSourcedApi makeClientApiForLocalHost(long timeOutMs) {
-			return ICrowdSourcedApi.Utils.forClient(getLocalConfig(true, timeOutMs));
+		public static ICrowdSourcedApi makeClientApiForLocalHost(long timeOutMs, ITransactionManager transactionManager) {
+			return ICrowdSourcedApi.Utils.forClient(getLocalConfig(true, timeOutMs), transactionManager);
 		}
 
-		public static ICrowdSourcedApi makeClientApiForSoftwareFmServer(long timeOutMs) {
-			return ICrowdSourcedApi.Utils.forClient(getLocalConfig(false, timeOutMs));
+		public static ICrowdSourcedApi makeClientApiForSoftwareFmServer(long timeOutMs, ITransactionManager transactionManager) {
+			return ICrowdSourcedApi.Utils.forClient(getLocalConfig(false, timeOutMs), transactionManager);
 		}
 
 		public static LocalConfig getLocalConfig(boolean local, long timeOutMs) {
@@ -73,8 +74,8 @@ public interface ISoftwareFmApiFactory {
 			};
 		}
 
-		public static ICrowdSourcedApi makeServerApi(int port, long timeOutMs) {
-			return ICrowdSourcedApi.Utils.forServer(getServerConfig(port, timeOutMs));
+		public static ICrowdSourcedApi makeServerApi(int port, long timeOutMs, ITransactionManager transactionManager) {
+			return ICrowdSourcedApi.Utils.forServer(getServerConfig(port, timeOutMs), transactionManager);
 		}
 
 		public static ServerConfig getServerConfig(int port, long timeOutMs) {
@@ -93,7 +94,7 @@ public interface ISoftwareFmApiFactory {
 			Callable<Long> timeGetter = Callables.time();
 			final String urlPrefix = JarAndPathConstants.urlPrefix;
 			IExtraReaderWriterConfigurator<ServerConfig> extraReadWriterConfigurator = Utils.getServerExtraReaderWriterConfigurator(urlPrefix, timeOutMs);
-			ServerConfig serverConfig = new ServerConfig(port, 1000,timeOutMs, root, dataSource, takeOnEnrichment, extraCallProcessors, usage, idAndSaltGenerator, cryptoGenerators, userCryptoAccess, urlPrefix, defaultUserValues, defaultGroupValues, errorHandler, mailer, timeGetter, extraReadWriterConfigurator);//
+			ServerConfig serverConfig = new ServerConfig(port, 1000, timeOutMs, root, dataSource, takeOnEnrichment, extraCallProcessors, usage, idAndSaltGenerator, cryptoGenerators, userCryptoAccess, urlPrefix, defaultUserValues, defaultGroupValues, errorHandler, mailer, timeGetter, extraReadWriterConfigurator);//
 			return serverConfig;
 		}
 

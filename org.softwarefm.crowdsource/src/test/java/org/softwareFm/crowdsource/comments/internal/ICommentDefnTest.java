@@ -15,6 +15,7 @@ import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 public class ICommentDefnTest extends TemporaryFileTest {
@@ -74,7 +75,7 @@ public class ICommentDefnTest extends TemporaryFileTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		ServerConfig serverConfig = ServerConfig.serverConfigForTests(root, IMailer.Utils.noMailer());
-		api = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(serverConfig);
+		api = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard());
 		container = api.makeUserAndGroupsContainer();
 		new JdbcTemplate(serverConfig.dataSource).update("delete From users");
 	}

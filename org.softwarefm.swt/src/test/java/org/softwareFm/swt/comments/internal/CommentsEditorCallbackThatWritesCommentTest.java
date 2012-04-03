@@ -22,6 +22,7 @@ import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.runnable.Runnables;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 
 public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 
@@ -93,12 +94,12 @@ public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 		whenFinished = EasyMock.createMock(Runnable.class);
 		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forTests(new IExtraReaderWriterConfigurator<ApiConfig>() {
 			@Override
-			public  void builder(IContainerBuilder builder, ApiConfig apiConfig) {
+			public void builder(IContainerBuilder builder, ApiConfig apiConfig) {
 				builder.register(IUserReader.class, userReader);
 				builder.register(IGroupsReader.class, groupsReader);
 				builder.register(IComments.class, commentWriter);
 			}
-		}, null);
+		}, ITransactionManager.Utils.standard(), null);
 		container = api.makeUserAndGroupsContainer();
 		callback = new CommentsEditorCallbackThatWritesComment(container, softwareFmId, userCrypto, groupsData, whenFinished);
 	}

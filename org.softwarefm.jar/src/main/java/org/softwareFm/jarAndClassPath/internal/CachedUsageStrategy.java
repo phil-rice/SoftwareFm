@@ -7,13 +7,12 @@ package org.softwareFm.jarAndClassPath.internal;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
-import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.jarAndClassPath.api.IUsageStrategy;
 import org.softwareFm.jarAndClassPath.api.IUserDataListener;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
@@ -39,11 +38,11 @@ public class CachedUsageStrategy implements IUsageStrategy, IHasCache {
 	}
 
 	@Override
-	public Future<?> using(String softwareFmId, String digest, IResponseCallback callback) {
+	public ITransaction<?> using(String softwareFmId, String digest, IResponseCallback callback) {
 		if (System.currentTimeMillis() > lastUpdate + period)
 			clearCaches();
 		if (!cached.add(digest))
-			return Futures.doneFuture(null);
+			return ITransaction.Utils.doneTransaction(null);
 		cachesToClearWhenUsageOccures.clearCaches();
 		return delegate.using(softwareFmId, digest, callback);
 	}

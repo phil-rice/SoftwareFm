@@ -23,6 +23,7 @@ import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.eclipse.mysoftwareFm.MyDetails;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups;
 import org.softwareFm.eclipse.mysoftwareFm.MyPeople;
@@ -30,6 +31,7 @@ import org.softwareFm.eclipse.snippets.SnippetFeedConfigurator;
 import org.softwareFm.jarAndClassPath.api.ISoftwareFmApiFactory;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
 import org.softwareFm.swt.ICollectionConfigurationFactory;
+import org.softwareFm.swt.ISwtSoftwareFmFactory;
 import org.softwareFm.swt.browser.IBrowserConfigurator;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardChangedListener;
@@ -76,22 +78,22 @@ public class ExplorerWithRadioChannel {
 					final IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
 					explorerAndButton.setLayout(new GridLayout());
 					buttonPanel.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
-
-					ICrowdSourcedApi api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost(CommonConstants.clientTimeOut) : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer(CommonConstants.clientTimeOut);
+					ITransactionManager transactionManager = ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(from.getDisplay(), CommonConstants.clientTimeOut);
+					ICrowdSourcedApi api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost(CommonConstants.clientTimeOut, transactionManager) : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer(CommonConstants.clientTimeOut, transactionManager);
 					final IUserAndGroupsContainer container = api.makeUserAndGroupsContainer();
 					forShutdown.set(api);
 
-					final IMutableCardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, serviceExecutor, container);
+					final IMutableCardDataStore cardDataStore = ICardDataStore.Utils.repositoryCardDataStore(from, container);
 					ICardFactory cardFactory = ICardFactory.Utils.cardFactory();
 					final CardConfig cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().configure(from.getDisplay(), new CardConfig(cardFactory, cardDataStore));
 
 					IPlayListGetter playListGetter = new ArtifactPlayListGetter(cardDataStore);
-					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), serviceExecutor, container);
+					ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(from.getDisplay(), container, CommonConstants.clientTimeOut);
 					final IUserDataManager userDataManager = IUserDataManager.Utils.userDataManager();
-					IShowMyData showMyDetails = MyDetails.showMyDetails(container, serviceExecutor, cardConfig, masterDetailSocial);
-					IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, container, serviceExecutor, false, cardConfig);
-					IShowMyPeople showMyPeople = MyPeople.showMyPeople(container, serviceExecutor, masterDetailSocial, cardConfig, CommonConstants.clientTimeOut * 2);
-					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, container, cardConfig, rootUrls, playListGetter, serviceExecutor, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, Callables.time());
+					IShowMyData showMyDetails = MyDetails.showMyDetails(container, cardConfig, masterDetailSocial);
+					IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, container, false, cardConfig);
+					IShowMyPeople showMyPeople = MyPeople.showMyPeople(container, masterDetailSocial, cardConfig, CommonConstants.clientTimeOut * 2);
+					final IExplorer explorer = IExplorer.Utils.explorer(masterDetailSocial, container, cardConfig, rootUrls, playListGetter, loginStrategy, showMyDetails, showMyGroups, showMyPeople, userDataManager, Callables.time());
 
 					ICardMenuItemHandler.Utils.addSoftwareFmMenuItemHandlers(explorer);
 					IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);

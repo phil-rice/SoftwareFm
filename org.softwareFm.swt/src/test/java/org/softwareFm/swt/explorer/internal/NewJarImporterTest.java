@@ -6,16 +6,13 @@ package org.softwareFm.swt.explorer.internal;
 
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.callbacks.MemoryCallback;
 import org.softwareFm.crowdsource.utilities.comparators.Comparators;
-import org.softwareFm.crowdsource.utilities.future.Futures;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.crowdsource.utilities.url.IUrlGeneratorMap;
 import org.softwareFm.crowdsource.utilities.url.UrlGenerator;
@@ -54,16 +51,16 @@ public class NewJarImporterTest extends SwtTest {
 		checkStage(stage, ImportStageCommand.MAKE_REPO, "<jar>/someGroupId/someArtifactId/someVersion/someDigest", Maps.emptyStringObjectMap());
 	}
 
-	public void testProcess() throws InterruptedException, ExecutionException, TimeoutException {
+	public void testProcess() throws Exception {
 		MemoryCallback<String> afterOk = ICallback.Utils.memory();
-		newJarImporter.process(afterOk).get(2, TimeUnit.SECONDS);
+		newJarImporter.process(afterOk).get(CommonConstants.testTimeOutMs);
 		assertEquals("<artifact>/someGroupId/someArtifactId/someVersion", afterOk.getOnlyResult());
 	}
 
-	public void testProcessImport() throws InterruptedException, ExecutionException, TimeoutException {
+	public void testProcessImport()  {
 		MemoryCallback<String> afterOk = ICallback.Utils.memory();
 		String randomUuid = UUID.randomUUID().toString();
-		Object actual = newJarImporter.processImport(randomUuid, afterOk).get(2, TimeUnit.SECONDS);
+		Object actual = newJarImporter.processImport(randomUuid, afterOk).get(CommonConstants.testTimeOutMs);
 		assertEquals("<artifact>/someGroupId/someArtifactId/someVersion", afterOk.getOnlyResult());
 		assertEquals("MAKE_REPO:<jar>/someGroupId/someArtifactId/someVersion/someDigest:{}\n" + //
 				"POST_DATA:<jar>/someGroupId/someArtifactId/someVersion/someDigest:{artifactId=someArtifactId, groupId=someGroupId, version=someVersion}\n" + //
@@ -120,11 +117,11 @@ public class NewJarImporterTest extends SwtTest {
 	static class ChainImporterMock implements IChainImporter {
 
 		@Override
-		public Future<?> process(Runnable afterOk, ImportStage... stages) {
+		public ITransaction<?> process(Runnable afterOk, ImportStage... stages) {
 			StringBuilder builder = new StringBuilder();
 			for (ImportStage stage : stages)
 				builder.append(stage.command + ":" + stage.url + ":" + Maps.sortByKey(stage.data, Comparators.<String> naturalOrder()) + "\n");
-			Future<?> result = Futures.doneFuture(builder.toString());
+			ITransaction<String> result = ITransaction.Utils.doneTransaction(builder.toString());
 			afterOk.run();
 			return result;
 		}

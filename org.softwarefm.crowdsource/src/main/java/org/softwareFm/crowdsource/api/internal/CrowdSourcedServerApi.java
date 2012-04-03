@@ -13,6 +13,7 @@ import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 
 public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 
@@ -23,9 +24,9 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 	private final Object lock = new Object();
 
 	@SuppressWarnings("unchecked")
-	public CrowdSourcedServerApi(ServerConfig serverConfig, IFunction1<IUserAndGroupsContainer, IServerDoers> serverDoersCreator) {
+	public CrowdSourcedServerApi(ServerConfig serverConfig, ITransactionManager transactionManager, IFunction1<IUserAndGroupsContainer, IServerDoers> serverDoersCreator) {
 		this.serverConfig = serverConfig;
-		containerForServer = new ContainerForServer(serverConfig);
+		containerForServer = new ContainerForServer(serverConfig, transactionManager);
 		serverDoers = Functions.call(serverDoersCreator, containerForServer);
 		serverConfig.extraReaderWriterConfigurator.builder(containerForServer, serverConfig);
 	}

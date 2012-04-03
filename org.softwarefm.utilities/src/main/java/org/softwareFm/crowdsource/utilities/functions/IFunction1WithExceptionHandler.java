@@ -2,13 +2,9 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwareFm.swt.explorer.internal;
+package org.softwareFm.crowdsource.utilities.functions;
 
-import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
-import org.softwareFm.swt.explorer.internal.NewJarImporter.ImportStage;
+public interface IFunction1WithExceptionHandler<From, To> extends IFunction1<From, To>{
 
-interface IChainImporter {
-
-	ITransaction<?> process(Runnable afterOk, ImportStage... stages);
-
+	void handle(Exception e);
 }

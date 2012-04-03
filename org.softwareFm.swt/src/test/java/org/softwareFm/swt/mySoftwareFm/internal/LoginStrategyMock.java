@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.login.IChangePasswordCallback;
 import org.softwareFm.swt.login.IForgotPasswordCallback;
 import org.softwareFm.swt.login.ILoginCallback;
@@ -49,35 +50,38 @@ public class LoginStrategyMock implements ILoginStrategy {
 	}
 
 	@Override
-	public void forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback) {
+	public ITransaction<Void> forgotPassword(String email, String sessionSalt, IForgotPasswordCallback callback) {
 		forgotPasswordEmail.add(email);
 		if (ok)
 			callback.emailSent(email);
 		else
 			callback.failedToSend(email, "someMessage");
+		return ITransaction.Utils.doneTransaction(null);
 	}
 
 	@Override
-	public void login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback) {
+	public ITransaction<Void> login(String email, String sessionSalt, String emailSalt, String password, ILoginCallback callback) {
 		loginEmail.add(email);
 		loginPassword.add(password);
 		if (ok)
 			callback.loggedIn(new UserData(email, softwareFmId, cryptoKey));
 		else
 			callback.failedToLogin(email, "someMessage");
+		return ITransaction.Utils.doneTransaction(null);
 	}
 
 	@Override
-	public void requestSessionSalt(IRequestSaltCallback callback) {
+	public ITransaction<Void> requestSessionSalt(IRequestSaltCallback callback) {
 		requestSaltCount.incrementAndGet();
 		if (ok)
 			callback.saltReceived(sessionSalt);
 		else
 			callback.problemGettingSalt("someMessage");
+		return ITransaction.Utils.doneTransaction(null);
 	}
 
 	@Override
-	public void signup(String email, String moniker, String sessionSalt, String passwordHash, ISignUpCallback callback) {
+	public ITransaction<Void> signup(String email, String moniker, String sessionSalt, String passwordHash, ISignUpCallback callback) {
 		signupEmail.add(email);
 		signupSalt.add(sessionSalt);
 		signupPassword.add(passwordHash);
@@ -86,20 +90,22 @@ public class LoginStrategyMock implements ILoginStrategy {
 			callback.signedUp(new UserData(email, softwareFmId, cryptoKey));
 		else
 			callback.failed(email, "someMessage");
+		return ITransaction.Utils.doneTransaction(null);
 	}
 
 	@Override
-	public void requestEmailSalt(String email, String sessionSalt, IRequestSaltCallback callback) {
+	public ITransaction<Void> requestEmailSalt(String email, String sessionSalt, IRequestSaltCallback callback) {
 		requestEmailSaltEmail.add(email);
 		requestEmailSaltSessionSalt.add(sessionSalt);
 		if (emailSaltOk)
 			callback.saltReceived(emailSalt);
 		else
 			callback.problemGettingSalt("someMessage");
+		return ITransaction.Utils.doneTransaction(null);
 	}
 
 	@Override
-	public void changePassword(String email, String oldHash, String newHash, IChangePasswordCallback callback) {
+	public ITransaction<Void> changePassword(String email, String oldHash, String newHash, IChangePasswordCallback callback) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,6 +1,5 @@
 package org.softwareFm.eclipse.mysoftwareFm;
 
-
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -33,13 +32,14 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 	protected final String softwareFmId2 = "someNewSoftwareFmId2";
 	protected final String softwareFmId3 = "someNewSoftwareFmId3";
 
-	protected final String email0 = softwareFmId0+"@someEmail.com";
-	protected final String email1 = softwareFmId1+"@someEmail.com";
-	protected final String email2 = softwareFmId2+"@someEmail.com";
-	protected final String email3 = softwareFmId3+"@someEmail.com";
+	protected final String email0 = softwareFmId0 + "@someEmail.com";
+	protected final String email1 = softwareFmId1 + "@someEmail.com";
+	protected final String email2 = softwareFmId2 + "@someEmail.com";
+	protected final String email3 = softwareFmId3 + "@someEmail.com";
 	protected final UserData userData = new UserData(email0, softwareFmId0, userKey0);
 
 	protected MyGroupsComposite displayMySoftwareClickMyGroup() {
+		Swts.dispatchUntilQueueEmpty(display);
 		userDataManager.setUserData(this, userData);
 		explorer.showMySoftwareFm();
 		Control mySoftwareFmComposite = masterDetailSocial.getMasterContent();
@@ -104,7 +104,6 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 		assertEquals(softwareFmId0, createUser());
 	}
 
-
 	protected void addUserToGroup(String softwareFmId, String email, String groupId, String groupCryptoKey, String status) {
 		String crypto = getUserCryptoAccess().getCryptoForUser(softwareFmId);
 		String usersProjectCryptoKey = IUserReader.Utils.getUserProperty(getServerApi().makeUserAndGroupsContainer(), softwareFmId, crypto, JarAndPathConstants.projectCryptoKey);
@@ -118,20 +117,20 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 				LoginConstants.softwareFmIdKey, softwareFmId, //
 				JarAndPathConstants.projectCryptoKey, usersProjectCryptoKey, //
 				GroupConstants.membershipStatusKey, status);
-		getServerApi().makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>(){
+		getServerApi().makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership membershipForServer) throws Exception {
 				groups.addUser(groupId, groupCryptoKey, initialData);
 				membershipForServer.addMembership(softwareFmId, crypto, groupId, groupCryptoKey, status);
-			}});
+			}
+		}).get();
 	}
 
-
 	protected void addUserToGroup1AndGroup2() {
-		assertEquals(groupId0, createGroup(groupId0 +"Name", groupCryptoKey0));
+		assertEquals(groupId0, createGroup(groupId0 + "Name", groupCryptoKey0));
 		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, "someStatus1");
 
-		assertEquals(groupId1, createGroup(groupId1 +"Name", groupCryptoKey1));
+		assertEquals(groupId1, createGroup(groupId1 + "Name", groupCryptoKey1));
 		addUserToGroup(softwareFmId0, email0, groupId1, groupCryptoKey1, "someStatus2");
 	}
 
@@ -159,6 +158,5 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 		else
 			return null;
 	}
-
 
 }

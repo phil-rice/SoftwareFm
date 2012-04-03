@@ -87,12 +87,19 @@ public class MySoftwareFmLoggedIn implements IHasControl {
 			userDetails.setHeaderVisible(false);
 			for (int i = 0; i < 2; i++)
 				new TableColumn(userDetails, SWT.NULL);
+			System.out.println(userDetails.isDisposed());
 			IUserReader.Utils.refresh(container, userData.softwareFmId);
+			System.out.println(userDetails.isDisposed());
 			for (String property : loggedInStrategy.displayProperties()) {
+				System.out.println(userDetails.isDisposed());
 				TableItem item = new TableItem(userDetails, SWT.NULL);
+				System.out.println(userDetails.isDisposed());
 				Object value = IUserReader.Utils.getUserProperty(container, userData.softwareFmId, userData.crypto, property);
+				System.out.println(userDetails.isDisposed());
 				String name = cardConfig.nameFn.apply(cardConfig, new LineItem(CardConstants.loginCardType, property, value));
+				System.out.println(userDetails.isDisposed());
 				item.setText(new String[] { name, Strings.nullSafeToString(value) });
+				System.out.println(userDetails.isDisposed());
 			}
 			String softwareFmIdName = cardConfig.nameFn.apply(cardConfig, new LineItem(CardConstants.loginCardType, LoginConstants.softwareFmIdKey, null));
 			TableItem softwareFmIdItem = new TableItem(userDetails, SWT.FULL_SELECTION);

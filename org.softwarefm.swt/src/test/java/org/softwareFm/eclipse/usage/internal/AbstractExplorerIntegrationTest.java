@@ -274,28 +274,29 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 		};
 	}
 
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		cardConfig = ICollectionConfigurationFactory.Utils.softwareFmConfigurator().//
-				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, getServiceExecutor(), getLocalApi().makeContainer()))).//
+				configure(display, new CardConfig(ICardFactory.Utils.cardFactory(), ICardDataStore.Utils.repositoryCardDataStore(shell, getLocalApi().makeContainer()))).//
 				withUrlGeneratorMap(ICollectionConfigurationFactory.Utils.makeSoftwareFmUrlGeneratorMap(prefix, "data"));
 		ICrowdSourcedServer server = getServerApi().getServer();
 		IUserAndGroupsContainer container = getLocalApi().makeUserAndGroupsContainer();
 		try {
 			rawResourceGetter = cardConfig.resourceGetterFn.apply(null);
 			masterDetailSocial = new MasterDetailSocial(shell, SWT.NULL);
-			showMyData = MyDetails.showMyDetails(container, getServiceExecutor(), cardConfig, masterDetailSocial);
-			IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, container, serviceExecutor, false, cardConfig);
-			IShowMyPeople showMyPeople = MyPeople.showMyPeople(container, serviceExecutor, masterDetailSocial, cardConfig, 2 * getLocalConfig().timeOutMs);
+			showMyData = MyDetails.showMyDetails(container, cardConfig, masterDetailSocial);
+			IShowMyGroups showMyGroups = MyGroups.showMyGroups(masterDetailSocial, container, false, cardConfig);
+			IShowMyPeople showMyPeople = MyPeople.showMyPeople(container, masterDetailSocial, cardConfig, 2 * getLocalConfig().timeOutMs);
 
 			userDataManager = IUserDataManager.Utils.userDataManager();
 			explorer = (Explorer) IExplorer.Utils.explorer(masterDetailSocial, container, cardConfig, //
 					Arrays.asList(rootArtifactUrl, rootSnippetUrl), //
 					IPlayListGetter.Utils.noPlayListGetter(), //
-					serviceExecutor, ILoginStrategy.Utils.noLoginStrategy(),//
-					showMyData, showMyGroups, showMyPeople,//
-					userDataManager, Callables.<Long> exceptionIfCalled());
+					ILoginStrategy.Utils.noLoginStrategy(), showMyData,//
+					showMyGroups, showMyPeople, userDataManager,//
+					Callables.<Long> exceptionIfCalled());
 			IBrowserConfigurator.Utils.configueWithUrlRssTweet(explorer);
 			new SnippetFeedConfigurator(cardConfig.cardDataStore, cardConfig.resourceGetterFn).configure(explorer);
 			// SnippetFeedConfigurator.configure(explorer, cardConfig);
@@ -306,7 +307,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 					httpClient.delete(Urls.compose(rootArtifactUrl, snippetUrl)).execute(IResponseCallback.Utils.noCallback()).get();
 					gitLocal.init(Urls.compose(rootArtifactUrl, groupUrl), "setup");
 				}
-			});
+			}).get();
 		} catch (Exception e) {
 			server.shutdown();
 			e.printStackTrace();

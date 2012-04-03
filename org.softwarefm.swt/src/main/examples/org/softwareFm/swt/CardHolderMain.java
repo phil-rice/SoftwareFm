@@ -5,13 +5,13 @@
 package org.softwareFm.swt;
 
 import java.util.Arrays;
-import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.future.GatedMockFuture;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardFactory;
@@ -28,7 +28,7 @@ public class CardHolderMain {
 				public Composite apply(final Composite from) throws Exception {
 					final CardConfig cardConfig = CardDataStoreFixture.asyncCardConfig(from.getDisplay());
 					final ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, Arrays.asList(CardDataStoreFixture.url), ICallback.Utils.<String> noCallback());
-					final Future<ICard> future = ICardFactory.Utils.makeCard(cardHolder, cardConfig, CardDataStoreFixture.url1a, new ICallback<ICard>() {
+					final ITransaction<ICard> future = ICardFactory.Utils.makeCard(cardHolder, cardConfig, CardDataStoreFixture.url1a, new ICallback<ICard>() {
 						@Override
 						public void process(ICard card) throws Exception {
 							if (card == null)

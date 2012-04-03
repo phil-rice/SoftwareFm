@@ -42,7 +42,7 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 
 	@Override
 	public List<Map<String, Object>> groupComments(final String baseUrl, final String softwareFmId, final String userCrypto) {
-		return container.access(IGitReader.class, IGroupsReader.class, IUserMembershipReader.class, new IFunction3<IGitReader, IGroupsReader, IUserMembershipReader, List<Map<String, Object>>>() {
+		return container.accessWithCallback(IGitReader.class, IGroupsReader.class, IUserMembershipReader.class, new IFunction3<IGitReader, IGroupsReader, IUserMembershipReader, List<Map<String, Object>>>() {
 			@Override
 			public List<Map<String, Object>> apply(IGitReader gitReader, IGroupsReader groupsReader, IUserMembershipReader userMembershipReader) {
 				final List<Map<String, Object>> result = Lists.newList();

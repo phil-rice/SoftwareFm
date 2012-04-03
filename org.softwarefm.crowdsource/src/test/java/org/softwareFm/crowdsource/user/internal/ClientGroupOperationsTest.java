@@ -46,9 +46,9 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 				memory.waitUntilCalled(CommonConstants.testTimeOutMs);
 				assertEquals(GroupOperationResult.groupId(groupId0), memory.getOnlyResult());
 			}
-		});
+		}).get();
 
-		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
+		localReadWriter.accessWithCallback(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
 				checkUserExistsAndIsMember(userReader, userMembershipReader, softwareFmId0, userKey0, email0, GroupConstants.adminStatus);

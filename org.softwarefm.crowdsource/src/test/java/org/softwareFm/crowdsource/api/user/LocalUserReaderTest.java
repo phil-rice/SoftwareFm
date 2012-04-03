@@ -28,6 +28,7 @@ import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.crowdsource.utilities.url.Urls;
 
@@ -45,6 +46,7 @@ public class LocalUserReaderTest extends GitTest {
 	private File localSfmId2File;
 	protected IFunction1<String, String> findRepositoryRoot = Strings.firstNSegments(3);
 	private final Map<String, Object> expected = Maps.stringObjectMap("someProperty", "someValue");
+	private ITransactionManager transactionManager;
 
 	public void testSet() {
 		assertFalse(remoteSfmId1File.exists());
@@ -87,13 +89,21 @@ public class LocalUserReaderTest extends GitTest {
 				builder.register(IGitReader.class, new GitLocal(builder, httpGitWriter, remoteAsUri, CommonConstants.staleCachePeriodForTest));
 				builder.register(IRepoFinder.class, IRepoFinder.Utils.forTests(remoteOperations));
 			}
-		}, localRoot).makeContainer();
+		}, makeTransactionManager(), localRoot).makeContainer();
 		localUser = new LocalUserReader(container, userUrlGenerator);
 		remoteSfmId1File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId1/", CommonConstants.dataFileName));
 		remoteSfmId2File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId2/", CommonConstants.dataFileName));
 
 		localSfmId1File = new File(localRoot, Urls.compose("user/sf/mI/sfmId1/", CommonConstants.dataFileName));
 		localSfmId2File = new File(localRoot, Urls.compose("user/sf/mI/sfmId2/", CommonConstants.dataFileName));
+	}
+
+	private ITransactionManager makeTransactionManager() {
+		return transactionManager == null ? transactionManager = getTransactionManager() : transactionManager;
+	}
+
+	private ITransactionManager getTransactionManager() {
+		return ITransactionManager.Utils.standard();
 	}
 
 }

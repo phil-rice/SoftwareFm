@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -21,6 +23,9 @@ import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.eclipse.mysoftwareFm.AbstractMyGroupsIntegrationTest;
@@ -28,23 +33,76 @@ import org.softwareFm.eclipse.mysoftwareFm.IdNameAndStatus;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsButtons;
 import org.softwareFm.eclipse.mysoftwareFm.MyGroups.MyGroupsComposite;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
+import org.softwareFm.swt.ISwtFunction1;
 import org.softwareFm.swt.card.composites.CompositeWithCardMargin;
 import org.softwareFm.swt.editors.NameAndValuesEditor.NameAndValuesEditorComposite;
 import org.softwareFm.swt.swt.Swts;
 
 public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
-	public void testCreateExceptionCausesTextPanelAndClickReturnsToMyGroups() {
-		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+	public void testAcceptInvite() {
+		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.invitedStatus);
+
+		final MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
-		Swts.Buttons.press(buttons.create);
+		Table beforeTable = getMyGroupsTable(myGroupsComposite);
+		Swts.selectOnlyAndNotifyListener(beforeTable, 0);
 		dispatchUntilQueueEmpty();
-		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
-		checkChange(editor, 0, "someNewGroupName");
-		checkChange(editor, 1, "notAnEmail");
-		checkChange(editor, 2, "newSubject $email$/$group$");
-		checkChange(editor, 3, "newMail $email$/$group$");
-		pressOkEvenThoughBadAndCheckGetTextMessageAndEditorReturnsWithValues("Exception creating group. Click to try again\nclass java.lang.IllegalArgumentException/Invalid email notAnEmail",//
-				"someNewGroupName", "notAnEmail", "newSubject $email$/$group$", "newMail $email$/$group$");
+
+		assertTrue(buttons.accept.isEnabled());
+		Swts.Buttons.press(buttons.accept);
+		dispatchUntil(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				if (masterDetailSocial.getDetailContent() instanceof MyGroupsComposite) {
+					MyGroupsComposite myGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
+					Table table = getMyGroupsTable(myGroupsComposite);
+					TableItem item = table.getItem(0);
+					IdNameAndStatus idNameAndStatus = (IdNameAndStatus) item.getData();
+					return idNameAndStatus.status.equals(GroupConstants.memberStatus);
+				}
+				return false;
+			}
+		});
+		IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void> checkFn = new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
+			@Override
+			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
+				String projectCryptoKey = userReader.getUserProperty(softwareFmId0, userKey0, JarAndPathConstants.projectCryptoKey);
+				assertEquals(GroupConstants.memberStatus, userMembershipReader.getMembershipProperty(softwareFmId0, userKey0, groupId0, GroupConstants.membershipStatusKey));
+				assertEquals(Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey, //
+						LoginConstants.emailKey, email0, //
+						LoginConstants.softwareFmIdKey, softwareFmId0,//
+						GroupConstants.membershipStatusKey, GroupConstants.memberStatus), Lists.getOnly(Iterables.list(groupsReader.users(groupId0, groupCryptoKey0))));
+				return null;
+			}
+		};
+		checkOnServerAndLocally(checkFn, new ISwtFunction1<Void, Void>() {
+			@Override
+			public Void apply(Void t) throws Exception {
+				MyGroupsComposite afterMyGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
+				Table afterTable = getMyGroupsTable(afterMyGroupsComposite);
+				assertEquals(1, afterTable.getItemCount());
+				assertEquals(groupId0 + "Name", afterTable.getItem(0).getText(0));
+				assertEquals("1", afterTable.getItem(0).getText(1));
+				assertEquals(GroupConstants.memberStatus, afterTable.getItem(0).getText(2));
+				return null;
+			}
+		});
+
+	}
+
+	public void testKickButtonRemovesUserFromGroup() {
+		createGroup(groupId0, groupCryptoKey0);
+		createUser(softwareFmId1, email1);
+		createUser(softwareFmId2, email2);
+		createUser(softwareFmId3, email3);
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
+
+		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
+		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
+		checkCanAddAndKick(new int[] { 1 }, softwareFmId0, softwareFmId2, softwareFmId3);
+		checkCanAddAndKick(new int[] { 2 }, softwareFmId0, softwareFmId1, softwareFmId3);
+		checkCanAddAndKick(new int[] { 3 }, softwareFmId0, softwareFmId1, softwareFmId2);
 	}
 
 	public void testLeaveIsEnabledIfAdminAndNoOtherMembers() {
@@ -71,6 +129,20 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		assertTrue(afterButtons.leave.getEnabled());
 	}
 
+	public void testCreateExceptionCausesTextPanelAndClickReturnsToMyGroups() {
+		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		MyGroupsButtons buttons = myGroupsComposite.getFooter();
+		Swts.Buttons.press(buttons.create);
+		dispatchUntilQueueEmpty();
+		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
+		checkChange(editor, 0, "someNewGroupName");
+		checkChange(editor, 1, "notAnEmail");
+		checkChange(editor, 2, "newSubject $email$/$group$");
+		checkChange(editor, 3, "newMail $email$/$group$");
+		pressOkEvenThoughBadAndCheckGetTextMessageAndEditorReturnsWithValues("Exception creating group. Click to try again\nclass java.lang.IllegalArgumentException/Invalid email notAnEmail",//
+				"someNewGroupName", "notAnEmail", "newSubject $email$/$group$", "newMail $email$/$group$");
+	}
+
 	public void testLeaveIsEnabledIfNotAdmin() {
 		addUserToGroup1AndGroup2();
 
@@ -82,20 +154,6 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		assertTrue(buttons.leave.getEnabled());
 		Swts.selectAndNotifyListener(myGroupsTable, 1);
 		assertTrue(buttons.leave.getEnabled());
-	}
-
-	public void testKickButtonRemovesUserFromGroup() {
-		createGroup(groupId0, groupCryptoKey0);
-		createUser(softwareFmId1, email1);
-		createUser(softwareFmId2, email2);
-		createUser(softwareFmId3, email3);
-		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
-
-		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
-		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
-		checkCanAddAndKick(new int[] { 1 }, softwareFmId0, softwareFmId2, softwareFmId3);
-		checkCanAddAndKick(new int[] { 2 }, softwareFmId0, softwareFmId1, softwareFmId3);
-		checkCanAddAndKick(new int[] { 3 }, softwareFmId0, softwareFmId1, softwareFmId2);
 	}
 
 	public void testKickButtonIsOnlyEnabledWhenAdminAndSelectedNoneAdmin() {
@@ -214,6 +272,8 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 				if (masterDetailSocial.getDetailContent() instanceof MyGroupsComposite) {
 					MyGroupsComposite myGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
 					final Table membershipTable = getMembershipTable(myGroupsComposite);
+					if (membershipTable == null)
+						return false;
 					int itemCount = membershipTable.getItemCount();
 					return itemCount == length;
 				}
@@ -230,53 +290,6 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 			actual.add((String) data.get(LoginConstants.softwareFmIdKey));
 		}
 		return actual;
-	}
-
-	public void testAcceptInvite() {
-		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
-		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.invitedStatus);
-
-		final MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
-		MyGroupsButtons buttons = myGroupsComposite.getFooter();
-		Table beforeTable = getMyGroupsTable(myGroupsComposite);
-		Swts.selectOnlyAndNotifyListener(beforeTable, 0);
-		dispatchUntilQueueEmpty();
-
-		assertTrue(buttons.accept.isEnabled());
-		Swts.Buttons.press(buttons.accept);
-		dispatchUntil(new Callable<Boolean>() {
-			@Override
-			public Boolean call() throws Exception {
-				if (masterDetailSocial.getDetailContent() instanceof MyGroupsComposite) {
-					MyGroupsComposite myGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
-					Table table = getMyGroupsTable(myGroupsComposite);
-					TableItem item = table.getItem(0);
-					IdNameAndStatus idNameAndStatus = (IdNameAndStatus) item.getData();
-					return idNameAndStatus.status.equals(GroupConstants.memberStatus);
-				}
-				return false;
-			}
-		});
-		IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void> checkFn = new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
-			@Override
-			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
-				String projectCryptoKey = userReader.getUserProperty(softwareFmId0, userKey0, JarAndPathConstants.projectCryptoKey);
-				assertEquals(GroupConstants.memberStatus, userMembershipReader.getMembershipProperty(softwareFmId0, userKey0, groupId0, GroupConstants.membershipStatusKey));
-				assertEquals(Maps.stringObjectMap(JarAndPathConstants.projectCryptoKey, projectCryptoKey, //
-						LoginConstants.emailKey, email0, //
-						LoginConstants.softwareFmIdKey, softwareFmId0,//
-						GroupConstants.membershipStatusKey, GroupConstants.memberStatus), Lists.getOnly(Iterables.list(groupsReader.users(groupId0, groupCryptoKey0))));
-				MyGroupsComposite afterMyGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
-				Table afterTable = getMyGroupsTable(afterMyGroupsComposite);
-				assertEquals(1, afterTable.getItemCount());
-				assertEquals(groupId0 + "Name", afterTable.getItem(0).getText(0));
-				assertEquals("1", afterTable.getItem(0).getText(1));
-				assertEquals(GroupConstants.memberStatus, afterTable.getItem(0).getText(2));
-				return null;
-			}
-		};
-		checkOnServerAndLocally(checkFn);
-
 	}
 
 	public void testInviteExceptionCausesTextPanelAndClickReturnsToMyGroups() {
@@ -394,7 +407,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 				return null;
 			}
 		};
-		checkOnServerAndLocally(checkFn);
+		checkOnServerAndLocally(checkFn, Functions.<Void, Void>identity());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -446,12 +459,36 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 				return null;
 			}
 		};
-		checkOnServerAndLocally(checkFn);
+		checkOnServerAndLocally(checkFn, Functions.<Void, Void> identity());
 	}
 
-	private void checkOnServerAndLocally(IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void> checkFn) {
-		getServerApi().makeContainer().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn, ICallback.Utils.<Void> noCallback()).get();
-		getLocalApi().makeContainer().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn, ICallback.Utils.<Void> noCallback()).get();
+	private void checkOnServerAndLocally(IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void> checkFn, final IFunction1<Void, Void> callbackFn) {
+		final long timeOutMs = getServerConfig().timeOutMs;
+		ICallback<Void> callback = new ICallback<Void>() {
+			@Override
+			public void process(final Void t) throws Exception {
+				if (Thread.currentThread() == display.getThread())
+					callbackFn.apply(t);
+				else {
+					final CountDownLatch latch = new CountDownLatch(1);
+					display.asyncExec(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								callbackFn.apply(t);
+							} catch (Exception e) {
+								throw WrappedException.wrap(e);
+							} finally {
+								latch.countDown();
+							}
+						}
+					});
+					latch.await(timeOutMs, TimeUnit.MILLISECONDS);
+				}
+			}
+		};
+		getServerApi().makeContainer().accessWithCallback(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn, callback).get();
+		getLocalApi().makeContainer().accessWithCallback(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn, callback).get();
 	}
 
 	public void testButtonsEnabledStatusWhenNotMemberOfAnyGroup() {

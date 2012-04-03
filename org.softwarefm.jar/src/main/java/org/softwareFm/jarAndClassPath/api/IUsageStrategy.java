@@ -5,22 +5,20 @@
 package org.softwareFm.jarAndClassPath.api;
 
 import java.util.Map;
-import java.util.concurrent.Future;
 
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.httpClient.IResponse;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
-import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.jarAndClassPath.internal.CachedUsageStrategy;
 import org.softwareFm.jarAndClassPath.internal.UsageStrategy;
 
 public interface IUsageStrategy {
 
-	public Future<?> using(String softwareFmId, String digest, IResponseCallback callback);
+	public ITransaction<?> using(String softwareFmId, String digest, IResponseCallback callback);
 
 	public Map<String, Object> myProjectData(String softwareFmId, String crypto);
 
@@ -29,8 +27,8 @@ public interface IUsageStrategy {
 			return new CachedUsageStrategy(delegate, period, cachesToClear, userDataManager);
 		}
 
-		public static IUsageStrategy usage(final IServiceExecutor serviceExecutor, final IContainer container, IUrlGenerator userGenerator) {
-			return new UsageStrategy(container, serviceExecutor, userGenerator);
+		public static IUsageStrategy usage(final IContainer container, IUrlGenerator userGenerator, long timeOutMs) {
+			return new UsageStrategy(container, userGenerator, timeOutMs);
 		}
 
 		public static IUsageStrategy noUsageStrategy() {
@@ -41,7 +39,7 @@ public interface IUsageStrategy {
 				}
 
 				@Override
-				public Future<?> using(String softwareFmId, String digest, IResponseCallback callback) {
+				public ITransaction<?> using(String softwareFmId, String digest, IResponseCallback callback) {
 					throw new UnsupportedOperationException();
 				}
 			};
@@ -50,11 +48,11 @@ public interface IUsageStrategy {
 		public static IUsageStrategy sysoutUsageStrategy() {
 			return new IUsageStrategy() {
 				@Override
-				public Future<?> using(String softwareFmId, String digest, IResponseCallback callback) {
+				public ITransaction<?> using(String softwareFmId, String digest, IResponseCallback callback) {
 					String message = "Using: SoftwareFmId: " + softwareFmId + ", Digest: " + digest;
 					System.out.println(message);
 					callback.process(IResponse.Utils.okText("", message));
-					return Futures.doneFuture(null);
+					return ITransaction.Utils.doneTransaction(null);
 				}
 
 				@Override

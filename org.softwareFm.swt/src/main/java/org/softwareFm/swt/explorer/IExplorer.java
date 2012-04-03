@@ -10,7 +10,6 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.UserData;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
 import org.softwareFm.swt.browser.IBrowserCompositeBuilder;
 import org.softwareFm.swt.card.ICard;
@@ -73,8 +72,8 @@ public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCard
 
 	public static class Utils {
 
-		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, IUserAndGroupsContainer container, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, IServiceExecutor service, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager, Callable<Long> timeGetter) {
-			return new Explorer(container, cardConfig, rootUrls, masterDetailSocial, service, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople, userDataManager, timeGetter);
+		public static IExplorer explorer(IMasterDetailSocial masterDetailSocial, IUserAndGroupsContainer container, CardConfig cardConfig, List<String> rootUrls, IPlayListGetter playListGetter, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IShowMyPeople showMyPeople, IUserDataManager userDataManager, Callable<Long> timeGetter) {
+			return new Explorer(container, cardConfig, rootUrls, masterDetailSocial, playListGetter, loginStrategy, showMyData, showMyGroups, showMyPeople, userDataManager, timeGetter);
 		}
 	}
 

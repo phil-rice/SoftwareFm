@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
-import org.softwareFm.crowdsource.utilities.future.Futures;
-import org.softwareFm.crowdsource.utilities.future.GatedFuture;
+import org.softwareFm.crowdsource.utilities.transaction.GatedTransaction;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardFactory;
 import org.softwareFm.swt.card.ICardHolder;
@@ -30,11 +29,11 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 
 	@Override
 	public CardAndCollectionsStatus processDataFor(final ICardHolder cardHolder, final CardConfig cardConfig, final String url, final ICardAndCollectionDataStoreVisitor visitor) {
-		final GatedFuture<Void> future = Futures.gatedFuture();
+		final GatedTransaction<Void> mainTransaction = ITransaction.Utils.gatedTransaction();
 		final AtomicInteger count = new AtomicInteger(1);
-		final List<Future<Object>> keyValueFutures = new CopyOnWriteArrayList<Future<Object>>();
+		final List<ITransaction<Object>> keyValueFutures = new CopyOnWriteArrayList<ITransaction<Object>>();
 		visitor.initialUrl(cardHolder, cardConfig, url);
-		Future<ICard> cardFuture = ICardFactory.Utils.makeCard(cardHolder, cardConfig, url, new ICallback<ICard>() {
+		ITransaction<ICard> cardFuture = ICardFactory.Utils.makeCard(cardHolder, cardConfig, url, new ICallback<ICard>() {
 			@Override
 			public void process(final ICard card) throws Exception {
 				visitor.initialCard(cardHolder, cardConfig, url, card);
@@ -44,7 +43,7 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 					if (followOnUrlFragment != null) {
 						count.incrementAndGet();
 						visitor.requestingFollowup(cardHolder, url, card, followOnUrlFragment);
-						Future<Object> future = cardConfig.cardDataStore.processDataFor(url + "/" + followOnUrlFragment, new ICardDataStoreCallback<Object>() {
+						ITransaction<Object> future = cardConfig.cardDataStore.processDataFor(url + "/" + followOnUrlFragment, new ICardDataStoreCallback<Object>() {
 							@Override
 							public Object process(String followUpUrl, Map<String, Object> result) throws Exception {
 								visitor.followedUp(cardHolder, url, card, followUpUrl, result);
@@ -81,11 +80,11 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 					} catch (Exception e) {
 						throw WrappedException.wrap(e);
 					}
-					future.done(null);
+					mainTransaction.kick();
 				}
 			}
 		});
-		final CardAndCollectionsStatus status = new CardAndCollectionsStatus(future, cardFuture, keyValueFutures, count);
+		final CardAndCollectionsStatus status = new CardAndCollectionsStatus(mainTransaction, cardFuture, keyValueFutures, count);
 		return status;
 	}
 

@@ -78,6 +78,8 @@ import org.softwareFm.crowdsource.utilities.indent.Indent;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
+import org.softwareFm.crowdsource.utilities.transaction.GatedTransaction;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.constants.DisplayConstants;
@@ -103,6 +105,11 @@ public class Swts {
 
 		public static void kickAndDispatch(Display display, Future<?> future) {
 			GatedMockFuture<?, ?> gatedMockFuture = (GatedMockFuture<?, ?>) future;
+			gatedMockFuture.kick();
+			dispatchUntilQueueEmpty(display);
+		}
+		public static void kickAndDispatch(Display display, ITransaction<?> transaction) {
+			GatedTransaction<?> gatedMockFuture =  (GatedTransaction<?>) transaction;
 			gatedMockFuture.kick();
 			dispatchUntilQueueEmpty(display);
 		}

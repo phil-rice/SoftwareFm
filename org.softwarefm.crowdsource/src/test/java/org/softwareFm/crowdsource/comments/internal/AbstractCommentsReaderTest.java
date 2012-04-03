@@ -58,7 +58,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 				return null;
 			}
 
-		},  ICallback.Utils.<Void> noCallback());
+		},  ICallback.Utils.<Void> noCallback()).get();
 		IGitReader.Utils.clearCache(container);
 		container.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
 			@Override
@@ -71,7 +71,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 						Maps.with(comment1, "a", "groupId3", sourcekey, "groupId3Name"), Maps.with(comment2, sourcekey, "groupId3Name")), actual);
 				return null;
 			}
-		},  ICallback.Utils.<Void> noCallback());
+		},  ICallback.Utils.<Void> noCallback()).get();
 	}
 
 	private void ensureUserHasDefaultValues() {
@@ -83,7 +83,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 				user.getUserProperty(softwareFmId, userKey0, GroupConstants.membershipCryptoKey);
 				return null;
 			}
-		}, ICallback.Utils.<Void> noCallback());
+		}, ICallback.Utils.<Void> noCallback()).get();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -100,7 +100,7 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 				assertEquals(addSource("asd", comment1, comment2), reader.globalComments("a/b", "asd"));
 				return null;
 			}
-		}, ICallback.Utils.<Void> noCallback());
+		}, ICallback.Utils.<Void> noCallback()).get();
 	}
 
 	@SuppressWarnings("unchecked")

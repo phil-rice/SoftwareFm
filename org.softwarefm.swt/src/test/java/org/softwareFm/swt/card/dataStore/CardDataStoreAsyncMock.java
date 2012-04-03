@@ -7,15 +7,14 @@ package org.softwareFm.swt.card.dataStore;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.UtilityConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
-import org.softwareFm.crowdsource.utilities.future.Futures;
-import org.softwareFm.crowdsource.utilities.future.GatedMockFuture;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.transaction.GatedTransaction;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.dataStore.IAfterEditCallback;
 import org.softwareFm.swt.dataStore.ICardDataStoreCallback;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;
@@ -25,7 +24,7 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 	private final Map<String, Map<String, Object>> map;
 	public final Map<String, Integer> counts = Maps.newMap();
 	public final Map<String, List<Map<String, Object>>> rememberedPuts = Maps.newMap();
-	private final List<GatedMockFuture<?, ?>> futures = Lists.newList();
+	private final List<GatedTransaction<?>> transactions = Lists.newList();
 
 	public CardDataStoreAsyncMock(Object... urlsAndMaps) {
 		map = Maps.makeMap(urlsAndMaps);
@@ -36,13 +35,13 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 	}
 
 	@Override
-	public <T> Future<T> processDataFor(final String url, final ICardDataStoreCallback<T> callback) {
+	public <T> ITransaction<T> processDataFor(final String url, final ICardDataStoreCallback<T> callback) {
 		try {
 			Maps.add(counts, url, 1);
 			final Map<String, Object> result = map.get(url);
 			if (result == null)
 				throw new NullPointerException(MessageFormat.format(UtilityConstants.mapDoesntHaveKey, url, Lists.sort(map.keySet()), map));
-			GatedMockFuture<Map<String, Object>, T> future = Futures.gatedMock(new IFunction1<Map<String, Object>, T>() {
+			GatedTransaction<T> transaction = ITransaction.Utils.gateTransaction(new IFunction1<Map<String, Object>, T>() {
 				@Override
 				public T apply(Map<String, Object> from) throws Exception {
 					T process = callback.process(url, from);
@@ -50,22 +49,22 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 					return process;
 				}
 			}, result);
-			futures.add(future);
-			return future;
+			transactions.add(transaction);
+			return transaction;
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
 	}
 
 	@Override
-	public Future<?> put(String url, Map<String, Object> map, IAfterEditCallback afterEdit) {
+	public ITransaction<?> put(String url, Map<String, Object> map, IAfterEditCallback afterEdit) {
 		Maps.addToList(rememberedPuts, url, map);
 		afterEdit.afterEdit(url);
-		return Futures.doneFuture(null);
+		return ITransaction.Utils.doneTransaction(null);
 	}
 
 	public void kickAllFutures() {
-		for (GatedMockFuture<?, ?> f : futures)
+		for (GatedTransaction<?> f : transactions)
 			f.kick();
 	}
 
@@ -74,7 +73,7 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 	}
 
 	@Override
-	public Future<?> makeRepo(String url, IAfterEditCallback callback) {
+	public ITransaction<?> makeRepo(String url, IAfterEditCallback callback) {
 		throw new UnsupportedOperationException();
 	}
 

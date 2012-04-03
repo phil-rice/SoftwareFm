@@ -26,8 +26,8 @@ public class ContainerForServer extends Container {
 	private final UserMembershipForServer userMembership;
 	private final CommentsForServer comments;
 
-	public ContainerForServer(ServerConfig serverConfig) {
-		super(ITransactionManager.Utils.standard(), new GitOperations(serverConfig.root));
+	public ContainerForServer(ServerConfig serverConfig, ITransactionManager transactionManager) {
+		super(transactionManager, new GitOperations(serverConfig.root));
 		this.user = new ServerUser(gitOperations(), serverConfig.userUrlGenerator, serverConfig.userRepoDefnFn, serverConfig.defaultUserValues);
 		this.groups = new GroupsForServer(this, serverConfig.groupUrlGenerator, serverConfig.groupRepoDefnFn, serverConfig.defaultGroupProperties);
 		this.userMembership = new UserMembershipForServer(this, serverConfig.userUrlGenerator, serverConfig.userRepoDefnFn);

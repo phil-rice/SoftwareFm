@@ -7,48 +7,43 @@ package org.softwareFm.swt.browser;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.conn.ClientConnectionManager;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
-import org.apache.http.util.EntityUtils;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.crowdsource.api.IContainer;
+import org.softwareFm.crowdsource.httpClient.IHttpClient;
+import org.softwareFm.crowdsource.httpClient.IResponse;
+import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
+import org.softwareFm.crowdsource.httpClient.internal.MemoryResponseCallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
-import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.crowdsource.utilities.maps.ISimpleMap;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
+import org.softwareFm.swt.ISwtFunction1;
 import org.softwareFm.swt.constants.DisplayConstants;
 import org.softwareFm.swt.swt.Swts;
 
 public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<String, IBrowserPart> {
 
-	private final IServiceExecutor service;
-	private final DefaultHttpClient client;
 	private final Map<String, IBrowserPart> transformerMap = Maps.newMap();
 	private final Composite content;
 	private final StackLayout stackLayout;
+	private final IContainer container;
 
-	public BrowserComposite(Composite parent, int style, IServiceExecutor service) {
-		this.service = service;
+	public BrowserComposite(Composite parent, int style, IContainer container) {
+		this.container = container;
 		this.content = Swts.newComposite(parent, style, "BrowserComposite");
 		stackLayout = new StackLayout();
 		content.setLayout(stackLayout);
-		DefaultHttpClient rawClient = new DefaultHttpClient();
-		ClientConnectionManager mgr = rawClient.getConnectionManager();
-		client = new DefaultHttpClient(new ThreadSafeClientConnManager(mgr.getSchemeRegistry()));
 	}
 
 	@Override
-	public Future<String> processUrl(final String feedType, final String url) {
+	public ITransaction<String> processUrl(final String feedType, final String url) {
 		final IBrowserPart transformer = transformerMap.get(feedType);
 		if (transformer == null)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.unrecognisedFeedType, feedType, Lists.sort(transformerMap.keySet())));
@@ -66,29 +61,23 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 				}
 
 			});
-
-			return Futures.doneFuture(null);
+			return ITransaction.Utils.doneTransaction(null);
 		} else
-			return service.submit(new IFunction1<IMonitor, String>() {
+			return container.accessWithCallbackFn(IHttpClient.class, new IFunction1<IHttpClient, IResponse>() {
 				@Override
-				public String apply(IMonitor from) throws Exception {
-					from.beginTask(MessageFormat.format(DisplayConstants.browsing, feedType, url), 2);
-					HttpGet get = new HttpGet(url.trim());
-					final HttpResponse httpResponse = client.execute(get);
-					from.worked(1);
-					final String reply = EntityUtils.toString(httpResponse.getEntity());
-					Swts.asyncExecAndMarkDone(transformer, from, new Runnable() {
-						@Override
-						public void run() {
-							try {
-								transformer.displayReply(httpResponse.getStatusLine().getStatusCode(), reply);
-								makeOnlyVisible(transformer);
-							} catch (Exception e) {
-								throw WrappedException.wrap(e);
-							}
-						}
-					});
-					return reply;
+				public IResponse apply(IHttpClient client) throws Exception {
+					MemoryResponseCallback memory = IResponseCallback.Utils.memoryCallback();
+					client.get(url.trim()).execute(memory).get(CommonConstants.clientTimeOut, TimeUnit.MILLISECONDS);
+					final IResponse response = memory.response;
+					return response;
+				}
+			}, new ISwtFunction1<IResponse, String>() {
+				@Override
+				public String apply(IResponse httpResponse) throws Exception {
+					String result = httpResponse.asString();
+					transformer.displayReply(httpResponse.statusCode(), result);
+					makeOnlyVisible(transformer);
+					return result;
 				}
 			});
 	}

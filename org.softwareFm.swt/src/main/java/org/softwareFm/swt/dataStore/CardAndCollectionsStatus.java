@@ -5,21 +5,21 @@
 package org.softwareFm.swt.dataStore;
 
 import java.util.List;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.card.ICard;
 
 public class CardAndCollectionsStatus {
-	public final Future<Void> mainFuture;
-	public final Future<ICard> initialFuture;
-	public final List<Future<Object>> keyValueFutures;
+	public final ITransaction<Void> mainTransaction;
+	public final ITransaction<ICard> initialTransaction;
+	public final List<ITransaction<Object>> keyValueTransactions;
 	public final AtomicInteger count;
 
-	public CardAndCollectionsStatus(Future<Void> mainFuture, Future<ICard> future, List<Future<Object>> keyValueFutures, AtomicInteger count) {
-		this.mainFuture = mainFuture;
-		this.initialFuture = future;
-		this.keyValueFutures = keyValueFutures;
+	public CardAndCollectionsStatus(ITransaction<Void> mainTransaction, ITransaction<ICard> initialTransaction, List<ITransaction<Object>> keyValueTransactions, AtomicInteger count) {
+		this.mainTransaction = mainTransaction;
+		this.initialTransaction = initialTransaction;
+		this.keyValueTransactions = keyValueTransactions;
 		this.count = count;
 	}
 

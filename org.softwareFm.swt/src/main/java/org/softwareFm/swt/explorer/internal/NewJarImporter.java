@@ -7,12 +7,12 @@ package org.softwareFm.swt.explorer.internal;
 import java.text.MessageFormat;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Future;
 
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.UtilityConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.crowdsource.utilities.url.IUrlGeneratorMap;
 import org.softwareFm.crowdsource.utilities.url.Urls;
@@ -101,7 +101,7 @@ public class NewJarImporter {
 		return new ImportStage(baseUrl, Maps.emptyStringObjectMap(), ImportStageCommand.MAKE_REPO);
 	}
 
-	public Future<?> process(final ICallback<String> afterOk, ImportStage... stages) {
+	public ITransaction<?> process(final ICallback<String> afterOk, ImportStage... stages) {
 		return importer.process(new Runnable() {
 			@Override
 			public void run() {
@@ -111,11 +111,11 @@ public class NewJarImporter {
 		}, stages);
 	}
 
-	public Future<?> processImport( final ICallback<String> afterOk) {
+	public ITransaction<?> processImport( final ICallback<String> afterOk) {
 		return processImport(UUID.randomUUID().toString(), afterOk);
 		
 	}
-	public Future<?> processImport(String jarNameUuid, final ICallback<String> afterOk) {
+	public ITransaction<?> processImport(String jarNameUuid, final ICallback<String> afterOk) {
 		return process(afterOk,//
 				
 				makeRepo(CardConstants.jarUrlKey),//

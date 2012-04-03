@@ -4,11 +4,10 @@
 
 package org.softwareFm.swt.dataStore;
 
-import java.util.concurrent.Future;
 
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.crowdsource.api.IContainer;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.card.dataStore.CardDataStoreMock;
 import org.softwareFm.swt.dataStore.internal.CardDataStoreForRepository;
 
@@ -16,7 +15,7 @@ import org.softwareFm.swt.dataStore.internal.CardDataStoreForRepository;
 public interface ICardDataStore {
 
 	/** Go get data for a url, no follow ups */
-	<T> Future<T> processDataFor(String url, ICardDataStoreCallback<T> callback);
+	<T> ITransaction<T> processDataFor(String url, ICardDataStoreCallback<T> callback);
 
 	void clearCaches();
 
@@ -27,11 +26,10 @@ public interface ICardDataStore {
 
 		/**
 		 * The control is used to ensure that call backs are in the correct thread, and everything ceases to work if the control is disposed
-		 * 
 		 * @param readWriteApi
 		 */
-		public static IMutableCardDataStore repositoryCardDataStore(Control from, IServiceExecutor serviceExecutor, IContainer readWriteApi) {
-			return new CardDataStoreForRepository(from, serviceExecutor, readWriteApi);
+		public static IMutableCardDataStore repositoryCardDataStore(Control from, IContainer readWriteApi) {
+			return new CardDataStoreForRepository(readWriteApi);
 		}
 	}
 

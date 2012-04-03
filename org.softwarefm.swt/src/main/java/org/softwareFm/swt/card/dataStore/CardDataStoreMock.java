@@ -6,14 +6,13 @@ package org.softwareFm.swt.card.dataStore;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 import junit.framework.Assert;
 
 import org.softwareFm.crowdsource.utilities.collections.Sets;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
-import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.dataStore.IAfterEditCallback;
 import org.softwareFm.swt.dataStore.ICardDataStoreCallback;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;
@@ -35,7 +34,7 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public Future<Map<String, Object>> processDataFor(String url, ICardDataStoreCallback callback) {
+	public ITransaction<?> processDataFor(String url, ICardDataStoreCallback callback) {
 		try {
 			Maps.add(counts, url, 1);
 			Map<String, Object> result = map.get(url);
@@ -44,19 +43,19 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 				callback.noData(url);
 			else
 				callback.process(url, result);
-			return Futures.doneFuture(result);
+			return ITransaction.Utils.doneTransaction(result);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
 	}
 
 	@Override
-	public Future<?> put(String url, Map<String, Object> map, IAfterEditCallback callback) {
+	public ITransaction<?> put(String url, Map<String, Object> map, IAfterEditCallback callback) {
 		if (updateMap.containsKey(url))
 			Assert.fail(url + " <- " + map);
 		updateMap.put(url, map);
 		callback.afterEdit(url);
-		return Futures.doneFuture(null);
+		return ITransaction.Utils.doneTransaction(null);
 	}
 
 	@Override
@@ -64,10 +63,10 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 	}
 
 	@Override
-	public Future<?> makeRepo(String url, IAfterEditCallback callback) {
+	public ITransaction<?> makeRepo(String url, IAfterEditCallback callback) {
 		repos.add(url);
 		callback.afterEdit(url);
-		return Futures.doneFuture(null);
+		return ITransaction.Utils.doneTransaction(null);
 	}
 
 

@@ -7,14 +7,13 @@ package org.softwareFm.swt.card.dataStore;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Future;
 
 import junit.framework.TestCase;
 
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
-import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.dataStore.IAfterEditCallback;
 import org.softwareFm.swt.dataStore.ICardDataStoreCallback;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;
@@ -88,14 +87,14 @@ class MutableCardDataStoreMock implements IMutableCardDataStore {
 	}
 
 	@Override
-	public <T> Future<T> processDataFor(String url, ICardDataStoreCallback<T> callback) {
+	public <T> ITransaction<T> processDataFor(String url, ICardDataStoreCallback<T> callback) {
 		try {
 			actions.add("process:" + url);
 			if (processResult == null)
 				callback.noData(url);
 			else
 				callback.process(url, processResult);
-			return Futures.doneFuture(null);
+			return ITransaction.Utils.doneTransaction(null);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -107,11 +106,11 @@ class MutableCardDataStoreMock implements IMutableCardDataStore {
 	}
 
 	@Override
-	public Future<?> put(String url, Map<String, Object> map, IAfterEditCallback callback) {
+	public ITransaction<?> put(String url, Map<String, Object> map, IAfterEditCallback callback) {
 		try {
 			actions.add("put:" + url + ":" + map);
 			callback.afterEdit(url);
-			return Futures.doneFuture(null);
+			return ITransaction.Utils.doneTransaction(null);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -123,7 +122,7 @@ class MutableCardDataStoreMock implements IMutableCardDataStore {
 	}
 
 	@Override
-	public Future<?> makeRepo(String url, IAfterEditCallback callback) {
+	public ITransaction<?> makeRepo(String url, IAfterEditCallback callback) {
 		throw new UnsupportedOperationException();
 	}
 

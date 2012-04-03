@@ -201,7 +201,7 @@ public class MySoftwareFmIntegrationTest extends ApiAndSwtTest implements IInteg
 			@Override
 			public void process(IHttpClient client) throws Exception {
 				client.get(Urls.compose(LoginConstants.passwordResetLinkPrefix, magicString)).execute(memoryCallback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-			}});
+			}}).get();
 		String html = memoryCallback.response.asString();
 		int start = html.indexOf(": ") + 2;
 		int end = html.indexOf("</html");
@@ -382,7 +382,7 @@ public class MySoftwareFmIntegrationTest extends ApiAndSwtTest implements IInteg
 	protected void setUp() throws Exception {
 		super.setUp();
 		getServerApi().getServer();
-		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, getServiceExecutor(), getLocalApi().makeContainer());
+		ILoginStrategy loginStrategy = ILoginStrategy.Utils.softwareFmLoginStrategy(display, getLocalApi().makeContainer(), CommonConstants.testTimeOutMs);
 		cardConfig = ICardConfigurator.Utils.cardConfigForTests(display);
 		userDataManager = IUserDataManager.Utils.userDataManager();
 		mySoftwareFm = new MySoftwareFm(shell, getLocalApi().makeUserAndGroupsContainer(), cardConfig, loginStrategy, IShowMyData.Utils.exceptionShowMyData(), IShowMyGroups.Utils.exceptionShowMyGroups(), userDataManager);

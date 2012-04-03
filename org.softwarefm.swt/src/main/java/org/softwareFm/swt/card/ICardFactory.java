@@ -5,13 +5,13 @@
 package org.softwareFm.swt.card;
 
 import java.util.Map;
-import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.card.card.CardFactoryMock;
 import org.softwareFm.swt.card.internal.Card;
 import org.softwareFm.swt.card.internal.CardFactory;
@@ -32,10 +32,10 @@ public interface ICardFactory {
 			return card;
 		}
 
-		public static Future<ICard> makeCard(final ICardHolder cardHolder, final CardConfig cardConfig, String url, final ICallback<ICard> callback) {
+		public static ITransaction<ICard> makeCard(final ICardHolder cardHolder, final CardConfig cardConfig, String url, final ICallback<ICard> callback) {
 			if (url == null)
 				throw new NullPointerException();
-			Future<ICard> cardFuture = cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<ICard>() {
+			ITransaction<ICard> cardTransaction = cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<ICard>() {
 				@Override
 				public ICard process(final String url, final Map<String, Object> result) throws Exception {
 					if (url == null)
@@ -61,7 +61,7 @@ public interface ICardFactory {
 					return process(url, Maps.<String, Object> newMap());
 				}
 			});
-			return cardFuture;
+			return cardTransaction;
 
 		}
 

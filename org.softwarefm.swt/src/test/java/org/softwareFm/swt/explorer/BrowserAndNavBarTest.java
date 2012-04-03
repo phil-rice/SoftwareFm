@@ -9,13 +9,13 @@ import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.callbacks.MemoryCallback;
 import org.softwareFm.crowdsource.utilities.history.History;
 import org.softwareFm.crowdsource.utilities.history.IHistory;
+import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.navigation.internal.NavNextHistoryPrevConfig;
-import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.timeline.PlayItem;
 
-public class BrowserAndNavBarTest extends SwtTest {
+public class BrowserAndNavBarTest extends ApiAndSwtTest {
 
 	private IHistory<PlayItem> history;
 	private BrowserAndNavBar browserAndNavBar;
@@ -33,7 +33,7 @@ public class BrowserAndNavBarTest extends SwtTest {
 		history = new History<PlayItem>();
 		memoryCallback = ICallback.Utils.<PlayItem> memory();
 		cardConfig = CardDataStoreFixture.syncCardConfig(display);
-		browserAndNavBar = new BrowserAndNavBar(shell, SWT.NULL, 4, cardConfig, NavNextHistoryPrevConfig.<PlayItem> forTests(), null, history);
+		browserAndNavBar = new BrowserAndNavBar(shell, SWT.NULL, 4, getLocalContainer(), cardConfig, NavNextHistoryPrevConfig.<PlayItem> forTests(), history);
 	}
 
 	@Override

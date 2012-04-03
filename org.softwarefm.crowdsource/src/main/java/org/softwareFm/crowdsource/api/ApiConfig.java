@@ -12,7 +12,7 @@ public class ApiConfig {
 
 	public final int port;
 	public final File root;
-	public long timeOutMs;
+	public final long timeOutMs;
 	public final IUrlGenerator userUrlGenerator;
 	public final IUrlGenerator groupUrlGenerator;
 	public final ICallback<Throwable> errorHandler;

@@ -4,8 +4,6 @@
 
 package org.softwareFm.swt.explorer;
 
-import java.util.concurrent.Future;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -16,10 +14,11 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.history.IHistory;
 import org.softwareFm.crowdsource.utilities.history.IHistoryListener;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.browser.BrowserComposite;
 import org.softwareFm.swt.browser.IBrowserCompositeBuilder;
 import org.softwareFm.swt.browser.IBrowserPart;
@@ -68,7 +67,7 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 		private final Label titleLabel;
 		private final CardConfig cardConfig;
 
-		public BrowserAndNavBarComposite(Composite parent, int style, final int margin, final CardConfig cardConfig, final NavNextHistoryPrevConfig<PlayItem> config, IServiceExecutor service, IHistory<PlayItem> history) {
+		public BrowserAndNavBarComposite(Composite parent, int style, final int margin, IContainer container, final CardConfig cardConfig, final NavNextHistoryPrevConfig<PlayItem> config, IHistory<PlayItem> history) {
 			super(parent, style);
 			this.cardConfig = cardConfig;
 			this.config = config;
@@ -79,7 +78,7 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 			navNextHistoryPrev.setBackground(white);// issue-3
 			titleLabel = new Label(titleComposite, SWT.NULL);
 			titleLabel.setBackground(white);
-			browser = new BrowserComposite(this, SWT.NULL, service);
+			browser = new BrowserComposite(this, SWT.NULL, container);
 			addPaintListener(new PaintListener() {
 				@Override
 				public void paintControl(PaintEvent e) {
@@ -105,8 +104,8 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 
 	}
 
-	public BrowserAndNavBar(Composite parent, int style, int margin, CardConfig cardConfig, NavNextHistoryPrevConfig<PlayItem> config, IServiceExecutor service, IHistory<PlayItem> history) {
-		content = new BrowserAndNavBarComposite(parent, style, margin, cardConfig, config, service, history);
+	public BrowserAndNavBar(Composite parent, int style, int margin, IContainer container, CardConfig cardConfig, NavNextHistoryPrevConfig<PlayItem> config, IHistory<PlayItem> history) {
+		content = new BrowserAndNavBarComposite(parent, style, margin, container, cardConfig, config, history);
 	}
 
 	@Override
@@ -115,7 +114,7 @@ public class BrowserAndNavBar implements IBrowserCompositeBuilder {
 	}
 
 	@Override
-	public Future<String> processUrl(String feedType, String url) {
+	public ITransaction<String> processUrl(String feedType, String url) {
 		content.navNextHistoryPrev.getHistory().push(new PlayItem(feedType, url));
 		return content.browser.processUrl(feedType, url);
 	}

@@ -35,7 +35,7 @@ public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenera
 
 	@Override
 	public Map<String, Map<String, Map<String, List<Integer>>>> generateReport(final String groupId, final String groupCryptoKey, final String month) {
-		return container.access(IGroupsReader.class, IUsageReader.class, new IFunction2<IGroupsReader, IUsageReader, Map<String, Map<String, Map<String, List<Integer>>>>>() {
+		return container.accessWithCallback(IGroupsReader.class, IUsageReader.class, new IFunction2<IGroupsReader, IUsageReader, Map<String, Map<String, Map<String, List<Integer>>>>>() {
 			@Override
 			public Map<String, Map<String, Map<String, List<Integer>>>> apply(final IGroupsReader groupsReader, IUsageReader usageReader) throws Exception {
 				final Map<String, Map<String, Map<String, List<Integer>>>> result = Maps.newMap();

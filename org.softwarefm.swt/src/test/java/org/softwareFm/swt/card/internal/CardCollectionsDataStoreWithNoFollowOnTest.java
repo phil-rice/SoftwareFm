@@ -6,9 +6,9 @@ package org.softwareFm.swt.card.internal;
 
 public class CardCollectionsDataStoreWithNoFollowOnTest extends AbstractCardCollectionsDataStoreTest {
 	public void testMainFutureIsDoneWhenInitialQueryReturnsWhenNoExtraDataNeeded() {
-		assertFalse(status.mainFuture.isDone());
-		kickAndDispatch(status.initialFuture);
-		assertTrue(status.mainFuture.isDone());
+		assertFalse(status.mainTransaction.isDone());
+		kickAndDispatch(status.initialTransaction);
+		assertTrue(status.mainTransaction.isDone());
 	}
 
 	@Override
@@ -19,7 +19,7 @@ public class CardCollectionsDataStoreWithNoFollowOnTest extends AbstractCardColl
 	@Override
 	public void testCallbackNotCalledUntilAnyFollowUpQueriesFinished() {
 		checkFuturesCount(0);
-		kickAndDispatch(status.initialFuture);
+		kickAndDispatch(status.initialTransaction);
 		checkFuturesCount(1);
 	}
 

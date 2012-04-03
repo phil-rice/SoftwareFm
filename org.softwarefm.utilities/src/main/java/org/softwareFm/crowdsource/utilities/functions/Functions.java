@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.Assert;
 
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.UtilityMessages;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
@@ -314,6 +315,7 @@ public class Functions {
 			}
 		};
 	}
+
 	public static <From, To> IFunction1<From, To> expectionIfCalled(final Exception e) {
 		return new IFunction1<From, To>() {
 			@Override
@@ -441,5 +443,15 @@ public class Functions {
 				Assert.assertSame(value, from);
 			return count.incrementAndGet();
 		}
+	}
+
+	public static <T> IFunction1<T, T> identityWithCallback(final ICallback<T>callback) {
+		return new IFunction1<T, T>() {
+			@Override
+			public T apply(T from) throws Exception {
+				callback.process(from);
+				return from;
+			}
+		};
 	}
 }

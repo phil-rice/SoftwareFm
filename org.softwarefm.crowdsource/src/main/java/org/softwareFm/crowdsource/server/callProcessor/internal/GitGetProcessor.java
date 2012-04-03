@@ -14,7 +14,6 @@ import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -64,7 +63,7 @@ public class GitGetProcessor implements ICallProcessor {
 					return Json.toString(Maps.stringObjectLinkedMap(CommonConstants.repoUrlKey, repoUrl));
 				}
 			}
-		}, ICallback.Utils.<String>noCallback()).get();
+		}).get();
 		return result;
 		
 	}
