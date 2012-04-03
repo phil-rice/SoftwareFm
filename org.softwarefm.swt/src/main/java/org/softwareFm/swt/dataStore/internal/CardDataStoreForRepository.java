@@ -83,7 +83,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 		return readWriteApi.accessWithCallbackFn(IGitLocal.class, new IFunction1<IGitLocal, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(IGitLocal from) throws Exception {
-				final Map<String, Object> data = IGitReader.Utils.getFileAndDescendants(readWriteApi, fileDescription);
+				final Map<String, Object> data = IGitReader.Utils.getFileAndDescendants1(readWriteApi, fileDescription);
 				return data;
 			}
 		}, new ISwtFunction1<Map<String, Object>, T>() {

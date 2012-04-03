@@ -106,13 +106,13 @@ public abstract class GitTest extends TemporaryFileTest {
 		assertNull(reader.getFile(plain));
 	}
 
-	protected void checkGetFileAndDescendants(IContainer container, String url, Map<String, Object> data) {
+	protected void checkGetFileAndDescendants1(IContainer container, String url, Map<String, Object> data) {
 		IFileDescription fileDescription = IFileDescription.Utils.plain(url);
-		checkGetFileAndDescendants(container, fileDescription, data);
+		checkGetFileAndDescendants1(container, fileDescription, data);
 	}
 
-	protected void checkGetFileAndDescendants(IContainer container, IFileDescription fileDescription, Map<String, Object> data) {
-		assertEquals(data, IGitReader.Utils.getFileAndDescendants(container, fileDescription));
+	protected void checkGetFileAndDescendants1(IContainer container, IFileDescription fileDescription, Map<String, Object> data) {
+		assertEquals(data, IGitReader.Utils.getFileAndDescendants1(container, fileDescription));
 	}
 
 	protected void checkGetFile(IContainer container, String url, Map<String, Object> data) {

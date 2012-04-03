@@ -42,8 +42,12 @@ public class GitWriterForServer implements IGitWriter {
 	}
 
 	@Override
-	public Map<String, Object> getFileAndDescendants(IFileDescription fileDescription) {
-		return gitOperations.getFile(fileDescription);
+	public Map<String, Object> getFileAndDescendants1(IFileDescription fileDescription) {
+		return gitOperations.getFileAndDescendants1(fileDescription);
+	}
+	@Override
+	public Map<String, Object> getFileAndDescendants2(IFileDescription fileDescription) {
+		return gitOperations.getFileAndDescendants2(fileDescription);
 	}
 
 	@Override

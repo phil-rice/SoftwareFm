@@ -213,7 +213,25 @@ public class GitOperations implements IGitOperations {
 	}
 
 	@Override
-	public Map<String, Object> getFileAndDescendants(IFileDescription fileDescription) {
+	public Map<String, Object> getFileAndDescendants1(IFileDescription fileDescription) {
+		Map<String, Object> map = getFile(fileDescription);
+		if (map == null)
+			map = Maps.newMap();
+		File directory = fileDescription.getDirectory(root);
+		for (File child : Files.listChildDirectoriesIgnoringDot(directory)) {
+			File childFile = fileDescription.getFileInSubdirectory(child);
+			Map<String, Object> collectionResults = Maps.newMap();
+			if (childFile.exists())
+				collectionResults.putAll(fileDescription.decode(Files.getText(childFile)));
+			for (File grandChild : Files.listChildDirectoriesIgnoringDot(child))
+				addDataFromFileIfExists(fileDescription, collectionResults, grandChild);
+			map.put(child.getName(), collectionResults);
+		}
+		return map;
+	}
+	@Override
+	@SuppressWarnings("Write getFileAndDescendants2")
+	public Map<String, Object> getFileAndDescendants2(IFileDescription fileDescription) {
 		Map<String, Object> map = getFile(fileDescription);
 		if (map == null)
 			map = Maps.newMap();

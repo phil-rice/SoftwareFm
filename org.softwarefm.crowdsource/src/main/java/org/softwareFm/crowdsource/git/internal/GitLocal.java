@@ -88,11 +88,23 @@ public class GitLocal implements IGitLocal {
 	}
 
 	@Override
-	public Map<String, Object> getFileAndDescendants(IFileDescription fileDescription) {
+	public Map<String, Object> getFileAndDescendants1(IFileDescription fileDescription) {
 		String url = fileDescription.url();
 		logger.debug(getClass().getSimpleName() + ".getFileAndDescendants(" + fileDescription + ")");
 		pullIfNeeded(fileDescription);
-		Map<String, Object> result = comtainer.gitOperations().getFileAndDescendants(fileDescription);
+		Map<String, Object> result = comtainer.gitOperations().getFileAndDescendants1(fileDescription);
+		if (aboveRepoCache.containsKey(url))
+			return aboveRepoCache.get(url);
+		logger.debug(getClass().getSimpleName() + ".getFileAndDescendants_end(" + fileDescription + ")-> " + result);
+		return result;
+	}
+
+	@Override
+	public Map<String, Object> getFileAndDescendants2(IFileDescription fileDescription) {
+		String url = fileDescription.url();
+		logger.debug(getClass().getSimpleName() + ".getFileAndDescendants(" + fileDescription + ")");
+		pullIfNeeded(fileDescription);
+		Map<String, Object> result = comtainer.gitOperations().getFileAndDescendants2(fileDescription);
 		if (aboveRepoCache.containsKey(url))
 			return aboveRepoCache.get(url);
 		logger.debug(getClass().getSimpleName() + ".getFileAndDescendants_end(" + fileDescription + ")-> " + result);

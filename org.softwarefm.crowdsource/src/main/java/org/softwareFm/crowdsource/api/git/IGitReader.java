@@ -18,14 +18,17 @@ public interface IGitReader extends IHasCache {
 	/** loads a file as a map */
 	Map<String, Object> getFile(IFileDescription fileDescription);
 
+	/** creates a map which is the aggregate of the file and it's immediate descendants (depth 1). The descendants are in sub directories with the same crypto key and name */
+	Map<String, Object> getFileAndDescendants1(IFileDescription fileDescription);
+
+	/** creates a map which is the aggregate of the file and it's immediate descendants, and those descendants (depth 2). The descendants are in sub directories with the same crypto key and name */
+	Map<String, Object> getFileAndDescendants2(IFileDescription fileDescription);
+
 	/** loads a file as a iterable of maps. Each line is a map, and optionally encrypted. This returns an Iterable rather than list on average, as this will often halve the processing time */
 	Iterable<Map<String, Object>> getFileAsListOfMaps(IFileDescription fileDescription);
 
 	/** This avoids having to decrypt the file to work out how many items are in it. It just counts the lines */
 	int countOfFileAsListsOfMap(IFileDescription fileDescription);
-
-	/** creates a map which is the aggregate of the file and it's descendants. The descendants are in sub directories with the same crypto key and name */
-	Map<String, Object> getFileAndDescendants(IFileDescription fileDescription);
 
 	public static class Utils {
 
@@ -36,7 +39,7 @@ public interface IGitReader extends IHasCache {
 					Iterable<Map<String, Object>> result = gitReader.getFileAsListOfMaps(fileDescription);
 					return result;
 				}
-			}, ICallback.Utils.<Iterable<Map<String,Object>>>noCallback()).get();
+			}, ICallback.Utils.<Iterable<Map<String, Object>>> noCallback()).get();
 		}
 
 		public static String getFileAsString(IContainer container, final IFileDescription fileDescription) {
@@ -46,7 +49,7 @@ public interface IGitReader extends IHasCache {
 					String result = gitReader.getFileAsString(fileDescription);
 					return result;
 				}
-			}, ICallback.Utils.<String>noCallback()).get();
+			}, ICallback.Utils.<String> noCallback()).get();
 		}
 
 		public static Map<String, Object> getFileAsMap(IContainer container, final IFileDescription fileDescription) {
@@ -56,7 +59,7 @@ public interface IGitReader extends IHasCache {
 					Map<String, Object> result = gitReader.getFile(fileDescription);
 					return result;
 				}
-			}, ICallback.Utils.<Map<String,Object>>noCallback()).get();
+			}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
 		}
 
 		public static Integer countOfFileAsListsOfMap(IContainer container, final IFileDescription fileDescription) {
@@ -66,7 +69,7 @@ public interface IGitReader extends IHasCache {
 					int result = gitReader.countOfFileAsListsOfMap(fileDescription);
 					return result;
 				}
-			}, ICallback.Utils.<Integer>noCallback()).get();
+			}, ICallback.Utils.<Integer> noCallback()).get();
 		}
 
 		public static void clearCache(IContainer container) {
@@ -76,16 +79,16 @@ public interface IGitReader extends IHasCache {
 					gitReader.clearCaches();
 					return null;
 				}
-			}, ICallback.Utils.<Void>noCallback()).get();
+			}, ICallback.Utils.<Void> noCallback()).get();
 		}
 
-		public static Map<String,Object> getFileAndDescendants(IContainer container, final IFileDescription fileDescription) {
-			return container.accessGitReader(new IFunction1<IGitReader, Map<String,Object>>() {
+		public static Map<String, Object> getFileAndDescendants1(IContainer container, final IFileDescription fileDescription) {
+			return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
 				@Override
-				public Map<String,Object> apply(IGitReader gitReader) throws Exception {
-					return gitReader.getFileAndDescendants(fileDescription);
+				public Map<String, Object> apply(IGitReader gitReader) throws Exception {
+					return gitReader.getFileAndDescendants1(fileDescription);
 				}
-			}, ICallback.Utils.<Map<String,Object>>noCallback()).get();
+			}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
 		}
 
 	}
