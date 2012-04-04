@@ -13,6 +13,7 @@ import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.crowdsource.utilities.transaction.Transaction;
+import org.softwareFm.swt.swt.Swts;
 
 public interface ISwtSoftwareFmFactory {
 
@@ -31,7 +32,7 @@ public interface ISwtSoftwareFmFactory {
 								return super.get();
 							long startTime = System.currentTimeMillis();
 							while (!future.isDone() && System.currentTimeMillis() < startTime + timeOutMs)
-								display.readAndDispatch();
+								Swts.dispatchUntilQueueEmpty(display);
 							try {
 								if (future.isDone())
 									return future.get();

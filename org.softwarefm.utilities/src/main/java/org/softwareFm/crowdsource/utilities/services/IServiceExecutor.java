@@ -21,19 +21,19 @@ public interface IServiceExecutor extends IShutdown {
 
 	public static class Utils {
 
-		public static IServiceExecutor defaultExecutor() {
-			return executor(10);
+		public static IServiceExecutor defaultExecutor(String pattern) {
+			return executor(pattern, 10);
 		}
 
-		public static IServiceExecutor executor(final int threadPoolSize, IMonitorFactory monitorFactory) {
-			IServiceExecutor executor = new ServiceExecutor(monitorFactory, threadPoolSize);
+		public static IServiceExecutor executor(String pattern, final int threadPoolSize, IMonitorFactory monitorFactory) {
+			IServiceExecutor executor = new ServiceExecutor(pattern,monitorFactory, threadPoolSize);
 			executor.addExceptionListener(IExceptionListener.Utils.syserr());
 			return executor;
 
 		}
 
-		public static IServiceExecutor executor(final int threadPoolSize) {
-			return executor(threadPoolSize, IMonitorFactory.Utils.noMonitors);
+		public static IServiceExecutor executor(String pattern, final int threadPoolSize) {
+			return executor(pattern, threadPoolSize, IMonitorFactory.Utils.noMonitors);
 		}
 	}
 }

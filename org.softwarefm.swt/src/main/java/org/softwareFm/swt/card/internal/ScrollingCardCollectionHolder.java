@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;
@@ -25,9 +26,9 @@ public class ScrollingCardCollectionHolder implements IHasControl {
 	private final ScrolledComposite content;
 	private final CardCollectionHolder holder;
 
-	public ScrollingCardCollectionHolder(Composite parent, CardConfig cardConfig) {
+	public ScrollingCardCollectionHolder(Composite parent, IContainer container, CardConfig cardConfig) {
 		this.content = Swts.newScrolledComposite(parent, SWT.H_SCROLL, getClass().getSimpleName());
-		holder = new CardCollectionHolder(content, cardConfig);
+		holder = new CardCollectionHolder(content, container, cardConfig);
 		holder.getComposite().setLayout(new CardConfigFillWithAspectRatioLayout());
 		Size.setSizeFromClientArea(content);
 		content.setContent(holder.getControl());

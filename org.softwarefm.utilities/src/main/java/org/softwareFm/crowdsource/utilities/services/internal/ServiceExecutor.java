@@ -5,7 +5,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -23,19 +22,22 @@ import org.softwareFm.crowdsource.utilities.services.IServiceExecutorLifeCycleLi
 import org.softwareFm.crowdsource.utilities.services.ServerExecutorException;
 
 public class ServiceExecutor implements IServiceExecutor {
-	private final ExecutorService service;
+	private final ThreadPoolExecutor service;
 	private final CopyOnWriteArrayList<IExceptionListener> exceptionListeners = new CopyOnWriteArrayList<IExceptionListener>();
 	private final CopyOnWriteArrayList<IServiceExecutorLifeCycleListener> lifeCycleListeners = new CopyOnWriteArrayList<IServiceExecutorLifeCycleListener>();
 	private final IMonitorFactory monitorFactory;
 	private final CopyOnWriteArrayList<IMonitor> monitors = new CopyOnWriteArrayList<IMonitor>();
 
-	public ServiceExecutor(IMonitorFactory monitorFactory, int threadPoolSize) {
+	public ServiceExecutor(final String pattern, IMonitorFactory monitorFactory, int threadPoolSize) {
 		this.monitorFactory = monitorFactory;
-		service = new ThreadPoolExecutor(threadPoolSize, threadPoolSize, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1000)) {
+
+		service = new ThreadPoolExecutor(threadPoolSize, threadPoolSize, 10, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1000), new NamedThreadFactory(pattern)) {
+
 			@Override
 			protected void afterExecute(Runnable r, Throwable t) {
 				super.afterExecute(r, t);
 			}
+
 		};
 	}
 
@@ -83,7 +85,6 @@ public class ServiceExecutor implements IServiceExecutor {
 		private final IMonitor delegate;
 		private boolean hasBegan;
 		private final IFunction1<IMonitor, ?> task;
-
 
 		public TrackBeginMonitor(IMonitor delegate, IFunction1<IMonitor, ?> task) {
 			this.delegate = delegate;

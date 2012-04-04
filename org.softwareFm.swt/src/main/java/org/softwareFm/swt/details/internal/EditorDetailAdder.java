@@ -5,6 +5,7 @@
 package org.softwareFm.swt.details.internal;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.swt.card.ICard;
@@ -16,12 +17,12 @@ import org.softwareFm.swt.details.IDetailsFactoryCallback;
 public class EditorDetailAdder implements IDetailAdder {
 
 	@Override
-	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
+	public IHasControl add(Composite parentComposite, IContainer container, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
 		if (value instanceof String) {
 			String editorName = IResourceGetter.Utils.getOr(cardConfig.resourceGetterFn, parentCard.cardType(), "editor." + key, "text");
 			IDetailAdder editorAdder = Functions.call(cardConfig.editorFn, editorName);
 			if (editorAdder != null)
-				return editorAdder.add(parentComposite, parentCard, cardConfig, key, value, callback);
+				return editorAdder.add(parentComposite, container, parentCard, cardConfig, key, value, callback);
 		}
 		return null;
 	}

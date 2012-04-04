@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.dataStore.CardDataStoreAsyncMock;
@@ -22,9 +23,8 @@ import org.softwareFm.swt.card.internal.CardHolder.CardHolderComposite;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;
-import org.softwareFm.swt.swt.SwtTest;
 
-public class CardCollectionHolderTest extends SwtTest {
+public class CardCollectionHolderTest extends ApiAndSwtTest {
 
 	private CardCollectionHolder cardCollectionHolder;
 	private CardCollectionHolder.CardCollectionHolderComposite composite;
@@ -111,7 +111,7 @@ public class CardCollectionHolderTest extends SwtTest {
 		super.setUp();
 		asyncCardConfig = CardDataStoreFixture.asyncCardConfig(shell.getDisplay());
 		mockDataStore = (CardDataStoreAsyncMock) asyncCardConfig.cardDataStore;
-		cardCollectionHolder = new CardCollectionHolder(shell, asyncCardConfig);
+		cardCollectionHolder = new CardCollectionHolder(shell, getLocalContainer(), asyncCardConfig);
 		composite = (CardCollectionHolderComposite) cardCollectionHolder.getComposite();
 		callback = new DetailsFactoryCallback(composite);
 		new Label(composite, SWT.NULL);// here to be removed!

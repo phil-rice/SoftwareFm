@@ -54,7 +54,7 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 		final CountDownLatch startLatch = new CountDownLatch(threads);
 		try {
 			serverSocket = new ServerSocket(port);
-			executor = IServiceExecutor.Utils.executor(threads);
+			executor = IServiceExecutor.Utils.executor("Server-{0}", threads);
 			shutdownLatch = new CountDownLatch(threads);
 			IFunction1<IMonitor, Void> job = new IFunction1<IMonitor, Void>() {
 				@Override

@@ -124,7 +124,7 @@ public abstract class GitTest extends TemporaryFileTest {
 	}
 
 	protected IServiceExecutor getServiceExecutor() {
-		return serviceExecutor == null ? serviceExecutor = IServiceExecutor.Utils.defaultExecutor() : serviceExecutor;
+		return serviceExecutor == null ? serviceExecutor = IServiceExecutor.Utils.defaultExecutor("Test-{0}") : serviceExecutor;
 	}
 
 	protected void checkCreateRepository(final IGitOperations gitOperations, final String url) {

@@ -48,6 +48,41 @@ public class TransactionManagerTest extends TestCase {
 		assertEquals(0, registered1Count.get());
 	}
 
+	public void testNestedTransactionsExecutedOnSameThread() {
+		ConstantFunctionWithMemoryOfFroms<String, String> postFunction1 = new ConstantFunctionWithMemoryOfFroms<String, String>("value1-b");
+		final ConstantFunctionWithMemoryOfFroms<String, String> postFunction2 = new ConstantFunctionWithMemoryOfFroms<String, String>("value2-b");
+		final AtomicReference<Thread> thread1 = new AtomicReference<Thread>();
+		final AtomicReference<Thread> thread2 = new AtomicReference<Thread>();
+		final AtomicReference<ITransaction<String>> nestedTransaction = new AtomicReference<ITransaction<String>>();
+		String result = manager.start(new IFunction1<IMonitor, String>() {
+			@Override
+			public String apply(IMonitor from) throws Exception {
+				from.beginTask("asd", 1);
+				thread1.set(Thread.currentThread());
+				ITransaction<String> nested = manager.start(new IFunction1<IMonitor, String>() {
+					@Override
+					public String apply(IMonitor from) throws Exception {
+						thread2.set(Thread.currentThread());
+						from.beginTask("asd", 1);
+						return "nestedResult";
+					}
+				}, postFunction2);
+				String result = nested.get(CommonConstants.testTimeOutMs);
+				assertFalse(nested.isDone());
+				nestedTransaction.set(nested);
+				return result;
+			}
+		}, postFunction1).get(CommonConstants.testTimeOutMs);
+		assertTrue(nestedTransaction.get().isDone());
+		assertTrue(thread1.get() != Thread.currentThread());
+		assertSame(thread1.get(), thread2.get());
+
+		assertEquals("value1-b", result);
+		assertEquals("value2-b", Lists.getOnly(postFunction1.froms));
+		assertEquals("nestedResult", Lists.getOnly(postFunction2.froms));
+
+	}
+
 	public void testCallbackIsExecutedByRegisteredExecutorIfMarkerInterfacePresent() {
 		ConstantFunctionWithMemoryOfFroms<IMonitor, String> job = Functions.<String> constantWithMemoryOfMonitor("value");
 		manager.start(job, new IFunctionWithMarker1<String, String>() {
@@ -270,7 +305,7 @@ public class TransactionManagerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		final IServiceExecutor defaultExecutor = IServiceExecutor.Utils.defaultExecutor();
+		final IServiceExecutor defaultExecutor = IServiceExecutor.Utils.defaultExecutor(getClass().getSimpleName() + "-{0}");
 		registered1Count = new AtomicInteger();
 		registered2Count = new AtomicInteger();
 		manager = new TransactionManager(defaultExecutor, new TransactionManager.DefaultFutureToTransactionDn()).//

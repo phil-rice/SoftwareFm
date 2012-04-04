@@ -64,7 +64,7 @@ public class ExplorerWithRadioChannel {
 		// Logger.getLogger(IGitLocal.class).setLevel(Level.DEBUG);
 		Logger.getLogger(IHttpClient.class).setLevel(Level.DEBUG);
 
-		final IServiceExecutor serviceExecutor = IServiceExecutor.Utils.defaultExecutor();
+		final IServiceExecutor serviceExecutor = IServiceExecutor.Utils.defaultExecutor("Explorer-{0}");
 		final AtomicReference<ICrowdSourcedApi> forShutdown = new AtomicReference<ICrowdSourcedApi>();
 
 		try {

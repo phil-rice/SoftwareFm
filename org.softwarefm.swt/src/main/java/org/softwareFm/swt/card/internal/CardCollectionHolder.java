@@ -10,6 +10,7 @@ import java.util.concurrent.Future;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.url.Urls;
@@ -30,8 +31,8 @@ public class CardCollectionHolder implements IHasComposite {
 		private String key;
 		private Object value;
 
-		public CardCollectionHolderComposite(Composite parent, CardConfig cardConfig) {
-			super(parent, SWT.NULL, cardConfig);
+		public CardCollectionHolderComposite(Composite parent, IContainer container, CardConfig cardConfig) {
+			super(parent, SWT.NULL, container, cardConfig);
 		}
 
 		@SuppressWarnings("unchecked")
@@ -68,8 +69,8 @@ public class CardCollectionHolder implements IHasComposite {
 
 	}
 
-	public CardCollectionHolder(Composite parent, CardConfig cardConfig) {
-		content = new CardCollectionHolderComposite(parent, cardConfig);
+	public CardCollectionHolder(Composite parent, IContainer container, CardConfig cardConfig) {
+		content = new CardCollectionHolderComposite(parent, container, cardConfig);
 	}
 
 	public void setKeyValue(final String rootUrl, String key, Object value, IDetailsFactoryCallback callback) {

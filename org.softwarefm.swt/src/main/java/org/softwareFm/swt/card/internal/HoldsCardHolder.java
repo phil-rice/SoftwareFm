@@ -11,6 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.ICardSelectedListener;
@@ -24,9 +25,11 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 
 	protected final List<ICardSelectedListener> listeners = new CopyOnWriteArrayList<ICardSelectedListener>();
 	protected final CardConfig cardConfig;
+	private final IContainer container;
 
-	public HoldsCardHolder(Composite parent, int style, CardConfig cardConfig) {
+	public HoldsCardHolder(Composite parent, int style, IContainer container, CardConfig cardConfig) {
 		super(parent, style);
+		this.container = container;
 		this.cardConfig = cardConfig.withStyleAndSelection(cardConfig.cardStyle, false).withPopupMenuService(IPopupMenuService.Utils.<ICard> noPopupMenus());
 	}
 
@@ -67,7 +70,7 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 						}
 					};
 
-					cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, visitor);
+					cardConfig.cardCollectionsDataStore.processDataFor(container, cardHolder, cardConfig, url, visitor);
 				}
 			}
 		};

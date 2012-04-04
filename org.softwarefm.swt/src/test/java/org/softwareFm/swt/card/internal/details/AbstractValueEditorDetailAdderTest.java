@@ -138,7 +138,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 	}
 
 	private TE makeHolder(CardConfig cardConfig, LineItem lineItem, final Runnable afterEdit) {
-		IHasControl actual = adder.add(shell, parentCard, cardConfig, lineItem.key, lineItem.value, new IDetailsFactoryCallback() {
+		IHasControl actual = adder.add(shell, getLocalContainer(), parentCard, cardConfig, lineItem.key, lineItem.value, new IDetailsFactoryCallback() {
 
 			@Override
 			public void cardSelected(String cardUrl) {

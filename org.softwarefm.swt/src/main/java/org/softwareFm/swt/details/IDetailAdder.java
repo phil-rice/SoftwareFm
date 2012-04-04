@@ -5,6 +5,7 @@
 package org.softwareFm.swt.details;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -17,7 +18,7 @@ import org.softwareFm.swt.editors.internal.TextViewerDetailAdder;
 public interface IDetailAdder {
 
 
-	IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback);
+	IHasControl add(Composite parentComposite, IContainer container, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback);
 
 	public static class Utils {
 		public static IDetailAdder collectionItem() {

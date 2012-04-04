@@ -32,7 +32,7 @@ public abstract class AbstractDetailsAdderTest<T extends IDetailAdder> extends A
 	abstract protected T makeDetailsAdder();
 
 	protected void checkGetCardCollectionsHolder(LineItem lineItem, String expectedUrl) {
-		IHasControl actual = adder.add(shell, parentCard, cardConfig, lineItem.key, lineItem.value, IDetailsFactoryCallback.Utils.noCallback());
+		IHasControl actual = adder.add(shell, getLocalContainer(), parentCard, cardConfig, lineItem.key, lineItem.value, IDetailsFactoryCallback.Utils.noCallback());
 		ScrollingCardCollectionHolder scrollingHolder = (ScrollingCardCollectionHolder) actual;
 		CardCollectionHolder holder = scrollingHolder.getCardHolder();
 		assertSame(lineItem.key, holder.getKey());

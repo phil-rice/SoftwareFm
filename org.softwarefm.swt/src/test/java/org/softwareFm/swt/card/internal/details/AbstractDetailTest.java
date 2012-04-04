@@ -10,6 +10,7 @@ import org.eclipse.swt.graphics.Image;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1WithDispose;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
 import org.softwareFm.images.BasicImageRegisterConfigurator;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICardData;
@@ -21,10 +22,9 @@ import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;
 import org.softwareFm.swt.details.internal.DetailFactory;
-import org.softwareFm.swt.swt.SwtTest;
 import org.softwareFm.swt.title.TitleSpec;
 
-abstract public class AbstractDetailTest extends SwtTest {
+abstract public class AbstractDetailTest extends ApiAndSwtTest {
 	protected static LineItem stringValue = new LineItem(null, "key", "stringValue");
 	protected static LineItem intValue = new LineItem(null, "key", 0);
 	protected static LineItem mapValue = new LineItem(null, "key", Maps.stringObjectMap("k1", "v1", "k2", "v2"));
@@ -62,7 +62,7 @@ abstract public class AbstractDetailTest extends SwtTest {
 	}
 
 	protected void checkGetNull(DetailFactory detailFactory, LineItem lineItem) {
-		IHasControl actual = detailFactory.makeDetail(shell, parentCard, cardConfig, lineItem.key, lineItem.value, IDetailsFactoryCallback.Utils.noCallback());
+		IHasControl actual = detailFactory.makeDetail(shell, getLocalContainer(), parentCard, cardConfig, lineItem.key, lineItem.value, IDetailsFactoryCallback.Utils.noCallback());
 		assertNull(actual);
 	}
 

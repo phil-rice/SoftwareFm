@@ -7,6 +7,7 @@ package org.softwareFm.swt.details.internal;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -24,11 +25,11 @@ public class DetailFactory implements IDetailFactory {
 	}
 
 	@Override
-	public IHasControl makeDetail(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
+	public IHasControl makeDetail(Composite parentComposite, IContainer container, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
 		if (key == null)
 			return null;
 		for (IDetailAdder adder : detailAdders) {
-			IHasControl result = adder.add(parentComposite, parentCard, cardConfig.withPopupMenuService(IPopupMenuService.Utils.<ICard> noPopupMenus()), key, value, callback);
+			IHasControl result = adder.add(parentComposite, container, parentCard, cardConfig.withPopupMenuService(IPopupMenuService.Utils.<ICard> noPopupMenus()), key, value, callback);
 			if (result != null)
 				return result;
 		}

@@ -18,12 +18,12 @@ public interface ITransactionManager extends IShutdown {
 
 	public static class Utils {
 		public static ITransactionManagerBuilder standard() {
-			return new TransactionManager(IServiceExecutor.Utils.defaultExecutor(), new TransactionManager.DefaultFutureToTransactionDn());
+			return new TransactionManager(IServiceExecutor.Utils.defaultExecutor("ITransactionManager-{0}"), new TransactionManager.DefaultFutureToTransactionDn());
 		}
 
 		/** This is used when (for example) you want to do something while waiting in the get method: such as process swt dispatch thread queues */
 		public static ITransactionManagerBuilder withFutureToTransactionFn(IFunction1<Future<?>, ITransaction<?>> fn) {
-			return new TransactionManager(IServiceExecutor.Utils.defaultExecutor(), fn);
+			return new TransactionManager(IServiceExecutor.Utils.defaultExecutor("ITransactionManager-{0}"), fn);
 		}
 	}
 }

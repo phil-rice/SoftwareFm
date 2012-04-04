@@ -33,12 +33,12 @@ public class StyledTextEditorDetailAdderTest extends AbstractDetailsAdderTest<St
 	}
 
 	public void testTitleSpecDerivedFromCardConfig() throws Exception {
-		StyledTextEditor actual = (StyledTextEditor) detailFactory.makeDetail(shell, parentCard, cardConfig, "key", "value", IDetailsFactoryCallback.Utils.noCallback());
+		StyledTextEditor actual = (StyledTextEditor) detailFactory.makeDetail(shell, getLocalContainer(), parentCard, cardConfig, "key", "value", IDetailsFactoryCallback.Utils.noCallback());
 		assertSame(cardConfig.titleSpecFn.apply(parentCard), actual.getTitleSpec());
 	}
 
 	private void checkMakesStyledTextIfStringAndKeyInEditorStyledText(LineItem lineItem) {
-		StyledTextEditor actual = (StyledTextEditor) detailFactory.makeDetail(shell, parentCard, cardConfig, lineItem.key, lineItem.value, IDetailsFactoryCallback.Utils.noCallback());
+		StyledTextEditor actual = (StyledTextEditor) detailFactory.makeDetail(shell, getLocalContainer(), parentCard, cardConfig, lineItem.key, lineItem.value, IDetailsFactoryCallback.Utils.noCallback());
 		assertEquals("stringValue", actual.getText().getText());
 	}
 

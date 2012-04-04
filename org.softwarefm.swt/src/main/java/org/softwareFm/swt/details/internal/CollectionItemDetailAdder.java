@@ -7,6 +7,7 @@ package org.softwareFm.swt.details.internal;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.internal.CardConfigFillWithAspectRatioLayout;
 import org.softwareFm.swt.card.internal.OneCardHolder;
@@ -21,14 +22,14 @@ import org.softwareFm.swt.swt.Swts;
 public class CollectionItemDetailAdder implements IDetailAdder {
 
 	@Override
-	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
+	public IHasControl add(Composite parentComposite, IContainer container, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
 		if (value instanceof Map<?, ?>) {
 			@SuppressWarnings("unchecked")
 			Map<String, Object> map = (Map<String, Object>) value;
 			Object object = map.get(CardConstants.slingResourceType);
 			if (object != null && !CardConstants.collection.equals(object)) {// it
 				String url = parentCard.url() + "/" + key;
-				OneCardHolder result = new OneCardHolder(parentComposite, cardConfig, url, key, callback);
+				OneCardHolder result = new OneCardHolder(parentComposite, container, cardConfig, url, key, callback);
 				result.getComposite().setLayout(new CardConfigFillWithAspectRatioLayout());
 				Swts.Size.setSizeFromClientArea(result.getControl());
 				return result;

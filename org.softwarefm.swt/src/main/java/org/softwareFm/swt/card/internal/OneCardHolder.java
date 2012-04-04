@@ -7,6 +7,7 @@ package org.softwareFm.swt.card.internal;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.swt.card.ICardSelectedListener;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -15,8 +16,8 @@ public class OneCardHolder implements IHasComposite {
 
 	private final HoldsCardHolder content;
 
-	public OneCardHolder(Composite parent, CardConfig cardConfig, String url, String title, ICardSelectedListener listener) {
-		content = new HoldsCardHolder(parent, SWT.NULL, cardConfig);
+	public OneCardHolder(Composite parent, IContainer container, CardConfig cardConfig, String url, String title, ICardSelectedListener listener) {
+		content = new HoldsCardHolder(parent, SWT.NULL, container, cardConfig);
 		content.makeCardHolder(url, title);
 		content.addCardSelectedListener(listener);
 	}

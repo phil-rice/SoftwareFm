@@ -104,8 +104,10 @@ public class Explorer implements IExplorer {
 	private Comments comments;
 	private MySoftwareFm mySoftwareFm;
 	private final IShowMyPeople showMyPeople;
+	private final IUserAndGroupsContainer container;
 
 	public Explorer(final IUserAndGroupsContainer container, final CardConfig cardConfig,  final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final Callable<Long> timeGetter) {
+		this.container = container;
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
 		this.showMyPeople = showMyPeople;
@@ -113,7 +115,7 @@ public class Explorer implements IExplorer {
 			@Override
 			public void process(String url) throws Exception {
 				masterDetailSocial.setMaster(cardHolder.getControl());
-				cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, new CardAndCollectionDataStoreAdapter() {
+				cardConfig.cardCollectionsDataStore.processDataFor(container, cardHolder, cardConfig, url, new CardAndCollectionDataStoreAdapter() {
 					@Override
 					public void finished(ICardHolder cardHolder, String url, ICard card) {
 						String key = findDefaultChild(card);
@@ -256,7 +258,7 @@ public class Explorer implements IExplorer {
 			@Override
 			public IHasControl apply(Composite from) throws Exception {
 				String value = Strings.nullSafeToString(card.data().get(key));
-				IHasControl hasControl = editor.add(from, card, cardConfig, key, value, makeEditCallback(card));
+				IHasControl hasControl = editor.add(from, container, card, cardConfig, key, value, makeEditCallback(card));
 				return hasControl;
 			}
 		});
@@ -530,7 +532,7 @@ public class Explorer implements IExplorer {
 		});
 		masterDetailSocial.putDetailOverSocial();
 		masterDetailSocial.setMaster(cardHolder.getControl());
-		cardConfig.cardCollectionsDataStore.processDataFor(cardHolder, cardConfig, url, new ICardAndCollectionDataStoreVisitor() {
+		cardConfig.cardCollectionsDataStore.processDataFor(container, cardHolder, cardConfig, url, new ICardAndCollectionDataStoreVisitor() {
 			@Override
 			public void requestingFollowup(final ICardHolder cardHolder, final String url, final ICard card, final String followOnUrlFragment) {
 				fireListeners(new ICallback<IExplorerListener>() {
@@ -798,7 +800,7 @@ public class Explorer implements IExplorer {
 			public IHasControl apply(Composite from) throws Exception {
 				CardConfig cardConfig = card.getCardConfig();
 				IDetailsFactoryCallback callback = makeEditCallback(card);
-				return cardConfig.detailFactory.makeDetail(from, card, cardConfig, key, value, callback);
+				return cardConfig.detailFactory.makeDetail(from, container, card, cardConfig, key, value, callback);
 			}
 
 		});

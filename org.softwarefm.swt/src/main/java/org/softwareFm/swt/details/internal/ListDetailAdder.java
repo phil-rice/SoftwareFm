@@ -7,6 +7,7 @@ package org.softwareFm.swt.details.internal;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.internal.ScrollingCardCollectionHolder;
 import org.softwareFm.swt.composites.IHasControl;
@@ -16,9 +17,9 @@ import org.softwareFm.swt.details.IDetailsFactoryCallback;
 
 public class ListDetailAdder implements IDetailAdder {
 	@Override
-	public IHasControl add(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
+	public IHasControl add(Composite parentComposite, IContainer container, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback) {
 		if (value instanceof Map<?, ?>) {
-			ScrollingCardCollectionHolder result = new ScrollingCardCollectionHolder(parentComposite, cardConfig);
+			ScrollingCardCollectionHolder result = new ScrollingCardCollectionHolder(parentComposite, container, cardConfig);
 			result.setKeyValue(parentCard.url(), key, value, callback);
 			return result;
 		} else

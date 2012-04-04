@@ -90,7 +90,7 @@ public class SwtThreadMonitor implements IHasComposite, IMonitorFactory {
 							tableItem.setText(0, name);
 							tableItem.setText(2, Integer.toString(totalWork));
 							monitor.beginTask(name, totalWork);
-							for(TableEditor editor: editors)
+							for (TableEditor editor : editors)
 								editor.layout();
 						}
 					});
@@ -169,7 +169,7 @@ public class SwtThreadMonitor implements IHasComposite, IMonitorFactory {
 	public static void main(String[] args) {
 		final int stages = 5;
 		final int tasks = 30;
-		final IServiceExecutor helper = IServiceExecutor.Utils.defaultExecutor();
+		final IServiceExecutor helper = IServiceExecutor.Utils.defaultExecutor(SwtThreadMonitor.class.getSimpleName() + "-helper-{0}");
 		final AtomicReference<IServiceExecutor> ref = new AtomicReference<IServiceExecutor>();
 		try {
 			Swts.Show.display(SwtThreadMonitor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
@@ -177,7 +177,7 @@ public class SwtThreadMonitor implements IHasComposite, IMonitorFactory {
 				public Composite apply(Composite from) throws Exception {
 					CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(from.getDisplay());
 					SwtThreadMonitor swtThreadMonitor = new SwtThreadMonitor(from, cardConfig, "Threads", IMonitorFactory.Utils.sysoutMonitors);
-					final IServiceExecutor executor = IServiceExecutor.Utils.executor(5, swtThreadMonitor);
+					final IServiceExecutor executor = IServiceExecutor.Utils.executor(SwtThreadMonitor.class.getSimpleName() + "-main-{0}",5, swtThreadMonitor);
 					ref.set(executor);
 					helper.submit(new IFunction1<IMonitor, Void>() {
 						@Override

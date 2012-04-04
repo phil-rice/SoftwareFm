@@ -21,7 +21,7 @@ public class FilesIntegrationTest extends TestCase implements IIntegrationTest {
 	private int count = 0;
 
 	public void testDoOperationInLock() throws Exception {
-		IServiceExecutor executor = IServiceExecutor.Utils.defaultExecutor();
+		IServiceExecutor executor = IServiceExecutor.Utils.defaultExecutor(getClass().getSimpleName()+"-{0}");
 		final int size = 100;// note this is a "square test...this many tries...and each try does it this many times
 		final CountDownLatch latch = new CountDownLatch(size);
 		String tempDir = System.getProperty("java.io.tmpdir");

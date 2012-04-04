@@ -7,6 +7,7 @@ package org.softwareFm.swt.details;
 import java.util.Arrays;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -15,7 +16,7 @@ import org.softwareFm.swt.details.internal.DetailFactory;
 /** creates a {@link IHasControl} to allow the user to view/edit a detail of the card */
 public interface IDetailFactory {
 
-	IHasControl makeDetail(Composite parentComposite, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback);
+	IHasControl makeDetail(Composite parentComposite, IContainer container, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback);
 
 	public static class Utils {
 		public static IDetailFactory detailsFactory(IDetailAdder... adders) {

@@ -92,7 +92,7 @@ public class SwtServiceLifeCycleListener implements IHasComposite, IServiceExecu
 
 	public static void main(String[] args) {
 		final ScheduledThreadPoolExecutor helperExecutor = new ScheduledThreadPoolExecutor(5);
-		final IServiceExecutor executor = IServiceExecutor.Utils.defaultExecutor();
+		final IServiceExecutor executor = IServiceExecutor.Utils.defaultExecutor(SwtServiceLifeCycleListener.class.getSimpleName()+"-{0}");
 		try {
 			Swts.Show.display(SwtServiceLifeCycleListener.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 				@Override

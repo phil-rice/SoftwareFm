@@ -7,6 +7,7 @@ package org.softwareFm.swt.dataStore.internal;
 import java.io.File;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitLocal;
@@ -17,10 +18,14 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.ISwtFunction1;
 import org.softwareFm.swt.dataStore.IAfterEditCallback;
+import org.softwareFm.swt.dataStore.ICardDataStore;
 import org.softwareFm.swt.dataStore.ICardDataStoreCallback;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;
 
+
 public class CardDataStoreForRepository implements IMutableCardDataStore {
+
+	public static Logger logger = Logger.getLogger(ICardDataStore.class);
 	private final IContainer readWriteApi;
 	private final File root;
 
@@ -31,6 +36,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 
 	@Override
 	public void clearCache(final String url) {
+		logger.debug("clearCache(" + url + ")");
 		readWriteApi.access(IGitLocal.class, new ICallback<IGitLocal>() {
 			@Override
 			public void process(IGitLocal gitLocal) throws Exception {
@@ -47,6 +53,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 
 	@Override
 	public void clearCaches() {
+		logger.debug("clearCaches");
 		readWriteApi.access(IGitLocal.class, new ICallback<IGitLocal>() {
 			@Override
 			public void process(IGitLocal gitLocal) throws Exception {
@@ -57,6 +64,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 
 	@Override
 	public ITransaction<?> makeRepo(final String url, final IAfterEditCallback callback) {
+		logger.debug("makeRepo: " + url);
 		return readWriteApi.accessWithCallback(IGitLocal.class, new IFunction1<IGitLocal, Void>() {
 			@Override
 			public Void apply(IGitLocal gitLocal) throws Exception {
@@ -79,16 +87,20 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 
 	@Override
 	public <T> ITransaction<T> processDataFor(final String url, final ICardDataStoreCallback<T> callback) {
+		logger.debug("processDataFor: " + url);
 		final IFileDescription fileDescription = IFileDescription.Utils.plain(url);
 		return readWriteApi.accessWithCallbackFn(IGitLocal.class, new IFunction1<IGitLocal, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(IGitLocal from) throws Exception {
+				logger.debug("  processDataFor/getFileAndDescendants: " + url);
 				final Map<String, Object> data = IGitReader.Utils.getFileAndDescendants1(readWriteApi, fileDescription);
+				logger.debug("  processDataFor/gotFileAndDescendants: " + url + ", " + data);
 				return data;
 			}
 		}, new ISwtFunction1<Map<String, Object>, T>() {
 			@Override
 			public T apply(Map<String, Object> data) throws Exception {
+				logger.debug("  processDataFor/swtFunc: " + url + ", " + data);
 				if (data == null || data.size() == 0)
 					return ICardDataStoreCallback.Utils.noData(callback, url);
 				else

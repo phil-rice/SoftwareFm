@@ -27,7 +27,7 @@ public class MultiThreadedTimeTester<Context> {
 		this.threads = threads;
 		this.timePerThread = timePerThread;
 		this.toBeTested = toBeTested;
-		serviceExecutor = IServiceExecutor.Utils.executor(threads);
+		serviceExecutor = IServiceExecutor.Utils.executor(getClass().getSimpleName()+"-{0}", threads);
 	}
 
 	public void testMe() {

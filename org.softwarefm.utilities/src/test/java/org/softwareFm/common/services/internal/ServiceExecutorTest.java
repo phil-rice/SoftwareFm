@@ -178,7 +178,7 @@ public class ServiceExecutorTest extends TestCase {
 	}
 
 	private void executeWithSpecificMonitor(IFunction1<IMonitor, String> job, IMonitor monitor) throws InterruptedException, ExecutionException, TimeoutException {
-		IServiceExecutor executorWithMockFactory = IServiceExecutor.Utils.executor(10, IMonitorFactory.Utils.specific(monitor));
+		IServiceExecutor executorWithMockFactory = IServiceExecutor.Utils.executor(getClass().getSimpleName()+"-specific-{0}", 10, IMonitorFactory.Utils.specific(monitor));
 		try {
 			executorWithMockFactory.submit(job).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		} finally {
@@ -189,7 +189,7 @@ public class ServiceExecutorTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		serviceExecutor = IServiceExecutor.Utils.executor(noOfThreads);
+		serviceExecutor = IServiceExecutor.Utils.executor(getClass().getSimpleName()+"-setup-{0}", noOfThreads);
 	}
 
 	@Override
