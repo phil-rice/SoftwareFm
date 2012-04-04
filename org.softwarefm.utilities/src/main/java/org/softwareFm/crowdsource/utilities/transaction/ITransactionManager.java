@@ -1,6 +1,7 @@
 package org.softwareFm.crowdsource.utilities.transaction;
 
 import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
@@ -17,13 +18,14 @@ public interface ITransactionManager extends IShutdown {
 	<T> void addResource(ITransaction<T> transaction, ITransactional transactional);
 
 	public static class Utils {
+		public static AtomicInteger count = new AtomicInteger();
 		public static ITransactionManagerBuilder standard() {
-			return new TransactionManager(IServiceExecutor.Utils.defaultExecutor("ITransactionManager-{0}"), new TransactionManager.DefaultFutureToTransactionDn());
+			return new TransactionManager(IServiceExecutor.Utils.defaultExecutor("ITransactionManager"+ count.getAndIncrement() + "-{0}"), new TransactionManager.DefaultFutureToTransactionDn());
 		}
 
 		/** This is used when (for example) you want to do something while waiting in the get method: such as process swt dispatch thread queues */
 		public static ITransactionManagerBuilder withFutureToTransactionFn(IFunction1<Future<?>, ITransaction<?>> fn) {
-			return new TransactionManager(IServiceExecutor.Utils.defaultExecutor("ITransactionManager-{0}"), fn);
+			return new TransactionManager(IServiceExecutor.Utils.defaultExecutor("ITransactionManager"+ count.getAndIncrement() + "-{0}"), fn);
 		}
 	}
 }

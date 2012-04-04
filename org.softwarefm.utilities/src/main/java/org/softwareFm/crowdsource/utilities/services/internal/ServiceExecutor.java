@@ -8,6 +8,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import org.softwareFm.crowdsource.utilities.constants.CommonMessages;
 import org.softwareFm.crowdsource.utilities.constants.UtilityMessages;
@@ -15,6 +16,7 @@ import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.future.Futures;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
+import org.softwareFm.crowdsource.utilities.services.FutureAndMonitor;
 import org.softwareFm.crowdsource.utilities.services.IExceptionListener;
 import org.softwareFm.crowdsource.utilities.services.IMonitorFactory;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
@@ -47,38 +49,52 @@ public class ServiceExecutor implements IServiceExecutor {
 	}
 
 	@Override
-	public <T> Future<T> submit(final IFunction1<IMonitor, T> task) {
-		final IMonitor monitor = monitorFactory.createMonitor();
-		final CountDownLatch latch = new CountDownLatch(1);
-		Future<T> rawFuture = service.submit(new Callable<T>() {
-			@Override
-			public T call() throws Exception {
-				latch.await();
-				try {
-					for (IServiceExecutorLifeCycleListener listener : lifeCycleListeners)
-						listener.starting(task);
+	public <T> FutureAndMonitor<T> submit(final IFunction1<IMonitor, T> task) {
+		try {
+			final IMonitor monitor = monitorFactory.createMonitor();
+			final CountDownLatch waitUntilSetupComplete = new CountDownLatch(1);
+			final CountDownLatch waitUntilMonitorSet = new CountDownLatch(1);
+			final AtomicReference<IMonitor> actualMonitor = new AtomicReference<IMonitor>();
+			Future<T> rawFuture = service.submit(new Callable<T>() {
+				@Override
+				public T call() throws Exception {
+					Thread currentThread = Thread.currentThread();
+					String startName = currentThread.getName();
+					currentThread.setName(startName + ": " + task);
+
 					TrackBeginMonitor trackingMonitor = new TrackBeginMonitor(monitor, task);
-					T result = task.apply(trackingMonitor);
-					for (IServiceExecutorLifeCycleListener listener : lifeCycleListeners)
-						listener.finished(task, result);
-					trackingMonitor.checkHasBegan();
-					return result;
-				} catch (Exception e) {
-					if (e != null) {
-						for (IExceptionListener listener : exceptionListeners)
-							listener.exceptionOccured(e);
+					actualMonitor.set(trackingMonitor);
+					waitUntilMonitorSet.countDown();
+					waitUntilSetupComplete.await();
+					try {
 						for (IServiceExecutorLifeCycleListener listener : lifeCycleListeners)
-							listener.exception(task, e);
+							listener.starting(task);
+						T result = task.apply(trackingMonitor);
+						for (IServiceExecutorLifeCycleListener listener : lifeCycleListeners)
+							listener.finished(task, result);
+						trackingMonitor.checkHasBegan();
+						return result;
+					} catch (Exception e) {
+						if (e != null) {
+							for (IExceptionListener listener : exceptionListeners)
+								listener.exceptionOccured(e);
+							for (IServiceExecutorLifeCycleListener listener : lifeCycleListeners)
+								listener.exception(task, e);
+						}
+						throw e;
+					} finally {
+						monitors.remove(monitor);
+						currentThread.setName(startName);
 					}
-					throw e;
-				} finally {
-					monitors.remove(monitor);
 				}
-			}
-		});
-		monitors.add(monitor);
-		latch.countDown();
-		return Futures.bindToMonitor(rawFuture, monitor);
+			});
+			waitUntilMonitorSet.await();
+			monitors.add(monitor);
+			waitUntilSetupComplete.countDown();
+			return new FutureAndMonitor<T>(Futures.bindToMonitor(rawFuture, monitor), actualMonitor.get());
+		} catch (InterruptedException e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	public static class TrackBeginMonitor implements IMonitor {

@@ -4,8 +4,6 @@
 
 package org.softwareFm.crowdsource.utilities.services;
 
-import java.util.concurrent.Future;
-
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.internal.ServiceExecutor;
@@ -13,7 +11,7 @@ import org.softwareFm.crowdsource.utilities.services.internal.ServiceExecutor;
 public interface IServiceExecutor extends IShutdown {
 
 	/** The monitor is provided by the IServiceExecutor. The called task should call beginTask, worked and done. etc,Note that the task may not be finished when this service executor is finished (the task could for example end on the SWT thread). The task can be cancelled using future.cancel, or monitor.cancel */
-	<T> Future<T> submit(IFunction1<IMonitor, T> job);
+	<T> FutureAndMonitor<T> submit(IFunction1<IMonitor, T> job);
 
 	void addExceptionListener(IExceptionListener listener);
 

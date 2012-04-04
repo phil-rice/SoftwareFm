@@ -22,7 +22,6 @@ import org.softwareFm.swt.dataStore.ICardDataStore;
 import org.softwareFm.swt.dataStore.ICardDataStoreCallback;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;
 
-
 public class CardDataStoreForRepository implements IMutableCardDataStore {
 
 	public static Logger logger = Logger.getLogger(ICardDataStore.class);
@@ -42,6 +41,11 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 			public void process(IGitLocal gitLocal) throws Exception {
 				gitLocal.clearCache(url);
 			}
+
+			@Override
+			public String toString() {
+				return CardDataStoreForRepository.this.getClass().getSimpleName() + ".clearCache(" + url + ")";
+			}
 		});
 	}
 
@@ -59,6 +63,11 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 			public void process(IGitLocal gitLocal) throws Exception {
 				gitLocal.clearCaches();
 			}
+
+			@Override
+			public String toString() {
+				return CardDataStoreForRepository.this.getClass().getSimpleName() + ".clearCaches";
+			}
 		}).get();
 	}
 
@@ -71,10 +80,21 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 				gitLocal.init(url, "CardDataStore.makeRepo(" + url + ")");
 				return null;
 			}
+
+			@Override
+			public String toString() {
+				return CardDataStoreForRepository.this.getClass().getSimpleName() + ".makeRepo(" + url + ")";
+			}
+
 		}, new ICallback<Void>() {
 			@Override
 			public void process(Void t) throws Exception {
 				callback.afterEdit(url);
+			}
+
+			@Override
+			public String toString() {
+				return "afterEdit";
 			}
 		});
 	}
@@ -97,6 +117,11 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 				logger.debug("  processDataFor/gotFileAndDescendants: " + url + ", " + data);
 				return data;
 			}
+
+			@Override
+			public String toString() {
+				return CardDataStoreForRepository.this.getClass().getSimpleName() + ".processDataFor(" + url + ", " + callback + ")";
+			}
 		}, new ISwtFunction1<Map<String, Object>, T>() {
 			@Override
 			public T apply(Map<String, Object> data) throws Exception {
@@ -106,6 +131,12 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 				else
 					return ICardDataStoreCallback.Utils.process(callback, url, data);
 			}
+
+			@Override
+			public String toString() {
+				return "callback";
+			}
+
 		});
 	}
 
@@ -118,11 +149,21 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 				gitLocal.put(fileDescription, map, "CardDataStore.put(" + url + ", " + map + ")");
 				return null;
 			}
+
+			@Override
+			public String toString() {
+				return CardDataStoreForRepository.this.getClass().getSimpleName() + ".put(" + url + ", " + map + ", " + afterEdit + ")";
+			}
+
 		}, new ISwtFunction1<Void, Void>() {
 			@Override
 			public Void apply(Void from) throws Exception {
 				afterEdit.afterEdit(url);
 				return null;
+			}
+			@Override
+			public String toString() {
+				return "afterEdit";
 			}
 		});
 	}

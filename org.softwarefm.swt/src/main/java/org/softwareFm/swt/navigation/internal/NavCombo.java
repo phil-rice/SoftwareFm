@@ -82,6 +82,10 @@ public class NavCombo implements IHasControl {
 				setDropdownItems(items);
 				return null;
 			}
+			@Override
+			public String toString() {
+				return NavCombo.this.getClass().getSimpleName() + ".processData";
+			}
 
 		});
 		workOutImage();
@@ -91,7 +95,7 @@ public class NavCombo implements IHasControl {
 	private void workOutImage() {
 		if (urlOffset == null || urlOffset.length() == 0)
 			return;
-		String url = rootUrl + "/" + urlOffset;
+		final String url = rootUrl + "/" + urlOffset;
 		cardConfig.cardDataStore.processDataFor(url, new ICardDataStoreCallback<Void>() {
 			@Override
 			public Void process(String url, Map<String, Object> result) throws Exception {
@@ -104,6 +108,10 @@ public class NavCombo implements IHasControl {
 			@Override
 			public Void noData(String url) throws Exception {
 				return process(url, Collections.<String, Object> emptyMap());
+			}
+			@Override
+			public String toString() {
+				return NavCombo.this.getClass().getSimpleName() + ".workOutImage";
 			}
 		});
 	}

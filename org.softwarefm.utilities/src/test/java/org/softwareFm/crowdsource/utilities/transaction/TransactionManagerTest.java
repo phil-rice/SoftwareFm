@@ -68,19 +68,47 @@ public class TransactionManagerTest extends TestCase {
 					}
 				}, postFunction2);
 				String result = nested.get(CommonConstants.testTimeOutMs);
-				assertFalse(nested.isDone());
+				assertTrue(nested.isDone());
 				nestedTransaction.set(nested);
 				return result;
 			}
 		}, postFunction1).get(CommonConstants.testTimeOutMs);
-		assertTrue(nestedTransaction.get().isDone());
+
 		assertTrue(thread1.get() != Thread.currentThread());
 		assertSame(thread1.get(), thread2.get());
 
 		assertEquals("value1-b", result);
 		assertEquals("value2-b", Lists.getOnly(postFunction1.froms));
 		assertEquals("nestedResult", Lists.getOnly(postFunction2.froms));
+	}
 
+	public void testNestedTransactionalsAreIncludedInCommits() {
+		final ITransactional tra = EasyMock.createMock(ITransactional.class);
+		final ITransactional trb = EasyMock.createMock(ITransactional.class);
+		final ITransactional tr1a = EasyMock.createMock(ITransactional.class);
+		final ITransactional tr1b = EasyMock.createMock(ITransactional.class);
+		final ITransactional tr2a = EasyMock.createMock(ITransactional.class);
+		final ITransactional tr2b = EasyMock.createMock(ITransactional.class);
+		tra.commit();
+		trb.commit();
+		tr1a.commit();
+		tr1b.commit();
+		tr2a.commit();
+		tr2b.commit();
+		EasyMock.replay(tra, trb, tr1a, tr1b, tr2a, tr2b);
+
+		final ConstantFunctionWithMemoryOfFroms<IMonitor, String> nestedJob1 = Functions.<String> constantWithMemoryOfMonitor("value1");
+		final ConstantFunctionWithMemoryOfFroms<IMonitor, String> nestedJob2 = Functions.<String> constantWithMemoryOfMonitor("value2");
+
+		final IFunction1<String, String> identity = Functions.<String, String> identity();
+		manager.start(new IFunction1<IMonitor, String>() {
+			@Override
+			public String apply(IMonitor from) throws Exception {
+				return manager.start(nestedJob1, identity, tr1a, tr1b).get(CommonConstants.testTimeOutMs) + manager.start(nestedJob2, identity, tr2a, tr2b).get(CommonConstants.testTimeOutMs);
+			}
+		}, identity, tra, trb).get(CommonConstants.testTimeOutMs);
+
+		EasyMock.verify(tra, trb, tr1a, tr1b, tr2a, tr2b);
 	}
 
 	public void testCallbackIsExecutedByRegisteredExecutorIfMarkerInterfacePresent() {

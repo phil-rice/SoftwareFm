@@ -27,9 +27,9 @@ public interface ISwtSoftwareFmFactory {
 				public ITransaction<?> apply(final Future<?> future) throws Exception {
 					return new Transaction<Object>((Future<Object>) future, timeOutMs) { 
 						@Override
-						public Object get() {
+						public Object get(long timeOutMs) {
 							if (Thread.currentThread() != swtThread)
-								return super.get();
+								return super.get(timeOutMs);
 							long startTime = System.currentTimeMillis();
 							while (!future.isDone() && System.currentTimeMillis() < startTime + timeOutMs)
 								Swts.dispatchUntilQueueEmpty(display);
@@ -41,6 +41,10 @@ public interface ISwtSoftwareFmFactory {
 							} catch (Exception e) {
 								throw WrappedException.wrap(e);
 							}
+						}
+						@Override
+						public String toString() {
+							return "SwtDispatchingTransaction(" + future +")";
 						}
 					};
 				}

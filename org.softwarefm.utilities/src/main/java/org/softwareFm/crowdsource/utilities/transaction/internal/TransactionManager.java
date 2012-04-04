@@ -20,6 +20,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1WithExceptionHan
 import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
+import org.softwareFm.crowdsource.utilities.services.FutureAndMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactionManagerBuilder;
@@ -82,10 +83,10 @@ public class TransactionManager implements ITransactionManagerBuilder {
 
 	private final IServiceExecutor serviceExecutor;
 
-	private final Map<IFunction1<IMonitor, ?>, ITransaction<?>> fullJobToTransaction = Maps.newSynchronisedMap();
-	private final Map<ITransaction<?>, List<ITransactional>> transactionalMap = Maps.newSynchronisedMap();
-
 	private final IFunction1<Future<?>, ITransaction<?>> futureToTransactionFn;
+	private final Map<IMonitor, ITransaction<?>> monitorToTransaction = Maps.newSynchronisedMap();
+	private final Map<ITransaction<?>, List<ITransactional>> transactionalMap = Maps.newSynchronisedMap();
+	private final ThreadLocal<IMonitor> monitors = new ThreadLocal<IMonitor>();
 
 	public TransactionManager(IServiceExecutor serviceExecutor, IFunction1<Future<?>, ITransaction<?>> futureToTransactionFn) {
 		this.serviceExecutor = serviceExecutor;
@@ -94,12 +95,34 @@ public class TransactionManager implements ITransactionManagerBuilder {
 
 	@Override
 	public <Intermediate, Result> ITransaction<Result> start(final IFunction1<IMonitor, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback, Object... potentialTransactionals) {
+		IMonitor existing = monitors.get();
+		if (existing == null)
+			return newTransaction(job, resultCallback, potentialTransactionals);
+		else
+			return nestedTransaction(existing, job, resultCallback,  potentialTransactionals);
+	}
+
+	private <Result, Intermediate> ITransaction<Result> nestedTransaction(IMonitor monitor, final IFunction1<IMonitor, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback, Object... potentialTransactionals) {
+		try {
+			ITransaction<?> existing = monitorToTransaction.get(monitor);
+			addPotentialTransactionals(existing, potentialTransactionals);
+			Intermediate intermediate = job.apply(monitor);
+			Result result = resultCallback.apply(intermediate);
+			return ITransaction.Utils.doneTransaction(result);
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+		
+	}
+	private <Result, Intermediate> ITransaction<Result> newTransaction(final IFunction1<IMonitor, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback, Object... potentialTransactionals) {
 		final CountDownLatch latch = new CountDownLatch(1);
 		IFunction1<IMonitor, Result> fullJob = new IFunction1<IMonitor, Result>() {
 			@Override
 			public Result apply(IMonitor monitor) throws Exception {
 				AtomicReference<Exception> exception = new AtomicReference<Exception>();
 				try {
+					assert monitors.get() == null;
+					monitors.set(monitor);
 					latch.await();
 					Intermediate intermediate = job.apply(monitor);
 					Result result = executeCallbackFunction(resultCallback, intermediate);
@@ -108,7 +131,7 @@ public class TransactionManager implements ITransactionManagerBuilder {
 					exception.set(e);
 					throw e;
 				} finally {
-					ITransaction<?> transaction = fullJobToTransaction.remove(this);
+					ITransaction<?> transaction = monitorToTransaction.remove(monitor);
 					if (transaction == null)
 						throw new IllegalStateException("The transaction was null");
 					if (exception.get() == null) {
@@ -123,8 +146,8 @@ public class TransactionManager implements ITransactionManagerBuilder {
 			private void rollback(final IFunction1<Intermediate, Result> resultCallbackFn, AtomicReference<Exception> exception, ITransaction<?> transaction) throws Exception {
 				CopyOnWriteArrayList<Exception> exceptions = new CopyOnWriteArrayList<Exception>();
 				try {
-					if (resultCallbackFn instanceof IFunction1WithExceptionHandler<?,?>)
-						((IFunction1WithExceptionHandler<?,?>) resultCallbackFn).handle(exception.get());
+					if (resultCallbackFn instanceof IFunction1WithExceptionHandler<?, ?>)
+						((IFunction1WithExceptionHandler<?, ?>) resultCallbackFn).handle(exception.get());
 				} catch (Exception e) {
 					exceptions.add(e);
 				}
@@ -140,7 +163,8 @@ public class TransactionManager implements ITransactionManagerBuilder {
 
 			private void commit(ITransaction<?> transaction) throws Exception {
 				CopyOnWriteArrayList<Exception> exceptions = new CopyOnWriteArrayList<Exception>();
-				for (ITransactional transactional : Maps.getOrEmptyList(transactionalMap, transaction))
+				List<ITransactional> transactionals = Maps.getOrEmptyList(transactionalMap, transaction);
+				for (ITransactional transactional : transactionals)
 					try {
 						transactional.commit();
 					} catch (Exception e) {
@@ -164,15 +188,17 @@ public class TransactionManager implements ITransactionManagerBuilder {
 					}
 				return resultCallback.apply(intermediate);
 			}
+			@Override
+			public String toString() {
+				return job.toString();
+			}
 		};
 		try {
-			Future<Result> future = serviceExecutor.submit(fullJob);
+			FutureAndMonitor<Result> futureAndMonitor = serviceExecutor.submit(fullJob);
 			@SuppressWarnings("unchecked")
-			ITransaction<Result> transaction = (ITransaction<Result>) futureToTransactionFn.apply(future);
-			for (Object potential : potentialTransactionals)
-				if (potential instanceof ITransactional)
-					Maps.addToList(transactionalMap, transaction, (ITransactional) potential);
-			fullJobToTransaction.put(fullJob, transaction);
+			ITransaction<Result> transaction = (ITransaction<Result>) futureToTransactionFn.apply(futureAndMonitor.future);
+			addPotentialTransactionals(transaction, potentialTransactionals);
+			monitorToTransaction.put(futureAndMonitor.monitor, transaction);
 			latch.countDown();
 			return transaction;
 		} catch (Exception e) {
@@ -180,12 +206,18 @@ public class TransactionManager implements ITransactionManagerBuilder {
 		}
 	}
 
+	private <Result> void addPotentialTransactionals(ITransaction<Result> transaction, Object... potentialTransactionals) {
+		for (Object potential : potentialTransactionals)
+			if (potential instanceof ITransactional)
+				Maps.addToList(transactionalMap, transaction, (ITransactional) potential);
+	}
+
 	@Override
 	public <T> void addResource(ITransaction<T> transaction, ITransactional transactional) {
 	}
 
 	@Override
-	public <Intermediate, Result> ITransactionManagerBuilder registerCallbackExecutor(Class<? > markerClass, IFunction3<IServiceExecutor, IFunction1<Intermediate, Result>, Intermediate, Result> executor) {
+	public <Intermediate, Result> ITransactionManagerBuilder registerCallbackExecutor(Class<?> markerClass, IFunction3<IServiceExecutor, IFunction1<Intermediate, Result>, Intermediate, Result> executor) {
 		callbackExecutors.put(markerClass, executor);
 		return this;
 	}

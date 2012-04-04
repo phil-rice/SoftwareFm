@@ -8,6 +8,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.TestCase;
 
@@ -22,6 +23,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.runnable.Runnables;
 import org.softwareFm.crowdsource.utilities.runnable.Runnables.CountRunnable;
+import org.softwareFm.crowdsource.utilities.services.FutureAndMonitor;
 import org.softwareFm.crowdsource.utilities.services.IMonitorFactory;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutorLifeCycleListener;
@@ -38,6 +40,21 @@ public class ServiceExecutorTest extends TestCase {
 		CountRunnable count = Runnables.count();
 		checkCanRunInParallel(count, 0);
 		assertEquals(noOfThreads, count.getCount());
+	}
+
+	public void testReturnsMonitor() throws Exception {
+		final AtomicReference<IMonitor> actual = new AtomicReference<IMonitor>();
+		IFunction1<IMonitor, String> job = new IFunction1<IMonitor, String>() {
+			@Override
+			public String apply(IMonitor from) throws Exception {
+				from.beginTask("", 1);
+				actual.set(from);
+				return "value";
+			}
+		};
+		FutureAndMonitor<String> submit = serviceExecutor.submit(job);
+		assertEquals("value", submit.future.get());
+		assertEquals(actual.get(), submit.monitor);
 	}
 
 	public void testIfExceptionIsThrownNewThreadIsCreatedAndCanStillExecuteInParallel() throws Exception {
@@ -62,7 +79,7 @@ public class ServiceExecutorTest extends TestCase {
 			@Override
 			public void run() {
 				try {
-					serviceExecutor.submit(job).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+					serviceExecutor.submit(job).future.get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 				} catch (Exception e) {
 					throw WrappedException.wrap(e);
 				}
@@ -83,7 +100,7 @@ public class ServiceExecutorTest extends TestCase {
 		EasyMock.replay(listener1);
 
 		serviceExecutor.addLifeCycleListener(listener1);
-		serviceExecutor.submit(job).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+		serviceExecutor.submit(job).future.get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		EasyMock.verify(listener1);
 	}
 
@@ -101,7 +118,7 @@ public class ServiceExecutorTest extends TestCase {
 			@Override
 			public void run() {
 				try {
-					serviceExecutor.submit(job).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+					serviceExecutor.submit(job).future.get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 				} catch (ExecutionException e) {
 					throw WrappedException.wrap(e.getCause());
 				} catch (Exception e) {
@@ -138,7 +155,7 @@ public class ServiceExecutorTest extends TestCase {
 					}
 				}
 
-			}));
+			}).future);
 		}
 		for (Future<Integer> future : futures) {
 			assertFalse(future.isCancelled());
@@ -178,9 +195,9 @@ public class ServiceExecutorTest extends TestCase {
 	}
 
 	private void executeWithSpecificMonitor(IFunction1<IMonitor, String> job, IMonitor monitor) throws InterruptedException, ExecutionException, TimeoutException {
-		IServiceExecutor executorWithMockFactory = IServiceExecutor.Utils.executor(getClass().getSimpleName()+"-specific-{0}", 10, IMonitorFactory.Utils.specific(monitor));
+		IServiceExecutor executorWithMockFactory = IServiceExecutor.Utils.executor(getClass().getSimpleName() + "-specific-{0}", 10, IMonitorFactory.Utils.specific(monitor));
 		try {
-			executorWithMockFactory.submit(job).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
+			executorWithMockFactory.submit(job).future.get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 		} finally {
 			executorWithMockFactory.shutdown();
 		}
@@ -189,7 +206,7 @@ public class ServiceExecutorTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		serviceExecutor = IServiceExecutor.Utils.executor(getClass().getSimpleName()+"-setup-{0}", noOfThreads);
+		serviceExecutor = IServiceExecutor.Utils.executor(getClass().getSimpleName() + "-setup-{0}", noOfThreads);
 	}
 
 	@Override

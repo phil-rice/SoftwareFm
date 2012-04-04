@@ -31,6 +31,11 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 				Map<String, Object> data = reader.getFileAndDescendants2(fileDescription);
 				return data;
 			}
+
+			@Override
+			public String toString() {
+				return CardCollectionsDataStore.this.getClass().getSimpleName() + ".processDataFor(" + url + ")";
+			}
 		}, new ISwtFunction1<Map<String, Object>, ICard>() {
 			@Override
 			public ICard apply(Map<String, Object> from) throws Exception {
@@ -38,6 +43,11 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 				visitor.initialCard(cardHolder, cardConfig, url, card);
 				visitor.finished(cardHolder, url, card);
 				return card;
+			}
+
+			@Override
+			public String toString() {
+				return "makeCard";
 			}
 		});
 		return mainTransaction;

@@ -110,7 +110,7 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 				return "unknown";
 			}
 
-		});
+		}).future;
 	}
 
 	abstract protected HttpRequestBase getRequestBase(String protocolHostAndUrl) throws Exception;

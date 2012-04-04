@@ -79,10 +79,10 @@ import org.softwareFm.swt.timeline.IPlayListGetter;
 
 /** These tests go out to software fm, so they are much more fragile */
 abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest implements INeedsServerTest {
-	final static String groupUrl = "/ant";
-	final static String artifactUrl = "/ant/ant/artifact/ant";
-	final static String snippetrepoUrl = "/java/io/File";
-	final static String snippetUrl = "/snippet/java/io/File/snippet";
+	protected final static String groupUrl = "/ant";
+	protected	final static String artifactUrl = "/ant/ant/artifact/ant";
+	protected	final static String snippetrepoUrl = "/java/io/File";
+	protected	final static String snippetUrl = "/snippet/java/io/File/snippet";
 
 	protected CardConfig cardConfig;
 	public Explorer explorer;
@@ -333,7 +333,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 			public void process(IGitWriter gitWriter) throws Exception {
 				gitWriter.put(IFileDescription.Utils.plain(url), Maps.stringObjectMap(CardConstants.slingResourceType, CardConstants.collection), "postSnippetData");
 			}
-		});
+		}).get();
 	}
 
 	protected void postArtifactData() {
@@ -345,7 +345,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial/one")), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), "postArtefactData_2");
 				gitWriter.put(IFileDescription.Utils.plain(Urls.compose(rootArtifactUrl, artifactUrl, "/tutorial/two")), Maps.stringObjectMap(CardConstants.slingResourceType, "tutorial"), "postArtefactData_3");
 			}
-		});
+		}).get();
 	}
 
 	protected void checkAndEdit(final Table cardTable, IAddingCallback<Table> addingCallback) {

@@ -67,6 +67,10 @@ public interface IMonitor {
 				public void beginTask(String name, int totalWork) {
 				}
 
+				@Override
+				public String toString() {
+					return "NoMonitor";
+				}
 			};
 		}
 

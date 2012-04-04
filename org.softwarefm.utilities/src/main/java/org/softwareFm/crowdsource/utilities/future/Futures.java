@@ -43,6 +43,11 @@ public class Futures {
 			public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 				return rawFuture.get(timeout, unit);
 			}
+			
+			@Override
+			public String toString() {
+				return "BindToMonitor(" + rawFuture +", " + rawMonitor +")";
+			}
 		};
 	}
 	
