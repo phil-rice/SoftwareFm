@@ -91,6 +91,15 @@ public interface IGitReader extends IHasCache {
 			}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
 		}
 
+		public static Map<String, Object> getFileAndDescendants2(IContainer container, final IFileDescription fileDescription) {
+			return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
+				@Override
+				public Map<String, Object> apply(IGitReader gitReader) throws Exception {
+					return gitReader.getFileAndDescendants2(fileDescription);
+				}
+			}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
+		}
+
 	}
 
 }

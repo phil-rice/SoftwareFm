@@ -4,7 +4,7 @@
 
 package org.softwareFm.swt.explorer.internal;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.CountDownLatch;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Event;
@@ -41,20 +41,20 @@ public class ExplorerTest extends ApiAndSwtTest {
 
 	public void testExplorerUsesPopupMenuId() {
 		Explorer explorer = makeExplorer("withCardNameField");
-		final AtomicInteger count = new AtomicInteger();
 
+		final CountDownLatch latch = new CountDownLatch(1);
 		explorer.displayCard(CardDataStoreFixture.url1a, new CardAndCollectionDataStoreAdapter() {
 			@Override
 			public void finished(ICardHolder cardHolder, String url, ICard card) {
 				PopupMenuContributorMock<ICard> contributor = new PopupMenuContributorMock<ICard>();
 				card.getCardConfig().popupMenuService.registerContributor(popupMenuId, contributor);
-				assertEquals(1, count.incrementAndGet());
 				Event event = new Event();
 				card.getTable().notifyListeners(SWT.MenuDetect, event);
 				assertEquals(event, Lists.getOnly(contributor.events));
+				latch.countDown();
 			}
 		});
-		assertEquals(1, count.get());
+		dispatchUntilTimeoutOrLatch(latch);
 	}
 
 	private Explorer makeExplorer(String cardNameUrl) {
@@ -63,7 +63,7 @@ public class ExplorerTest extends ApiAndSwtTest {
 				"noCardNameField", new ResourceGetterMock(), //
 				"withCardNameField", new ResourceGetterMock(CardConstants.cardNameFieldKey, "cardName"))).//
 				withTitleSpecFn(Functions.<ICardData, TitleSpec> constant(TitleSpec.noTitleSpec(shell.getBackground())));
-		Explorer explorer = new Explorer(getLocalApi().makeUserAndGroupsContainer(),cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, IPlayListGetter.Utils.noPlayListGetter(), ILoginStrategy.Utils.noLoginStrategy(), //
+		Explorer explorer = new Explorer(getLocalApi().makeUserAndGroupsContainer(), cardConfig, CardDataStoreFixture.urlAsList, masterDetailSocial, IPlayListGetter.Utils.noPlayListGetter(), ILoginStrategy.Utils.noLoginStrategy(), //
 				IShowMyData.Utils.exceptionShowMyData(),//
 				IShowMyGroups.Utils.exceptionShowMyGroups(), IShowMyPeople.Utils.exceptionShowMyPeople(), IUserDataManager.Utils.userDataManager(), //
 				Callables.value(1000l)) {

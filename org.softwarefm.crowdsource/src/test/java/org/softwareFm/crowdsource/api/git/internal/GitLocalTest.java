@@ -123,7 +123,7 @@ public class GitLocalTest extends ApiTest {
 		localOperations.pull("a");
 
 		Map<String, Object> bad = Maps.stringObjectMap(CommonConstants.errorKey, MessageFormat.format(CommonMessages.cannotDecrypt, Crypto.aesEncrypt(badCrypto, Json.toString(v21))));
-		assertEquals(Arrays.asList(v11, v12, bad, v22), IGitReader.Utils.getFileAsListOfMaps(container,ac));
+		assertEquals(Arrays.asList(v11, v12, bad, v22), IGitReader.Utils.getFileAsListOfMaps(container, ac));
 
 	}
 
@@ -138,7 +138,7 @@ public class GitLocalTest extends ApiTest {
 		remoteOperations.append(ac, v22);
 		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
 
-		assertEquals(Arrays.asList(v11, v12, v21, v22), IGitReader.Utils.getFileAsListOfMaps(container,ac));
+		assertEquals(Arrays.asList(v11, v12, v21, v22), IGitReader.Utils.getFileAsListOfMaps(container, ac));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -152,7 +152,7 @@ public class GitLocalTest extends ApiTest {
 		remoteOperations.append(ac, v22);
 		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
 
-		assertEquals(Arrays.asList(v11, v12, v21, v22), IGitReader.Utils.getFileAsListOfMaps(container,ac));
+		assertEquals(Arrays.asList(v11, v12, v21, v22), IGitReader.Utils.getFileAsListOfMaps(container, ac));
 	}
 
 	public void testGetFileAndDescendants1() {
@@ -171,22 +171,43 @@ public class GitLocalTest extends ApiTest {
 		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b/c"), v12);
 		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b/d"), v21);
 	}
-	public void testGetFileAndDescendants2() {
-		fail("write this");
-		Map<String, Object> map = Maps.with(v11, "c", v12, "d", v21);
+
+	public void testGetFileAndDescendants1_again() {
+		Map<String, Object> map = Maps.with(v11, "c", Maps.with(v12, "d", v21));
 		remoteOperations.init("a");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
-		remoteOperations.put(IFileDescription.Utils.plain("a/b/d"), v21);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/c/d"), v21);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/c/d/e"), v22);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/c/d/e/f"), v31);
+		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
+
+		localOperations.init("a");
+		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
+		localOperations.pull("a");
+
+		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b"), map);
+		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b/c"), Maps.with(v12, "d", Maps.with(v21, "e", v22)));
+		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b/c/d"), Maps.with(v21, "e", Maps.with(v22, "f", v31)));
+	}
+	
+	public void testGetFileAndDescendants2() {
+		Map<String, Object> map = Maps.with(v11, "c", Maps.with(v12, "d",  Maps.with(v21, "e", v22)));
+		remoteOperations.init("a");
+		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/c/d"), v21);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/c/d/e"), v22);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/c/d/e/f"), v31);
 		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
 		
 		localOperations.init("a");
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 		
-		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b"), map);
-		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b/d"), v21);
+		checkGetFileAndDescendants2(container, IFileDescription.Utils.plain("a/b"), map);
+		checkGetFileAndDescendants2(container, IFileDescription.Utils.plain("a/b/c"), Maps.with(v12, "d", Maps.with(v21, "e",  Maps.with(v22, "f", v31))));
+		checkGetFileAndDescendants2(container, IFileDescription.Utils.plain("a/b/c/d"), Maps.with(v21, "e", Maps.with(v22, "f", v31)));
 	}
 
 	public void testGetFileAboveRepo() {

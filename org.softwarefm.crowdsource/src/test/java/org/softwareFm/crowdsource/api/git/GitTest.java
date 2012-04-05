@@ -86,10 +86,10 @@ public abstract class GitTest extends TemporaryFileTest {
 		remoteAsUri = new File(root, "remote").getAbsolutePath();
 		localOperations = IGitOperations.Utils.gitOperations(localRoot);
 		remoteOperations = IGitOperations.Utils.gitOperations(remoteRoot);
-		repoFinder = makeFindRepositoryRoot();
+		repoFinder = makeRepoFinder();
 	}
 
-	protected IRepoFinder makeFindRepositoryRoot() {
+	protected IRepoFinder makeRepoFinder() {
 		return IRepoFinder.Utils.forTests(remoteOperations);
 	}
 
@@ -113,6 +113,9 @@ public abstract class GitTest extends TemporaryFileTest {
 
 	protected void checkGetFileAndDescendants1(IContainer container, IFileDescription fileDescription, Map<String, Object> data) {
 		assertEquals(data, IGitReader.Utils.getFileAndDescendants1(container, fileDescription));
+	}
+	protected void checkGetFileAndDescendants2(IContainer container, IFileDescription fileDescription, Map<String, Object> data) {
+		assertEquals(data, IGitReader.Utils.getFileAndDescendants2(container, fileDescription));
 	}
 
 	protected void checkGetFile(IContainer container, String url, Map<String, Object> data) {

@@ -25,6 +25,19 @@ public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrati
 
 	private final String orgFirstGroupUrl = "/org/first/org.first";
 
+	public void testNavigatingAboveRepository() {// issue-16
+		displayCard("/org", new CardHolderAndCardCallback() {
+			@Override
+			public void process(final ICardHolder cardHolder, ICard card) throws Exception {
+				clickOnItemAndCheckCollection(card, "First", "first", Maps.stringObjectMap("org.first", Maps.emptyStringObjectMap()));
+				final String expectedUrl = Urls.composeWithSlash(rootArtifactUrl, orgFirstGroupUrl);
+				ICard childCard = checkChildUrl(0, expectedUrl);
+				clickOnChildCardAndCheckUrl(cardHolder, childCard);
+			}
+
+		});
+	}
+
 	public void testNavigatingTutorials() {
 		postArtifactData();
 		displayCard(artifactUrl, new CardHolderAndCardCallback() {
@@ -39,19 +52,6 @@ public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrati
 				checkChildUrl(1, Urls.composeWithSlash(rootArtifactUrl, artifactUrl, "tutorial", "two"));
 				clickOnChildCardAndCheckUrl(cardHolder, childOne);
 			}
-		});
-	}
-
-	public void testNavigatingAboveRepository() {// issue-16
-		displayCard("/org", new CardHolderAndCardCallback() {
-			@Override
-			public void process(final ICardHolder cardHolder, ICard card) throws Exception {
-				clickOnItemAndCheckCollection(card, "First", "first", Maps.stringObjectMap("org.first", Maps.emptyStringObjectMap()));
-				final String expectedUrl = Urls.composeWithSlash(rootArtifactUrl, orgFirstGroupUrl);
-				ICard childCard = checkChildUrl(0, expectedUrl);
-				clickOnChildCardAndCheckUrl(cardHolder, childCard);
-			}
-
 		});
 	}
 

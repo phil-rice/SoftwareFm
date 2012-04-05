@@ -40,6 +40,8 @@ public class RssDisplayByBrowser implements IBrowserPart {
 
 	@Override
 	public void displayReply(int statusCode, String reply) throws Exception {
+		if (browser.isDisposed())
+			return;
 		int index1 = reply.indexOf("<rss");
 		int index2 = reply.indexOf("<feed");
 		if (index1 == -1 && index2 == -1)

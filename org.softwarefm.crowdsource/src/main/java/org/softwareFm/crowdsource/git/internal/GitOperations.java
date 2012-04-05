@@ -229,6 +229,7 @@ public class GitOperations implements IGitOperations {
 		}
 		return map;
 	}
+
 	@Override
 	@SuppressWarnings("Write getFileAndDescendants2")
 	public Map<String, Object> getFileAndDescendants2(IFileDescription fileDescription) {
@@ -237,21 +238,16 @@ public class GitOperations implements IGitOperations {
 			map = Maps.newMap();
 		File directory = fileDescription.getDirectory(root);
 		for (File child : Files.listChildDirectoriesIgnoringDot(directory)) {
-			File childFile = fileDescription.getFileInSubdirectory(child);
-			Map<String, Object> collectionResults = Maps.newMap();
-			if (childFile.exists())
-				collectionResults.putAll(fileDescription.decode(Files.getText(childFile)));
-			for (File grandChild : Files.listChildDirectoriesIgnoringDot(child))
-				addDataFromFileIfExists(fileDescription, collectionResults, grandChild);
-			map.put(child.getName(), collectionResults);
+			IFileDescription childFileDescription = IFileDescription.Utils.plain(Urls.compose(fileDescription.url(), Files.noExtension(child.getName())));
+			Map<String, Object> childFileAndDescendants = getFileAndDescendants1(childFileDescription);
+			map.put(child.getName(), childFileAndDescendants);
 		}
 		return map;
 	}
 
 	private void addDataFromFileIfExists(IFileDescription fileDescription, Map<String, Object> collectionResults, File directory) {
 		File file = fileDescription.getFileInSubdirectory(directory);
-		if (file.exists())
-			collectionResults.put(directory.getName(), fileDescription.decode(Files.getText(file)));
+		collectionResults.put(directory.getName(), file.exists() ? fileDescription.decode(Files.getText(file)) : Maps.emptyStringObjectMap());
 	}
 
 	@Override
@@ -350,8 +346,8 @@ public class GitOperations implements IGitOperations {
 		File file = fileDescription.getFile(root);
 		if (file.exists()) {
 			file.delete();
-//			File repositoryFile = fileDescription.findRepositoryUrl(root);
-//			String repositoryUrl = Files.offset(root, repositoryFile);
+			// File repositoryFile = fileDescription.findRepositoryUrl(root);
+			// String repositoryUrl = Files.offset(root, repositoryFile);
 		}
 	}
 

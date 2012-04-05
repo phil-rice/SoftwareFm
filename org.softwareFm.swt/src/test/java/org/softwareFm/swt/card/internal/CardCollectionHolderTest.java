@@ -12,6 +12,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.softwareFm.crowdsource.api.IContainerBuilder;
+import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
+import org.softwareFm.crowdsource.api.LocalConfig;
+import org.softwareFm.crowdsource.api.git.IRepoFinder;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
@@ -117,6 +121,17 @@ public class CardCollectionHolderTest extends ApiAndSwtTest {
 		new Label(composite, SWT.NULL);// here to be removed!
 	}
 
+	@Override
+	protected IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
+		final IExtraReaderWriterConfigurator<LocalConfig> parent = super.getLocalExtraReaderWriterConfigurator();
+		return new IExtraReaderWriterConfigurator<LocalConfig>() {
+			@Override
+			public void builder(IContainerBuilder builder, LocalConfig apiConfig) {
+				parent.builder(builder, apiConfig);
+				builder.register(IRepoFinder.class, makeRepoFinder());
+			}
+		};
+	}
 	private static final class DetailsFactoryCallback implements IDetailsFactoryCallback {
 		public final AtomicInteger count = new AtomicInteger();
 		private final Control expectedControl;

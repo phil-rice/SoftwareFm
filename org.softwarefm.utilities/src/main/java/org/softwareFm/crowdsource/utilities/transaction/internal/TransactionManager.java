@@ -99,7 +99,7 @@ public class TransactionManager implements ITransactionManagerBuilder {
 		if (existing == null)
 			return newTransaction(job, resultCallback, potentialTransactionals);
 		else
-			return nestedTransaction(existing, job, resultCallback,  potentialTransactionals);
+			return nestedTransaction(existing, job, resultCallback, potentialTransactionals);
 	}
 
 	private <Result, Intermediate> ITransaction<Result> nestedTransaction(IMonitor monitor, final IFunction1<IMonitor, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback, Object... potentialTransactionals) {
@@ -107,13 +107,14 @@ public class TransactionManager implements ITransactionManagerBuilder {
 			ITransaction<?> existing = monitorToTransaction.get(monitor);
 			addPotentialTransactionals(existing, potentialTransactionals);
 			Intermediate intermediate = job.apply(monitor);
-			Result result = resultCallback.apply(intermediate);
+			Result result = executeCallbackFunction(resultCallback, intermediate);
 			return ITransaction.Utils.doneTransaction(result);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
-		
+
 	}
+
 	private <Result, Intermediate> ITransaction<Result> newTransaction(final IFunction1<IMonitor, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback, Object... potentialTransactionals) {
 		final CountDownLatch latch = new CountDownLatch(1);
 		IFunction1<IMonitor, Result> fullJob = new IFunction1<IMonitor, Result>() {
@@ -180,14 +181,6 @@ public class TransactionManager implements ITransactionManagerBuilder {
 				}
 			}
 
-			@SuppressWarnings({ "rawtypes", "unchecked" })
-			private Result executeCallbackFunction(final IFunction1<Intermediate, Result> resultCallback, Intermediate intermediate) throws Exception {
-				for (Entry<Class<?>, IFunction3> entry : callbackExecutors.entrySet())
-					if (entry.getKey().isAssignableFrom(resultCallback.getClass())) {
-						return (Result) entry.getValue().apply(serviceExecutor, resultCallback, intermediate);
-					}
-				return resultCallback.apply(intermediate);
-			}
 			@Override
 			public String toString() {
 				return job.toString();
@@ -204,6 +197,15 @@ public class TransactionManager implements ITransactionManagerBuilder {
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private <Intermediate, Result> Result executeCallbackFunction(final IFunction1<Intermediate, Result> resultCallback, Intermediate intermediate) throws Exception {
+		for (Entry<Class<?>, IFunction3> entry : callbackExecutors.entrySet())
+			if (entry.getKey().isAssignableFrom(resultCallback.getClass())) {
+				return (Result) entry.getValue().apply(serviceExecutor, resultCallback, intermediate);
+			}
+		return resultCallback.apply(intermediate);
 	}
 
 	private <Result> void addPotentialTransactionals(ITransaction<Result> transaction, Object... potentialTransactionals) {
