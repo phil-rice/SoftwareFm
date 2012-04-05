@@ -25,6 +25,7 @@ import org.softwareFm.swt.card.dataStore.CardDataStoreAsyncMock;
 import org.softwareFm.swt.card.internal.CardCollectionHolder.CardCollectionHolderComposite;
 import org.softwareFm.swt.card.internal.CardHolder.CardHolderComposite;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.dataStore.ICardDataStore;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;
 import org.softwareFm.swt.details.IDetailsFactoryCallback;
 
@@ -35,6 +36,19 @@ public class CardCollectionHolderTest extends ApiAndSwtTest {
 	private DetailsFactoryCallback callback;
 	private CardConfig asyncCardConfig;
 	private CardDataStoreAsyncMock mockDataStore;
+
+	public void testCardHolderPaintListenersCauseDataRequestForCard() {
+		cardCollectionHolder.setKeyValue("some", "url", Maps.stringObjectLinkedMap(CardDataStoreFixture.dataIndexedByUrlFragment), callback);
+		checkPaintCausesRequest(0, "/some/url/1a", CardDataStoreFixture.data1ap);
+		checkPaintCausesRequest(1, "/some/url/1b", CardDataStoreFixture.data1bp);
+		for (int i = 3; i < 6; i++)
+			checkChildhasNullCard(i);
+		checkPaintCausesRequest(2, "/some/url/2a", CardDataStoreFixture.data2ap);
+		checkPaintCausesRequest(3, "/some/url/2b", CardDataStoreFixture.data2bp);
+		checkPaintCausesRequest(4, "/some/url/2c", CardDataStoreFixture.data2cp);
+		// last item is some...which will throw an exception is we try and paint it
+		assertEquals(0, callback.cardUrls.size());
+	}
 
 	public void testConstructor() {
 		assertEquals(1, composite.getChildren().length); // just the label
@@ -47,19 +61,6 @@ public class CardCollectionHolderTest extends ApiAndSwtTest {
 		dispatchUntilQueueEmpty();// not needed, but just being carefull
 		for (int i = 0; i < 6; i++)
 			checkChildhasNullCard(i);
-		assertEquals(0, callback.cardUrls.size());
-	}
-
-	public void testCardHolderPaintListenersCauseDataRequestForCard() {
-		cardCollectionHolder.setKeyValue("some", "url", Maps.stringObjectLinkedMap(CardDataStoreFixture.dataIndexedByUrlFragment), callback);
-		checkPaintCausesRequest(0, "/some/url/1a", CardDataStoreFixture.data1ap);
-		checkPaintCausesRequest(1, "/some/url/1b", CardDataStoreFixture.data1bp);
-		for (int i = 3; i < 6; i++)
-			checkChildhasNullCard(i);
-		checkPaintCausesRequest(2, "/some/url/2a", CardDataStoreFixture.data2ap);
-		checkPaintCausesRequest(3, "/some/url/2b", CardDataStoreFixture.data2bp);
-		checkPaintCausesRequest(4, "/some/url/2c", CardDataStoreFixture.data2cp);
-		// last item is some...which will throw an exception is we try and paint it
 		assertEquals(0, callback.cardUrls.size());
 	}
 
@@ -121,6 +122,10 @@ public class CardCollectionHolderTest extends ApiAndSwtTest {
 		new Label(composite, SWT.NULL);// here to be removed!
 	}
 
+	private CardDataStoreAsyncMock getMockDataStore() {
+		return mockDataStore == null ? mockDataStore = (CardDataStoreAsyncMock) asyncCardConfig.cardDataStore : mockDataStore;
+	}
+
 	@Override
 	protected IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
 		final IExtraReaderWriterConfigurator<LocalConfig> parent = super.getLocalExtraReaderWriterConfigurator();
@@ -129,9 +134,11 @@ public class CardCollectionHolderTest extends ApiAndSwtTest {
 			public void builder(IContainerBuilder builder, LocalConfig apiConfig) {
 				parent.builder(builder, apiConfig);
 				builder.register(IRepoFinder.class, makeRepoFinder());
+				builder.register(ICardDataStore.class, getMockDataStore());
 			}
 		};
 	}
+
 	private static final class DetailsFactoryCallback implements IDetailsFactoryCallback {
 		public final AtomicInteger count = new AtomicInteger();
 		private final Control expectedControl;

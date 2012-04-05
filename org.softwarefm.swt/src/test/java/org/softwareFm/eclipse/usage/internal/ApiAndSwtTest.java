@@ -40,9 +40,9 @@ abstract public class ApiAndSwtTest extends ApiTest {
 
 	@Override
 	protected void setUp() throws Exception {
-		super.setUp();
 		this.shell = new Shell();
 		this.display = shell.getDisplay();
+		super.setUp();
 	}
 
 	@Override

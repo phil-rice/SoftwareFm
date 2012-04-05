@@ -40,8 +40,10 @@ public class CardCollectionsDataStore implements ICardAndCollectionsDataStore {
 			@Override
 			public ICard apply(Map<String, Object> from) throws Exception {
 				ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, url, from);
-				visitor.initialCard(cardHolder, cardConfig, url, card);
-				visitor.finished(cardHolder, url, card);
+				if (card != null) {
+					visitor.initialCard(cardHolder, cardConfig, url, card);
+					visitor.finished(cardHolder, url, card);
+				}
 				return card;
 			}
 

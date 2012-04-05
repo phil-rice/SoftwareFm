@@ -178,8 +178,8 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	@Override
 	protected void setUp() throws Exception {
 		mailer = new MailerMock();
-		super.setUp();
 		dataSource = AbstractLoginDataAccessor.defaultDataSource();
+		super.setUp();
 	}
 
 	@Override
