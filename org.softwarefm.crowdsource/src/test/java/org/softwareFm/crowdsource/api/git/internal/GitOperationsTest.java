@@ -180,17 +180,17 @@ public class GitOperationsTest extends GitTest {
 		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
 		Map<String, Object> map = Maps.with(v11, "c", v12, "d", v21);
 
-		assertEquals(map, remoteOperations.getFileAndDescendants1(IFileDescription.Utils.plain("a/b")));
-		assertEquals(v12, remoteOperations.getFileAndDescendants1(IFileDescription.Utils.plain("a/b/c")));
-		assertEquals(v21, remoteOperations.getFileAndDescendants1(IFileDescription.Utils.plain("a/b/d")));
+		assertEquals(map, remoteOperations.getFileAndDescendants(IFileDescription.Utils.plain("a/b"), 2));
+		assertEquals(v12, remoteOperations.getFileAndDescendants(IFileDescription.Utils.plain("a/b/c"), 2));
+		assertEquals(v21, remoteOperations.getFileAndDescendants(IFileDescription.Utils.plain("a/b/d"), 2));
 
 		localOperations.init("a");
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 
-		assertEquals(map, localOperations.getFileAndDescendants1(IFileDescription.Utils.plain("a/b")));
-		assertEquals(v12, localOperations.getFileAndDescendants1(IFileDescription.Utils.plain("a/b/c")));
-		assertEquals(v21, localOperations.getFileAndDescendants1(IFileDescription.Utils.plain("a/b/d")));
+		assertEquals(map, localOperations.getFileAndDescendants(IFileDescription.Utils.plain("a/b"), 2));
+		assertEquals(v12, localOperations.getFileAndDescendants(IFileDescription.Utils.plain("a/b/c"), 2));
+		assertEquals(v21, localOperations.getFileAndDescendants(IFileDescription.Utils.plain("a/b/d"), 2));
 	}
 
 	public void testMapWithPlainFiles() {

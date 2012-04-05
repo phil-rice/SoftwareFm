@@ -6,30 +6,28 @@ package org.softwareFm.swt.card.internal;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.widgets.Composite;
-import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.card.ICardSelectedListener;
 import org.softwareFm.swt.card.IHasCardConfig;
 import org.softwareFm.swt.card.ILineSelectedListener;
-import org.softwareFm.swt.card.dataStore.CardAndCollectionDataStoreVisitorMonitored;
 import org.softwareFm.swt.configuration.CardConfig;
+import org.softwareFm.swt.dataStore.CardDataStoreCallbackAdapter;
 import org.softwareFm.swt.menu.IPopupMenuService;
 
 public class HoldsCardHolder extends Composite implements IHasCardConfig {
 
 	protected final List<ICardSelectedListener> listeners = new CopyOnWriteArrayList<ICardSelectedListener>();
 	protected final CardConfig cardConfig;
-	private final IContainer container;
 
-	public HoldsCardHolder(Composite parent, int style, IContainer container, CardConfig cardConfig) {
+	public HoldsCardHolder(Composite parent, int style, CardConfig cardConfig) {
 		super(parent, style);
-		this.container = container;
 		this.cardConfig = cardConfig.withStyleAndSelection(cardConfig.cardStyle, false).withPopupMenuService(IPopupMenuService.Utils.<ICard> noPopupMenus());
 	}
 
@@ -38,7 +36,7 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 	}
 
 	public void makeCardHolder(String url, String title) {
-		ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(this, cardConfig,  Arrays.asList(url), null);
+		ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(this, cardConfig, Arrays.asList(url), null);
 		cardHolder.getComposite().setLayout(new CardHolder.CardHolderLayout());
 		addPaintListenerThatGetsMoreData(cardHolder, url);
 	}
@@ -49,12 +47,10 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 			public void paintControl(PaintEvent e) {
 				cardHolder.getControl().removePaintListener(this);
 				if (!cardHolder.getControl().isDisposed()) {
-					// System.out.println("PaintListener... get data for: " + url);
-					CardAndCollectionDataStoreVisitorMonitored visitor = new CardAndCollectionDataStoreVisitorMonitored() {
+					cardConfig.cardDataStore.processDataFor(url, new CardDataStoreCallbackAdapter<Void>() {
 						@Override
-						public void initialCard(ICardHolder cardHolder, CardConfig cardConfig, String url, final ICard card) {
-							// System.out.println("  Initial card " + card.getControl().isDisposed());
-							super.initialCard(cardHolder, cardConfig, url, card);
+						public Void process(String url, Map<String, Object> result) throws Exception {
+							final ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, url, result);
 							card.addLineSelectedListener(new ILineSelectedListener() {
 								@Override
 								public void selected(ICard card, String key, Object value) {
@@ -67,10 +63,9 @@ public class HoldsCardHolder extends Composite implements IHasCardConfig {
 									notifyCardSelectedListeners(card);
 								}
 							});
+							return null;
 						}
-					};
-
-					cardConfig.cardCollectionsDataStore.processDataFor(container, cardHolder, cardConfig, url, visitor);
+					});
 				}
 			}
 		};

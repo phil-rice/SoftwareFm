@@ -78,6 +78,7 @@ public class ClientGroupOperations implements IGroupOperations {
 		readWriteApi.access(IHttpClient.class, new ICallback<IHttpClient>() {
 			@Override
 			public void process(IHttpClient client) throws Exception {
+				
 				client.post(GroupConstants.leaveGroupPrefix).//
 						addParam(LoginConstants.softwareFmIdKey, softwareFmId).//
 						addParam(GroupConstants.groupIdKey, groupId).//

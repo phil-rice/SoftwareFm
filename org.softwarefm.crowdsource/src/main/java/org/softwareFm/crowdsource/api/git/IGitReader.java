@@ -19,10 +19,7 @@ public interface IGitReader extends IHasCache {
 	Map<String, Object> getFile(IFileDescription fileDescription);
 
 	/** creates a map which is the aggregate of the file and it's immediate descendants (depth 1). The descendants are in sub directories with the same crypto key and name */
-	Map<String, Object> getFileAndDescendants1(IFileDescription fileDescription);
-
-	/** creates a map which is the aggregate of the file and it's immediate descendants, and those descendants (depth 2). The descendants are in sub directories with the same crypto key and name */
-	Map<String, Object> getFileAndDescendants2(IFileDescription fileDescription);
+	Map<String, Object> getFileAndDescendants(IFileDescription fileDescription, int depth);
 
 	/** loads a file as a iterable of maps. Each line is a map, and optionally encrypted. This returns an Iterable rather than list on average, as this will often halve the processing time */
 	Iterable<Map<String, Object>> getFileAsListOfMaps(IFileDescription fileDescription);
@@ -82,23 +79,15 @@ public interface IGitReader extends IHasCache {
 			}, ICallback.Utils.<Void> noCallback()).get();
 		}
 
-		public static Map<String, Object> getFileAndDescendants1(IContainer container, final IFileDescription fileDescription) {
+		public static Map<String, Object> getFileAndDescendants(IContainer container, final IFileDescription fileDescription, final int depth) {
 			return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
 				@Override
 				public Map<String, Object> apply(IGitReader gitReader) throws Exception {
-					return gitReader.getFileAndDescendants1(fileDescription);
+					return gitReader.getFileAndDescendants(fileDescription, depth);
 				}
 			}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
 		}
 
-		public static Map<String, Object> getFileAndDescendants2(IContainer container, final IFileDescription fileDescription) {
-			return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
-				@Override
-				public Map<String, Object> apply(IGitReader gitReader) throws Exception {
-					return gitReader.getFileAndDescendants2(fileDescription);
-				}
-			}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
-		}
 
 	}
 

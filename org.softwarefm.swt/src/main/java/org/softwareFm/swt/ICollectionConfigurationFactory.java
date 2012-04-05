@@ -11,6 +11,7 @@ import org.softwareFm.crowdsource.utilities.url.IUrlGeneratorMap;
 import org.softwareFm.crowdsource.utilities.url.UrlGenerator;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.card.ILineItemFunction;
 import org.softwareFm.swt.card.IRightClickCategoriser;
 import org.softwareFm.swt.configuration.ICardConfigurator;
@@ -33,7 +34,7 @@ public interface ICollectionConfigurationFactory {
 			return new SoftwareFmCardValueFunction(resourceGetterFn, valuePattern);
 		}
 
-		public static IFunction1<ICard, String> softwareFmDefaultChildFunction() {
+		public static IFunction1<ICardData, String> softwareFmDefaultChildFunction() {
 			return new SoftwareFmDefaultChildFunction();
 		}
 

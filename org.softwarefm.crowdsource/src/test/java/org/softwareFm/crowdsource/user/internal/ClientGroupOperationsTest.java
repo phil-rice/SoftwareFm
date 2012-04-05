@@ -33,11 +33,11 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 /** This is just checking the wiring: the details of the gui interaction and server side processor are checked elsewhere */
 public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrationTests {
 
-	private IContainer localReadWriter;
+	private IContainer localContainer;
 
 	@SuppressWarnings("unchecked")
 	public void testCreateGroup() {
-		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
+		localContainer.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
 			public void process(IGroupOperations groupOperations) throws Exception {
 				String takeOnEmailList = "a@x.com,b@x.com";
@@ -48,7 +48,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		}).get();
 
-		localReadWriter.accessWithCallback(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
+		localContainer.accessWithCallback(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
 			@Override
 			public Void apply(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
 				checkUserExistsAndIsMember(userReader, userMembershipReader, softwareFmId0, userKey0, email0, GroupConstants.adminStatus);
@@ -84,7 +84,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		}).get();
 
-		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
+		localContainer.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
 			public void process(IGroupOperations groupOperations) throws Exception {
 				String takeOnEmailList = "a@x.com,b@x.com";
@@ -96,7 +96,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		}).get();
 
-		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new ICallback3<IGroupsReader, IUserReader, IUserMembershipReader>() {
+		localContainer.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new ICallback3<IGroupsReader, IUserReader, IUserMembershipReader>() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void process(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
@@ -140,7 +140,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		}).get();
 
-		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
+		localContainer.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
 			public void process(IGroupOperations groupOperations) throws Exception {
 				MemoryCallback<GroupOperationResult> memory = ICallback.Utils.memory();
@@ -150,7 +150,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		}).get();
 
-		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new ICallback3<IGroupsReader, IUserReader, IUserMembershipReader>() {
+		ICallback3<IGroupsReader, IUserReader, IUserMembershipReader> check = new ICallback3<IGroupsReader, IUserReader, IUserMembershipReader>() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void process(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
@@ -166,7 +166,9 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 				assertEquals(expected.size(), actual.size());
 			}
 
-		}).get();
+		};
+		getServerContainer().access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, check).get();
+		localContainer.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, check).get();
 	}
 
 	public void testLEaveGroup() {
@@ -183,7 +185,8 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		}).get();
 
-		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
+		
+		localContainer.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
 			public void process(IGroupOperations groupOperations) throws Exception {
 				MemoryCallback<GroupOperationResult> memory = ICallback.Utils.memory();
@@ -193,10 +196,11 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		}).get();
 
-		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new ICallback3<IGroupsReader, IUserReader, IUserMembershipReader>() {
+		localContainer.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new ICallback3<IGroupsReader, IUserReader, IUserMembershipReader>() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void process(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
+				
 				checkUserExistsAndIsMember(userReader, userMembershipReader, softwareFmId0, userKey0, email0, GroupConstants.adminStatus);
 				assertEquals(Collections.emptyList(), userMembershipReader.walkGroupsFor(softwareFmId1, userKey1));
 
@@ -223,7 +227,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		}).get();
 
-		localReadWriter.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
+		localContainer.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
 			public void process(IGroupOperations groupOperations) throws Exception {
 				MemoryCallback<GroupOperationResult> memory = ICallback.Utils.memory();
@@ -233,7 +237,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		}).get();
 
-		localReadWriter.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new ICallback3<IGroupsReader, IUserReader, IUserMembershipReader>() {
+		localContainer.access(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new ICallback3<IGroupsReader, IUserReader, IUserMembershipReader>() {
 			@SuppressWarnings("unchecked")
 			@Override
 			public void process(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
@@ -266,7 +270,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		localReadWriter = getLocalApi().makeContainer();
+		localContainer = getLocalApi().makeContainer();
 		assertEquals(softwareFmId0, createUser());
 	}
 

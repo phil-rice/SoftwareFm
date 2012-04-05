@@ -10,17 +10,17 @@ import java.util.Map.Entry;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
-import org.softwareFm.swt.card.ICard;
+import org.softwareFm.swt.card.ICardData;
 import org.softwareFm.swt.constants.CardConstants;
 
-public class SoftwareFmDefaultChildFunction implements IFunction1<ICard, String> {
+public class SoftwareFmDefaultChildFunction implements IFunction1<ICardData, String> {
 	final Map<String, String> typeToDefaultChildMap = Maps.makeMap(//
 			CardConstants.group, CardConstants.artifact,//
 			CardConstants.artifact, JarAndPathConstants.version,//
 			JarAndPathConstants.version, JarAndPathConstants.digest);
 
 	@Override
-	public String apply(ICard from) throws Exception {
+	public String apply(ICardData from) throws Exception {
 		String cardType = typeToDefaultChildMap.get(from.cardType());
 		Map<String, Object> data = from.data();
 		if (data.containsKey(cardType))

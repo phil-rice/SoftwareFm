@@ -97,7 +97,7 @@ public interface IGitOperations extends IGitReader {
 				}
 
 				@Override
-				public Map<String, Object> getFileAndDescendants1(IFileDescription fileDescription) {
+				public Map<String, Object> getFileAndDescendants(IFileDescription fileDescription, int depth) {
 					throw new UnsupportedOperationException();
 				}
 
@@ -166,10 +166,6 @@ public interface IGitOperations extends IGitReader {
 					throw new UnsupportedOperationException();
 				}
 
-				@Override
-				public Map<String, Object> getFileAndDescendants2(IFileDescription fileDescription) {
-					throw new UnsupportedOperationException();
-				}
 			};
 		}
 	}

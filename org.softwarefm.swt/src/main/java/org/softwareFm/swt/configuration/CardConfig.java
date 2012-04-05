@@ -27,10 +27,8 @@ import org.softwareFm.swt.card.IRightClickCategoriser;
 import org.softwareFm.swt.card.LineItem;
 import org.softwareFm.swt.constants.CardConstants;
 import org.softwareFm.swt.constants.DisplayConstants;
-import org.softwareFm.swt.dataStore.ICardAndCollectionsDataStore;
 import org.softwareFm.swt.dataStore.IFollowOnFragment;
 import org.softwareFm.swt.dataStore.IMutableCardDataStore;
-import org.softwareFm.swt.dataStore.internal.CardCollectionsDataStore;
 import org.softwareFm.swt.details.IDetailAdder;
 import org.softwareFm.swt.details.IDetailFactory;
 import org.softwareFm.swt.details.internal.DetailFactory;
@@ -93,8 +91,6 @@ public class CardConfig {
 	public final IUrlGeneratorMap urlGeneratorMap;
 	/** This gets data from the server. */
 	public final IMutableCardDataStore cardDataStore;
-	/** When data is asked about a card, often more data is asked: specifically any collections are asked for. This manages that 'extra data' getting */
-	public final ICardAndCollectionsDataStore cardCollectionsDataStore = new CardCollectionsDataStore();
 	/** this is the function used by the {@link #cardCollectionsDataStore} to determine what extra data needs to be acquired. Typically used to request more data about children */
 	public final IFollowOnFragment followOnFragment;
 
@@ -126,7 +122,7 @@ public class CardConfig {
 	public final ILineItemFunction<Boolean> hideFn;
 
 	/** Given the data in a card, which is the item that should be (by default) shown in the details area. */
-	public final IFunction1<ICard, String> defaultChildFn;
+	public final IFunction1<ICardData, String> defaultChildFn;
 
 	/** The {@link TitleSpec} holds data about the title: image, color, and the right indent */
 	public final IFunction1<ICardData, TitleSpec> titleSpecFn;
@@ -193,7 +189,7 @@ public class CardConfig {
 		this.popupMenuService = IPopupMenuService.Utils.popUpMenuService();
 	}
 
-	private CardConfig(IFunction1<String, IResourceGetter> resourceGetterFn, IDetailFactory detailFactory, ICardFactory cardFactory, IMutableCardDataStore cardDataStore, int style, boolean allowSelection, IFunction1<ICard, String> cardTitleFn, IFunction1<String, Image> imageFn, IFunction1<LineItem, Image> iconFn, ILineItemFunction<String> nameFn, ILineItemFunction<String> valueFn, IFunction1<ICard, String> defaultChildFn, ILineItemFunction<Boolean> hideFn, int leftMargin, int rightMargin, int topMargin, int bottomMargin, int navBarHeight, IFunction1<Map<String, Object>, Image> navIconFn, List<ICardDataModifier> keyValueModifiers, IFollowOnFragment followOnFragment, IFunction1<ICardData, TitleSpec> titleSpecFn, IRightClickCategoriser rightClickCategoriser, IUrlGeneratorMap urlGeneratorMap, IFunction1<String, IEditorDetailAdder> editorFn, IPopupMenuService<ICard> popupMenuService, IFunction1<ICard, String> popupMenuIdFn) {
+	private CardConfig(IFunction1<String, IResourceGetter> resourceGetterFn, IDetailFactory detailFactory, ICardFactory cardFactory, IMutableCardDataStore cardDataStore, int style, boolean allowSelection, IFunction1<ICard, String> cardTitleFn, IFunction1<String, Image> imageFn, IFunction1<LineItem, Image> iconFn, ILineItemFunction<String> nameFn, ILineItemFunction<String> valueFn, IFunction1<ICardData, String> defaultChildFn, ILineItemFunction<Boolean> hideFn, int leftMargin, int rightMargin, int topMargin, int bottomMargin, int navBarHeight, IFunction1<Map<String, Object>, Image> navIconFn, List<ICardDataModifier> keyValueModifiers, IFollowOnFragment followOnFragment, IFunction1<ICardData, TitleSpec> titleSpecFn, IRightClickCategoriser rightClickCategoriser, IUrlGeneratorMap urlGeneratorMap, IFunction1<String, IEditorDetailAdder> editorFn, IPopupMenuService<ICard> popupMenuService, IFunction1<ICard, String> popupMenuIdFn) {
 		this.resourceGetterFn = resourceGetterFn;
 		this.detailFactory = detailFactory;
 		this.cardFactory = cardFactory;
@@ -275,7 +271,7 @@ public class CardConfig {
 		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuService, popupMenuIdFn);
 	}
 
-	public CardConfig withDefaultChildFn(IFunction1<ICard, String> defaultChildFn) {
+	public CardConfig withDefaultChildFn(IFunction1<ICardData, String> defaultChildFn) {
 		return new CardConfig(resourceGetterFn, detailFactory, cardFactory, cardDataStore, cardStyle, allowSelection, cardTitleFn, imageFn, iconFn, nameFn, valueFn, defaultChildFn, hideFn, leftMargin, rightMargin, topMargin, bottomMargin, titleHeight, navIconFn, cardDataModifiers, followOnFragment, titleSpecFn, rightClickCategoriser, urlGeneratorMap, editorFn, popupMenuService, popupMenuIdFn);
 	}
 

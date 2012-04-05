@@ -113,7 +113,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 			@Override
 			public Map<String, Object> apply(IGitLocal from) throws Exception {
 				logger.debug("  processDataFor/getFileAndDescendants: " + url);
-				final Map<String, Object> data = IGitReader.Utils.getFileAndDescendants2(readWriteApi, fileDescription);
+				final Map<String, Object> data = IGitReader.Utils.getFileAndDescendants(readWriteApi, fileDescription, 2);
 				logger.debug("  processDataFor/gotFileAndDescendants: " + url + ", " + data);
 				return data;
 			}

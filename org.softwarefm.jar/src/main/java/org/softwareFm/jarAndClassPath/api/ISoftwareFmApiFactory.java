@@ -57,7 +57,7 @@ public interface ISoftwareFmApiFactory {
 			File root = new File(home, ".sfm");
 			final String urlPrefix = JarAndPathConstants.urlPrefix;
 			IExtraReaderWriterConfigurator<LocalConfig> extraReaderWriterConfigurator = getLocalExtraReaderWriterConfigurator();
-			LocalConfig localConfig = new LocalConfig(port, 10, timeOutMs, host, root, urlPrefix, remoteGitPrefix, CommonConstants.clientTimeOut, CommonConstants.staleCachePeriod, ICallback.Utils.rethrow(), extraReaderWriterConfigurator);
+			LocalConfig localConfig = new LocalConfig(port, 10, timeOutMs, host, root, urlPrefix, remoteGitPrefix, CommonConstants.staleCachePeriod, ICallback.Utils.rethrow(), extraReaderWriterConfigurator);
 			return localConfig;
 		}
 

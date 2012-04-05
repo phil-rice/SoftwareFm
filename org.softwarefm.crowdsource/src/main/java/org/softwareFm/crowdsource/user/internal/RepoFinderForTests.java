@@ -20,7 +20,7 @@ public class RepoFinderForTests implements IRepoFinder {
 	public RepoDetails findRepoUrl(String url) {
 		String repositoryUrl = IFileDescription.Utils.findRepositoryUrl(remoteOperations.getRoot(), url);
 		if (repositoryUrl == null)
-			return RepoDetails.aboveRepo(remoteOperations.getFileAndDescendants1(IFileDescription.Utils.plain(url)));
+			return RepoDetails.aboveRepo(remoteOperations.getFileAndDescendants(IFileDescription.Utils.plain(url), 2));
 		else
 			return RepoDetails.repositoryUrl(repositoryUrl);
 	}

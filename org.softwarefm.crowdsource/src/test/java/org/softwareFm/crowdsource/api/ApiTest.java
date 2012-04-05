@@ -106,8 +106,8 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected LocalConfig getLocalConfig() {
-		return localConfig == null ? localConfig = new LocalConfig(CommonConstants.testPort, 20, CommonConstants.testTimeOutMs, "localhost", localRoot, getUrlPrefix(), remoteAsUri, CommonConstants.staleCachePeriodForTest, takeOnCount, getErrorHandler(), getLocalExtraReaderWriterConfigurator()) : localConfig;
-	}
+		return localConfig == null ? localConfig = new LocalConfig(CommonConstants.testPort, 20, CommonConstants.testTimeOutMs, "localhost", localRoot, getUrlPrefix(), remoteAsUri, CommonConstants.staleCachePeriodForTest,  getErrorHandler(), getLocalExtraReaderWriterConfigurator()) : localConfig;
+	} 
 
 	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {
 		return IExtraReaderWriterConfigurator.Utils.noExtras();

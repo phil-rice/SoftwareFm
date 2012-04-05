@@ -46,4 +46,9 @@ public class RepoDetails {
 		return repositoryUrl;
 	}
 
+	@Override
+	public String toString() {
+		return "RepoDetails [repositoryUrl=" + repositoryUrl + ", data=" + data + "]";
+	}
+
 }

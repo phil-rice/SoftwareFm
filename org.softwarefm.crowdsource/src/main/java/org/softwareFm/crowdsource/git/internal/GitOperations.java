@@ -212,44 +212,23 @@ public class GitOperations implements IGitOperations {
 		return null;
 	}
 
-	@Override
-	public Map<String, Object> getFileAndDescendants1(IFileDescription fileDescription) {
-		Map<String, Object> map = getFile(fileDescription);
-		if (map == null)
-			map = Maps.newMap();
-		File directory = fileDescription.getDirectory(root);
-		for (File child : Files.listChildDirectoriesIgnoringDot(directory)) {
-			File childFile = fileDescription.getFileInSubdirectory(child);
-			Map<String, Object> collectionResults = Maps.newMap();
-			if (childFile.exists())
-				collectionResults.putAll(fileDescription.decode(Files.getText(childFile)));
-			for (File grandChild : Files.listChildDirectoriesIgnoringDot(child))
-				addDataFromFileIfExists(fileDescription, collectionResults, grandChild);
-			map.put(child.getName(), collectionResults);
-		}
-		return map;
-	}
 
 	@Override
-	@SuppressWarnings("Write getFileAndDescendants2")
-	public Map<String, Object> getFileAndDescendants2(IFileDescription fileDescription) {
+	public Map<String, Object> getFileAndDescendants(IFileDescription fileDescription, int depth) {
 		Map<String, Object> map = getFile(fileDescription);
 		if (map == null)
 			map = Maps.newMap();
+		if (depth == 0)
+			return map;
 		File directory = fileDescription.getDirectory(root);
 		for (File child : Files.listChildDirectoriesIgnoringDot(directory)) {
 			IFileDescription childFileDescription = IFileDescription.Utils.plain(Urls.compose(fileDescription.url(), Files.noExtension(child.getName())));
-			Map<String, Object> childFileAndDescendants = getFileAndDescendants1(childFileDescription);
+			Map<String, Object> childFileAndDescendants = getFileAndDescendants(childFileDescription, depth-1);
 			map.put(child.getName(), childFileAndDescendants);
 		}
 		return map;
 	}
-
-	private void addDataFromFileIfExists(IFileDescription fileDescription, Map<String, Object> collectionResults, File directory) {
-		File file = fileDescription.getFileInSubdirectory(directory);
-		collectionResults.put(directory.getName(), file.exists() ? fileDescription.decode(Files.getText(file)) : Maps.emptyStringObjectMap());
-	}
-
+	
 	@Override
 	public File getRoot() {
 		return root;

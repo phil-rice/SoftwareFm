@@ -2,9 +2,7 @@ package org.softwareFm.swt.dataStore.internal;
 
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.crowdsource.utilities.url.Urls;
@@ -17,15 +15,6 @@ public class CardDataStoreForRepositoryTest extends AbstractExplorerIntegrationT
 
 	private IMutableCardDataStore cardDataStore;
 
-	public void testSetup() {
-		assertTrue(cardDataStore instanceof CardDataStoreForRepository);
-		IFunction1<IGitReader, String> fn = new IFunction1<IGitReader, String>() {
-			@Override
-			public String apply(IGitReader from) throws Exception {
-				return from.getRoot().getAbsolutePath().toString();
-			}
-		};
-	}
 
 	public void testProcessData() {
 		postArtifactData();

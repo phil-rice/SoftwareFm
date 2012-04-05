@@ -106,7 +106,7 @@ public class Explorer implements IExplorer {
 	private final IShowMyPeople showMyPeople;
 	private final IUserAndGroupsContainer container;
 
-	public Explorer(final IUserAndGroupsContainer container, final CardConfig cardConfig,  final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final Callable<Long> timeGetter) {
+	public Explorer(final IUserAndGroupsContainer container, final CardConfig cardConfig, final List<String> rootUrls, final IMasterDetailSocial masterDetailSocial, IPlayListGetter playListGetter, final ILoginStrategy loginStrategy, final IShowMyData showMyData, final IShowMyGroups showMyGroups, final IShowMyPeople showMyPeople, final IUserDataManager userDataManager, final Callable<Long> timeGetter) {
 		this.container = container;
 		this.cardConfig = cardConfig;
 		this.masterDetailSocial = masterDetailSocial;
@@ -114,10 +114,9 @@ public class Explorer implements IExplorer {
 		callbackToGotoUrlAndUpdateDetails = new ICallback<String>() {
 			@Override
 			public void process(String url) throws Exception {
-				masterDetailSocial.setMaster(cardHolder.getControl());
-				cardConfig.cardCollectionsDataStore.processDataFor(container, cardHolder, cardConfig, url, new CardAndCollectionDataStoreAdapter() {
+				displayCard(url, new CardAndCollectionDataStoreAdapter() {
 					@Override
-					public void finished(ICardHolder cardHolder, String url, ICard card) {
+					public void finished(ICardHolder cardHolder, String url, ICard card) throws Exception {
 						String key = findDefaultChild(card);
 						showDetailForCardKey(card, key, card.data().get(key));
 					}
@@ -164,7 +163,7 @@ public class Explorer implements IExplorer {
 
 					@Override
 					public void selected(String cardType, String url, int index, Map<String, Object> comment) {
-						if (comment == null||comment.containsKey(CommonConstants.errorKey)){
+						if (comment == null || comment.containsKey(CommonConstants.errorKey)) {
 							System.out.println("Selected duff comment: " + comment);
 							return;
 						}
@@ -189,7 +188,7 @@ public class Explorer implements IExplorer {
 								String title = CommentConstants.editorTitle;
 								Iterable<Map<String, Object>> groupData = IUserMembershipReader.Utils.walkGroups(container, userData.softwareFmId, userData.crypto);
 								List<String> groupNames = getGroupNames(groupData);
-								return new CommentsEditor(from, cardConfig, baseUrl, title, "", groupNames, ICommentsEditorCallback.Utils.writeComments(container, userData.softwareFmId, userData.crypto, groupData,  new Runnable() {
+								return new CommentsEditor(from, cardConfig, baseUrl, title, "", groupNames, ICommentsEditorCallback.Utils.writeComments(container, userData.softwareFmId, userData.crypto, groupData, new Runnable() {
 									@Override
 									public void run() {
 										masterDetailSocial.setDetail(null);
@@ -532,74 +531,26 @@ public class Explorer implements IExplorer {
 		});
 		masterDetailSocial.putDetailOverSocial();
 		masterDetailSocial.setMaster(cardHolder.getControl());
-		cardConfig.cardCollectionsDataStore.processDataFor(container, cardHolder, cardConfig, url, new ICardAndCollectionDataStoreVisitor() {
+		cardConfig.cardDataStore.processDataFor(url, new CardDataStoreCallbackAdapter<ICard>() {
 			@Override
-			public void requestingFollowup(final ICardHolder cardHolder, final String url, final ICard card, final String followOnUrlFragment) {
-				fireListeners(new ICallback<IExplorerListener>() {
-					@Override
-					public void process(IExplorerListener t) throws Exception {
-						t.requestingFollowup(cardHolder, url, card, followOnUrlFragment);
-					}
-				});
-				visitor.requestingFollowup(cardHolder, url, card, followOnUrlFragment);
-			}
-
-			@Override
-			public void noData(final ICardHolder cardHolder, final String url, final ICard card, final String followUpUrl) {
-				fireListeners(new ICallback<IExplorerListener>() {
-					@Override
-					public void process(IExplorerListener t) throws Exception {
-						t.noData(cardHolder, url, card, followUpUrl);
-					}
-				});
-				visitor.noData(cardHolder, url, card, followUpUrl);
-			}
-
-			@Override
-			public void initialUrl(final ICardHolder cardHolder, final CardConfig cardConfig, final String url) {
-				fireListeners(new ICallback<IExplorerListener>() {
-					@Override
-					public void process(IExplorerListener t) throws Exception {
-						t.initialUrl(cardHolder, cardConfig, url);
-					}
-				});
-				visitor.initialUrl(cardHolder, cardConfig, url);
-			}
-
-			@Override
-			public void initialCard(final ICardHolder cardHolder, final CardConfig cardConfig, final String url, final ICard card) {
-				fireListeners(new ICallback<IExplorerListener>() {
-					@Override
-					public void process(IExplorerListener t) throws Exception {
-						t.initialCard(cardHolder, cardConfig, url, card);
-					}
-				});
-				visitor.initialCard(cardHolder, cardConfig, url, card);
-			}
-
-			@Override
-			public void followedUp(final ICardHolder cardHolder, final String url, final ICard card, final String followUpUrl, final Map<String, Object> result) {
-				fireListeners(new ICallback<IExplorerListener>() {
-					@Override
-					public void process(IExplorerListener t) throws Exception {
-						t.followedUp(cardHolder, url, card, followUpUrl, result);
-					}
-				});
-				visitor.followedUp(cardHolder, url, card, followUpUrl, result);
-			}
-
-			@Override
-			public void finished(final ICardHolder cardHolder, final String url, final ICard card) throws Exception {
-				comments.showCommentsFor(getUserData(), card.cardType(), url);
-				fireListeners(new ICallback<IExplorerListener>() {
-					@Override
-					public void process(IExplorerListener t) throws Exception {
-						t.finished(cardHolder, url, card);
-					}
-				});
-				visitor.finished(cardHolder, url, card);
+			public ICard process(final String url, Map<String, Object> result) throws Exception {
+				final ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, url, result);
+				if (card != null) {
+					visitor.initialCard(cardHolder, cardConfig, url, card);
+					visitor.finished(cardHolder, url, card);
+					fireListeners(new ICallback<IExplorerListener>() {
+						@Override
+						public void process(IExplorerListener t) throws Exception {
+							t.initialCard(cardHolder, cardConfig, url, card);
+							t.finished(cardHolder, url, card);
+						}
+					});
+					comments.showCommentsFor(getUserData(), card.cardType(), url);
+				}
+				return card;
 			}
 		});
+
 	}
 
 	@Override
@@ -756,13 +707,13 @@ public class Explorer implements IExplorer {
 		masterDetailSocial.showSocial();
 	}
 
-	private String findDefaultChild(ICard card) {
+	private String findDefaultChild(ICardData card) {
 		String result = Functions.call(card.getCardConfig().defaultChildFn, card);
 		return result;
 	}
 
 	@SuppressWarnings("unchecked")
-	private void browseDetailForCardKey(ICard card, String key, Object value) {
+	private void browseDetailForCardKey(ICardData card, String key, Object value) {
 		masterDetailSocial.hideSocial();
 		masterDetailSocial.putDetailOverSocial();
 
@@ -814,7 +765,7 @@ public class Explorer implements IExplorer {
 		masterDetailSocial.createAndShowSocial(TextInBorder.makeTextWhenKeyMightNotExist(SWT.WRAP, cardConfig, cardType, "", helpKey));
 	}
 
-	private IDetailsFactoryCallback makeEditCallback(final ICard card) {
+	private IDetailsFactoryCallback makeEditCallback(final ICardData card) {
 		IDetailsFactoryCallback callback = new IDetailsFactoryCallback() {
 
 			@Override

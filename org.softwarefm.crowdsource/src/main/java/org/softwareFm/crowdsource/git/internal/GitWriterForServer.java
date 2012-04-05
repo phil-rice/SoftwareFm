@@ -30,6 +30,11 @@ public class GitWriterForServer implements IGitWriter {
 	public Map<String, Object> getFile(IFileDescription fileDescription) {
 		return gitOperations.getFile(fileDescription);
 	}
+	
+	@Override
+	public Map<String, Object> getFileAndDescendants(IFileDescription fileDescription, int depth) {
+		return gitOperations.getFileAndDescendants(fileDescription, depth);
+	}
 
 	@Override
 	public Iterable<Map<String, Object>> getFileAsListOfMaps(IFileDescription fileDescription) {
@@ -40,16 +45,6 @@ public class GitWriterForServer implements IGitWriter {
 	public int countOfFileAsListsOfMap(IFileDescription fileDescription) {
 		return gitOperations.countOfFileAsListsOfMap(fileDescription);
 	}
-
-	@Override
-	public Map<String, Object> getFileAndDescendants1(IFileDescription fileDescription) {
-		return gitOperations.getFileAndDescendants1(fileDescription);
-	}
-	@Override
-	public Map<String, Object> getFileAndDescendants2(IFileDescription fileDescription) {
-		return gitOperations.getFileAndDescendants2(fileDescription);
-	}
-
 	@Override
 	public void clearCaches() {
 		gitOperations.clearCaches();

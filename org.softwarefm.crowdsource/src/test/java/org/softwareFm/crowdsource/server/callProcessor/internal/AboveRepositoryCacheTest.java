@@ -46,10 +46,10 @@ public class AboveRepositoryCacheTest extends AbstractProcessCallTest<GitGetProc
 		assertTrue(cache.containsKey("a/b/c/d"));
 		assertTrue(cache.containsKey("a/b/d"));
 
-		checkGetWhenNotIn("a", "{\"data\":{\"b\":{}}}");
+		checkGetWhenNotIn("a", "{\"data\":{\"b\":{\"c\":{}}}}");
 		checkGetWhenNotIn("a/b", "{\"data\":{\"c\":{}}}");
 
-		checkGetWhenIn("a", "{\"data\":{\"b\":{}}}");
+		checkGetWhenIn("a", "{\"data\":{\"b\":{\"c\":{}}}}");
 		checkGetWhenIn("a/b", "{\"data\":{\"c\":{}}}");
 	}
 

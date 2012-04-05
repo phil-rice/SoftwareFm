@@ -155,7 +155,26 @@ public class GitLocalTest extends ApiTest {
 		assertEquals(Arrays.asList(v11, v12, v21, v22), IGitReader.Utils.getFileAsListOfMaps(container, ac));
 	}
 
-	public void testGetFileAndDescendants1() {
+	public void testGetFileAndDescendantsDepth0() {
+		remoteOperations.init("a");
+		remoteOperations.put(IFileDescription.Utils.plain("a"), v11);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/d"), v21);
+		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
+
+		localOperations.init("a");
+		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
+		localOperations.pull("a");
+
+		checkGetFileAndDescendants(container, 0, IFileDescription.Utils.plain("a"), v11);
+		checkGetFileAndDescendants(container, 0, IFileDescription.Utils.plain("a/b"), v11);
+		checkGetFileAndDescendants(container, 0, IFileDescription.Utils.plain("a/b/c"), v12);
+		checkGetFileAndDescendants(container, 0, IFileDescription.Utils.plain("a/b/d"), v21);
+
+	}
+
+	public void testGetFileAndDescendantsDepth1() {
 		Map<String, Object> map = Maps.with(v11, "c", v12, "d", v21);
 		remoteOperations.init("a");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);
@@ -167,12 +186,29 @@ public class GitLocalTest extends ApiTest {
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 
-		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b"), map);
-		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b/d"), v21);
+		checkGetFileAndDescendants(container, 1, IFileDescription.Utils.plain("a/b"), map);
+		checkGetFileAndDescendants(container, 1, IFileDescription.Utils.plain("a/b/c"), v12);
+		checkGetFileAndDescendants(container,1,  IFileDescription.Utils.plain("a/b/d"), v21);
 	}
 
-	public void testGetFileAndDescendants1_again() {
+	public void testGetFileAndDescendantsDepth2() {
+		Map<String, Object> map = Maps.with(v11, "c", v12, "d", v21);
+		remoteOperations.init("a");
+		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
+		remoteOperations.put(IFileDescription.Utils.plain("a/b/d"), v21);
+		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
+
+		localOperations.init("a");
+		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
+		localOperations.pull("a");
+
+		checkGetFileAndDescendants(container, 2, IFileDescription.Utils.plain("a/b"), map);
+		checkGetFileAndDescendants(container, 2, IFileDescription.Utils.plain("a/b/c"), v12);
+		checkGetFileAndDescendants(container, 2, IFileDescription.Utils.plain("a/b/d"), v21);
+	}
+
+	public void testGetFileAndDescendantsDepth2_again() {
 		Map<String, Object> map = Maps.with(v11, "c", Maps.with(v12, "d", v21));
 		remoteOperations.init("a");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);
@@ -186,13 +222,13 @@ public class GitLocalTest extends ApiTest {
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
 
-		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b"), map);
-		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b/c"), Maps.with(v12, "d", Maps.with(v21, "e", v22)));
-		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a/b/c/d"), Maps.with(v21, "e", Maps.with(v22, "f", v31)));
+		checkGetFileAndDescendants(container, 2, IFileDescription.Utils.plain("a/b"), map);
+		checkGetFileAndDescendants(container, 2, IFileDescription.Utils.plain("a/b/c"), Maps.with(v12, "d", Maps.with(v21, "e", v22)));
+		checkGetFileAndDescendants(container, 2, IFileDescription.Utils.plain("a/b/c/d"), Maps.with(v21, "e", Maps.with(v22, "f", v31)));
 	}
-	
-	public void testGetFileAndDescendants2() {
-		Map<String, Object> map = Maps.with(v11, "c", Maps.with(v12, "d",  Maps.with(v21, "e", v22)));
+
+	public void testGetFileAndDescendantsDepth3() {
+		Map<String, Object> map = Maps.with(v11, "c", Maps.with(v12, "d", Maps.with(v21, "e", v22)));
 		remoteOperations.init("a");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
@@ -200,14 +236,14 @@ public class GitLocalTest extends ApiTest {
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/c/d/e"), v22);
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/c/d/e/f"), v31);
 		remoteOperations.addAllAndCommit("a", getClass().getSimpleName());
-		
+
 		localOperations.init("a");
 		localOperations.setConfigForRemotePull("a", remoteRoot.getAbsolutePath());
 		localOperations.pull("a");
-		
-		checkGetFileAndDescendants2(container, IFileDescription.Utils.plain("a/b"), map);
-		checkGetFileAndDescendants2(container, IFileDescription.Utils.plain("a/b/c"), Maps.with(v12, "d", Maps.with(v21, "e",  Maps.with(v22, "f", v31))));
-		checkGetFileAndDescendants2(container, IFileDescription.Utils.plain("a/b/c/d"), Maps.with(v21, "e", Maps.with(v22, "f", v31)));
+
+		checkGetFileAndDescendants(container, 3, IFileDescription.Utils.plain("a/b"), map);
+		checkGetFileAndDescendants(container, 3, IFileDescription.Utils.plain("a/b/c"), Maps.with(v12, "d", Maps.with(v21, "e", Maps.with(v22, "f", v31))));
+		checkGetFileAndDescendants(container, 3, IFileDescription.Utils.plain("a/b/c/d"), Maps.with(v21, "e", Maps.with(v22, "f", v31)));
 	}
 
 	public void testGetFileAboveRepo() {
@@ -219,7 +255,7 @@ public class GitLocalTest extends ApiTest {
 	public void testGetFileAndDescendantsAboveRepo() {
 		remoteOperations.init("a/b/c");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFileAndDescendants1(container, IFileDescription.Utils.plain("a"), Maps.stringObjectMap("b", Maps.stringObjectMap("c", v12)));
+		checkGetFileAndDescendants(container, 1, IFileDescription.Utils.plain("a"), Maps.stringObjectMap("b", Maps.stringObjectMap("c", v12)));
 	}
 
 	public void testClearCache() {

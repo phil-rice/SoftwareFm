@@ -23,7 +23,7 @@ public class GitGetProcessorTest extends AbstractProcessCallTest<GitGetProcessor
 
 	public void testGetReturnsDataIfAboveRespository() {
 		checkCreateRepository(remoteOperations, "a/b/c");
-		checkGetFromProcessor("a", CommonConstants.dataKey, Maps.stringObjectLinkedMap("b", emptyMap));
+		checkGetFromProcessor("a", CommonConstants.dataKey, Maps.stringObjectLinkedMap("b", Maps.stringObjectLinkedMap("c", emptyMap)));
 		checkGetFromProcessor("a/d", CommonConstants.dataKey, emptyMap);
 	}
 
