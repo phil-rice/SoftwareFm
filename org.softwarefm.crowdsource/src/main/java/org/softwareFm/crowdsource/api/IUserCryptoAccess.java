@@ -6,15 +6,9 @@ import javax.sql.DataSource;
 
 import org.softwareFm.crowdsource.api.internal.DatabaseCryptoAccess;
 import org.softwareFm.crowdsource.api.server.IMagicStringForPassword;
-import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
-import org.softwareFm.crowdsource.utilities.functions.Functions;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 public interface IUserCryptoAccess extends IMagicStringForPassword {
-
-	@SuppressWarnings("Migrate away from this")
-	IFunction1<Map<String, Object>, String> userCryptoFn();
 
 	String getCryptoForUser(String softwareFmId);
 
@@ -41,10 +35,6 @@ public interface IUserCryptoAccess extends IMagicStringForPassword {
 					throw new UnsupportedOperationException();
 				}
 
-				@Override
-				public IFunction1<Map<String, Object>, String> userCryptoFn() {
-					return Functions.mapFromKey(LoginConstants.softwareFmIdKey, (Object[]) idsAndCryptos);
-				}
 
 				@Override
 				public String getCryptoForUser(String softwareFmId) {

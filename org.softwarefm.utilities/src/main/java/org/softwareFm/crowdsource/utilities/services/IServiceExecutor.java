@@ -13,19 +13,18 @@ public interface IServiceExecutor extends IShutdown {
 	/** The monitor is provided by the IServiceExecutor. The called task should call beginTask, worked and done. etc,Note that the task may not be finished when this service executor is finished (the task could for example end on the SWT thread). The task can be cancelled using future.cancel, or monitor.cancel */
 	<T> FutureAndMonitor<T> submit(IFunction1<IMonitor, T> job);
 
-	
 	void addExceptionListener(IExceptionListener listener);
 
 	void addLifeCycleListener(IServiceExecutorLifeCycleListener listener);
 
 	public static class Utils {
 
-		public static IServiceExecutor defaultExecutor(String pattern) {
-			return executor(pattern, 10);
+		public static IServiceExecutor defaultExecutor(String pattern, int threadPoolSize) {
+			return executor(pattern, threadPoolSize);
 		}
 
 		public static IServiceExecutor executor(String pattern, final int threadPoolSize, IMonitorFactory monitorFactory) {
-			IServiceExecutor executor = new ServiceExecutor(pattern,monitorFactory, threadPoolSize);
+			IServiceExecutor executor = new ServiceExecutor(pattern, monitorFactory, threadPoolSize);
 			executor.addExceptionListener(IExceptionListener.Utils.syserr());
 			return executor;
 

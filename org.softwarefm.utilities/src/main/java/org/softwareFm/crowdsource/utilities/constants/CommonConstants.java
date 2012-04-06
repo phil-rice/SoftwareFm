@@ -43,5 +43,7 @@ public class CommonConstants {
 	public static final int serverPort = 8080;
 	public static final Object errorKey = "error";
 	public static final String debugCardType = "debug";
+	public static final int localThreadPoolSizeForTests = 10;
+	public static final int serverThreadPoolSizeForTests = 10;
 
 }

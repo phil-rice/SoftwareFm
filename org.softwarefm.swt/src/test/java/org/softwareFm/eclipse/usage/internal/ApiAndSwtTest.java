@@ -29,13 +29,13 @@ abstract public class ApiAndSwtTest extends ApiTest {
 
 	@Override
 	protected ITransactionManager getLocalTransactionManager() {
-		return ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.testTimeOutMs);
+		return ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.localThreadPoolSizeForTests, CommonConstants.testTimeOutMs);
 	}
 
 	@Override
 	/** Needed because there are tests that have callbacks running on the server*/
 	protected ITransactionManager getServerTransactionManager() {
-		return ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.testTimeOutMs);
+		return ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.serverThreadPoolSizeForTests, CommonConstants.testTimeOutMs);
 	}
 
 	@Override

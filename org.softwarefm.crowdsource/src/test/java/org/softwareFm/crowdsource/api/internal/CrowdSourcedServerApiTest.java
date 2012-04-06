@@ -15,18 +15,18 @@ public class CrowdSourcedServerApiTest extends TestCase {
 	private final ServerConfig serverConfig = ServerConfig.serverConfigForTests(root, IMailer.Utils.noMailer());
 
 	public void testConstructor() {
-		ICrowdSourcedApi api1 = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard());
+		ICrowdSourcedApi api1 = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard(2));
 		assertTrue(api1 instanceof CrowdSourcedServerApi);
-		ICrowdSourcedApi api2 = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard());
+		ICrowdSourcedApi api2 = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard(2));
 		assertNotSame(api1, api2);
 	}
 
 	public void testGettersReturnsSameObjectEachTime() {
-		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard());
+		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard(2));
 		assertTrue(api instanceof CrowdSourcedServerApi);
 		IContainer container1 = api.makeContainer();
 		IContainer container2 = api.makeContainer();
-		
+
 		assertSame(container1, container2);
 	}
 

@@ -75,7 +75,7 @@ public class ICommentDefnTest extends TemporaryFileTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		ServerConfig serverConfig = ServerConfig.serverConfigForTests(root, IMailer.Utils.noMailer());
-		api = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard());
+		api = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard(2));
 		container = api.makeUserAndGroupsContainer();
 		new JdbcTemplate(serverConfig.dataSource).update("delete From users");
 	}

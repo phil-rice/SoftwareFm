@@ -87,7 +87,7 @@ public class Activator extends AbstractUIPlugin {
 		if (!displayToApiMap.containsKey(display)) {
 			synchronized (lock) {
 				if (!displayToApiMap.containsKey(display)) {
-					ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forClient(getLocalConfig(), ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.clientTimeOut));
+					ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forClient(getLocalConfig(), ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, 10, CommonConstants.clientTimeOut));
 					displayToApiMap.put(display, api);
 				}
 			}

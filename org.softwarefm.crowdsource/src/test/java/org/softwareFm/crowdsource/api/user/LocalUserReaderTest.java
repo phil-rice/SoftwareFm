@@ -103,7 +103,7 @@ public class LocalUserReaderTest extends GitTest {
 	}
 
 	private ITransactionManager getTransactionManager() {
-		return ITransactionManager.Utils.standard();
+		return ITransactionManager.Utils.standard(CommonConstants.localThreadPoolSizeForTests);
 	}
 
 }

@@ -14,7 +14,6 @@ import org.softwareFm.swt.card.ILineItemFunction;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.configuration.ICardConfigurator;
 import org.softwareFm.swt.constants.CardConstants;
-import org.softwareFm.swt.dataStore.IFollowOnFragment;
 import org.softwareFm.swt.details.IDetailAdder;
 import org.softwareFm.swt.details.IDetailFactory;
 import org.softwareFm.swt.editors.IEditorDetailAdder;
@@ -47,7 +46,6 @@ public class BasicCardConfigurator implements ICardConfigurator {
 						ICardDataModifier.Utils.folderAggregator(CardConstants.jcrPrimaryType, CardConstants.ntUnstructured, CardConstants.slingResourceType), //
 						ICardDataModifier.Utils.missingItems(), //
 						ICardDataModifier.Utils.sorter(JarAndPathConstants.version)).//
-				withFollowOn(IFollowOnFragment.Utils.followOnMaps).//
 
 				withTitleSpecFn(TitleSpec.cardToTitleSpecFn(display, imageFn)).//
 				withEditorFn(IEditorDetailAdder.Utils.defaultEditorFn());

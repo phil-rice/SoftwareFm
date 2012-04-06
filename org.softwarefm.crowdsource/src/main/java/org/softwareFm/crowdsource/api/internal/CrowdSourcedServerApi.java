@@ -1,5 +1,6 @@
 package org.softwareFm.crowdsource.api.internal;
 
+import java.io.IOException;
 import java.sql.SQLException;
 
 import org.softwareFm.crowdsource.api.IContainer;
@@ -28,6 +29,8 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 		this.serverConfig = serverConfig;
 		containerForServer = new ContainerForServer(serverConfig, transactionManager);
 		serverDoers = Functions.call(serverDoersCreator, containerForServer);
+		ICallProcessor callProcessor = ICallProcessor.Utils.softwareFmProcessCall(containerForServer, serverDoers, serverConfig);
+		containerForServer.register(ICallProcessor.class, callProcessor);
 		serverConfig.extraReaderWriterConfigurator.builder(containerForServer, serverConfig);
 	}
 
@@ -45,8 +48,11 @@ public class CrowdSourcedServerApi extends AbstractCrowdSourcesApi {
 		if (server == null) {
 			synchronized (lock) {
 				if (server == null) {
-					ICallProcessor callProcessor = ICallProcessor.Utils.softwareFmProcessCall(containerForServer, serverDoers, serverConfig);
-					server = new CrowdSourcedServer(serverConfig.port, serverConfig.workerThreads, callProcessor, ICallback.Utils.sysErrCallback(), serverConfig.usage);
+					try {
+						server = new CrowdSourcedServer(serverConfig.port, containerForServer, ICallback.Utils.sysErrCallback(), serverConfig.usage);
+					} catch (IOException e) {
+						throw WrappedException.wrap(e);
+					}
 				}
 			}
 		}

@@ -40,7 +40,7 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 		container.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
-				String userCrypto = Functions.call(serverConfig.userCryptoAccess.userCryptoFn(), Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId, LoginConstants.emailKey, email));
+				String userCrypto = serverConfig.userCryptoAccess.getCryptoForUser( softwareFmId);
 				if (userCrypto == null)
 					throw new IllegalStateException(MessageFormat.format("Cannot add existing user {0} to group {1} as cannot determine usercrypto", softwareFmId, groupId));
 				Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email, LoginConstants.softwareFmIdKey, softwareFmId, GroupConstants.membershipStatusKey, status);

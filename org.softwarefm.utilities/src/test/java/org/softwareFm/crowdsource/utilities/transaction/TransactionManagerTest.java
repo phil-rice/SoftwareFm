@@ -333,7 +333,7 @@ public class TransactionManagerTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		final IServiceExecutor defaultExecutor = IServiceExecutor.Utils.defaultExecutor(getClass().getSimpleName() + "-{0}");
+		final IServiceExecutor defaultExecutor = IServiceExecutor.Utils.defaultExecutor(getClass().getSimpleName() + "-{0}", 10);
 		registered1Count = new AtomicInteger();
 		registered2Count = new AtomicInteger();
 		manager = new TransactionManager(defaultExecutor, new TransactionManager.DefaultFutureToTransactionDn()).//

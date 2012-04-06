@@ -19,8 +19,8 @@ public interface ISwtSoftwareFmFactory {
 
 	public static class Utils {
 
-		public static ITransactionManager getSwtTransactionManager(final Display display, final long timeOutMs) {
-			return ITransactionManager.Utils.withFutureToTransactionFn(new IFunction1<Future<?>, ITransaction<?>>() {
+		public static ITransactionManager getSwtTransactionManager(final Display display, int workerThreads, final long timeOutMs) {
+			return ITransactionManager.Utils.withFutureToTransactionFn(workerThreads, new IFunction1<Future<?>, ITransaction<?>>() {
 				private final Thread swtThread = display.getThread();
 				@SuppressWarnings("unchecked")
 				@Override

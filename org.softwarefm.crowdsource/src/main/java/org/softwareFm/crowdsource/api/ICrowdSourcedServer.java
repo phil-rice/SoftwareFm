@@ -13,13 +13,8 @@ import java.util.concurrent.Callable;
 import javax.sql.DataSource;
 
 import org.softwareFm.crowdsource.api.git.IGitOperations;
-import org.softwareFm.crowdsource.api.server.ICallProcessor;
-import org.softwareFm.crowdsource.api.server.IUsage;
 import org.softwareFm.crowdsource.api.user.IUser;
-import org.softwareFm.crowdsource.server.internal.CrowdSourcedServer;
-import org.softwareFm.crowdsource.server.internal.UserCryptoFn;
 import org.softwareFm.crowdsource.user.internal.ServerUser;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -35,17 +30,6 @@ public interface ICrowdSourcedServer {
 
 	abstract public static class Utils {
 
-//		public static ICrowdSourcedServer fullServer(int port, IGitOperations gitOperations, BasicDataSource dataSource, IFunction1<ProcessCallParameters, ICallProcessor[]> extraProcessCalls, String prefix, Map<String, Callable<Object>> defaultValues) {
-//			return CrowdSourcedServer.makeServer(port, gitOperations, dataSource, extraProcessCalls, prefix, defaultValues);
-//		}
-
-		public static ICrowdSourcedServer testServerPort(ICallProcessor callProcessor, ICallback<Throwable> errorHandler) {
-			return server(CommonConstants.testPort, 2, callProcessor, errorHandler);
-		}
-
-		public static ICrowdSourcedServer server(int port, int threads, ICallProcessor callProcessor, ICallback<Throwable> errorHandler) {
-			return new CrowdSourcedServer(port, threads, callProcessor, errorHandler, IUsage.Utils.defaultUsage());
-		}
 
 		public static File makeSfmRoot() {
 			File root = new File(System.getProperty("user.home"));
@@ -73,9 +57,6 @@ public interface ICrowdSourcedServer {
 			};
 		}
 
-		public static IFunction1<Map<String, Object>, String> cryptoFn(DataSource dataSource) {
-			return new UserCryptoFn(dataSource);
-		}
 
 		public static IUser makeUserForServer(IGitOperations gitOperations, IUrlGenerator userUrlGenerator, IFunction1<String, String> userRepositoryDefn, Map<String, Callable<Object>> defaultValues) {
 			return new ServerUser(gitOperations, userUrlGenerator, userRepositoryDefn, defaultValues);

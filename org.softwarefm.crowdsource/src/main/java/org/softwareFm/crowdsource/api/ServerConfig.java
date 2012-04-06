@@ -36,7 +36,6 @@ public class ServerConfig extends ApiConfig {
 
 	public final Map<String, Callable<Object>> defaultUserValues;
 	public final Map<String, Callable<Object>> defaultGroupProperties;
-	@SuppressWarnings("migrate away from this towarsd the usercryptoaccess")
 	public final BasicDataSource dataSource;
 	public final ITakeOnEnrichmentProvider takeOnEnrichment;
 	public final IExtraCallProcessorFactory extraCallProcessors;

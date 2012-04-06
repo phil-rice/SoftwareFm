@@ -122,10 +122,12 @@ public class TransactionManager implements ITransactionManagerBuilder {
 			public Result apply(IMonitor monitor) throws Exception {
 				AtomicReference<Exception> exception = new AtomicReference<Exception>();
 				try {
+					monitor.beginTask(toString(), 2);
 					assert monitors.get() == null;
 					monitors.set(monitor);
 					latch.await();
 					Intermediate intermediate = job.apply(monitor);
+					monitor.worked(1);
 					Result result = executeCallbackFunction(resultCallback, intermediate);
 					return result;
 				} catch (Exception e) {

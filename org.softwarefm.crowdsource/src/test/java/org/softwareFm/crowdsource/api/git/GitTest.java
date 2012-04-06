@@ -6,7 +6,6 @@ package org.softwareFm.crowdsource.api.git;
 
 import java.io.File;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.git.internal.GitOperations;
@@ -14,7 +13,6 @@ import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.url.Urls;
 
 public abstract class GitTest extends TemporaryFileTest {
@@ -31,8 +29,6 @@ public abstract class GitTest extends TemporaryFileTest {
 	protected final static Map<String, Object> v42 = Maps.stringObjectLinkedMap("c", 4l, "v", 2l);
 
 	protected static final Map<String, Object> emptyMap = Maps.stringObjectMap();
-
-	protected IServiceExecutor serviceExecutor;
 
 	protected IGitOperations localOperations;
 	protected IGitOperations remoteOperations;
@@ -93,13 +89,6 @@ public abstract class GitTest extends TemporaryFileTest {
 		return IRepoFinder.Utils.forTests(remoteOperations);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		if (serviceExecutor != null)
-			serviceExecutor.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-
-	}
 
 	protected void checkNoData(IGitLocal reader, String url) {
 		IFileDescription plain = IFileDescription.Utils.plain(url);
@@ -123,9 +112,6 @@ public abstract class GitTest extends TemporaryFileTest {
 		assertEquals(data, IGitReader.Utils.getFileAsMap(container, fileDescription));
 	}
 
-	protected IServiceExecutor getServiceExecutor() {
-		return serviceExecutor == null ? serviceExecutor = IServiceExecutor.Utils.defaultExecutor("Test-{0}") : serviceExecutor;
-	}
 
 	protected void checkCreateRepository(final IGitOperations gitOperations, final String url) {
 		gitOperations.init(url);

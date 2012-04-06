@@ -18,6 +18,7 @@ import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
 import org.softwareFm.crowdsource.constants.CommentConstants;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -99,7 +100,7 @@ public class CommentsEditorCallbackThatWritesCommentTest extends TestCase {
 				builder.register(IGroupsReader.class, groupsReader);
 				builder.register(IComments.class, commentWriter);
 			}
-		}, ITransactionManager.Utils.standard(), null);
+		}, ITransactionManager.Utils.standard(CommonConstants.localThreadPoolSizeForTests), null);
 		container = api.makeUserAndGroupsContainer();
 		callback = new CommentsEditorCallbackThatWritesComment(container, softwareFmId, userCrypto, groupsData, whenFinished);
 	}

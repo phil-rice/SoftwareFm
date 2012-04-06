@@ -169,7 +169,7 @@ public class SwtThreadMonitor implements IHasComposite, IMonitorFactory {
 	public static void main(String[] args) {
 		final int stages = 5;
 		final int tasks = 30;
-		final IServiceExecutor helper = IServiceExecutor.Utils.defaultExecutor(SwtThreadMonitor.class.getSimpleName() + "-helper-{0}");
+		final IServiceExecutor helper = IServiceExecutor.Utils.defaultExecutor(SwtThreadMonitor.class.getSimpleName() + "-helper-{0}", CommonConstants.localThreadPoolSizeForTests);
 		final AtomicReference<IServiceExecutor> ref = new AtomicReference<IServiceExecutor>();
 		try {
 			Swts.Show.display(SwtThreadMonitor.class.getSimpleName(), new IFunction1<Composite, Composite>() {

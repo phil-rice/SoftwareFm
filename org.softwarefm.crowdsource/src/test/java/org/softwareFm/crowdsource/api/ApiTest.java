@@ -88,11 +88,11 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected ITransactionManager getServerTransactionManager() {
-		return serverTransactionManager == null ? serverTransactionManager = ITransactionManager.Utils.standard() : serverTransactionManager;
+		return serverTransactionManager == null ? serverTransactionManager = ITransactionManager.Utils.standard(CommonConstants.serverThreadPoolSizeForTests) : serverTransactionManager;
 	}
 
 	protected ITransactionManager getLocalTransactionManager() {
-		return localTransactionManager == null ? localTransactionManager = ITransactionManager.Utils.standard() : localTransactionManager;
+		return localTransactionManager == null ? localTransactionManager = ITransactionManager.Utils.standard(CommonConstants.localThreadPoolSizeForTests) : localTransactionManager;
 	}
 
 	protected ICrowdSourcedApi getLocalApi() {

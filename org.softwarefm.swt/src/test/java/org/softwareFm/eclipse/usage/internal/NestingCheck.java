@@ -22,7 +22,7 @@ public class NestingCheck {
 		Swts.Show.display(NestingCheck.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
-				ITransactionManager transactionManager = ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(from.getDisplay(), CommonConstants.testTimeOutMs);
+				ITransactionManager transactionManager = ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(from.getDisplay(), CommonConstants.localThreadPoolSizeForTests, CommonConstants.testTimeOutMs);
 				LocalConfig localConfig = ISoftwareFmApiFactory.Utils.getLocalConfig(false, CommonConstants.clientTimeOut);
 				final IContainer container = ICrowdSourcedApi.Utils.forClient(localConfig, transactionManager).makeContainer();
 				Composite composite = new Composite(from, SWT.NULL);

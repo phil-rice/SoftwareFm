@@ -15,6 +15,8 @@ class NamedThreadFactory implements ThreadFactory {
 
 	@Override
 	public Thread newThread(Runnable r) {
-		return new Thread(r, MessageFormat.format(pattern, count.getAndIncrement()));
+		Thread thread = new Thread(r, MessageFormat.format(pattern, count.getAndIncrement()));
+		thread.setDaemon(true);
+		return thread;
 	}
 }

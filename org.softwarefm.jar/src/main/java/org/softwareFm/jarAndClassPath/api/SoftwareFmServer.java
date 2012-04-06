@@ -19,7 +19,7 @@ public class SoftwareFmServer {
 		int port = ICrowdSourcedServer.Utils.port(args);
 
 		ServerConfig serverConfig = Utils.getServerConfig(port, CommonConstants.clientTimeOut);
-		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard());
+		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard(serverConfig.workerThreads));
 		api.getServer();
 	}
 

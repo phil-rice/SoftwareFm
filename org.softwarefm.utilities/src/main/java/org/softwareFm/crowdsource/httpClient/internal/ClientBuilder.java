@@ -36,7 +36,7 @@ public class ClientBuilder implements IClientBuilder {
 	}
 
 	public ClientBuilder(String host, int port) {
-		this(IServiceExecutor.Utils.defaultExecutor("HttpClient-{0}"), new HttpHost(host, port), makeClient(), null, Collections.<NameValuePair> emptyList());
+		this(IServiceExecutor.Utils.defaultExecutor("HttpClient-{0}", 10), new HttpHost(host, port), makeClient(), null, Collections.<NameValuePair> emptyList());
 	}
 
 	public ClientBuilder(IServiceExecutor executor, HttpHost httpHost, DefaultHttpClient httpClient, String url, List<NameValuePair> parameters) {
