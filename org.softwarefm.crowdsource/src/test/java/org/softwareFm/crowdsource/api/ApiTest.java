@@ -84,19 +84,19 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected ICrowdSourcedApi getServerApi() {
-		return serverApi == null ? serverApi = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(getServerConfig(), getServerTransactionManager()) : serverApi;
+		return serverApi == null ? serverApi = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(getServerConfig(), makeServerTransactionManager()) : serverApi;
 	}
 
-	protected ITransactionManager getServerTransactionManager() {
+	protected ITransactionManager makeServerTransactionManager() {
 		return serverTransactionManager == null ? serverTransactionManager = ITransactionManager.Utils.standard(CommonConstants.serverThreadPoolSizeForTests) : serverTransactionManager;
 	}
 
-	protected ITransactionManager getLocalTransactionManager() {
+	protected ITransactionManager makeLocalTransactionManager() {
 		return localTransactionManager == null ? localTransactionManager = ITransactionManager.Utils.standard(CommonConstants.localThreadPoolSizeForTests) : localTransactionManager;
 	}
 
 	protected ICrowdSourcedApi getLocalApi() {
-		return localApi == null ? localApi = (CrowdSourcedLocalApi) ICrowdSourcedApi.Utils.forClient(getLocalConfig(), getLocalTransactionManager()) : localApi;
+		return localApi == null ? localApi = (CrowdSourcedLocalApi) ICrowdSourcedApi.Utils.forClient(getLocalConfig(), makeLocalTransactionManager()) : localApi;
 	}
 
 	protected ServerConfig getServerConfig() {

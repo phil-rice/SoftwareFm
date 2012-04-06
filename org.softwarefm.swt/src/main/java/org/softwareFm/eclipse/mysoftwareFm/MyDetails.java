@@ -123,7 +123,7 @@ public class MyDetails implements IHasComposite {
 					Swts.packTables(projectDetails);
 					return null;
 				}
-			}).get();
+			});
 		}
 	}
 

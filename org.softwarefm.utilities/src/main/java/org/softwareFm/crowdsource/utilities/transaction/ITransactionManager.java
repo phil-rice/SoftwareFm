@@ -16,6 +16,11 @@ public interface ITransactionManager extends IShutdown {
 
 	/** Adds a resource to the transaction: this will be commited or rollbacked when the transaction concludes */
 	<T> void addResource(ITransaction<T> transaction, ITransactional transactional);
+	
+	int activeJobs();
+	
+	/** is the calling thread part of a transaction */
+	boolean inTransaction();
 
 	public static class Utils {
 		public static AtomicInteger count = new AtomicInteger();

@@ -36,6 +36,7 @@ import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback2;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
@@ -80,9 +81,9 @@ import org.softwareFm.swt.timeline.IPlayListGetter;
 /** These tests go out to software fm, so they are much more fragile */
 abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest implements INeedsServerTest {
 	protected final static String groupUrl = "/ant";
-	protected	final static String artifactUrl = "/ant/ant/artifact/ant";
-	protected	final static String snippetrepoUrl = "/java/io/File";
-	protected	final static String snippetUrl = "/snippet/java/io/File/snippet";
+	protected final static String artifactUrl = "/ant/ant/artifact/ant";
+	protected final static String snippetrepoUrl = "/java/io/File";
+	protected final static String snippetUrl = "/snippet/java/io/File/snippet";
 
 	protected CardConfig cardConfig;
 	public Explorer explorer;
@@ -110,13 +111,13 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 	}
 
 	protected void displayCard(final String url, final CardHolderAndCardCallback cardHolderAndCardCallback) {
-		doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {
-			@Override
-			public void run() {
-				explorer.displayCard(rootArtifactUrl + url, new CardAndCollectionDataStoreAdapter());
-			}
-		}, cardHolderAndCardCallback);
-
+		try {
+			ICard card = explorer.displayCard(rootArtifactUrl + url, new CardAndCollectionDataStoreAdapter() ).get();
+			cardHolderAndCardCallback.process(explorer.getCardHolder(), card);
+			dispatchUntilJobsFinished();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	protected void displayCardThenViewChild(String url, final String childTitle, final CardHolderAndCardCallback callback) {
@@ -158,7 +159,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 				try {
 					explorer.removeExplorerListener(this);
 					cardHolderAndCardCallback.process(cardHolder, card);
-					dispatchUntilQueueEmpty();
+					dispatchUntilJobsFinished();
 					cardRef.set(card);
 				} catch (Exception e) {
 					exception.set(e);
@@ -168,6 +169,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 				}
 			}
 		});
+		dispatchUntilJobsFinished();
 		something.run();
 		dispatchUntilTimeoutOrLatch(latch);
 		if (exception.get() != null)
@@ -237,7 +239,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {
 		return new IExtraReaderWriterConfigurator<ServerConfig>() {
 			@Override
-			public void builder(IContainerBuilder builder,ServerConfig apiConfig) {
+			public void builder(IContainerBuilder builder, ServerConfig apiConfig) {
 				ISoftwareFmApiFactory.Utils.getServerExtraReaderWriterConfigurator(getUrlPrefix(), apiConfig.timeOutMs).builder(builder, apiConfig);
 				ProjectMock projectMock = getProjectTimeGetterFixture(builder);
 				builder.register(IUsageReader.class, projectMock);
@@ -259,7 +261,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 		final IExtraReaderWriterConfigurator<LocalConfig> parent = super.getLocalExtraReaderWriterConfigurator();
 		return new IExtraReaderWriterConfigurator<LocalConfig>() {
 			@Override
-			public  void builder(IContainerBuilder builder, LocalConfig localConfig) {
+			public void builder(IContainerBuilder builder, LocalConfig localConfig) {
 				parent.builder(builder, localConfig);
 				IProjectTimeGetter projectTimeGetter = new ProjectTimeGetterFixture();
 				IRequestGroupReportGeneration requestGroupReportGeneration = IRequestGroupReportGeneration.Utils.httpClient(builder, IResponseCallback.Utils.noCallback());
@@ -274,7 +276,6 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 		};
 	}
 
-	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

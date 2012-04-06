@@ -57,7 +57,7 @@ public class ExplorerNavigationIntegrationTest extends AbstractExplorerIntegrati
 
 	private void clickOnItemAndCheckCollection(ICard card, String name, String expectedKey, Map<String, Object> expectedValue) {
 		selectItemAndNotifyListeners(card, name);
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 		ScrolledComposite detailContent = (ScrolledComposite) masterDetailSocial.getDetailContent();
 		IHasKeyAndValue hasKeyAndValue = (IHasKeyAndValue) detailContent.getContent();
 		assertEquals(expectedKey, hasKeyAndValue.getKey());

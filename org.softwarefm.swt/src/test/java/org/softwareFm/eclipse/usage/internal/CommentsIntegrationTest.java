@@ -20,7 +20,7 @@ public class CommentsIntegrationTest extends AbstractExplorerIntegrationTest {
 			public void process(ICardHolder cardHolder, ICard card) throws Exception {
 				assertNotSame(masterDetailSocial.getSocialContent(), explorer.getComments().getControl());
 				selectItemAndNotifyListeners(card, "Name");
-				dispatchUntilQueueEmpty();
+				dispatchUntilJobsFinished();
 				Control socialContent = masterDetailSocial.getSocialContent();
 				Comments comments = explorer.getComments();
 				CommentsComposite commentControl = (CommentsComposite) comments.getControl();

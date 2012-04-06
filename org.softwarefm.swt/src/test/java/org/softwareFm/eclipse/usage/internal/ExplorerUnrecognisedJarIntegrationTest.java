@@ -43,6 +43,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		String text = findSearchText();
 		assertTrue(text, text.contains("Searching SoftwareFM Database for other Jars that look like this"));
 		// possible race condition here...the card may arrive before we have tested that the search text occured. I think that because we are not dispatching this won't take place
+		dispatchUntilJobsFinished();
 
 		dispatchUntil(new Callable<Boolean>() {
 			@Override
@@ -59,7 +60,8 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		checkAndSet(table, 1, "Artifact Id", "ant", "someArtifact");
 		checkAndSet(table, 2, "Version", "1.2.3", "someVersion");
 		clickOk(detailContent);
-		dispatchUntilHasImportingMessage();
+		dispatchUntilJobsFinished();
+//		dispatchUntilHasImportingMessage(); it would be nice to test for this...but its rather difficult!
 		dispatchUntilHasCardInHolder();
 		ICardHolder cardHolder = explorer.getCardHolder();
 		ICard card = cardHolder.getCard();
@@ -111,7 +113,9 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 				// this is race condition territory. We may get a importing message (normally takes a while to import), then the card will appear
 				Control masterContent = masterDetailSocial.getMasterContent();
 				try {
+					Swts.layoutDump(masterContent);
 					StyledText text = Swts.<StyledText>getDescendant(masterContent, 1, 0, 0);
+					System.out.println("text: " + text.getText());
 					return text.getText().startsWith("Importing");
 				} catch (Exception e) {
 					return false;

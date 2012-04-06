@@ -22,7 +22,6 @@ import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.constants.CommentConstants;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.comparators.Comparators;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -31,6 +30,7 @@ import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
+import org.softwareFm.swt.ISwtFunction1;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
@@ -114,43 +114,47 @@ public class Comments implements IHasControl {
 			return table;
 		}
 
-		@SuppressWarnings("threadiness...look at which thread this is in, and the allComments call")
-		public void populate(final UserData userData, String cardType, final String url) {
+		public void populate(final UserData userData, final String cardType, final String url) {
 			this.url = url;
-			CardConfig cc = getCardConfig();
 
-			allComments = readWriteApi.accessCommentsReader(new IFunction1<ICommentsReader, List<Map<String, Object>>>() {
+			allComments = readWriteApi.accessWithCallbackFn(ICommentsReader.class, new IFunction1<ICommentsReader, List<Map<String, Object>>>() {
 				@Override
 				public List<Map<String, Object>> apply(ICommentsReader commentsReader) throws Exception {
 					return Lists.sort(ICommentsReader.Utils.allComments(commentsReader, url, userData.softwareFmId, userData.crypto, CommentConstants.globalSource, CommentConstants.mySource), //
 							Comparators.invert(Comparators.mapKey(CommentConstants.timeKey)));
 				}
-			}, ICallback.Utils.< List<Map<String, Object>>>noCallback()).get();
-			String titleKey = allComments.size() > 0 ? CollectionConstants.commentsTitle : CollectionConstants.commentsNoTitle;
+			}, new ISwtFunction1<List<Map<String, Object>>, List<Map<String, Object>>>() {
+				@Override
+				public List<Map<String, Object>> apply(List<Map<String, Object>> from) throws Exception {
+					String titleKey = from.size() > 0 ? CollectionConstants.commentsTitle : CollectionConstants.commentsNoTitle;
+					CardConfig cc = getCardConfig();
 
-			String pattern = IResourceGetter.Utils.getOrException(cc.resourceGetterFn, cardType, titleKey);
-			String titleText = MessageFormat.format(pattern, url, Strings.lastSegment(url, "/"), url);
-			setTitleAndImage(titleText, "", cardType);
-			footer.setUserData(userData);
-			updateDisplay(allComments);
-		}
+					String pattern = IResourceGetter.Utils.getOrException(cc.resourceGetterFn, cardType, titleKey);
+					String titleText = MessageFormat.format(pattern, url, Strings.lastSegment(url, "/"), url);
+					setTitleAndImage(titleText, "", cardType);
+					footer.setUserData(userData);
+					updateDisplay(from);
+					return from;
+				}
 
-		private void updateDisplay(List<Map<String, Object>> comments) {
-			table.removeAll();
-			int i = 0;
-			for (Map<String, Object> comment : comments) {
-				Object text = comment.get(CommentConstants.textKey);
-				Object creator = comment.get(CommentConstants.creatorKey);
-				Object source = comment.get(CommentConstants.sourceKey);
-				if (comment.containsKey(CommonConstants.errorKey))
-					text = CommonMessages.corrupted;
-				TableItem item = new TableItem(table, SWT.NULL);
-				item.setData(i++);
-				item.setText(0, Strings.nullSafeToString(creator));
-				item.setText(1, Strings.nullSafeToString(source));
-				item.setText(2, Strings.nullSafeToString(text));
-			}
-			Swts.packColumns(table);
+				private void updateDisplay(List<Map<String, Object>> comments) {
+					table.removeAll();
+					int i = 0;
+					for (Map<String, Object> comment : comments) {
+						Object text = comment.get(CommentConstants.textKey);
+						Object creator = comment.get(CommentConstants.creatorKey);
+						Object source = comment.get(CommentConstants.sourceKey);
+						if (comment.containsKey(CommonConstants.errorKey))
+							text = CommonMessages.corrupted;
+						TableItem item = new TableItem(table, SWT.NULL);
+						item.setData(i++);
+						item.setText(0, Strings.nullSafeToString(creator));
+						item.setText(1, Strings.nullSafeToString(source));
+						item.setText(2, Strings.nullSafeToString(text));
+					}
+					Swts.packColumns(table);
+				}
+			}).get();
 		}
 
 	}
@@ -189,5 +193,5 @@ public class Comments implements IHasControl {
 	public Table getTable() {
 		return content.table;
 	}
-	
+
 }

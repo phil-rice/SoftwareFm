@@ -47,6 +47,7 @@ abstract public class AbstractMyGroupsIntegrationTest extends AbstractExplorerIn
 		Button myGroupsButton = composite.myGroupsButton;
 		Swts.Buttons.press(myGroupsButton);
 		MyGroupsComposite myGroups = dispatchUntilMyGroups();
+		dispatchUntilJobsFinished();
 		return myGroups;
 	}
 

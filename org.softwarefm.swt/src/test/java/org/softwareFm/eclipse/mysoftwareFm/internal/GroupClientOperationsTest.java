@@ -39,15 +39,31 @@ import org.softwareFm.swt.editors.NameAndValuesEditor.NameAndValuesEditorComposi
 import org.softwareFm.swt.swt.Swts;
 
 public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
-	public void testAcceptInvite() {
+	public void testKickButtonRemovesUserFromGroup() {
+		createGroup(groupId0, groupCryptoKey0);
+		createUser(softwareFmId1, email1);
+		createUser(softwareFmId2, email2);
+		createUser(softwareFmId3, email3);
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
+
+		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
+		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
+		checkCanAddAndKick(new int[] { 1 }, softwareFmId0, softwareFmId2, softwareFmId3);
+		checkCanAddAndKick(new int[] { 2 }, softwareFmId0, softwareFmId1, softwareFmId3);
+		checkCanAddAndKick(new int[] { 3 }, softwareFmId0, softwareFmId1, softwareFmId2);
+	}
+
+	public void testAcceptInvite() throws InterruptedException {
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
 		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.invitedStatus);
 
 		final MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		dispatchUntilJobsFinished();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 		Table beforeTable = getMyGroupsTable(myGroupsComposite);
 		Swts.selectOnlyAndNotifyListener(beforeTable, 0);
-		dispatchUntilQueueEmpty();
+		Thread.sleep(1000);
+		dispatchUntilJobsFinished();
 
 		assertTrue(buttons.accept.isEnabled());
 		Swts.Buttons.press(buttons.accept);
@@ -91,20 +107,6 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 
 	}
 
-	public void testKickButtonRemovesUserFromGroup() {
-		createGroup(groupId0, groupCryptoKey0);
-		createUser(softwareFmId1, email1);
-		createUser(softwareFmId2, email2);
-		createUser(softwareFmId3, email3);
-		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
-
-		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
-		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
-		checkCanAddAndKick(new int[] { 1 }, softwareFmId0, softwareFmId2, softwareFmId3);
-		checkCanAddAndKick(new int[] { 2 }, softwareFmId0, softwareFmId1, softwareFmId3);
-		checkCanAddAndKick(new int[] { 3 }, softwareFmId0, softwareFmId1, softwareFmId2);
-	}
-
 	public void testLeaveIsEnabledIfAdminAndNoOtherMembers() {
 		createGroup(groupId0, groupCryptoKey0);
 		createUser(softwareFmId1, email1);
@@ -116,10 +118,12 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		Table myGroupsTable = getMyGroupsTable(myGroupsComposite);
 
 		Swts.selectAndNotifyListener(myGroupsTable, 0);
+		dispatchUntilJobsFinished();
 		assertFalse(buttons.leave.getEnabled()); //
 		Table membershipTable = getMembershipTable(myGroupsComposite);
 
 		Swts.selectOnlyAndNotifyListener(membershipTable, 1);
+		dispatchUntilJobsFinished();
 		pressKickButtonAndWaitUntilMembershipTableIsOfSize(buttons, 1);
 
 		MyGroupsComposite afterMyGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
@@ -133,7 +137,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 		Swts.Buttons.press(buttons.create);
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
 		checkChange(editor, 0, "someNewGroupName");
 		checkChange(editor, 1, "notAnEmail");
@@ -151,6 +155,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		assertFalse(buttons.leave.getEnabled());// no group selected
 		Table myGroupsTable = getMyGroupsTable(myGroupsComposite);
 		Swts.selectAndNotifyListener(myGroupsTable, 0);
+		dispatchUntilJobsFinished();
 		assertTrue(buttons.leave.getEnabled());
 		Swts.selectAndNotifyListener(myGroupsTable, 1);
 		assertTrue(buttons.leave.getEnabled());
@@ -177,17 +182,21 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 
 		Table membershipTable = getMembershipTable(myGroupsComposite);
 		Swts.selectOnlyAndNotifyListener(membershipTable, 0);
+		dispatchUntilJobsFinished();
 		assertEquals(GroupConstants.adminStatus, getMembershipStatus(membershipTable, 0));// you are admin, they admin
 		assertFalse(buttons.kick.getEnabled());
 
 		Swts.selectOnlyAndNotifyListener(membershipTable, 1);
+		dispatchUntilJobsFinished();
 		assertEquals("someStatus2", getMembershipStatus(membershipTable, 1));// you are the admin, they are not admin
 		assertTrue(buttons.kick.getEnabled());
 
 		Swts.selectOnlyAndNotifyListener(summaryTable, 1);
+		dispatchUntilJobsFinished();
 		assertFalse(buttons.kick.getEnabled());// nothing is selected on membership table
 
 		Swts.selectOnlyAndNotifyListener(membershipTable, 0);
+		dispatchUntilJobsFinished();
 		assertEquals("notAdmin", getMembershipStatus(membershipTable, 0));// you are not admin, they are not admin
 		assertFalse(buttons.kick.getEnabled());
 	}
@@ -219,9 +228,11 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	private void checkCanKick(MyGroupsComposite myGroupsComposite, boolean expected, int... is) {
+		dispatchUntilJobsFinished();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 		Table membershipTable = getMembershipTable(myGroupsComposite);
 		Swts.selectAndNotifyListener(membershipTable, is);
+		dispatchUntilJobsFinished();
 		assertEquals(expected, buttons.kick.getEnabled());
 
 	}
@@ -240,16 +251,21 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 
 		final MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
-
 		assertFalse(buttons.kick.getEnabled());
 		Table summaryTable = getMyGroupsTable(myGroupsComposite);
 
 		Swts.selectOnlyAndNotifyListener(summaryTable, 0);
+		dispatchUntilJobsFinished();
 		assertFalse(buttons.kick.getEnabled());// nothing is selected on membership table
 
 		final Table membershipTable = getMembershipTable(myGroupsComposite);
 		Swts.selectAndNotifyListener(membershipTable, kick);
-
+		dispatchUntilJobsFinished();
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			throw WrappedException.wrap(e);
+		}
 		pressKickButtonAndWaitUntilMembershipTableIsOfSize(buttons, expected.length);
 		MyGroupsComposite afterMyGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
 		final Table afterMembershipTable = getMembershipTable(afterMyGroupsComposite);
@@ -300,11 +316,11 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table beforeTable = getMyGroupsTable(myGroupsComposite);
 		Swts.selectOnlyAndNotifyListener(beforeTable, 0);
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 		assertTrue(buttons.invite.isEnabled());
 		Swts.Buttons.press(buttons.invite);
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 
 		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
 
@@ -351,11 +367,11 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		Table beforeTable = getMyGroupsTable(myGroupsComposite);
 		Swts.selectOnlyAndNotifyListener(beforeTable, 0);
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 		assertTrue(buttons.invite.isEnabled());
 		Swts.Buttons.press(buttons.invite);
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 
 		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
 		assertFalse(((Text) editor.getEditor().getChildren()[1]).getEditable());
@@ -407,7 +423,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 				return null;
 			}
 		};
-		checkOnServerAndLocally(checkFn, Functions.<Void, Void>identity());
+		checkOnServerAndLocally(checkFn, Functions.<Void, Void> identity());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -415,7 +431,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 		Swts.Buttons.press(buttons.create);
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
 		checkChange(editor, 0, "someNewGroupName");
 		checkChange(editor, 1, email1 + "," + email2);
@@ -521,7 +537,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		Table table = getMyGroupsTable(myGroupsComposite);
 		table.select(0);
 		table.notifyListeners(SWT.Selection, new Event());
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 
 		assertFalse(buttons.accept.getEnabled());
 		assertTrue(buttons.invite.getEnabled());
@@ -539,7 +555,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 
 		Table table = getMyGroupsTable(myGroupsComposite);
 		Swts.selectOnlyAndNotifyListener(table, 0);
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 		assertTrue(buttons.accept.getEnabled());
 		assertFalse(buttons.invite.getEnabled());
 		assertTrue(buttons.create.getEnabled());
@@ -551,7 +567,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 		Swts.Buttons.press(buttons.create);
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 		NameAndValuesEditorComposite editor = (NameAndValuesEditorComposite) masterDetailSocial.getDetailContent();
 		Swts.checkLabelsMatch(editor.getEditor(), "Group Name", "Email List", "Subject", "Email Pattern");
 		Swts.checkTextMatches(editor.getEditor(), //

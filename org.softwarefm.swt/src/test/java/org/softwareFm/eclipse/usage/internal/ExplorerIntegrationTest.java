@@ -37,71 +37,6 @@ import org.softwareFm.swt.title.TitleWithTitlePaintListener;
 public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 	private String popupMenuId;
 
-	public void testRefresh() {
-		postArtifactData();
-		displayCard(artifactUrl, new CardHolderAndCardCallback() {
-			@Override
-			public void process(ICardHolder cardHolder, ICard card) throws Exception {
-				cardConfig.cardDataStore.refresh(card.url());// this is the equivalent of pressing the refresh button
-				File localFile = new File(localRoot, card.url());
-				assertFalse(localFile.exists());
-			}
-		});
-	}
-
-	public void testUnrecognisedJarPutsJarNotRecognisedTextInLhsAndLeavesDetailAloneWhileDisplayingHelpInSocial() {
-		IHasControl detail = masterDetailSocial.createAndShowDetail(Swts.labelFn("detail"));
-
-		File file = new File("a/b/c/artifact-1.0.0.jar");
-		explorer.displayUnrecognisedJar(file, "someDigest", "someProject");
-		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
-		String pattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedText);
-
-		String expected = Strings.removeNewLines(MessageFormat.format(pattern, file, file.getName(), "someProject")).replace("<", "").replace(">", "");
-		assertEquals(expected.trim(), Strings.removeNewLines(text.getText()));
-
-		assertSame(detail.getControl(), masterDetailSocial.getDetailContent());
-		CompositeWithCardMargin socialContent = (CompositeWithCardMargin) masterDetailSocial.getSocialContent();
-		StyledText actualHelpTextComponent =  Swts.<StyledText>getDescendant(socialContent, 1, 0, 0);
-		String expectedHelp = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.helpUnrecognisedPleaseAddText);
-		assertEquals(expectedHelp, actualHelpTextComponent.getText());
-	}
-
-	@SuppressWarnings("unchecked")
-	public void testClickingOnUnrecognisedJarOpensEditor() {
-		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest", "someProject");
-		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
-
-		text.notifyListeners(SWT.MouseUp, new Event());
-		Control detailContent = masterDetailSocial.getDetailContent();
-		final IDataCompositeWithOkCancel<Table> valueComposite = (IDataCompositeWithOkCancel<Table>) detailContent;
-		TitleWithTitlePaintListener titleWithTitlePaintListener = valueComposite.getTitle();
-		String jarTitle = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle);
-		assertEquals(jarTitle, titleWithTitlePaintListener.getText());
-		Table editor = valueComposite.getEditor();
-		checkAndEdit(editor, new IAddingCallback<Table>() {
-			@Override
-			public void process(boolean added, Table card, IAdding adding) {
-				adding.tableItem(0, "Group Id", "Please specify the group id", "some.group.id");
-				adding.tableItem(1, "Artifact Id", "artifact", "someArtifact");
-				adding.tableItem(2, "Version", "1.0.0", "1.2.0");
-			}
-		});
-		doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {//one intermittent failing test
-			@Override
-			public void run() {
-				Control okButton =  valueComposite.getFooter().okButton();
-				Swts.Buttons.press(okButton);
-			}
-		}, new CardHolderAndCardCallback() {
-			@Override
-			public void process(ICardHolder cardHolder, ICard card) throws Exception {
-				assertEquals(rootArtifactUrl + "/some/group/id/some.group.id/artifact/someArtifact", card.url());
-			}
-
-		});
-	}
-
 	public void testShowContentOnlyAsksForOneMainUrlFromCardDataStore() {
 		postArtifactData();
 		final AtomicInteger count = new AtomicInteger();
@@ -135,6 +70,71 @@ public class ExplorerIntegrationTest extends AbstractExplorerIntegrationTest {
 				assertEquals(explorer.getBrowser().getComposite(), masterDetailSocial.getDetailContent());
 			}
 		});
+	}
+
+	public void testRefresh() {
+		postArtifactData();
+		displayCard(artifactUrl, new CardHolderAndCardCallback() {
+			@Override
+			public void process(ICardHolder cardHolder, ICard card) throws Exception {
+				cardConfig.cardDataStore.refresh(card.url());// this is the equivalent of pressing the refresh button
+				File localFile = new File(localRoot, card.url());
+				assertFalse(localFile.exists());
+			}
+		});
+	}
+
+	public void testUnrecognisedJarPutsJarNotRecognisedTextInLhsAndLeavesDetailAloneWhileDisplayingHelpInSocial() {
+		IHasControl detail = masterDetailSocial.createAndShowDetail(Swts.labelFn("detail"));
+
+		File file = new File("a/b/c/artifact-1.0.0.jar");
+		explorer.displayUnrecognisedJar(file, "someDigest", "someProject");
+		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
+		String pattern = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedText);
+
+		String expected = Strings.removeNewLines(MessageFormat.format(pattern, file, file.getName(), "someProject")).replace("<", "").replace(">", "");
+		assertEquals(expected.trim(), Strings.removeNewLines(text.getText()));
+
+		assertSame(detail.getControl(), masterDetailSocial.getDetailContent());
+		CompositeWithCardMargin socialContent = (CompositeWithCardMargin) masterDetailSocial.getSocialContent();
+		StyledText actualHelpTextComponent = Swts.<StyledText> getDescendant(socialContent, 1, 0, 0);
+		String expectedHelp = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.helpUnrecognisedPleaseAddText);
+		assertEquals(expectedHelp, actualHelpTextComponent.getText());
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testClickingOnUnrecognisedJarOpensEditor() {
+		explorer.displayUnrecognisedJar(new File("a/b/c/artifact-1.0.0.jar"), "someDigest", "someProject");
+		StyledText text = getTextInBorderComponent(masterDetailSocial.getMasterContent());
+
+		text.notifyListeners(SWT.MouseUp, new Event());
+		Control detailContent = masterDetailSocial.getDetailContent();
+		final IDataCompositeWithOkCancel<Table> valueComposite = (IDataCompositeWithOkCancel<Table>) detailContent;
+		TitleWithTitlePaintListener titleWithTitlePaintListener = valueComposite.getTitle();
+		String jarTitle = IResourceGetter.Utils.getOrException(cardConfig.resourceGetterFn, CollectionConstants.jarNotRecognisedCardType, CollectionConstants.jarNotRecognisedTitle);
+		assertEquals(jarTitle, titleWithTitlePaintListener.getText());
+		Table editor = valueComposite.getEditor();
+		checkAndEdit(editor, new IAddingCallback<Table>() {
+			@Override
+			public void process(boolean added, Table card, IAdding adding) {
+				adding.tableItem(0, "Group Id", "Please specify the group id", "some.group.id");
+				adding.tableItem(1, "Artifact Id", "artifact", "someArtifact");
+				adding.tableItem(2, "Version", "1.0.0", "1.2.0");
+			}
+		});
+		doSomethingAndWaitForCardDataStoreToFinish(new Runnable() {// one intermittent failing test
+					@Override
+					public void run() {
+						Control okButton = valueComposite.getFooter().okButton();
+						Swts.Buttons.press(okButton);
+					}
+				}, new CardHolderAndCardCallback() {
+					@Override
+					public void process(ICardHolder cardHolder, ICard card) throws Exception {
+						assertEquals(rootArtifactUrl + "/some/group/id/some.group.id/artifact/someArtifact", card.url());
+					}
+
+				});
 	}
 
 	public void testAddMailingListCausesCardEditorToAppear() {

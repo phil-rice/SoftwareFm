@@ -18,7 +18,6 @@ import org.softwareFm.swt.swt.Swts;
 
 abstract public class ApiAndSwtTest extends ApiTest {
 
-	
 	protected final static String projectCryptoKey0 = Crypto.makeKey();
 	protected final static String projectCryptoKey1 = Crypto.makeKey();
 	protected final static String projectCryptoKey2 = Crypto.makeKey();
@@ -28,13 +27,13 @@ abstract public class ApiAndSwtTest extends ApiTest {
 	protected Display display;
 
 	@Override
-	protected ITransactionManager getLocalTransactionManager() {
+	protected ITransactionManager makeLocalTransactionManager() {
 		return ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.localThreadPoolSizeForTests, CommonConstants.testTimeOutMs);
 	}
 
 	@Override
 	/** Needed because there are tests that have callbacks running on the server*/
-	protected ITransactionManager getServerTransactionManager() {
+	protected ITransactionManager makeServerTransactionManager() {
 		return ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.serverThreadPoolSizeForTests, CommonConstants.testTimeOutMs);
 	}
 
@@ -48,24 +47,59 @@ abstract public class ApiAndSwtTest extends ApiTest {
 	@Override
 	protected void tearDown() throws Exception {
 		try {
-			Swts.Dispatch.dispatchUntilQueueEmpty(display);
+			dispatchUntilJobsFinished();
 		} finally {
 			shell.dispose();
 			super.tearDown();
 		}
 	}
 
-	protected void dispatchUntilTimeoutOrLatch(CountDownLatch latch) {
-		Swts.Dispatch.dispatchUntilTimeoutOrLatch(display, latch, CommonConstants.testTimeOutMs);
+	protected void dispatchUntilTimeoutOrLatch(final CountDownLatch latch) {
+		dispatchUntil(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return latch.getCount() == 0;
+			}
+		});
 	}
 
-	protected void dispatchUntilQueueEmpty() {
-		Swts.Dispatch.dispatchUntilQueueEmpty(display);
-
+	private int allOtherJobsClosedCount() {
+		boolean inTransaction = getLocalContainer().getTransactionManager().inTransaction();
+		boolean inSwtCallbackFunction = ISwtSoftwareFmFactory.Utils.inSwtCallbackFunction(display);
+		return inTransaction||inSwtCallbackFunction ? 1 : 0;
 	}
 
-	protected void dispatchUntil(Callable<Boolean> callable) {
-		Swts.Dispatch.dispatchUntil(display, CommonConstants.testTimeOutMs, callable);
+	protected void dispatchUntilJobsFinished() {
+		dispatchUntil(new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				int jobs = getLocalContainer().activeJobs();
+				// System.out.println("Jobs: " + jobs );
+				int count = allOtherJobsClosedCount();
+				return jobs == count;
+			}
+		});
+	}
+
+	Callable<Boolean> activeJobsAre(final ITransactionManager manager, final int value) {
+		return new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return manager.activeJobs() == value;
+			}
+		};
+	}
+
+	protected void dispatchUntil(final Callable<Boolean> callable) {
+		Swts.Dispatch.dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				int jobs = getLocalContainer().activeJobs();
+				int count = allOtherJobsClosedCount();
+				System.out.println("jobs: " + jobs + " target: " + count + " in sync: "  + ISwtSoftwareFmFactory.Utils.inSwtCallbackFunction(display));
+				return callable.call() && jobs == count;
+			}
+		});
 	}
 
 	@Override

@@ -13,6 +13,11 @@ import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 
 public interface IContainer {
 
+	int activeJobs();
+
+	
+	ITransactionManager getTransactionManager();
+	
 	ITransaction<Void> accessComments(ICallback<IComments> callback);
 
 	<T> ITransaction<T> accessGitReader(IFunction1<IGitReader, T> function, ICallback<T> resultCallback);
@@ -29,6 +34,8 @@ public interface IContainer {
 
 	<Result, Intermediate, A1, A2> ITransaction<Result> accessWithCallbackFn(Class<A1> clazz1, Class<A2> clazz2, IFunction2<A1, A2, Intermediate> function, IFunction1<Intermediate, Result> resultCallback);
 
+	<Result, Intermediate, A1, A2, A3> ITransaction<Result> accessWithCallbackFn(Class<A1> clazz1, Class<A2> clazz2, Class<A3> clazz3, IFunction3<A1, A2, A3, Intermediate> function, IFunction1<Intermediate, Result> resultCallback);
+
 	<Result, A1, A2, A3> ITransaction<Result> accessWithCallback(Class<A1> clazz1, Class<A2> clazz2, Class<A3> clazz3, IFunction3<A1, A2, A3, Result> function, ICallback<Result> resultCallback);
 
 	<API> ITransaction<Void> access(Class<API> clazz, ICallback<API> callback);
@@ -40,4 +47,5 @@ public interface IContainer {
 	ITransactionManager transactionManager();
 
 	IGitOperations gitOperations();
+
 }

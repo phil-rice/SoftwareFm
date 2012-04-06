@@ -521,7 +521,7 @@ public class Explorer implements IExplorer {
 	}
 
 	@Override
-	public void displayCard(final String url, final ICardAndCollectionDataStoreVisitor visitor) {
+	public ITransaction<ICard> displayCard(final String url, final ICardAndCollectionDataStoreVisitor visitor) {
 		fireListeners(new ICallback<IExplorerListener>() {
 			@Override
 			public void process(IExplorerListener t) throws Exception {
@@ -531,7 +531,7 @@ public class Explorer implements IExplorer {
 		});
 		masterDetailSocial.putDetailOverSocial();
 		masterDetailSocial.setMaster(cardHolder.getControl());
-		cardConfig.cardDataStore.processDataFor(url, new CardDataStoreCallbackAdapter<ICard>() {
+		ITransaction<ICard> cardTransaction = cardConfig.cardDataStore.processDataFor(url, new CardDataStoreCallbackAdapter<ICard>() {
 			@Override
 			public ICard process(final String url, Map<String, Object> result) throws Exception {
 				final ICard card = cardConfig.cardFactory.makeCard(cardHolder, cardConfig, url, result);
@@ -550,7 +550,7 @@ public class Explorer implements IExplorer {
 				return card;
 			}
 		});
-
+		return cardTransaction;
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.UserData;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.jarAndClassPath.api.IUserDataManager;
 import org.softwareFm.swt.browser.IBrowserCompositeBuilder;
 import org.softwareFm.swt.card.ICard;
@@ -26,7 +27,7 @@ import org.softwareFm.swt.timeline.ITimeLine;
 
 public interface IExplorer extends IBrowserCompositeBuilder, ITimeLine, IHasCardConfig {
 
-	void displayCard(String url, ICardAndCollectionDataStoreVisitor visitor);
+	ITransaction<ICard> displayCard(String url, ICardAndCollectionDataStoreVisitor visitor);
 
 	void displayUnrecognisedJar(File file, String digest, String projectName);
 

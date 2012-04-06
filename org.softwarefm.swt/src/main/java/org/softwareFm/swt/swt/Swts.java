@@ -142,6 +142,7 @@ public class Swts {
 					dispatchUntilQueueEmpty(display);
 					Thread.sleep(2);
 				}
+				dispatchUntilQueueEmpty(display);
 				checkAtEnd(display, callable);
 			} catch (Exception e) {
 				throw WrappedException.wrap(e);

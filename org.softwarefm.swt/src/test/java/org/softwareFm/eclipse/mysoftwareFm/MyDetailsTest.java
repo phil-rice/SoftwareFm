@@ -47,6 +47,7 @@ public class MyDetailsTest extends AbstractMyGroupsIntegrationTest {
 
 	@SuppressWarnings("unchecked")
 	private void checkProjectDetails(MyDetails myDetails) {
+		dispatchUntilJobsFinished();
 		DataComposite<Table> composite = (DataComposite<Table>) myDetails.getComposite();
 		Table projectTable = composite.getEditor();
 		Swts.checkColumns(projectTable, "Group ID", "Artifact ID", "Jan 2012", "Feb 2012", "Mar 2012");

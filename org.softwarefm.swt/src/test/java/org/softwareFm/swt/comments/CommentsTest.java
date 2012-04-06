@@ -126,7 +126,7 @@ public class CommentsTest extends ApiAndSwtTest {
 
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
 		composite.getFooter().addCommentButton.notifyListeners(SWT.MouseUp, new Event());
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 	}
 
 	@SuppressWarnings("unchecked")

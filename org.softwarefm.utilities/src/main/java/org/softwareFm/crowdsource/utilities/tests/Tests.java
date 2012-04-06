@@ -5,6 +5,7 @@
 package org.softwareFm.crowdsource.utilities.tests;
 
 import java.io.File;
+import java.util.concurrent.Callable;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
@@ -13,6 +14,7 @@ import junit.textui.TestRunner;
 
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -25,7 +27,19 @@ public class Tests {
 		Assert.assertNotNull(t);
 		return t;
 	}
-	
+	public static  void waitUntil(Callable<Boolean> callable) {
+		long startTime = System.currentTimeMillis();
+		try {
+			while (!callable.call() && System.currentTimeMillis() < startTime + CommonConstants.testTimeOutMs)
+				Thread.sleep(1);
+			if (!callable.call())
+				Assert.fail();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+
+	}
+
 	public static boolean deleteTempDirectory(String name) {
 		String tempDir = System.getProperty("java.io.tmpdir");
 		File tests = new File(tempDir, "softwareFmTests");

@@ -218,10 +218,13 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 	}
 
 	private void checkAddingToUrl(String initialUrl, final ICallback<ICard> addMenuExecutor, final String collection, final String nameInMainCard, final int count, final String urlFragment, final IAddingCallback<ICard> addingCallback, final IFunction1<String, String> baseToExpectedCollectionUrlFn) {
+		dispatchUntilJobsFinished();
 		displayCard(initialUrl, new CardHolderAndCardCallback() {
 			@Override
 			public void process(ICardHolder cardHolder, final ICard initialCard) throws Exception {
+				dispatchUntilJobsFinished();
 				addMenuExecutor.process(initialCard);
+				dispatchUntilJobsFinished();
 
 				Composite detailContent1 = (Composite) masterDetailSocial.getDetailContent();
 				final Table cardTable = Lists.getOnly(Swts.findChildrenWithClass(detailContent1, Table.class));
@@ -233,8 +236,10 @@ public abstract class ExplorerAddingCollectionsIntegrationTest extends AbstractE
 						TableItem item = cardTable.getItem(index);
 						assertEquals(prettyName, item.getText(0));
 						assertEquals(existing, item.getText(1));
+						dispatchUntilJobsFinished();
 						cardTable.select(index);
 						cardTable.notifyListeners(SWT.Selection, new Event());
+						dispatchUntilJobsFinished();
 						Text text = Swts.findChildrenWithClass(cardTable, Text.class).get(index);
 						assertEquals(existing, text.getText());
 						text.setText(newValue);

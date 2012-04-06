@@ -2,6 +2,7 @@ package org.softwareFm.swt;
 
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.eclipse.swt.widgets.Display;
@@ -19,13 +20,22 @@ public interface ISwtSoftwareFmFactory {
 
 	public static class Utils {
 
+		private static AtomicInteger inSwtCount = new AtomicInteger();
+
+		/** returns true if the calling thread is currently running inside the syncexec of the swtfunction code */
+		public static boolean inSwtCallbackFunction(Display display) {
+			return Thread.currentThread() == display.getThread() && inSwtCount.get() > 0;
+
+		}
+
 		public static ITransactionManager getSwtTransactionManager(final Display display, int workerThreads, final long timeOutMs) {
 			return ITransactionManager.Utils.withFutureToTransactionFn(workerThreads, new IFunction1<Future<?>, ITransaction<?>>() {
 				private final Thread swtThread = display.getThread();
+
 				@SuppressWarnings("unchecked")
 				@Override
 				public ITransaction<?> apply(final Future<?> future) throws Exception {
-					return new Transaction<Object>((Future<Object>) future, timeOutMs) { 
+					return new Transaction<Object>((Future<Object>) future, timeOutMs) {
 						@Override
 						public Object get(long timeOutMs) {
 							if (Thread.currentThread() != swtThread)
@@ -42,9 +52,10 @@ public interface ISwtSoftwareFmFactory {
 								throw WrappedException.wrap(e);
 							}
 						}
+
 						@Override
 						public String toString() {
-							return "SwtDispatchingTransaction(" + future +")";
+							return "SwtDispatchingTransaction(" + future + ")";
 						}
 					};
 				}
@@ -55,17 +66,19 @@ public interface ISwtSoftwareFmFactory {
 					Runnable runnable = new Runnable() {
 						@Override
 						public void run() {
-							result.set(Functions.call(callbackFn, value));
+							inSwtCount.incrementAndGet();
+							try {
+								result.set(Functions.call(callbackFn, value));
+							} finally {
+								inSwtCount.decrementAndGet();
+							}
 						}
 					};
-					if (Thread.currentThread() == display.getThread())
-						runnable.run();
-					else
-						display.syncExec(runnable);
+					display.syncExec(runnable);
 					return result.get();
 				}
 			});
 		}
 	}
-	
+
 }

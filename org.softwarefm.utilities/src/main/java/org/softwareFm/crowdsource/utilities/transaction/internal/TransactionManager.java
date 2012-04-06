@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.softwareFm.crowdsource.utilities.collections.Lists;
@@ -87,6 +88,7 @@ public class TransactionManager implements ITransactionManagerBuilder {
 	private final Map<IMonitor, ITransaction<?>> monitorToTransaction = Maps.newSynchronisedMap();
 	private final Map<ITransaction<?>, List<ITransactional>> transactionalMap = Maps.newSynchronisedMap();
 	private final ThreadLocal<IMonitor> monitors = new ThreadLocal<IMonitor>();
+	private final AtomicInteger activeJobs = new AtomicInteger();
 
 	public TransactionManager(IServiceExecutor serviceExecutor, IFunction1<Future<?>, ITransaction<?>> futureToTransactionFn) {
 		this.serviceExecutor = serviceExecutor;
@@ -100,6 +102,11 @@ public class TransactionManager implements ITransactionManagerBuilder {
 			return newTransaction(job, resultCallback, potentialTransactionals);
 		else
 			return nestedTransaction(existing, job, resultCallback, potentialTransactionals);
+	}
+	
+	@Override
+	public boolean inTransaction() {
+		return monitors.get() != null;
 	}
 
 	private <Result, Intermediate> ITransaction<Result> nestedTransaction(IMonitor monitor, final IFunction1<IMonitor, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback, Object... potentialTransactionals) {
@@ -116,6 +123,7 @@ public class TransactionManager implements ITransactionManagerBuilder {
 	}
 
 	private <Result, Intermediate> ITransaction<Result> newTransaction(final IFunction1<IMonitor, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback, Object... potentialTransactionals) {
+		activeJobs.incrementAndGet();
 		final CountDownLatch latch = new CountDownLatch(1);
 		IFunction1<IMonitor, Result> fullJob = new IFunction1<IMonitor, Result>() {
 			@Override
@@ -134,13 +142,17 @@ public class TransactionManager implements ITransactionManagerBuilder {
 					exception.set(e);
 					throw e;
 				} finally {
-					ITransaction<?> transaction = monitorToTransaction.remove(monitor);
-					if (transaction == null)
-						throw new IllegalStateException("The transaction was null");
-					if (exception.get() == null) {
-						commit(transaction);
-					} else {
-						rollback(resultCallback, exception, transaction);
+					try {
+						ITransaction<?> transaction = monitorToTransaction.remove(monitor);
+						if (transaction == null)
+							throw new IllegalStateException("The transaction was null");
+						if (exception.get() == null) {
+							commit(transaction);
+						} else {
+							rollback(resultCallback, exception, transaction);
+						}
+					} finally {
+						activeJobs.decrementAndGet();
 					}
 
 				}
@@ -234,6 +246,11 @@ public class TransactionManager implements ITransactionManagerBuilder {
 	@Override
 	public void shutdownAndAwaitTermination(long timeout, TimeUnit unit) {
 		serviceExecutor.shutdownAndAwaitTermination(timeout, unit);
+	}
+
+	@Override
+	public int activeJobs() {
+		return activeJobs.get();
 	}
 
 }

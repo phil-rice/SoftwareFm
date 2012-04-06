@@ -33,6 +33,7 @@ public class CardDataStoreForRepositoryTest extends AbstractExplorerIntegrationT
 		String url = Urls.compose(rootArtifactUrl, artifactUrl);
 		ITransaction<Map<String, Object>> transaction = cardDataStore.processDataFor(url, callback);
 		Map<String, Object> result = transaction.get(CommonConstants.testTimeOutMs);
+		dispatchUntilJobsFinished();
 		assertEquals(Maps.stringObjectMap(//
 				CommonConstants.typeTag, CardConstants.artifact, //
 				"tutorial", Maps.stringObjectMap(CommonConstants.typeTag, CardConstants.collection, //

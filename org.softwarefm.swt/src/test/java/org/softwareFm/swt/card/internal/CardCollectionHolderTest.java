@@ -58,7 +58,7 @@ public class CardCollectionHolderTest extends ApiAndSwtTest {
 		cardCollectionHolder.setKeyValue("some", "key", Maps.stringObjectLinkedMap(CardDataStoreFixture.dataIndexedByUrlFragment), callback);
 		assertEquals(1, callback.count.get());
 		assertEquals(6, composite.getChildren().length);
-		dispatchUntilQueueEmpty();// not needed, but just being carefull
+		dispatchUntilJobsFinished();// not needed, but just being carefull
 		for (int i = 0; i < 6; i++)
 			checkChildhasNullCard(i);
 		assertEquals(0, callback.cardUrls.size());
@@ -69,7 +69,7 @@ public class CardCollectionHolderTest extends ApiAndSwtTest {
 		CardHolderComposite control = (CardHolderComposite) composite.getChildren()[0];
 		control.notifyListeners(SWT.Paint, new Event());
 		mockDataStore.kickAllFutures();
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 
 		ICard card = control.card;
 		assertEquals(0, callback.cardUrls.size());
@@ -86,7 +86,7 @@ public class CardCollectionHolderTest extends ApiAndSwtTest {
 		assertNull(control.card);
 		control.notifyListeners(SWT.Paint, new Event());
 		mockDataStore.kickAllFutures();
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 
 		ICard card = control.card;
 		assertEquals(url, card.url());
@@ -99,7 +99,7 @@ public class CardCollectionHolderTest extends ApiAndSwtTest {
 		ICard card = control.card;
 		assertNull(card);
 		mockDataStore.kickAllFutures();
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 		assertNull(control.card);
 
 	}

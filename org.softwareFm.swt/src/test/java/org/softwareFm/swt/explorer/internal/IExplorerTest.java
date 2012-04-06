@@ -51,7 +51,7 @@ public class IExplorerTest extends ApiAndSwtTest {
 			assertEquals(rootUrls, cardHolder.getRootUrls());
 			assertEquals(cardConfig, cardHolder.getCardConfig());
 		} finally {
-			dispatchUntilQueueEmpty();
+			dispatchUntilJobsFinished();
 			cardConfig.dispose();
 			masterDetailSocial.dispose();
 		}

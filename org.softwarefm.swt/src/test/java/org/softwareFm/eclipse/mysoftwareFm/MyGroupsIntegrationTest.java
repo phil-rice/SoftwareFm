@@ -57,7 +57,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		checkMainTable(table);
 		table.select(1);
 		table.notifyListeners(SWT.Selection, new Event());
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 		checkMainTable(table);
 		assertEquals(1, table.getSelectionIndex());
 
@@ -86,7 +86,7 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 
 		table.select(0);
 		table.notifyListeners(SWT.Selection, new Event());
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 
 		Swts.checkTableColumns(table, "Group Name", "Members", "My Status");
 		Swts.checkTable(table, 0, new IdNameAndStatus(groupId0, groupName0, "someStatus1"), groupName0, "3", "someStatus1");
@@ -129,18 +129,18 @@ public class MyGroupsIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		table.select(0); // this is the bad crypto
 		Table summaryTable = Swts.getDescendant(myGroupsComposite.getEditor(), 1, 1);
 		table.notifyListeners(SWT.Selection, new Event());
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 		assertEquals(0, summaryTable.getItemCount());
 
 		table.select(1);
 		table.notifyListeners(SWT.Selection, new Event());
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 		assertEquals(1, summaryTable.getItemCount());
 		Swts.checkTable(summaryTable, 0, makeMembershipMap(softwareFmId0, userKey0, email0, "someStatus1"), email0, "someStatus1");
 
 		table.select(0);
 		table.notifyListeners(SWT.Selection, new Event());
-		dispatchUntilQueueEmpty();
+		dispatchUntilJobsFinished();
 		assertEquals(0, summaryTable.getItemCount());
 
 	}

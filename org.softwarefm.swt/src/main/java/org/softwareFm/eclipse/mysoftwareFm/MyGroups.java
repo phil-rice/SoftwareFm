@@ -299,25 +299,31 @@ public class MyGroups implements IHasComposite {
 						final String groupCryptoKey = idToCrypto.get(groupId);
 						if (groupCryptoKey == null)
 							throw new NullPointerException("GroupCrypto is null: " + Integer.toString(index));
-						Iterable<Map<String, Object>> users = container.accessGroupReader(new IFunction1<IGroupsReader, Iterable<Map<String, Object>>>() {
+
+						container.accessWithCallbackFn(IGroupsReader.class, new IFunction1<IGroupsReader, Iterable<Map<String, Object>>>() {
 							@Override
 							public Iterable<Map<String, Object>> apply(IGroupsReader from) throws Exception {
 								return from.users(groupId, groupCryptoKey);
 							}
-						}, ICallback.Utils.<Iterable<Map<String, Object>>> noCallback()).get();
-						for (Map<String, Object> user : Lists.sort(users, Comparators.mapKey(LoginConstants.emailKey))) {
-							TableItem tableItem = new TableItem(membershipTable, SWT.NULL);
-							if (user.containsKey(CommonConstants.errorKey))
-								tableItem.setText(new String[] { CommonMessages.corrupted, CommonMessages.record });
-							else {
-								tableItem.setData(user);
-								tableItem.setText(new String[] { Strings.nullSafeToString(user.get(LoginConstants.emailKey)), Strings.nullSafeToString(user.get(GroupConstants.membershipStatusKey)) });
+						}, new ISwtFunction1<Iterable<Map<String, Object>>, Iterable<Map<String, Object>>>() {
+							@Override
+							public Iterable<Map<String, Object>> apply(Iterable<Map<String, Object>> from) throws Exception {
+								for (Map<String, Object> user : Lists.sort(from, Comparators.mapKey(LoginConstants.emailKey))) {
+									TableItem tableItem = new TableItem(membershipTable, SWT.NULL);
+									if (user.containsKey(CommonConstants.errorKey))
+										tableItem.setText(new String[] { CommonMessages.corrupted, CommonMessages.record });
+									else {
+										tableItem.setData(user);
+										tableItem.setText(new String[] { Strings.nullSafeToString(user.get(LoginConstants.emailKey)), Strings.nullSafeToString(user.get(GroupConstants.membershipStatusKey)) });
+									}
+								}
+								Swts.packColumns(membershipTable);
+								rightHand.layout();
+								sortOutButtonsEnabledStatus();
+								return from;
 							}
-						}
+						});
 					}
-					Swts.packColumns(membershipTable);
-					rightHand.layout();
-					sortOutButtonsEnabledStatus();
 				}
 			});
 			membershipTable.addListener(SWT.Selection, new Listener() {

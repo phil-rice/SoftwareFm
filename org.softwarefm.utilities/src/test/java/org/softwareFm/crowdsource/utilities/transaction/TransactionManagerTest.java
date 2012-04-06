@@ -1,6 +1,7 @@
 package org.softwareFm.crowdsource.utilities.transaction;
 
 import java.util.Arrays;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -47,6 +48,51 @@ public class TransactionManagerTest extends TestCase {
 		assertEquals(Lists.getOnly(job.threads), postFunctionThread);
 		assertEquals(0, registered1Count.get());
 	}
+
+	public void testActiveJobs() throws InterruptedException {
+		ConstantFnWithKick<IMonitor, String> fn1 = new ConstantFnWithKick<IMonitor, String>("value1");
+		ConstantFnWithKick<IMonitor, String> fn2 = new ConstantFnWithKick<IMonitor, String>("value2");
+		ConstantFnWithKick<IMonitor, String> fn3 = new ConstantFnWithKick<IMonitor, String>("value3");
+		ConstantFnWithKick<IMonitor, String> fn4 = new ConstantFnWithKick<IMonitor, String>("value4");
+
+		ConstantFnWithKick<String, String> cb1 = new ConstantFnWithKick<String, String>("res1");
+		ConstantFnWithKick<String, String> cb2 = new ConstantFnWithKick<String, String>("res2");
+		ConstantFnWithKick<String, String> cb3 = new ConstantFnWithKick<String, String>("res3");
+		ConstantFnWithKick<String, String> cb4 = new ConstantFnWithKick<String, String>("res4");
+
+		assertEquals(0, manager.activeJobs());
+		ITransaction<String> t1 = manager.start(fn1, cb1);
+		ITransaction<String> t2 = manager.start(fn2, cb2);
+		ITransaction<String> t3 = manager.start(fn3, cb3);
+		ITransaction<String> t4 = manager.start(fn4, cb4);
+
+	Tests.	waitUntil(activeJobsAre(manager, 4));
+		fn1.kick();
+		fn2.kick();
+		Thread.sleep(10);//giving it time to go wrong
+		Tests.	waitUntil(activeJobsAre(manager, 4));
+		cb1.kick();
+		Tests.	waitUntil(activeJobsAre(manager, 3));
+		cb2.kick();
+		Tests.	waitUntil(activeJobsAre(manager, 2));
+		fn3.kick();
+		fn4.kick();
+		Thread.sleep(10);//giving it time to go wrong
+		Tests.	waitUntil(activeJobsAre(manager, 2));
+		cb3.kick();
+		cb4.kick();
+		Tests.	waitUntil(activeJobsAre(manager, 0));
+	}
+
+	public static Callable<Boolean> activeJobsAre(final ITransactionManager manager, final int value) {
+		return new Callable<Boolean>() {
+			@Override
+			public Boolean call() throws Exception {
+				return manager.activeJobs() == value;
+			}
+		};
+	}
+
 
 	public void testNestedTransactionsExecutedOnSameThread() {
 		ConstantFunctionWithMemoryOfFroms<String, String> postFunction1 = new ConstantFunctionWithMemoryOfFroms<String, String>("value1-b");

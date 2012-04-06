@@ -45,6 +45,16 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 	}
 
 	@Override
+	public ITransactionManager getTransactionManager() {
+		return transactionManager;
+	}
+
+	@Override
+	public int activeJobs() {
+		return transactionManager.activeJobs();
+	}
+
+	@Override
 	public <T, X extends T> void register(Class<T> class1, X x) {
 		map.put(class1, x);
 	}
@@ -126,6 +136,24 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 		}, resultCallback, one, two);
 	}
 
+	@Override
+	public <Result, Intermediate, A1, A2, A3> ITransaction<Result> accessWithCallbackFn(final Class<A1> clazz1, final Class<A2> clazz2, final Class<A3> clazz3, final IFunction3<A1, A2, A3, Intermediate> function, final IFunction1<Intermediate, Result> resultCallback) {
+		final A1 one = getReadWriter(clazz1);
+		final A2 two = getReadWriter(clazz2);
+		final A3 three= getReadWriter(clazz3);
+		return transactionManager.start(new IFunction1<IMonitor, Intermediate>() {
+			@Override
+			public Intermediate apply(IMonitor from) throws Exception {
+				from.beginTask(getTaskName(), 1);
+				return function.apply(one, two, three);
+			}
+
+			@Override
+			public String toString() {
+				return "accessWithCallbackFn(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + clazz3.getSimpleName() + ", " + function + ", " + resultCallback + ")";
+			}
+		}, resultCallback, one, two);
+	}
 	@Override
 	public <A1, A2, A3> ITransaction<Void> access(final Class<A1> clazz1, final Class<A2> clazz2, final Class<A3> clazz3, final ICallback3<A1, A2, A3> callback) {
 		final A1 one = getReadWriter(clazz1);

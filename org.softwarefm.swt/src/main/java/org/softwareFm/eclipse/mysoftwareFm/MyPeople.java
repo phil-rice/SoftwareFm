@@ -26,13 +26,13 @@ import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUserMembershipReader;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback3;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.functions.IFunction3;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
@@ -54,7 +54,7 @@ public class MyPeople implements IHasComposite {
 		return new IShowMyPeople() {
 			@Override
 			public void showMyPeople(final UserData userData, final String groupId, final String artifactId) {
-				container.accessWithCallbackFn(IGitReader.class, Functions.<IGitReader, Void>constant(null), new ISwtFunction1<Void, Void>() {
+				container.accessWithCallbackFn(IGitReader.class, Functions.<IGitReader, Void> constant(null), new ISwtFunction1<Void, Void>() {
 					@Override
 					public Void apply(Void from) throws Exception {
 						MyPeople myPeople = masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyPeople>() {
@@ -141,17 +141,16 @@ public class MyPeople implements IHasComposite {
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked", "rawtypes" , "provide composite object for result"})
 	public void setData(final String groupId, final String artifactId) {
 		final Set<String> softwareFmIds = Sets.newSet();
 		final Map<String, String> softwareFmIdToName = Maps.newMap();
 		final Map<String, Set<String>> softwareFmIdToGroups = Maps.newMap();
 		final Map<String, Map<String, List<Integer>>> softwareFmIdToMonthToUsage = Maps.newMap();
 
-		container.access(IUserMembershipReader.class, IProjectTimeGetter.class, IGroupsReader.class, new ICallback3<IUserMembershipReader, IProjectTimeGetter, IGroupsReader>() {
+		container.accessWithCallbackFn(IUserMembershipReader.class, IProjectTimeGetter.class, IGroupsReader.class, new IFunction3<IUserMembershipReader, IProjectTimeGetter, IGroupsReader, Void>() {
 			@Override
-			public void process(IUserMembershipReader membershipReader, IProjectTimeGetter timeGetter, IGroupsReader groupsReader) throws Exception {
-
+			public Void apply(IUserMembershipReader membershipReader, IProjectTimeGetter timeGetter, IGroupsReader groupsReader) throws Exception {
 				Iterable<Map<String, Object>> walkGroups = membershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
 
 				for (Map<String, Object> groupData : walkGroups)
@@ -198,15 +197,15 @@ public class MyPeople implements IHasComposite {
 						}
 					}
 				}
+				return null;
 			}
-		}).get();
-
-		Swts.syncExec(content, new Runnable() {
+		}, new ISwtFunction1<Void, Void>() {
 			@Override
-			public void run() {
+			public Void apply(Void from) throws Exception {
 				System.out.println("Report: ");
 				System.out.println(softwareFmIdToMonthToUsage);
 				content.setSoftwareFmIds(groupId, artifactId, softwareFmIds, softwareFmIdToName, softwareFmIdToGroups, softwareFmIdToMonthToUsage);
+				return null;
 			}
 		});
 	}

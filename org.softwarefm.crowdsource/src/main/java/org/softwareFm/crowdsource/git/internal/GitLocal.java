@@ -185,7 +185,6 @@ public class GitLocal implements IGitLocal {
 		clearCaches();
 	}
 
-	@SuppressWarnings("ensure git local fully implements git writer")
 	@Override
 	public void append(IFileDescription fileDescription, Map<String, Object> data, String commitMessage) {
 		throw new UnsupportedOperationException();
