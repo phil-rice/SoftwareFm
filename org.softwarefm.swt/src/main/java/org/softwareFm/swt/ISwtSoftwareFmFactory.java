@@ -28,6 +28,10 @@ public interface ISwtSoftwareFmFactory {
 
 		}
 
+		public static boolean swtFunctionsFinished() {
+			return inSwtCount.get() == 0;
+		}
+
 		public static ITransactionManager getSwtTransactionManager(final Display display, int workerThreads, final long timeOutMs) {
 			return ITransactionManager.Utils.withFutureToTransactionFn(workerThreads, new IFunction1<Future<?>, ITransaction<?>>() {
 				private final Thread swtThread = display.getThread();
@@ -62,15 +66,20 @@ public interface ISwtSoftwareFmFactory {
 			}).registerCallbackExecutor(ISwtFunction1.class, new IFunction3<IServiceExecutor, IFunction1<Object, Object>, Object, Object>() {
 				@Override
 				public Object apply(IServiceExecutor first, final IFunction1<Object, Object> callbackFn, final Object value) throws Exception {
+					if (inSwtCount.get() > 1)
+						throw new IllegalArgumentException();
 					final AtomicReference<Object> result = new AtomicReference<Object>();
 					Runnable runnable = new Runnable() {
 						@Override
 						public void run() {
 							inSwtCount.incrementAndGet();
+							System.out.println("Initiating swt function: " + inSwtCount + " " + callbackFn);
 							try {
-								result.set(Functions.call(callbackFn, value));
+								Object actualResult = Functions.call(callbackFn, value);
+								result.set(actualResult);
 							} finally {
 								inSwtCount.decrementAndGet();
+								System.out.println("finished swt function: " + inSwtCount + " " + callbackFn);
 							}
 						}
 					};

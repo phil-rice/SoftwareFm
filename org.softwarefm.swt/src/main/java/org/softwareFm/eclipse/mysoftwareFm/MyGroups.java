@@ -8,6 +8,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -54,37 +55,34 @@ import org.softwareFm.swt.explorer.IShowMyGroups;
 import org.softwareFm.swt.swt.Swts;
 
 public class MyGroups implements IHasComposite {
+	final static String membershipCountKey = "membershipCount";
+	final static AtomicInteger id = new AtomicInteger();
+
 	public static IShowMyGroups showMyGroups(final IMasterDetailSocial masterDetailSocial, final IUserAndGroupsContainer container, final boolean showDialogs, final CardConfig cardConfig) {
 		return new IShowMyGroups() {
 			@Override
-			@SuppressWarnings("need to add access method for the container without a function")
 			public void show(final UserData userData, final String groupId) {
-				container.accessWithCallbackFn(IGroupsReader.class, new IFunction1<IGroupsReader, Void>() {
+				IGitReader.Utils.clearCache(container);
+				masterDetailSocial.hideSocial();
+				masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
 					@Override
-					public Void apply(IGroupsReader t) throws Exception {
-						IGitReader.Utils.clearCache(container);
-						return null;
-					}
-				}, new ISwtFunction1<Void, Void>() {
-					@Override
-					public Void apply(Void t) throws Exception {
-						masterDetailSocial.hideSocial();
-						masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
+					public MyGroups apply(Composite from) throws Exception {
+						MyGroups myGroups = new MyGroups(from, masterDetailSocial, container, showDialogs, cardConfig, userData, new ICallback<String>() {
+							private final int myId = id.incrementAndGet(); 4
+
 							@Override
-							public MyGroups apply(Composite from) throws Exception {
-								MyGroups myGroups = new MyGroups(from, masterDetailSocial, container, showDialogs, cardConfig, userData, new ICallback<String>() {
-									@Override
-									public void process(String groupId) throws Exception {
-										showMyGroups(masterDetailSocial, container, showDialogs, cardConfig).show(userData, groupId);
-									}
-								});
-								myGroups.selectAndScrollTo(groupId);
-								return myGroups;
+							public void process(String groupId) throws Exception {
+								System.out.println("In showMyGroupsCallback " + myId);
+								IShowMyGroups showMyGroups = showMyGroups(masterDetailSocial, container, showDialogs, cardConfig);
+								System.out.println("In showMyGroupsCallback: calling showMyGroups " + myId);
+								showMyGroups.show(userData, groupId);
+								System.out.println("In showMyGroupsCallback: finished calling showMyGroups " + myId);
 							}
 						});
-						return null;
+						myGroups.selectAndScrollTo(groupId);
+						return myGroups;
 					}
-				}).get();
+				});
 			}
 		};
 	}
@@ -178,6 +176,8 @@ public class MyGroups implements IHasComposite {
 		private final Table membershipTable;
 		private final Map<String, String> idToCrypto = Maps.newMap();
 		private final MyGroupsButtons buttons;
+		private final UserData userData;
+		private final IUserAndGroupsContainer container;
 
 		@Override
 		public MyGroupsButtons getFooter() {
@@ -191,6 +191,8 @@ public class MyGroups implements IHasComposite {
 
 		public MyGroupsComposite(Composite parent, IMasterDetailSocial masterDetailSocial, final IUserAndGroupsContainer container, boolean showDialogs, final CardConfig cardConfig, final UserData userData, ICallback<String> showMyGroups) {
 			super(parent, cardConfig, GroupConstants.myGroupsCardType, JarAndPathConstants.myGroupsTitle, true);
+			this.container = container;
+			this.userData = userData;
 			sashForm = new SashForm(getInnerBody(), SWT.HORIZONTAL);
 			summaryTable = new Table(sashForm, SWT.FULL_SELECTION);
 			buttons = new MyGroupsButtons(getInnerBody(), masterDetailSocial, cardConfig, container, showDialogs, userData, showMyGroups, new Callable<IdNameAndStatus>() {
@@ -223,10 +225,37 @@ public class MyGroups implements IHasComposite {
 			new TableColumn(summaryTable, SWT.NULL).setText("Members");
 			new TableColumn(summaryTable, SWT.NULL).setText("My Status");
 
-			final String membershipCountKey = "membershipCount";
+			rightHand = new Composite(sashForm, SWT.NULL);
+			final StackLayout stackLayout = new StackLayout();
+			rightHand.setLayout(stackLayout);
+
+			StyledText textInBorder = new StyledText(rightHand, SWT.WRAP | SWT.READ_ONLY);
+			textInBorder.setText(IResourceGetter.Utils.getOrException(getResourceGetter(), GroupConstants.needToSelectGroup));
+			stackLayout.topControl = textInBorder;
+
+			membershipTable = new Table(rightHand, SWT.FULL_SELECTION | SWT.MULTI);
+			System.out.println("created membership table: " + membershipTable);
+			membershipTable.setHeaderVisible(true);
+			new TableColumn(membershipTable, SWT.NULL).setText("Email");
+			new TableColumn(membershipTable, SWT.NULL).setText("Status");
+			setUpSummaryTableListener(container, stackLayout);
+			membershipTable.addListener(SWT.Selection, new Listener() {
+				@Override
+				public void handleEvent(Event event) {
+					sortOutButtonsEnabledStatus();
+				}
+			});
+			sashForm.setWeights(new int[] { 2, 3 });
+			populate();
+		}
+
+		private void populate() {
+			final int myId = id.get();
+			System.out.println("MyGroups.populate " + id);
 			container.accessWithCallbackFn(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, List<Map<String, Object>>>() {
 				@Override
 				public List<Map<String, Object>> apply(final IGroupsReader groupsReader, IUserMembershipReader userMembershipReader) throws Exception {
+					System.out.println("inside MyGroups.populate.gettingData " + id);
 					Iterable<Map<String, Object>> groups = userMembershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
 					List<Map<String, Object>> groupsWithName = Lists.map(groups, new IFunction1<Map<String, Object>, Map<String, Object>>() {
 						@Override
@@ -243,11 +272,13 @@ public class MyGroups implements IHasComposite {
 							}
 						}
 					});
+					System.out.println("end of MyGroups.populate.getting data " + myId + ": " + groupsWithName);
 					return groupsWithName;
 				}
 			}, new ISwtFunction1<List<Map<String, Object>>, Void>() {
 				@Override
 				public Void apply(List<Map<String, Object>> groupsWithName) throws Exception {
+					System.out.println("MyGroups.populate.SwtFunction " + myId);
 					for (Map<String, Object> map : Lists.sort(groupsWithName, Comparators.mapKey(GroupConstants.groupNameKey))) {
 						if (map.containsKey(CommonConstants.errorKey)) {
 							TableItem item = new TableItem(summaryTable, SWT.NULL);
@@ -264,24 +295,22 @@ public class MyGroups implements IHasComposite {
 							item.setData(data);
 							item.setText(new String[] { groupName, membershipCountString, myStatus });
 							idToCrypto.put(groupId, groupCryptoKey);
+							Swts.packTables(summaryTable, membershipTable);
+							sortOutButtonsEnabledStatus();
 						}
 					}
+					System.out.println("Completed MyGroups.populate.SwtFunction " + myId + " membership table: " + membershipTable + " myGroup: " + MyGroupsComposite.this + " items: " + membershipTable.getItemCount());
 					return null;
 				}
-			}).get();
 
-			rightHand = new Composite(sashForm, SWT.NULL);
-			final StackLayout stackLayout = new StackLayout();
-			rightHand.setLayout(stackLayout);
+				@Override
+				public String toString() {
+					return "Swt function for MyGroupsComposite.populate";
+				}
+			});
+		}
 
-			StyledText textInBorder = new StyledText(rightHand, SWT.WRAP | SWT.READ_ONLY);
-			textInBorder.setText(IResourceGetter.Utils.getOrException(getResourceGetter(), GroupConstants.needToSelectGroup));
-			stackLayout.topControl = textInBorder;
-
-			membershipTable = new Table(rightHand, SWT.FULL_SELECTION | SWT.MULTI);
-			membershipTable.setHeaderVisible(true);
-			new TableColumn(membershipTable, SWT.NULL).setText("Email");
-			new TableColumn(membershipTable, SWT.NULL).setText("Status");
+		private void setUpSummaryTableListener(final IUserAndGroupsContainer container, final StackLayout stackLayout) {
 			summaryTable.addListener(SWT.Selection, new Listener() {
 				@Override
 				public void handleEvent(Event event) {
@@ -322,23 +351,24 @@ public class MyGroups implements IHasComposite {
 								sortOutButtonsEnabledStatus();
 								return from;
 							}
+
+							@Override
+							public String toString() {
+								return "SwtFunction for summary table listener";
+							}
 						});
 					}
 				}
 			});
-			membershipTable.addListener(SWT.Selection, new Listener() {
-				@Override
-				public void handleEvent(Event event) {
-					sortOutButtonsEnabledStatus();
-				}
-			});
-			Swts.packTables(summaryTable, membershipTable);
-			sashForm.setWeights(new int[] { 2, 3 });
-			sortOutButtonsEnabledStatus();
 		}
 
 		private void sortOutButtonsEnabledStatus() {
 			buttons.sortOutButtonStatus();
+		}
+		
+		@Override
+		public String toString() {
+			return super.toString() +"/" + hashCode();
 		}
 	}
 

@@ -66,7 +66,7 @@ abstract public class ApiAndSwtTest extends ApiTest {
 	private int allOtherJobsClosedCount() {
 		boolean inTransaction = getLocalContainer().getTransactionManager().inTransaction();
 		boolean inSwtCallbackFunction = ISwtSoftwareFmFactory.Utils.inSwtCallbackFunction(display);
-		return inTransaction||inSwtCallbackFunction ? 1 : 0;
+		return inTransaction||inSwtCallbackFunction ? 0 : 0;
 	}
 
 	protected void dispatchUntilJobsFinished() {
@@ -96,8 +96,10 @@ abstract public class ApiAndSwtTest extends ApiTest {
 			public Boolean call() throws Exception {
 				int jobs = getLocalContainer().activeJobs();
 				int count = allOtherJobsClosedCount();
-				System.out.println("jobs: " + jobs + " target: " + count + " in sync: "  + ISwtSoftwareFmFactory.Utils.inSwtCallbackFunction(display));
-				return callable.call() && jobs == count;
+				boolean swtFunctionsFinished = ISwtSoftwareFmFactory.Utils.swtFunctionsFinished();
+				System.out.println("jobs: " + jobs + " target: " + count + " in sync: "  + ISwtSoftwareFmFactory.Utils.inSwtCallbackFunction(display) + " swts finished: " + swtFunctionsFinished);
+				
+				return callable.call() && jobs == count && swtFunctionsFinished;
 			}
 		});
 	}

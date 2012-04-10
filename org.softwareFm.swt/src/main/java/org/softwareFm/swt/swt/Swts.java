@@ -133,14 +133,15 @@ public class Swts {
 
 			return result.get();
 		}
-
+@SuppressWarnings("reduce to 2")
 		public static void dispatchUntil(Display display, long delay, Callable<Boolean> callable) {
 			long startTime = System.currentTimeMillis();
 			try {
 				dispatchUntilQueueEmpty(display);
 				while (!callable.call() && System.currentTimeMillis() < startTime + delay) {
 					dispatchUntilQueueEmpty(display);
-					Thread.sleep(2);
+					
+					Thread.sleep(200);
 				}
 				dispatchUntilQueueEmpty(display);
 				checkAtEnd(display, callable);
