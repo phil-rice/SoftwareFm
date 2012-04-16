@@ -21,6 +21,7 @@ import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.crowdsource.utilities.url.Urls;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
@@ -183,6 +184,7 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 		DOMConfigurator.configure(new ClassPathResource("log4j.xml").getURL());
 		Logger.getRootLogger().setLevel(Level.FATAL);
 		CardDataStoreForRepository.logger.setLevel(Level.DEBUG);
+		ITransactionManager.logger.setLevel(Level.DEBUG);
 		super.setUp();
 		// this is a bit of a bodge...it ensures that the snippet menu is activated (no matter what url).
 		String popupMenuId = getClass().getSimpleName();

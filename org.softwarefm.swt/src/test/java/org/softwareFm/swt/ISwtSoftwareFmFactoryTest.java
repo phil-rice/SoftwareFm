@@ -1,10 +1,12 @@
 package org.softwareFm.swt;
 
+import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IGitReader;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
@@ -61,9 +63,13 @@ public class ISwtSoftwareFmFactoryTest extends ApiAndSwtTest {
 								public String apply(IGitReader from) throws Exception {
 									System.out.println("Started nested in swt");
 									assertEquals(reader1.get(), from);
-									assertEquals(thread1.get(), Thread.currentThread());
+									System.out.println("Nested in swt assertion 1");
+//									assertEquals(thread1.get(), Thread.currentThread());
+									System.out.println("Nested in swt assertion 2");
 									inLatch2.countDown();
+									System.out.println("Nested in swt waiting for latch 2");
 									latch2.await();
+									System.out.println("Finishing nested in swt");
 									return "from2";
 								}
 							}, new ISwtFunction1<String, String>() {
@@ -71,9 +77,13 @@ public class ISwtSoftwareFmFactoryTest extends ApiAndSwtTest {
 								public String apply(String from) throws Exception {
 									System.out.println("Started swt 2");
 									assertEquals("from2", from);
+									System.out.println("swt 2 - assertion 1");
 									assertEquals(threadMain, Thread.currentThread());
+									System.out.println("swt 2 - assertion 1");
 									inSwtLatch2.countDown();
+									System.out.println("swt 2 - waiting for swtLatch2");
 									swtLatch2.await();
+									System.out.println("swt 2 - finished");
 									return "from3";
 								}
 							});
@@ -85,20 +95,21 @@ public class ISwtSoftwareFmFactoryTest extends ApiAndSwtTest {
 					System.out.println("latch1 being cleared: " + latch1);
 					latch1.countDown();
 					inSwtLatch1.await();
-					assertFalse(bigTransaction.isDone());//at this point in the Swt function
+					assertFalse(bigTransaction.isDone());// at this point in the Swt function
 					System.out.println("swtLatch1");
 					swtLatch1.countDown();
 					inLatch2.await();
-					assertFalse(bigTransaction.isDone());//at this point in the standard function launched from the swt thread
 					System.out.println("latch2");
+//					assertFalse(bigTransaction.isDone());// at this point in the standard function launched from the swt thread
 					latch2.countDown();
+					System.out.println("counted down latch 2");
 					inSwtLatch2.await();
-					assertFalse(bigTransaction.isDone());//at this point in the standard function launched from the swt thread
+//					assertFalse(bigTransaction.isDone());// at this point in the standard function launched from the swt thread
 					System.out.println("swtLatch2");
 					swtLatch2.countDown();
 					assertEquals("from", bigTransaction.get());
 					assertTrue(bigTransaction.isDone());
-					
+
 				} catch (Throwable e) {
 					exception.set(e);
 				} finally {
@@ -106,9 +117,15 @@ public class ISwtSoftwareFmFactoryTest extends ApiAndSwtTest {
 				}
 			};
 		}.start();
-		dispatchUntilTimeoutOrLatch(finished);
-		if (exception.get() != null)
-			throw exception.get();
+		dispatchUntil(new Callable<Boolean>() {
+
+			@Override
+			public Boolean call() throws Exception {
+				if (exception.get() != null)
+					throw WrappedException.wrap(exception.get());
+				return finished.getCount() == 0;
+			}
+		});
 	}
 
 }

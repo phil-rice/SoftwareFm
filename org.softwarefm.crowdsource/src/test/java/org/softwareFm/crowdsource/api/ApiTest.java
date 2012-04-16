@@ -102,7 +102,8 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	protected ServerConfig getServerConfig() {
 		return serverConfig == null ? serverConfig = new ServerConfig(CommonConstants.testPort, 10, CommonConstants.testTimeOutMs, remoteRoot, dataSource, //
 				getTakeOnEnrichment(), getExtraProcessCalls(), getUsage(), getIdAndSaltGenerator(), getCryptoGenerators(), //
-				getUserCryptoAccess(), getUrlPrefix(), getDefaultUserValues(), getDefaultGroupValues(), getErrorHandler(), getMailer(), getTimeGetter(), getServerExtraReaderWriterConfigurator()) : serverConfig;
+				getUserCryptoAccess(), getUrlPrefix(), getDefaultUserValues(), getDefaultGroupValues(), //
+				getErrorHandler(), getMailer(), getTimeGetter(), getServerExtraReaderWriterConfigurator()) : serverConfig;
 	}
 
 	protected LocalConfig getLocalConfig() {
@@ -194,6 +195,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 		cryptoGenerators = null;
 		serverConfig = null;
 		localApi = null;
+		super.tearDown();
 	}
 
 	protected void truncateUsersTable() {

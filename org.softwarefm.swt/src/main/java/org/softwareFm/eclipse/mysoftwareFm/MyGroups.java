@@ -68,8 +68,7 @@ public class MyGroups implements IHasComposite {
 					@Override
 					public MyGroups apply(Composite from) throws Exception {
 						MyGroups myGroups = new MyGroups(from, masterDetailSocial, container, showDialogs, cardConfig, userData, new ICallback<String>() {
-							private final int myId = id.incrementAndGet(); 4
-
+							private final int myId = id.incrementAndGet(); 
 							@Override
 							public void process(String groupId) throws Exception {
 								System.out.println("In showMyGroupsCallback " + myId);

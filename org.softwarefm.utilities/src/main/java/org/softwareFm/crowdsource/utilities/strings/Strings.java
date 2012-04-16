@@ -47,6 +47,10 @@ public class Strings {
 		return buf.toString();
 	}
 
+	
+	public static String idString(Object object){
+		return Integer.toHexString(object.hashCode() % 0xFFFF);
+	}
 	/**
 	 * Return the passed in byte array as a hex string.
 	 * 

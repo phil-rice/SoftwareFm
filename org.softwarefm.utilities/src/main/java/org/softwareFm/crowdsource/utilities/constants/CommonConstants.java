@@ -28,6 +28,7 @@ public class CommonConstants {
 
 	public static final String makeRootPrefix = "command/makeRoot";
 	public static final String emailSaltPrefix = "command/emailSalt";
+	public static final String navigationPrefix = "command/navigation";
 	public static final String commitMessageKey = "commitMessage";
 
 	public static final int okStatusCode = 200;

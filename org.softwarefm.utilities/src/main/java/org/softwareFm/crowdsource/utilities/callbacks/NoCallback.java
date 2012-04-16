@@ -10,4 +10,16 @@ public class NoCallback<T> implements ICallback<T> {
 	public void process(T t) throws Exception {
 	}
 
+	@Override
+	public int hashCode() {
+		return 0;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		return obj.getClass() == getClass();
+	}
+
 }

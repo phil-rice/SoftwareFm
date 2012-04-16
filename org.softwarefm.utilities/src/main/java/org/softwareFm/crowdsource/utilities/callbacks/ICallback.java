@@ -56,6 +56,8 @@ public interface ICallback<T> {
 
 			};
 		}
+		@SuppressWarnings("rawtypes")
+		public static NoCallback noCallback = new NoCallback<Object>();
 
 		public static final <T> ICallback<T> noCallback() {
 			return new NoCallback<T>();

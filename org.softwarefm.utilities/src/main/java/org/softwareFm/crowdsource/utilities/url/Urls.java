@@ -8,11 +8,23 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
+import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.strings.UrlRipperResult;
 
 public class Urls {
+
+	public static List<String> urlsToRoot(String url) {
+		List<String> segments = Strings.splitIgnoreBlanks(url, "/");
+		List<String> result = Lists.newList();
+		for (int i = 0; i<segments.size(); i++)
+		 result.add(composeFirst(i+1, segments));
+		return result;
+	}
 
 	public static String removeSlash(String raw) {
 		if (raw.startsWith("/"))
@@ -22,8 +34,19 @@ public class Urls {
 	}
 
 	public static String compose(String... urls) {
+		return composeFirst(urls.length, urls);
+	}
+
+	public static String composeFirst(int n, String... urls) {
+		return composeFirst(n, Arrays.asList(urls));
+	}
+
+	public static String composeFirst(int n, List<String> urls) {
 		StringBuilder builder = new StringBuilder();
+		int i = 0;
 		for (String url : urls) {
+			if (i++ >= n)
+				break;
 			if (builder.length() > 0) {
 				if (builder.charAt(builder.length() - 1) != '/')
 					builder.append('/');

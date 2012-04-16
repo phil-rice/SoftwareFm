@@ -66,20 +66,22 @@ public interface ISwtSoftwareFmFactory {
 			}).registerCallbackExecutor(ISwtFunction1.class, new IFunction3<IServiceExecutor, IFunction1<Object, Object>, Object, Object>() {
 				@Override
 				public Object apply(IServiceExecutor first, final IFunction1<Object, Object> callbackFn, final Object value) throws Exception {
-					if (inSwtCount.get() > 1)
-						throw new IllegalArgumentException();
+					// if (inSwtCount.get() > 1)
+					// throw new IllegalArgumentException();
 					final AtomicReference<Object> result = new AtomicReference<Object>();
 					Runnable runnable = new Runnable() {
 						@Override
 						public void run() {
 							inSwtCount.incrementAndGet();
-							System.out.println("Initiating swt function: " + inSwtCount + " " + callbackFn);
+							if (ITransactionManager.logger.isDebugEnabled())
+								ITransactionManager.logger.debug("Initiating swt function: " + inSwtCount + " " + callbackFn);
 							try {
 								Object actualResult = Functions.call(callbackFn, value);
 								result.set(actualResult);
 							} finally {
 								inSwtCount.decrementAndGet();
-								System.out.println("finished swt function: " + inSwtCount + " " + callbackFn);
+								if (ITransactionManager.logger.isDebugEnabled())
+									ITransactionManager.logger.debug("finished swt function: " + inSwtCount + " " + callbackFn);
 							}
 						}
 					};

@@ -1,5 +1,7 @@
 package org.softwareFm.crowdsource.api.server;
 
+import org.softwareFm.crowdsource.navigation.IRepoNavigation;
+
 public interface IServerDoers {
 
 	IEmailSaltRequester getEmailSaltRequester();
@@ -9,6 +11,8 @@ public interface IServerDoers {
 	ITakeOnProcessor getTakeOnProcessor();
 
 	ISaltProcessor getSaltProcessor();
+
+	IRepoNavigation getRepoNavigation();
 
 	IUsage getUsage();
 

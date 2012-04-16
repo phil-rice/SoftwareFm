@@ -539,4 +539,11 @@ public class Files {
 			}
 		}
 	}
+	public static IFunction1<File, String> fileNameFn = new IFunction1<File, String>() {
+		@Override
+		public String apply(File from) throws Exception {
+			return from.getName();
+		}
+	};
+
 }

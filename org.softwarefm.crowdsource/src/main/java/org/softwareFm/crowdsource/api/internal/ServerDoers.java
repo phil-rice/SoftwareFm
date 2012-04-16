@@ -12,6 +12,8 @@ import org.softwareFm.crowdsource.api.server.IServerDoers;
 import org.softwareFm.crowdsource.api.server.ISignUpChecker;
 import org.softwareFm.crowdsource.api.server.ITakeOnProcessor;
 import org.softwareFm.crowdsource.api.server.IUsage;
+import org.softwareFm.crowdsource.navigation.IRepoNavigation;
+import org.softwareFm.crowdsource.navigation.ServerRepoNavigation;
 import org.softwareFm.crowdsource.server.doers.internal.EmailSaltRequester;
 import org.softwareFm.crowdsource.server.doers.internal.ForgottonPasswordMailer;
 import org.softwareFm.crowdsource.server.doers.internal.LoginChecker;
@@ -30,11 +32,12 @@ public class ServerDoers implements IServerDoers {
 	private final PasswordResetter passwordResetter;
 	private final ForgottonPasswordMailer forgottonPasswordMailer;
 	private final EmailSaltRequester emailSaltRequester;
+	private final IRepoNavigation repoNavigation;
 
 	public ServerDoers(ServerConfig serverConfig, IUserAndGroupsContainer container) {
 		this.serverConfig = serverConfig;
 		this.mailer = serverConfig.mailer;
-		
+
 		this.signUpChecker = new SignUpChecker(serverConfig.dataSource, serverConfig.cryptoGenerators, container);
 		this.saltProcessor = new SaltProcessor();
 		this.loginChecker = new LoginChecker(serverConfig.dataSource);
@@ -42,6 +45,12 @@ public class ServerDoers implements IServerDoers {
 		this.passwordResetter = new PasswordResetter(serverConfig.dataSource);
 		this.forgottonPasswordMailer = new ForgottonPasswordMailer(getMailer(), serverConfig.userCryptoAccess);
 		this.emailSaltRequester = new EmailSaltRequester(serverConfig.dataSource);
+		this.repoNavigation = new ServerRepoNavigation(serverConfig.root);
+	}
+
+	@Override
+	public IRepoNavigation getRepoNavigation() {
+		return repoNavigation;
 	}
 
 	@Override

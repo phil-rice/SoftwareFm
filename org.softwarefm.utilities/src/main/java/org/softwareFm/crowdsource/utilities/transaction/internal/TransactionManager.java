@@ -23,12 +23,14 @@ import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.FutureAndMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
+import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactionManagerBuilder;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactional;
 
 public class TransactionManager implements ITransactionManagerBuilder {
 
+	
 	public static class DefaultFutureToTransactionDn implements IFunction1<Future<?>, ITransaction<?>> {
 
 		@Override
@@ -103,7 +105,7 @@ public class TransactionManager implements ITransactionManagerBuilder {
 		else
 			return nestedTransaction(existing, job, resultCallback, potentialTransactionals);
 	}
-	
+
 	@Override
 	public boolean inTransaction() {
 		return monitors.get() != null;
@@ -123,9 +125,9 @@ public class TransactionManager implements ITransactionManagerBuilder {
 	}
 
 	private <Result, Intermediate> ITransaction<Result> newTransaction(final IFunction1<IMonitor, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback, Object... potentialTransactionals) {
-		activeJobs.incrementAndGet();
+		
 		final CountDownLatch latch = new CountDownLatch(1);
-		IFunction1<IMonitor, Result> fullJob = new IFunction1<IMonitor, Result>() {
+		final IFunction1<IMonitor, Result> fullJob = new IFunction1<IMonitor, Result>() {
 			@Override
 			public Result apply(IMonitor monitor) throws Exception {
 				AtomicReference<Exception> exception = new AtomicReference<Exception>();
@@ -174,24 +176,32 @@ public class TransactionManager implements ITransactionManagerBuilder {
 					}
 				if (exceptions.size() > 0)
 					throw new AggregateException(Lists.addAtStart(exceptions, exception.get()));
+				if (logger.isDebugEnabled())
+					logger.debug("rolledBack (" + Strings.idString(this) + ": " + this.toString());
+
 			}
 
 			private void commit(ITransaction<?> transaction) throws Exception {
-				CopyOnWriteArrayList<Exception> exceptions = new CopyOnWriteArrayList<Exception>();
-				List<ITransactional> transactionals = Maps.getOrEmptyList(transactionalMap, transaction);
-				for (ITransactional transactional : transactionals)
-					try {
-						transactional.commit();
-					} catch (Exception e) {
-						exceptions.add(e);
+				try {
+					CopyOnWriteArrayList<Exception> exceptions = new CopyOnWriteArrayList<Exception>();
+					List<ITransactional> transactionals = Maps.getOrEmptyList(transactionalMap, transaction);
+					for (ITransactional transactional : transactionals)
+						try {
+							transactional.commit();
+						} catch (Exception e) {
+							exceptions.add(e);
+						}
+					switch (exceptions.size()) {
+					case 0:
+						break;
+					case 1:
+						throw Lists.getOnly(exceptions);
+					default:
+						throw new AggregateException(exceptions);
 					}
-				switch (exceptions.size()) {
-				case 0:
-					break;
-				case 1:
-					throw Lists.getOnly(exceptions);
-				default:
-					throw new AggregateException(exceptions);
+				} finally {
+					if (logger.isDebugEnabled())
+						logger.debug("committed (" + Strings.idString(this) +": " + this.toString());
 				}
 			}
 
@@ -201,6 +211,9 @@ public class TransactionManager implements ITransactionManagerBuilder {
 			}
 		};
 		try {
+			if (logger.isDebugEnabled())
+				logger.debug("start (" + Strings.idString(fullJob) + ": " + fullJob.toString());
+			activeJobs.incrementAndGet();
 			FutureAndMonitor<Result> futureAndMonitor = serviceExecutor.submit(fullJob);
 			@SuppressWarnings("unchecked")
 			ITransaction<Result> transaction = (ITransaction<Result>) futureToTransactionFn.apply(futureAndMonitor.future);

@@ -54,7 +54,6 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	public void testAcceptInvite() throws InterruptedException {
-		System.exit(1);
 		assertEquals(groupId0, createGroup(groupName0, groupCryptoKey0));
 		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.invitedStatus);
 

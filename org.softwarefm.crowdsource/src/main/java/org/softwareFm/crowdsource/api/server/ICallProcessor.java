@@ -27,6 +27,7 @@ import org.softwareFm.crowdsource.server.callProcessor.internal.LeaveGroupComman
 import org.softwareFm.crowdsource.server.callProcessor.internal.LoginProcessor;
 import org.softwareFm.crowdsource.server.callProcessor.internal.MakeRootProcessor;
 import org.softwareFm.crowdsource.server.callProcessor.internal.MakeSaltForLoginProcessor;
+import org.softwareFm.crowdsource.server.callProcessor.internal.NavigationCommandProcessor;
 import org.softwareFm.crowdsource.server.callProcessor.internal.RequestEmailSaltProcessor;
 import org.softwareFm.crowdsource.server.callProcessor.internal.SignupProcessor;
 import org.softwareFm.crowdsource.server.callProcessor.internal.TakeOnGroupProcessor;
@@ -82,7 +83,7 @@ public interface ICallProcessor extends IServerDoer{
 					new RequestEmailSaltProcessor(serverDoers.getEmailSaltRequester()),//
 					new ForgottonPasswordWebPageProcessor(serverDoers.getPasswordResetter()),//
 					new ChangePasswordProcessor(userCryptoAccess),//
-					
+					new NavigationCommandProcessor(container, userCryptoAccess, serverDoers.getRepoNavigation()),//
 					new TakeOnGroupProcessor(serverDoers, userCryptoAccess, idAndSaltGenerator, serverConfig.cryptoGenerators, container),//
 					new InviteGroupProcessor(container, serverDoers, userCryptoAccess, idAndSaltGenerator),//
 					new AcceptInviteGroupProcessor(userCryptoAccess, container),//
