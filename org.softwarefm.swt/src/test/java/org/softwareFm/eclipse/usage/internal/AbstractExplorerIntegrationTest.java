@@ -157,10 +157,9 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 			@Override
 			public void finished(ICardHolder cardHolder, String url, ICard card) throws Exception {
 				try {
+					cardRef.set(card);
 					explorer.removeExplorerListener(this);
 					cardHolderAndCardCallback.process(cardHolder, card);
-					dispatchUntilJobsFinished();
-					cardRef.set(card);
 				} catch (Exception e) {
 					exception.set(e);
 					throw e;
@@ -359,6 +358,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 				assertEquals(existing, item.getText(1));
 				cardTable.select(index);
 				cardTable.notifyListeners(SWT.Selection, new Event());
+				dispatchUntilJobsFinished();
 				Text text = Swts.findChildrenWithClass(cardTable, Text.class).get(index);
 				assertEquals(existing, text.getText());
 				text.setText(newValue);

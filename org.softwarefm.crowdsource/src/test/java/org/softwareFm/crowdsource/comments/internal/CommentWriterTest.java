@@ -147,6 +147,11 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 	}
 
 	@Override
+	protected Callable<Long> getTimeGetter() {
+		return Callables.valueFromList(1000L, 2000L, 3000L, 4000L);
+	}
+	
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		remoteOperations.init("a");

@@ -30,14 +30,19 @@ public class UrlsTest extends TestCase {
 		assertEquals("", Urls.composeFirst(0, "a", "b"));
 		assertEquals("a", Urls.composeFirst(1, "a", "b"));
 		assertEquals("a/b", Urls.composeFirst(2, "a", "b"));
+		assertEquals("a/b", Urls.composeFirst(2, "a/b", ""));
 	}
 	public void testCompose() {
 		assertEquals("a/b", Urls.compose("a", "b"));
 		assertEquals("a/b", Urls.compose("a/", "b"));
 		assertEquals("a/b", Urls.compose("a/", "/b"));
+		assertEquals("a/b", Urls.compose("a", "b/"));
+		assertEquals("a/b", Urls.compose("a", "/b/"));
 		assertEquals("/a/b", Urls.composeWithSlash("a", "b"));
 		assertEquals("/a/b", Urls.composeWithSlash("a/", "b"));
 		assertEquals("/a/b", Urls.composeWithSlash("a/", "/b"));
+		assertEquals("a/b", Urls.compose("a/b", ""));
+		assertEquals("/a/b", Urls.composeWithSlash("a/b", ""));
 	}
 
 	public void testRipper() {

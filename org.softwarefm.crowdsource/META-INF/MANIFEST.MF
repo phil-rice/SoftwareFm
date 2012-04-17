@@ -11,4 +11,5 @@ Export-Package: org.softwareFm.crowdsource.api,
  org.softwareFm.crowdsource.api.git,
  org.softwareFm.crowdsource.api.server,
  org.softwareFm.crowdsource.api.user,
- org.softwareFm.crowdsource.constants
+ org.softwareFm.crowdsource.constants,
+ org.softwareFm.crowdsource.navigation

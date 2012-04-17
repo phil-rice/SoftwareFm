@@ -29,9 +29,10 @@ public class ServerConfig extends ApiConfig {
 		IIdAndSaltGenerator idGenerators = IIdAndSaltGenerator.Utils.uuidGenerators();
 		ICryptoGenerators cryptoGenerators = ICryptoGenerators.Utils.cryptoGenerators();
 		IUserCryptoAccess userCryptoAccess = IUserCryptoAccess.Utils.database(dataSource, idGenerators);
-
-		return new ServerConfig(CommonConstants.testPort, 10, CommonConstants.testTimeOutMs, root, dataSource, takeOnEnrichment, IExtraCallProcessorFactory.Utils.noExtraCalls(), IUsage.Utils.noUsage(),//
-				idGenerators, cryptoGenerators, userCryptoAccess, "testPrefix", defaultUserValues, defaultGroupValues, ICallback.Utils.rethrow(), mailer, Callables.valueFromList(1000l, 2000l, 3000l, 4000l), IExtraReaderWriterConfigurator.Utils.<ServerConfig> noExtras());
+		
+		return new ServerConfig(CommonConstants.testPort, 10, CommonConstants.testTimeOutMs, CommonConstants.staleCachePeriodForTest, root, dataSource, takeOnEnrichment, IExtraCallProcessorFactory.Utils.noExtraCalls(), IUsage.Utils.noUsage(),//
+				idGenerators, cryptoGenerators, userCryptoAccess, "testPrefix", defaultUserValues, defaultGroupValues, ICallback.Utils.rethrow(), mailer, //
+				Callables.valueFromList(1000l, 2000l, 3000l, 4000l), IExtraReaderWriterConfigurator.Utils.<ServerConfig> noExtras());
 	}
 
 	public final Map<String, Callable<Object>> defaultUserValues;
@@ -52,9 +53,9 @@ public class ServerConfig extends ApiConfig {
 	public final Callable<Long> timeGetter;
 
 	public final IMailer mailer;
-	
-	public ServerConfig(int port, int workerThreads,long timeOutMs,  File root, BasicDataSource dataSource, ITakeOnEnrichmentProvider takeOnEnrichment, IExtraCallProcessorFactory extraCallProcessors, IUsage usage, IIdAndSaltGenerator idAndSaltGenerator, ICryptoGenerators cryptoGenerators, IUserCryptoAccess userCryptoAccess, String prefix, Map<String, Callable<Object>> defaultUserValues, Map<String, Callable<Object>> defaultGroupValues, ICallback<Throwable> errorHandler, IMailer mailer, Callable<Long> timeGetter, IExtraReaderWriterConfigurator<ServerConfig> extraReaderWriterConfigurator) {
-		super(port, workerThreads, timeOutMs, root, prefix, errorHandler, extraReaderWriterConfigurator);
+
+	public ServerConfig(int port, int workerThreads, long timeOutMs, long staleCacheTimeMs, File root, BasicDataSource dataSource, ITakeOnEnrichmentProvider takeOnEnrichment, IExtraCallProcessorFactory extraCallProcessors, IUsage usage, IIdAndSaltGenerator idAndSaltGenerator, ICryptoGenerators cryptoGenerators, IUserCryptoAccess userCryptoAccess, String prefix, Map<String, Callable<Object>> defaultUserValues, Map<String, Callable<Object>> defaultGroupValues, ICallback<Throwable> errorHandler, IMailer mailer, Callable<Long> timeGetter, IExtraReaderWriterConfigurator<ServerConfig> extraReaderWriterConfigurator) {
+		super(port, workerThreads, timeOutMs, staleCacheTimeMs, root, prefix, errorHandler, extraReaderWriterConfigurator, timeGetter);
 		this.dataSource = dataSource;
 		this.takeOnEnrichment = takeOnEnrichment;
 		this.extraCallProcessors = extraCallProcessors;

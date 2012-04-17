@@ -11,7 +11,7 @@ import org.softwareFm.crowdsource.utilities.callbacks.MemoryCallback;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 
-public class AbstractRepoNavigationTest extends ApiTest {
+abstract public class AbstractRepoNavigationTest extends ApiTest {
 
 	protected static final Map<String, Object> a = Maps.stringObjectLinkedMap("a", Arrays.asList("b", "h"));
 	protected static final Map<String, Object> b = Maps.stringObjectLinkedMap("a/b", Arrays.asList("c", "d", "e"));
@@ -36,6 +36,7 @@ public class AbstractRepoNavigationTest extends ApiTest {
 		System.out.println();
 	}
 
+	@SuppressWarnings("unchecked")
 	public static void checkValues(IRepoNavigation navigation) {
 		checkGetUrl(navigation, "a", a);
 		checkGetUrl(navigation, "a/b", a, b);
@@ -49,7 +50,7 @@ public class AbstractRepoNavigationTest extends ApiTest {
 		checkGetUrl(navigation, "k", Maps.stringObjectMap("k", Arrays.asList()));
 	}
 
-	private static void checkGetUrl(IRepoNavigation navigation, String url, Map<String, Object>... expectedFragments) {
+	public static void checkGetUrl(IRepoNavigation navigation, String url, Map<String, Object>... expectedFragments) {
 		Map<String, Object> expected = Maps.merge(expectedFragments);
 		MemoryCallback<Map<String, List<String>>> memory = ICallback.Utils.memory();
 		ITransaction<Map<String, List<String>>> transaction = navigation.navigationData(url, memory);

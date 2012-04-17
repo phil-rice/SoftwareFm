@@ -100,14 +100,14 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected ServerConfig getServerConfig() {
-		return serverConfig == null ? serverConfig = new ServerConfig(CommonConstants.testPort, 10, CommonConstants.testTimeOutMs, remoteRoot, dataSource, //
+		return serverConfig == null ? serverConfig = new ServerConfig(CommonConstants.testPort, 10, CommonConstants.testTimeOutMs,CommonConstants.staleCachePeriodForTest,  remoteRoot, dataSource, //
 				getTakeOnEnrichment(), getExtraProcessCalls(), getUsage(), getIdAndSaltGenerator(), getCryptoGenerators(), //
 				getUserCryptoAccess(), getUrlPrefix(), getDefaultUserValues(), getDefaultGroupValues(), //
 				getErrorHandler(), getMailer(), getTimeGetter(), getServerExtraReaderWriterConfigurator()) : serverConfig;
 	}
 
 	protected LocalConfig getLocalConfig() {
-		return localConfig == null ? localConfig = new LocalConfig(CommonConstants.testPort, 20, CommonConstants.testTimeOutMs, "localhost", localRoot, getUrlPrefix(), remoteAsUri, CommonConstants.staleCachePeriodForTest,  getErrorHandler(), getLocalExtraReaderWriterConfigurator()) : localConfig;
+		return localConfig == null ? localConfig = new LocalConfig(CommonConstants.testPort, 20, CommonConstants.testTimeOutMs, CommonConstants.staleCachePeriodForTest, "localhost", localRoot, getUrlPrefix(), remoteAsUri, CommonConstants.staleCachePeriodForTest,  getErrorHandler(), getLocalExtraReaderWriterConfigurator(), getTimeGetter()) : localConfig;
 	} 
 
 	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {
@@ -133,7 +133,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected Callable<Long> getTimeGetter() {
-		return Callables.valueFromList(1000l, 2000l, 3000l);
+		return Callables.value(1000l);
 	}
 
 	protected IUsage getUsage() {

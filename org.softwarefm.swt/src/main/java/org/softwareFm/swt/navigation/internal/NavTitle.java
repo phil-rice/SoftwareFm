@@ -6,6 +6,7 @@ package org.softwareFm.swt.navigation.internal;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.navigation.ITitleBarForCard;
@@ -19,10 +20,11 @@ public class NavTitle extends TitleWithTitlePaintListener implements ITitleBarFo
 	}
 
 	@Override
-	public void setUrl(ICard card) {
+	public ITransaction<?> setUrl(ICard card) {
 		String title = (Functions.call(card.getCardConfig().cardTitleFn, card));
 		TitleSpec titleSpec = Functions.call(card.getCardConfig().titleSpecFn, card);
 		setTitleAndImage(title, card.url(), titleSpec);
+		return ITransaction.Utils.doneTransaction(null);
 	}
 
 }

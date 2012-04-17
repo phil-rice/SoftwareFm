@@ -12,7 +12,7 @@ public class MeteredRepoNavigation implements IRepoNavigation {
 	private final Map<String, Integer> urlToCount = Maps.newMap();
 	private final IRepoNavigation delegate;
 
-	public MeteredRepoNavigation(ServerRepoNavigation repoNavigation) {
+	public MeteredRepoNavigation(IRepoNavigation repoNavigation) {
 		delegate = repoNavigation;
 	}
 

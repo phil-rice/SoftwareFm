@@ -126,7 +126,7 @@ public class Explorer implements IExplorer {
 		cardHolder = masterDetailSocial.createMaster(new IFunction1<Composite, ICardHolder>() {
 			@Override
 			public ICardHolder apply(Composite from) throws Exception {
-				ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, rootUrls, callbackToGotoUrlAndUpdateDetails);
+				ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, container, rootUrls, callbackToGotoUrlAndUpdateDetails);
 				return cardHolder;
 			}
 		}, true);

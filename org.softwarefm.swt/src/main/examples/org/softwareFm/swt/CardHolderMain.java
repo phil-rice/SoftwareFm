@@ -6,7 +6,10 @@ package org.softwareFm.swt;
 
 import java.util.Arrays;
 
+import junit.framework.Assert;
+
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -27,7 +30,9 @@ public class CardHolderMain {
 				@Override
 				public Composite apply(final Composite from) throws Exception {
 					final CardConfig cardConfig = CardDataStoreFixture.asyncCardConfig(from.getDisplay());
-					final ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, Arrays.asList(CardDataStoreFixture.url), ICallback.Utils.<String> noCallback());
+					IContainer container = null;
+					Assert.fail("need to set up container");
+					final ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, container, Arrays.asList(CardDataStoreFixture.url), ICallback.Utils.<String> noCallback());
 					final ITransaction<ICard> future = ICardFactory.Utils.makeCard(cardHolder, cardConfig, CardDataStoreFixture.url1a, new ICallback<ICard>() {
 						@Override
 						public void process(ICard card) throws Exception {

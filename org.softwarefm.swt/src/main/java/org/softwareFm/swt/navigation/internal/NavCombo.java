@@ -7,7 +7,6 @@ package org.softwareFm.swt.navigation.internal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
@@ -23,8 +22,6 @@ import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.dataStore.CardDataStoreCallbackAdapter;
-import org.softwareFm.swt.dataStore.ICardDataStore;
 import org.softwareFm.swt.dataStore.ICardDataStoreCallback;
 
 public class NavCombo implements IHasControl {
@@ -40,7 +37,6 @@ public class NavCombo implements IHasControl {
 		this.rootUrl = rootUrl;
 		this.urlOffset = urlOffset;
 
-		final ICardDataStore cardDataStore = cardConfig.cardDataStore;
 		combo = new Combo(parent, SWT.DROP_DOWN | SWT.READ_ONLY);
 		combo.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -71,25 +67,7 @@ public class NavCombo implements IHasControl {
 					e.gc.drawImage(image, 1, 0);
 			}
 		});
-		cardDataStore.processDataFor(rootUrl, new CardDataStoreCallbackAdapter<Void>() {
-			@Override
-			public Void process(String url, Map<String, Object> result) throws Exception {
-				List<String> items = Lists.newList();
-				for (Entry<String, Object> entry : result.entrySet())
-					if (entry.getValue() instanceof Map<?, ?>)
-						items.add(entry.getKey());
-				Collections.sort(items);
-				setDropdownItems(items);
-				return null;
-			}
-			@Override
-			public String toString() {
-				return NavCombo.this.getClass().getSimpleName() + ".processData";
-			}
-
-		});
 		workOutImage();
-
 	}
 
 	private void workOutImage() {
@@ -109,6 +87,7 @@ public class NavCombo implements IHasControl {
 			public Void noData(String url) throws Exception {
 				return process(url, Collections.<String, Object> emptyMap());
 			}
+
 			@Override
 			public String toString() {
 				return NavCombo.this.getClass().getSimpleName() + ".workOutImage";
@@ -124,10 +103,12 @@ public class NavCombo implements IHasControl {
 	}
 
 	public void setDropdownItems(List<String> items) {
+		List<String> actualItems = Lists.sort(items);
+
 		if (combo.isDisposed())
 			return;
 		combo.removeAll();
-		for (String item : items)
+		for (String item : actualItems)
 			combo.add(item);
 	}
 

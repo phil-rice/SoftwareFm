@@ -86,7 +86,7 @@ public class LocalUserReaderTest extends GitTest {
 			@Override
 			public void builder(IContainerBuilder builder, ApiConfig apiConfig) {
 				HttpGitWriter httpGitWriter = null;
-				builder.register(IGitReader.class, new GitLocal(builder, httpGitWriter, remoteAsUri, CommonConstants.staleCachePeriodForTest));
+				builder.register(IGitReader.class, new GitLocal(builder, httpGitWriter, remoteAsUri, apiConfig.staleCacheTimeMs));
 				builder.register(IRepoFinder.class, IRepoFinder.Utils.forTests(remoteOperations));
 			}
 		}, makeTransactionManager(), localRoot).makeContainer();

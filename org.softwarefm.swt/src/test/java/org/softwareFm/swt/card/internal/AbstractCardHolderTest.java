@@ -15,16 +15,18 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
 import org.softwareFm.swt.card.CardChangedListenerMock;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.configuration.CardConfig;
-import org.softwareFm.swt.swt.SwtTest;
+import org.softwareFm.swt.swt.Swts;
 
-public abstract class AbstractCardHolderTest extends SwtTest {
+public abstract class AbstractCardHolderTest extends ApiAndSwtTest {
 
 	protected CardConfig cardConfig;
 	protected CardHolder cardHolder;
@@ -33,7 +35,7 @@ public abstract class AbstractCardHolderTest extends SwtTest {
 	private CardChangedListenerMock mock1;
 	private CardChangedListenerMock mock2;
 
-	abstract protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig);
+	abstract protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig, IContainer container);
 
 	public void testCardIsNullWhenConstructed() {
 		assertNull(cardHolder.content.card);
@@ -83,7 +85,7 @@ public abstract class AbstractCardHolderTest extends SwtTest {
 		event.y = control.y;
 
 		table.notifyListeners(SWT.MenuDetect, event);
-		dispatchUntilQueueEmpty();
+		Swts.dispatchUntilQueueEmpty(display);
 		assertEquals(event, Lists.getOnly(events));
 	}
 
@@ -130,7 +132,7 @@ public abstract class AbstractCardHolderTest extends SwtTest {
 				return new Rectangle(10, 20, 110, 220);
 			}
 		};
-		cardHolder = makeCardHolder(parent, cardConfig);
+		cardHolder = makeCardHolder(parent, cardConfig, getLocalContainer());
 		// borderThickness = 0;
 		// expectedClientArea = new Rectangle(cardConfig.leftMargin, //
 		// cardConfig.topMargin,//

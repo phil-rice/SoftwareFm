@@ -13,6 +13,7 @@ import org.softwareFm.crowdsource.utilities.url.Urls;
 public class UrlCache<V> {
 
 	private final Map<String, V> map = Maps.newMap();
+	//note that there are now two locks involved: the cachedRepoNavigation and this one. I don't think this will ever cause a deadlock, but think about it when changing this code
 	private final Object lock = new Object();
 
 	public boolean containsKey(String url) {

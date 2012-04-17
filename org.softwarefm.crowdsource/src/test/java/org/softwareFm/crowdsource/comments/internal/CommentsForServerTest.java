@@ -3,6 +3,7 @@ package org.softwareFm.crowdsource.comments.internal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 
 import org.softwareFm.crowdsource.api.ICommentDefn;
 import org.softwareFm.crowdsource.api.IComments;
@@ -15,6 +16,7 @@ import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
+import org.softwareFm.crowdsource.utilities.runnable.Callables;
 
 public class CommentsForServerTest extends AbstractCommentsReaderTest {
 
@@ -45,6 +47,10 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 		}).get();
 	}
 
+	@Override
+	protected Callable<Long> getTimeGetter() {
+		return Callables.valueFromList(1000L, 2000L, 3000L, 4000L, 5000L);
+	}
 	@SuppressWarnings("unchecked")
 	public void testAddMyComments() {
 		remoteOperations.init("a");

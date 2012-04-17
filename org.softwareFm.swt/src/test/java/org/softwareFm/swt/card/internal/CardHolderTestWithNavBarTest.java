@@ -7,6 +7,7 @@ package org.softwareFm.swt.card.internal;
 import java.util.Arrays;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.history.IHistory;
 import org.softwareFm.swt.card.ICard;
@@ -17,8 +18,8 @@ import org.softwareFm.swt.navigation.internal.NavBar;
 public class CardHolderTestWithNavBarTest extends AbstractCardHolderTest {
 
 	@Override
-	protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig) {
-		ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(shell, cardConfig, Arrays.asList(rootUrl), ICallback.Utils.<String> memory());
+	protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig, IContainer container) {
+		ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(shell, cardConfig, container, Arrays.asList(rootUrl), ICallback.Utils.<String> memory());
 		return (CardHolder) cardHolder;
 	}
 
@@ -28,8 +29,11 @@ public class CardHolderTestWithNavBarTest extends AbstractCardHolderTest {
 
 	public void testSetCardUpdatesHistory() {
 		ICard card1 = makeAndSetCard(cardConfig, "one");
+		dispatchUntilJobsFinished();
 		ICard card2 = makeAndSetCard(cardConfig, "two");
+		dispatchUntilJobsFinished();
 		ICard card3 = makeAndSetCard(cardConfig, "three");
+		dispatchUntilJobsFinished();
 		checkHistory(card1, card2, card3);
 	}
 

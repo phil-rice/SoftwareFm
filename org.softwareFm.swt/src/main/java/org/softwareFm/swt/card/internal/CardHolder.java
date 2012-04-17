@@ -16,6 +16,7 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Layout;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
@@ -75,7 +76,7 @@ public class CardHolder implements ICardHolderForTests {
 		private final List<ILineSelectedListener> lineListeners = new CopyOnWriteArrayList<ILineSelectedListener>();
 		private final List<ICardSelectedListener> cardSelectedListeners = new CopyOnWriteArrayList<ICardSelectedListener>();
 
-		public CardHolderComposite(Composite parent, CardConfig navBarCardConfig, List<String> rootUrls, ICallback<String> callbackToGotoUrl) {
+		public CardHolderComposite(Composite parent, CardConfig navBarCardConfig, IContainer container, List<String> rootUrls, ICallback<String> callbackToGotoUrl) {
 			super(parent, SWT.NULL);
 			this.navBarCardConfig = navBarCardConfig;
 			if (navBarCardConfig == null)
@@ -91,7 +92,7 @@ public class CardHolder implements ICardHolderForTests {
 					}
 				});
 			} else {
-				NavBar bar = new NavBar(this, navBarCardConfig, rootUrls, callbackToGotoUrl);
+				NavBar bar = new NavBar(this, navBarCardConfig, container, rootUrls, callbackToGotoUrl);
 				bar.getComposite().setLayout(new NavBar.NavBarLayout());
 				title = bar;
 			}
@@ -141,9 +142,9 @@ public class CardHolder implements ICardHolderForTests {
 	public final CardHolderComposite content;
 	private final List<String> rootUrls;
 
-	public CardHolder(Composite parent, CardConfig cardConfig, List<String> rootUrls, ICallback<String> callbackToGotoUrl) {
+	public CardHolder(Composite parent, CardConfig cardConfig,IContainer container, List<String> rootUrls, ICallback<String> callbackToGotoUrl) {
 		this.rootUrls = rootUrls;
-		content = new CardHolderComposite(parent, cardConfig, rootUrls, callbackToGotoUrl);
+		content = new CardHolderComposite(parent, cardConfig, container, rootUrls, callbackToGotoUrl);
 	}
 
 	@Override

@@ -57,7 +57,7 @@ public interface ISoftwareFmApiFactory {
 			File root = new File(home, ".sfm");
 			final String urlPrefix = JarAndPathConstants.urlPrefix;
 			IExtraReaderWriterConfigurator<LocalConfig> extraReaderWriterConfigurator = getLocalExtraReaderWriterConfigurator();
-			LocalConfig localConfig = new LocalConfig(port, 10, timeOutMs, host, root, urlPrefix, remoteGitPrefix, CommonConstants.staleCachePeriod, ICallback.Utils.rethrow(), extraReaderWriterConfigurator);
+			LocalConfig localConfig = new LocalConfig(port, 10, timeOutMs,CommonConstants.staleCachePeriod, host, root, urlPrefix, remoteGitPrefix, CommonConstants.staleCachePeriod, ICallback.Utils.rethrow(), extraReaderWriterConfigurator, Callables.time());
 			return localConfig;
 		}
 
@@ -94,7 +94,7 @@ public interface ISoftwareFmApiFactory {
 			Callable<Long> timeGetter = Callables.time();
 			final String urlPrefix = JarAndPathConstants.urlPrefix;
 			IExtraReaderWriterConfigurator<ServerConfig> extraReadWriterConfigurator = Utils.getServerExtraReaderWriterConfigurator(urlPrefix, timeOutMs);
-			ServerConfig serverConfig = new ServerConfig(port, 1000, timeOutMs, root, dataSource, takeOnEnrichment, extraCallProcessors, usage, idAndSaltGenerator, cryptoGenerators, userCryptoAccess, urlPrefix, defaultUserValues, defaultGroupValues, errorHandler, mailer, timeGetter, extraReadWriterConfigurator);//
+			ServerConfig serverConfig = new ServerConfig(port, 1000, timeOutMs,CommonConstants.staleCachePeriod, root, dataSource, takeOnEnrichment, extraCallProcessors, usage, idAndSaltGenerator, cryptoGenerators, userCryptoAccess, urlPrefix, defaultUserValues, defaultGroupValues, errorHandler, mailer, timeGetter, extraReadWriterConfigurator);//
 			return serverConfig;
 		}
 

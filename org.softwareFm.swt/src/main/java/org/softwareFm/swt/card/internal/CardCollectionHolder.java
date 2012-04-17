@@ -32,7 +32,7 @@ public class CardCollectionHolder implements IHasComposite {
 		private Object value;
 
 		public CardCollectionHolderComposite(Composite parent, IContainer container, CardConfig cardConfig) {
-			super(parent, SWT.NULL, cardConfig);
+			super(parent, SWT.NULL, cardConfig, container);
 		}
 
 		@SuppressWarnings("unchecked")

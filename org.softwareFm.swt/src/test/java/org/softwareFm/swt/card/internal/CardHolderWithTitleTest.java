@@ -7,6 +7,7 @@ package org.softwareFm.swt.card.internal;
 import java.util.Arrays;
 
 import org.eclipse.swt.widgets.Composite;
+import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.ICard;
@@ -39,8 +40,8 @@ public class CardHolderWithTitleTest extends AbstractCardHolderTest {
 	}
 
 	@Override
-	protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig) {
-		return (CardHolder) ICardHolder.Utils.cardHolderWithLayout(parent, cardConfig, Arrays.asList(rootUrl), null);
+	protected CardHolder makeCardHolder(Composite parent, CardConfig cardConfig, IContainer container) {
+		return (CardHolder) ICardHolder.Utils.cardHolderWithLayout(parent, cardConfig, container, Arrays.asList(rootUrl), null);
 	}
 
 	String getTitleText() {

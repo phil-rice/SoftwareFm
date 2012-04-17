@@ -9,13 +9,14 @@ import java.util.Map;
 import org.eclipse.swt.graphics.Image;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.composites.IHasControl;
 import org.softwareFm.swt.navigation.internal.NavIconFunction;
 
 public interface ITitleBarForCard extends IHasControl {
 
-	void setUrl(ICard card);
+	ITransaction<?> setUrl(ICard card);
 
 	public static class Utils {
 		public static IFunction1<Map<String, Object>, Image> navIconFn(IFunction1<String, IResourceGetter> resourceGetterFn, IFunction1<String, Image> imageFn) {

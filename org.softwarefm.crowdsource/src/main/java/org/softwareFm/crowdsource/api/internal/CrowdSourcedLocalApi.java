@@ -21,6 +21,10 @@ import org.softwareFm.crowdsource.git.internal.HttpRepoFinder;
 import org.softwareFm.crowdsource.httpClient.IClientBuilder;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.membership.internal.UserMembershipReaderForLocal;
+import org.softwareFm.crowdsource.navigation.CachedRepoNavigation;
+import org.softwareFm.crowdsource.navigation.HttpRepoNavigation;
+import org.softwareFm.crowdsource.navigation.IRepoNavigation;
+import org.softwareFm.crowdsource.navigation.MeteredRepoNavigation;
 import org.softwareFm.crowdsource.user.internal.LocalGroupsReader;
 import org.softwareFm.crowdsource.user.internal.LocalUserReader;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
@@ -42,6 +46,9 @@ public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
 		HttpRepoFinder repoFinder = new HttpRepoFinder(httpClient, localConfig.timeOutMs);
 		CommentsLocal comments = new CommentsLocal(container, gitLocal, localConfig.timeOutMs);
 		LocalUserReader userReader = new LocalUserReader(container, userUrlGenerator);
+		MeteredRepoNavigation repoNavigation = new MeteredRepoNavigation(new HttpRepoNavigation(container));
+		CachedRepoNavigation cachedRepoNavigation = new CachedRepoNavigation(repoNavigation, localConfig.staleCacheTimeMs, localConfig.timeGetter);
+
 		container.register(IGitLocal.class, gitLocal);
 		container.register(IHttpClient.class, httpClient);
 		container.register(IUserReader.class, userReader);
@@ -54,15 +61,16 @@ public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
 		container.register(IComments.class, comments);
 		container.register(IUserReader.class, userReader);
 		container.register(IRepoFinder.class, repoFinder);
-		localConfig.extraReaderWriterConfigurator.builder(container, localConfig );
+		container.register(IRepoNavigation.class, cachedRepoNavigation);
+		container.register(MeteredRepoNavigation.class, repoNavigation);
+		localConfig.extraReaderWriterConfigurator.builder(container, localConfig);
 	}
-
 
 	@Override
 	public IContainer makeContainer() {
 		return container;
 	}
-	
+
 	@Override
 	public IUserAndGroupsContainer makeUserAndGroupsContainer() {
 		return container;

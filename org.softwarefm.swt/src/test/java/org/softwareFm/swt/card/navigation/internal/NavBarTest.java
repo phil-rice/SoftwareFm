@@ -12,9 +12,15 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
+import org.softwareFm.crowdsource.api.IContainerBuilder;
+import org.softwareFm.crowdsource.api.IExtraReaderWriterConfigurator;
+import org.softwareFm.crowdsource.api.LocalConfig;
+import org.softwareFm.crowdsource.navigation.IRepoNavigation;
+import org.softwareFm.crowdsource.navigation.RepoNavigationMock;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.callbacks.MemoryCallback;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.eclipse.usage.internal.ApiAndSwtTest;
 import org.softwareFm.swt.card.CardDataStoreFixture;
 import org.softwareFm.swt.card.CardMock;
 import org.softwareFm.swt.card.ICard;
@@ -22,9 +28,8 @@ import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.navigation.internal.NavBar;
 import org.softwareFm.swt.navigation.internal.NavBar.NavBarLayout;
 import org.softwareFm.swt.navigation.internal.NavNextHistoryPrev;
-import org.softwareFm.swt.swt.SwtTest;
 
-public class NavBarTest extends SwtTest {
+public class NavBarTest extends ApiAndSwtTest {
 
 	private CardConfig cardConfig;
 	private NavBar nav;
@@ -51,7 +56,7 @@ public class NavBarTest extends SwtTest {
 	@SuppressWarnings("unused")
 	public void testPopulatesComboWithDataFromCardStore() {
 		ICard card = makeCard("/" + CardDataStoreFixture.url1a);
-		nav.setUrl(card);
+		nav.setUrl(card).get();
 		Control[] children = navComposite.getChildren();
 		assertEquals(4, children.length);
 		Combo combo1 = (Combo) children[1];
@@ -93,7 +98,7 @@ public class NavBarTest extends SwtTest {
 
 	private void checkComputeSize(String url, int expectedWidth) {
 		ICard card = makeCard(url);
-		nav.setUrl(card);
+		nav.setUrl(card).get();
 		NavBarLayout layout = new NavBar.NavBarLayout();
 		Point size = layout.computeSize(navComposite, SWT.DEFAULT, SWT.DEFAULT, true);
 		assertEquals(new Point(expectedWidth, cardConfig.titleHeight), size);
@@ -104,11 +109,21 @@ public class NavBarTest extends SwtTest {
 	}
 
 	@Override
+	protected IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
+		final IExtraReaderWriterConfigurator<LocalConfig> parent = super.getLocalExtraReaderWriterConfigurator();
+		return new IExtraReaderWriterConfigurator<LocalConfig>(){
+			@Override
+			public void builder(IContainerBuilder builder, LocalConfig apiConfig) {
+				parent.builder(builder, apiConfig);
+				builder.register(IRepoNavigation.class, new RepoNavigationMock(CardDataStoreFixture.dataForMocks));
+			}};
+	}
+	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		cardConfig = CardDataStoreFixture.syncCardConfig(display).withMargins(5, 6, 7, 8);
 		MemoryCallback<String> memory = ICallback.Utils.memory();
-		nav = new NavBar(shell, cardConfig, Arrays.asList("/" + CardDataStoreFixture.url), memory);
+		nav = new NavBar(shell, cardConfig, getLocalContainer(), Arrays.asList("/" + CardDataStoreFixture.url), memory);
 		navComposite = nav.getComposite();
 		navHistoryPrev = nav.getNavHistoryPrev();
 	}

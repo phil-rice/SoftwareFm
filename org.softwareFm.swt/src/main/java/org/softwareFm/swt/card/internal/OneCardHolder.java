@@ -17,7 +17,7 @@ public class OneCardHolder implements IHasComposite {
 	private final HoldsCardHolder content;
 
 	public OneCardHolder(Composite parent, IContainer container, CardConfig cardConfig, String url, String title, ICardSelectedListener listener) {
-		content = new HoldsCardHolder(parent, SWT.NULL, cardConfig);
+		content = new HoldsCardHolder(parent, SWT.NULL, cardConfig, container);
 		content.makeCardHolder(url, title);
 		content.addCardSelectedListener(listener);
 	}

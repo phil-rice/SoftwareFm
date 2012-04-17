@@ -21,8 +21,8 @@ public class Urls {
 	public static List<String> urlsToRoot(String url) {
 		List<String> segments = Strings.splitIgnoreBlanks(url, "/");
 		List<String> result = Lists.newList();
-		for (int i = 0; i<segments.size(); i++)
-		 result.add(composeFirst(i+1, segments));
+		for (int i = 0; i < segments.size(); i++)
+			result.add(composeFirst(i + 1, segments));
 		return result;
 	}
 
@@ -47,16 +47,22 @@ public class Urls {
 		for (String url : urls) {
 			if (i++ >= n)
 				break;
-			if (builder.length() > 0) {
-				if (builder.charAt(builder.length() - 1) != '/')
-					builder.append('/');
+			if (url.length() > 0) {
+				if (builder.length() > 0) {
+					if (builder.charAt(builder.length() - 1) != '/')
+						builder.append('/');
+				}
+				String withoutSlashes = withoutSlashes(url);
+				builder.append(withoutSlashes);
 			}
-			if (url.startsWith("/"))
-				builder.append(url.substring(1));
-			else
-				builder.append(url);
 		}
 		return builder.toString();
+	}
+
+	private static String withoutSlashes(String url) {
+		String withoutStart = url.startsWith("/") ? url.substring(1) : url;
+		String withoutEnd = withoutStart.endsWith("/") ? withoutStart.substring(0, withoutStart.length() - 1) : withoutStart;
+		return withoutEnd;
 	}
 
 	public static String composeWithSlash(String... urls) {
