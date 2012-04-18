@@ -33,7 +33,6 @@ abstract public class AbstractRepoNavigationTest extends ApiTest {
 		remoteOperations.init("a/b/e/g");
 		remoteOperations.init("a/h/i");
 		remoteOperations.init("a/h/j");
-		System.out.println();
 	}
 
 	@SuppressWarnings("unchecked")

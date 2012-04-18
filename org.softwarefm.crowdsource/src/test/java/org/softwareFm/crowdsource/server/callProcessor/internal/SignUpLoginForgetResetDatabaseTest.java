@@ -93,7 +93,6 @@ public class SignUpLoginForgetResetDatabaseTest extends AbstractProcessorDatabas
 
 		String resetKey = "someFakeKey";
 		resetPassword(resetKey, IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, LoginMessages.failedToResetPasswordHtml));
-		System.out.println();
 	}
 
 	public void testForgotPasswordAndUseLinkTwice() {

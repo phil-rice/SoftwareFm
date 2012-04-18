@@ -7,9 +7,6 @@ package org.softwareFm.eclipse.usage.internal;
 import java.io.File;
 import java.util.Map;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.xml.DOMConfigurator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
@@ -21,16 +18,13 @@ import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
-import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.crowdsource.utilities.url.Urls;
 import org.softwareFm.swt.card.ICard;
 import org.softwareFm.swt.card.ICardHolder;
 import org.softwareFm.swt.constants.CardConstants;
-import org.softwareFm.swt.dataStore.internal.CardDataStoreForRepository;
 import org.softwareFm.swt.editors.IDataCompositeWithOkCancel;
 import org.softwareFm.swt.menu.ICardMenuItemHandler;
 import org.softwareFm.swt.swt.Swts;
-import org.springframework.core.io.ClassPathResource;
 
 public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 
@@ -181,10 +175,6 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 
 	@Override
 	protected void setUp() throws Exception {
-		DOMConfigurator.configure(new ClassPathResource("log4j.xml").getURL());
-		Logger.getRootLogger().setLevel(Level.FATAL);
-		CardDataStoreForRepository.logger.setLevel(Level.DEBUG);
-		ITransactionManager.logger.setLevel(Level.DEBUG);
 		super.setUp();
 		// this is a bit of a bodge...it ensures that the snippet menu is activated (no matter what url).
 		String popupMenuId = getClass().getSimpleName();

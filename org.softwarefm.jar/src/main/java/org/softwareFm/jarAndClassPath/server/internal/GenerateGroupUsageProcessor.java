@@ -42,14 +42,12 @@ public class GenerateGroupUsageProcessor extends AbstractCallProcessor {
 				if (logger.isDebugEnabled()) {
 					String message = MessageFormat.format("GroupId: {0},  Month: {1}", groupId, month);
 					logger.debug(message);
-					System.out.println(message);
 				}
 				Map<String, Map<String, Map<String, List<Integer>>>> reportMap = generateUsageReportGenerator.generateReport(groupId, groupCryptoKey, month);
 				groups.setReport(groupId, groupCryptoKey, month, (Map) reportMap);
 				if (logger.isDebugEnabled()) {
 					String message = MessageFormat.format("Result for GroupId: {0},  Month{1} is {2}", groupId, month, reportMap);
 					logger.debug(message);
-					System.out.println(message);
 				}
 				report.set(Strings.nullSafeToString(reportMap));
 			}

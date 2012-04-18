@@ -133,7 +133,6 @@ public class ActionBar implements IActionBar {
 	}
 
 	private void peopleSelection() {
-		System.out.println("People Selection");
 		String fileExtension = ripperResult.path.getFileExtension();
 		if (!fileExtension.equals("jar")) {
 			explorer.displayNotAJar();
@@ -142,7 +141,6 @@ public class ActionBar implements IActionBar {
 		final String hexDigest = ripperResult.hexDigest;
 		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(CardConstants.jarUrlKey);
 		String jarUrl = jarUrlGenerator.findUrlFor(Maps.stringObjectMap(JdtConstants.hexDigestKey, hexDigest));
-		System.out.println("Processing JarUrl: " + jarUrl);
 		cardConfig.cardDataStore.processDataFor(jarUrl, new ICardDataStoreCallback<Void>() {
 			@Override
 			public Void process(String jarUrl, final Map<String, Object> groupArtifactVersionMap) throws Exception {

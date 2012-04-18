@@ -248,7 +248,6 @@ public class GroupClientOperations implements IGroupClientOperations {
 		return new Runnable() {
 			@Override
 			public void run() {
-				System.out.println("Starting kickMember");
 				IdNameAndStatus idNameAndStatus = Callables.call(idNameStatusGetter);
 				List<Map<String, Object>> objectMembershipDetails = Callables.call(objectMembershipGetter);
 				if (objectMembershipDetails == null)
@@ -270,16 +269,13 @@ public class GroupClientOperations implements IGroupClientOperations {
 				final String groupId = idNameAndStatus.id;
 				if (groupId == null)
 					throw new NullPointerException("group id is null");
-				System.out.println("About to access group operations");
 				
 				readWriteApi.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 					@Override
 					public void process(IGroupOperations t) throws Exception {
-						System.out.println("About to kick with group operations");
 						t.kickFromGroup(userData.softwareFmId, userData.crypto, groupId, otherIds, new ICallback<GroupOperationResult>() {
 							@Override
 							public void process(GroupOperationResult t) throws Exception {
-								System.out.println("Kicked: " + t);
 								if (t.errorMessage == null)
 									ICallback.Utils.call(showMyGroups, groupId);
 								else

@@ -109,8 +109,9 @@ public class Swts {
 			gatedMockFuture.kick();
 			dispatchUntilQueueEmpty(display);
 		}
+
 		public static void kickAndDispatch(Display display, ITransaction<?> transaction) {
-			GatedTransaction<?> gatedMockFuture =  (GatedTransaction<?>) transaction;
+			GatedTransaction<?> gatedMockFuture = (GatedTransaction<?>) transaction;
 			gatedMockFuture.kick();
 			dispatchUntilQueueEmpty(display);
 		}
@@ -134,14 +135,14 @@ public class Swts {
 
 			return result.get();
 		}
-@SuppressWarnings("reduce to 2")
+
+		@SuppressWarnings("reduce to 2")
 		public static void dispatchUntil(Display display, long delay, Callable<Boolean> callable) {
 			long startTime = System.currentTimeMillis();
 			try {
 				dispatchUntilQueueEmpty(display);
 				while (!callable.call() && System.currentTimeMillis() < startTime + delay) {
 					dispatchUntilQueueEmpty(display);
-					
 					Thread.sleep(200);
 				}
 				dispatchUntilQueueEmpty(display);
@@ -846,18 +847,17 @@ public class Swts {
 	}
 
 	private static String getStackLayoutString(Control control) {
-		if (control instanceof Composite)
-		{
+		if (control instanceof Composite) {
 			Composite composite = (Composite) control;
-			if (composite.getLayout() instanceof StackLayout){
+			if (composite.getLayout() instanceof StackLayout) {
 				StackLayout stackLayout = (StackLayout) composite.getLayout();
 				Control topControl = stackLayout.topControl;
 				Control[] children = composite.getChildren();
-				for (int i = 0; i<children.length; i++){
+				for (int i = 0; i < children.length; i++) {
 					if (control == children[i])
-						return "StackLayout[" + i +"]"; 
+						return "StackLayout[" + i + "]";
 				}
-				return "StackLayout[" + topControl +"]";
+				return "StackLayout[" + topControl + "]";
 			}
 		}
 		return "";

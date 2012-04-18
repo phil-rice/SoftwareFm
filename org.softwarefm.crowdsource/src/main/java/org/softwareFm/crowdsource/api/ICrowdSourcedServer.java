@@ -12,6 +12,7 @@ import java.util.concurrent.Callable;
 
 import javax.sql.DataSource;
 
+import org.apache.log4j.Logger;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.api.user.IUser;
 import org.softwareFm.crowdsource.user.internal.ServerUser;
@@ -26,6 +27,8 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 
 public interface ICrowdSourcedServer {
 
+	public static Logger logger = Logger.getLogger(ICrowdSourcedServer.class);
+	
 	void shutdown();
 
 	abstract public static class Utils {

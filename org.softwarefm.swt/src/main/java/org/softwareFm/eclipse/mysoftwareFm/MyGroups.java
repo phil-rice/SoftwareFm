@@ -73,11 +73,8 @@ public class MyGroups implements IHasComposite {
 
 							@Override
 							public void process(String groupId) throws Exception {
-								System.out.println("In showMyGroupsCallback " + myId);
 								IShowMyGroups showMyGroups = showMyGroups(masterDetailSocial, container, showDialogs, cardConfig);
-								System.out.println("In showMyGroupsCallback: calling showMyGroups " + myId);
 								showMyGroups.show(userData, groupId);
-								System.out.println("In showMyGroupsCallback: finished calling showMyGroups " + myId);
 							}
 						}, new ICallback<IScrollableToId>() {
 							@Override
@@ -239,7 +236,6 @@ public class MyGroups implements IHasComposite {
 			stackLayout.topControl = textInBorder;
 
 			membershipTable = new Table(rightHand, SWT.FULL_SELECTION | SWT.MULTI);
-			System.out.println("created membership table: " + membershipTable);
 			membershipTable.setHeaderVisible(true);
 			new TableColumn(membershipTable, SWT.NULL).setText("Email");
 			new TableColumn(membershipTable, SWT.NULL).setText("Status");
@@ -256,11 +252,9 @@ public class MyGroups implements IHasComposite {
 
 		private void populate(final ICallback<IScrollableToId> postPopulate) {
 			final int myId = id.get();
-			System.out.println("MyGroups.populate " + id);
 			container.accessWithCallbackFn(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, List<Map<String, Object>>>() {
 				@Override
 				public List<Map<String, Object>> apply(final IGroupsReader groupsReader, IUserMembershipReader userMembershipReader) throws Exception {
-					System.out.println("inside MyGroups.populate.gettingData " + id);
 					Iterable<Map<String, Object>> groups = userMembershipReader.walkGroupsFor(userData.softwareFmId, userData.crypto);
 					List<Map<String, Object>> groupsWithName = Lists.map(groups, new IFunction1<Map<String, Object>, Map<String, Object>>() {
 						@Override
@@ -278,13 +272,11 @@ public class MyGroups implements IHasComposite {
 						}
 					});
 
-					System.out.println("end of MyGroups.populate.getting data " + myId + ": " + groupsWithName);
 					return groupsWithName;
 				}
 			}, new ISwtFunction1<List<Map<String, Object>>, Void>() {
 				@Override
 				public Void apply(List<Map<String, Object>> groupsWithName) throws Exception {
-					System.out.println("MyGroups.populate.SwtFunction " + myId);
 					for (Map<String, Object> map : Lists.sort(groupsWithName, Comparators.mapKey(GroupConstants.groupNameKey))) {
 						if (map.containsKey(CommonConstants.errorKey)) {
 							TableItem item = new TableItem(summaryTable, SWT.NULL);
@@ -306,7 +298,6 @@ public class MyGroups implements IHasComposite {
 					}
 					sortOutButtonsEnabledStatus();
 					postPopulate.process(MyGroupsComposite.this);
-					System.out.println("Completed MyGroups.populate.SwtFunction " + myId + " membership table: " + membershipTable + " myGroup: " + MyGroupsComposite.this + " items: " + membershipTable.getItemCount());
 					return null;
 				}
 

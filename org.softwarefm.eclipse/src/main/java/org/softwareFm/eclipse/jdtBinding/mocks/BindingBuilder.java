@@ -23,7 +23,6 @@ public class BindingBuilder extends BindingAdapter implements IBindingBuilder {
 
 	public BindingBuilder(String path, Class<?> markerClass) {
 		this(makePathFrom(path, markerClass), "", true, new JavaElementData(path, null), new JavaElementData(path, null));
-		System.out.println("Building: " + this.path);
 	}
 
 	private static Path makePathFrom(String path, Class<?> markerClass) {

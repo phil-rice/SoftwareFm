@@ -36,7 +36,7 @@ import org.softwareFm.swt.title.TitleSpec;
 
 public class Card implements ICard {
 
-	private final static boolean profile = true;
+	private final static boolean profile = false;
 
 	public static class CardLayout extends Layout {
 

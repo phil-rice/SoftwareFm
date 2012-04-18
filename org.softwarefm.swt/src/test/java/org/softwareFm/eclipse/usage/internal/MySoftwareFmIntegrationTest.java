@@ -186,7 +186,6 @@ public class MySoftwareFmIntegrationTest extends ApiAndSwtTest implements IInteg
 	private String getText() {
 		Control firstChild = softwareFmComposite.getChildren()[0];
 		CompositeWithCardMargin compositeWithCardMargin = (CompositeWithCardMargin) firstChild;
-		Swts.layoutDump(compositeWithCardMargin);
 		StyledText text = Swts.<StyledText> getDescendant(compositeWithCardMargin, 1, 0, 0);
 		return text.getText();
 	}

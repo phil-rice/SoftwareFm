@@ -86,9 +86,10 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 										usage.monitor(ip, requestLineAsString, duration);
 										long usageDuration = System.currentTimeMillis() - now;
 										double nanosToMilli = 1E6;
-										System.out.println(String.format(prefix + "...took %10.2fms Usage %10.2fms AvgUsage %10.2f", duration / nanosToMilli, usageDuration / nanosToMilli, aggregatedUsage.addAndGet(usageDuration) / count.incrementAndGet() / nanosToMilli));
+										ICrowdSourcedServer.logger.debug(String.format(prefix + "...took %10.2fms Usage %10.2fms AvgUsage %10.2f", duration / nanosToMilli, usageDuration / nanosToMilli, aggregatedUsage.addAndGet(usageDuration) / count.incrementAndGet() / nanosToMilli));
 									}
 								} catch (Exception e) {
+									ICrowdSourcedServer.logger.error("Server main method", e);
 									errorHandler.process(e);
 								}
 							}
@@ -115,6 +116,7 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 									return makeResponse(processResult, 200, "OK");
 								} catch (Exception e) {
 									e.printStackTrace();
+									ICrowdSourcedServer.logger.error("Calling the call processor", e);
 									return makeResponse(IProcessResult.Utils.processString(e.getClass() + "/" + e.getMessage()), 500, e.getMessage());
 								}
 							}
@@ -145,6 +147,7 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 			serverSocket.close();
 			usage.shutdown();
 		} catch (IOException e) {
+			ICrowdSourcedServer.logger.error("Shutdown", e);
 			throw WrappedException.wrap(e);
 		}
 	}

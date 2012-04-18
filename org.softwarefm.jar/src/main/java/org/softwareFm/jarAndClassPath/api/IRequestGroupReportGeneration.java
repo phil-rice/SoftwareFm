@@ -31,11 +31,9 @@ public interface IRequestGroupReportGeneration {
 					long now = System.currentTimeMillis();
 					Long last = Maps.getOrDefault(map, groupId, now - period * 2);
 					if (now > period + last) {
-						System.out.println("requesting: " + groupId);
 						map.put(groupId, now);
 						return reportGeneration.request(groupId, groupCryptoKey, month);
 					}
-					System.out.println("no need to request: " + groupId);
 					return Futures.doneFuture(null);
 				}
 			};

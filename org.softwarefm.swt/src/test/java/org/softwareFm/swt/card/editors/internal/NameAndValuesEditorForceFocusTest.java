@@ -14,13 +14,11 @@ import org.softwareFm.swt.editors.IEditableControlStrategy;
 import org.softwareFm.swt.editors.KeyAndEditStrategy;
 import org.softwareFm.swt.editors.NameAndValuesEditor;
 import org.softwareFm.swt.okCancel.IOkCancel;
-import org.softwareFm.swt.swt.Swts;
 
 public class NameAndValuesEditorForceFocusTest extends AbstractNameAndValuesEditorTest<NameAndValuesEditor> {
 
 	public void testForceFocus() {
 		editor.getComposite().forceFocus();
-		Swts.layoutDump(editorComposite);
 		Control[] children = editorComposite.getChildren();
 		for (int i = 0; i < children.length; i += 2) {
 			assertTrue(children[i + 0] instanceof Label);

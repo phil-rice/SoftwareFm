@@ -74,7 +74,6 @@ abstract public class ApiAndSwtTest extends ApiTest {
 			@Override
 			public Boolean call() throws Exception {
 				int jobs = getLocalContainer().activeJobs();
-				// System.out.println("Jobs: " + jobs );
 				int count = allOtherJobsClosedCount();
 				return jobs == count;
 			}
@@ -97,7 +96,7 @@ abstract public class ApiAndSwtTest extends ApiTest {
 				int jobs = getLocalContainer().activeJobs();
 				int count = allOtherJobsClosedCount();
 				boolean swtFunctionsFinished = ISwtSoftwareFmFactory.Utils.swtFunctionsFinished();
-				System.out.println("jobs: " + jobs + " target: " + count + " in sync: "  + ISwtSoftwareFmFactory.Utils.inSwtCallbackFunction(display) + " swts finished: " + swtFunctionsFinished);
+				//				System.out.println("jobs: " + jobs + " target: " + count + " in sync: "  + ISwtSoftwareFmFactory.Utils.inSwtCallbackFunction(display) + " swts finished: " + swtFunctionsFinished);
 				
 				return callable.call() && jobs == count && swtFunctionsFinished;
 			}

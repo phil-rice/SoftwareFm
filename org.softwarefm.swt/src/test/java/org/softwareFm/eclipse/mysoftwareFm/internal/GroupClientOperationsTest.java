@@ -261,24 +261,19 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		addUserToGroup(softwareFmId2, email2, groupId0, groupCryptoKey0, "someStatus2");
 		addUserToGroup(softwareFmId3, email3, groupId0, groupCryptoKey0, "someStatus3");
 
-		System.out.println("displayMySoftwareClickMyGroup");
 		final MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
 		MyGroupsButtons buttons = myGroupsComposite.getFooter();
 		assertFalse(buttons.kick.getEnabled());
 		Table summaryTable = getMyGroupsTable(myGroupsComposite);
-		System.out.println("about to select summary table(0)" + Arrays.asList(summaryTable.getItems()));
 
 		Swts.selectOnlyAndNotifyListener(summaryTable, 0);
 		dispatchUntilJobsFinished();
 		assertFalse(buttons.kick.getEnabled());// nothing is selected on membership table
 
-		System.out.println("about to select summary table(" + Arrays.asList(kick) + "): " + Arrays.asList(summaryTable.getItems()));
 		final Table membershipTable = getMembershipTable(myGroupsComposite);
 		Swts.selectAndNotifyListener(membershipTable, kick);
 		dispatchUntilJobsFinished();
-		System.out.println("about to kick");
 		pressKickButtonAndWaitUntilMembershipTableIsOfSize(buttons, expected.length);
-		System.out.println("finished kick processing");
 		MyGroupsComposite afterMyGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
 		final Table afterMembershipTable = getMembershipTable(afterMyGroupsComposite);
 		MyGroupsButtons afterButtons = afterMyGroupsComposite.getFooter();
@@ -292,24 +287,18 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 	}
 
 	private void pressKickButtonAndWaitUntilMembershipTableIsOfSize(MyGroupsButtons buttons, final int length) {
-		System.out.println("pressKickButtonAndWaitUntilMembershipTableIsOfSize: " + masterDetailSocial.getDetailContent() + " " + length);
 		assertTrue(buttons.kick.getEnabled());
 		Swts.Buttons.press(buttons.kick);
 		dispatchUntilJobsFinished();
-		System.out.println("kickButtonWasPressedWaitUntilMembershipTableIsOfSize: " + masterDetailSocial.getDetailContent() + " " + length);
 		dispatchUntil(new Callable<Boolean>() {
 			@Override
 			public Boolean call() throws Exception {
-				System.out.println(masterDetailSocial.getDetailContent());
 				if (masterDetailSocial.getDetailContent() instanceof MyGroupsComposite) {
 					MyGroupsComposite myGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
 					final Table membershipTable = getMembershipTable(myGroupsComposite);
-					Swts.layoutDump(myGroupsComposite);
-					System.out.println("membershipTable: " + membershipTable + " " + (membershipTable == null ? "" : membershipTable.getItemCount()));
 					if (membershipTable == null)
 						return false;
 					int itemCount = membershipTable.getItemCount();
-					System.out.println("expected: " + length + " actual: " + itemCount + " myGroupsComposite: " + myGroupsComposite);
 					return itemCount == length;
 				}
 				return false;
