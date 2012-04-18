@@ -9,7 +9,9 @@ import org.softwareFm.crowdsource.api.internal.CrowdSourcedLocalApi;
 import org.softwareFm.crowdsource.api.internal.CrowdSourcedServerApi;
 import org.softwareFm.crowdsource.api.internal.ServerDoers;
 import org.softwareFm.crowdsource.api.server.IServerDoers;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.runnable.Callables;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 
 public interface ICrowdSourcedApi {
@@ -46,7 +48,7 @@ public interface ICrowdSourcedApi {
 			final IGitOperations gitOperations = IGitOperations.Utils.gitOperations(root);
 			final Container readWriter = new Container(transactionManager, gitOperations) {
 			};
-			configurator.builder(readWriter, null);
+			configurator.builder(readWriter, new ApiConfig(1, 1, CommonConstants.testTimeOutMs, CommonConstants.staleCachePeriodForTest, root, "junk", null, IExtraReaderWriterConfigurator.Utils.noExtras(), Callables.<Long>exceptionIfCalled()));
 			return new AbstractCrowdSourcesApi() {
 
 				@Override

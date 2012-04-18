@@ -107,7 +107,7 @@ public class ISwtSoftwareFmFactoryTest extends ApiAndSwtTest {
 //					assertFalse(bigTransaction.isDone());// at this point in the standard function launched from the swt thread
 					System.out.println("swtLatch2");
 					swtLatch2.countDown();
-					assertEquals("from", bigTransaction.get());
+					assertEquals("from4", bigTransaction.get());
 					assertTrue(bigTransaction.isDone());
 
 				} catch (Throwable e) {

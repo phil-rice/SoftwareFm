@@ -224,7 +224,6 @@ public class GroupClientOperations implements IGroupClientOperations {
 						t.acceptInvite(userData.softwareFmId, userData.crypto, groupId, new ICallback<GroupOperationResult>() {
 							@Override
 							public void process(GroupOperationResult t) throws Exception {
-
 								if (t.errorMessage == null)
 									ICallback.Utils.call(showMyGroups, groupId);
 								else

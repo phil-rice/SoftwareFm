@@ -26,6 +26,7 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.MouseAdapter;
@@ -828,7 +829,7 @@ public class Swts {
 	}
 
 	public static void layoutDump(Control control, Indent indent) {
-		System.out.println(indent + control.getClass().getSimpleName() + "(Visible: " + control.isVisible() + ": " + layoutAsString(control));
+		System.out.println(indent + control.getClass().getSimpleName() + "(Visible: " + control.isVisible() + ": " + layoutAsString(control) + getStackLayoutString(control));
 		if (control.getLayoutData() instanceof GridData)
 			if (!(control.getParent().getLayout() instanceof GridLayout))
 				System.err.println("Layout issues: child has GridData parent not GridLayout");
@@ -842,6 +843,24 @@ public class Swts {
 				layoutDump(nested, indented);
 			}
 		}
+	}
+
+	private static String getStackLayoutString(Control control) {
+		if (control instanceof Composite)
+		{
+			Composite composite = (Composite) control;
+			if (composite.getLayout() instanceof StackLayout){
+				StackLayout stackLayout = (StackLayout) composite.getLayout();
+				Control topControl = stackLayout.topControl;
+				Control[] children = composite.getChildren();
+				for (int i = 0; i<children.length; i++){
+					if (control == children[i])
+						return "StackLayout[" + i +"]"; 
+				}
+				return "StackLayout[" + topControl +"]";
+			}
+		}
+		return "";
 	}
 
 	public static void removeAllChildren(Composite composite) {

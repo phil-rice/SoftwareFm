@@ -46,6 +46,7 @@ import org.softwareFm.jarAndClassPath.constants.JarAndPathConstants;
 import org.softwareFm.swt.ISwtFunction1;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.composites.IHasControl;
+import org.softwareFm.swt.composites.IScrollableToId;
 import org.softwareFm.swt.configuration.CardConfig;
 import org.softwareFm.swt.editors.DataComposite;
 import org.softwareFm.swt.editors.DataCompositeWithFooterLayout;
@@ -67,8 +68,9 @@ public class MyGroups implements IHasComposite {
 				masterDetailSocial.createAndShowDetail(new IFunction1<Composite, MyGroups>() {
 					@Override
 					public MyGroups apply(Composite from) throws Exception {
-						MyGroups myGroups = new MyGroups(from, masterDetailSocial, container, showDialogs, cardConfig, userData, new ICallback<String>() {
-							private final int myId = id.incrementAndGet(); 
+						final MyGroups myGroups = new MyGroups(from, masterDetailSocial, container, showDialogs, cardConfig, userData, new ICallback<String>() {
+							private final int myId = id.incrementAndGet();
+
 							@Override
 							public void process(String groupId) throws Exception {
 								System.out.println("In showMyGroupsCallback " + myId);
@@ -77,8 +79,12 @@ public class MyGroups implements IHasComposite {
 								showMyGroups.show(userData, groupId);
 								System.out.println("In showMyGroupsCallback: finished calling showMyGroups " + myId);
 							}
+						}, new ICallback<IScrollableToId>() {
+							@Override
+							public void process(IScrollableToId t) throws Exception {
+								t.selectAndScrollTo(groupId);
+							}
 						});
-						myGroups.selectAndScrollTo(groupId);
 						return myGroups;
 					}
 				});
@@ -119,8 +125,8 @@ public class MyGroups implements IHasComposite {
 						return;
 					groupClientOperations.kickMember(userData, idNameStatusGetter, objectMapGetter, new ICallback<String>() {
 						@Override
-						public void process(String t) throws Exception {
-							showMyGroups.process(t);
+						public void process(String groupId) throws Exception {
+							showMyGroups.process(groupId);
 						}
 					}).run();
 				}
@@ -168,7 +174,7 @@ public class MyGroups implements IHasComposite {
 		}
 	}
 
-	public static class MyGroupsComposite extends DataComposite<SashForm> implements IDataCompositeWithFooter<SashForm, MyGroupsButtons> {
+	public static class MyGroupsComposite extends DataComposite<SashForm> implements IDataCompositeWithFooter<SashForm, MyGroupsButtons>, IScrollableToId {
 		public final Table summaryTable;
 		private final SashForm sashForm;
 		private final Composite rightHand;
@@ -188,7 +194,7 @@ public class MyGroups implements IHasComposite {
 			return sashForm;
 		}
 
-		public MyGroupsComposite(Composite parent, IMasterDetailSocial masterDetailSocial, final IUserAndGroupsContainer container, boolean showDialogs, final CardConfig cardConfig, final UserData userData, ICallback<String> showMyGroups) {
+		public MyGroupsComposite(Composite parent, IMasterDetailSocial masterDetailSocial, final IUserAndGroupsContainer container, boolean showDialogs, final CardConfig cardConfig, final UserData userData, ICallback<String> showMyGroups, ICallback<IScrollableToId> postPopulate) {
 			super(parent, cardConfig, GroupConstants.myGroupsCardType, JarAndPathConstants.myGroupsTitle, true);
 			this.container = container;
 			this.userData = userData;
@@ -245,10 +251,10 @@ public class MyGroups implements IHasComposite {
 				}
 			});
 			sashForm.setWeights(new int[] { 2, 3 });
-			populate();
+			populate(postPopulate);
 		}
 
-		private void populate() {
+		private void populate(final ICallback<IScrollableToId> postPopulate) {
 			final int myId = id.get();
 			System.out.println("MyGroups.populate " + id);
 			container.accessWithCallbackFn(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, List<Map<String, Object>>>() {
@@ -271,6 +277,7 @@ public class MyGroups implements IHasComposite {
 							}
 						}
 					});
+
 					System.out.println("end of MyGroups.populate.getting data " + myId + ": " + groupsWithName);
 					return groupsWithName;
 				}
@@ -295,9 +302,10 @@ public class MyGroups implements IHasComposite {
 							item.setText(new String[] { groupName, membershipCountString, myStatus });
 							idToCrypto.put(groupId, groupCryptoKey);
 							Swts.packTables(summaryTable, membershipTable);
-							sortOutButtonsEnabledStatus();
 						}
 					}
+					sortOutButtonsEnabledStatus();
+					postPopulate.process(MyGroupsComposite.this);
 					System.out.println("Completed MyGroups.populate.SwtFunction " + myId + " membership table: " + membershipTable + " myGroup: " + MyGroupsComposite.this + " items: " + membershipTable.getItemCount());
 					return null;
 				}
@@ -364,15 +372,29 @@ public class MyGroups implements IHasComposite {
 		private void sortOutButtonsEnabledStatus() {
 			buttons.sortOutButtonStatus();
 		}
-		
+
 		@Override
 		public String toString() {
-			return super.toString() +"/" + hashCode();
+			return super.toString() + "/" + hashCode();
 		}
+
+		@Override
+		public void selectAndScrollTo(String groupId) {
+			for (int i = 0; i < summaryTable.getItemCount(); i++) {
+				TableItem item = summaryTable.getItem(i);
+				IdNameAndStatus idNameAndStatus = (IdNameAndStatus) item.getData();
+				if (idNameAndStatus != null && idNameAndStatus.id.equals(groupId)) {
+					Swts.selectOnlyAndNotifyListener(summaryTable, i);
+					summaryTable.showItem(item);
+				}
+			}
+
+		}
+
 	}
 
-	public MyGroups(Composite parent, IMasterDetailSocial masterDetailSocial, IUserAndGroupsContainer container, boolean showDialogs, CardConfig cardConfig, UserData userData, ICallback<String> showMyGroups) {
-		content = new MyGroupsComposite(parent, masterDetailSocial, container, showDialogs, cardConfig, userData, showMyGroups);
+	public MyGroups(Composite parent, IMasterDetailSocial masterDetailSocial, IUserAndGroupsContainer container, boolean showDialogs, CardConfig cardConfig, UserData userData, ICallback<String> showMyGroups, ICallback<IScrollableToId> postPopulate) {
+		content = new MyGroupsComposite(parent, masterDetailSocial, container, showDialogs, cardConfig, userData, showMyGroups, postPopulate);
 		content.setLayout(new DataCompositeWithFooterLayout());
 	}
 
@@ -384,19 +406,6 @@ public class MyGroups implements IHasComposite {
 	@Override
 	public Composite getComposite() {
 		return content;
-	}
-
-	protected void selectAndScrollTo(String groupId) {
-		Table table = content.summaryTable;
-		for (int i = 0; i < table.getItemCount(); i++) {
-			TableItem item = table.getItem(i);
-			IdNameAndStatus idNameAndStatus = (IdNameAndStatus) item.getData();
-			if (idNameAndStatus != null && idNameAndStatus.id.equals(groupId)) {
-				Swts.selectOnlyAndNotifyListener(table, i);
-				table.showItem(item);
-			}
-		}
-
 	}
 
 }

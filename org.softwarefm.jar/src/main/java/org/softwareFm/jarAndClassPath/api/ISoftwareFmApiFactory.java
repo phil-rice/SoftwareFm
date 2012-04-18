@@ -21,6 +21,7 @@ import org.softwareFm.crowdsource.api.ServerConfig;
 import org.softwareFm.crowdsource.api.server.ICallProcessor;
 import org.softwareFm.crowdsource.api.server.IMailer;
 import org.softwareFm.crowdsource.api.server.IUsage;
+import org.softwareFm.crowdsource.api.user.IGroupOperations;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
@@ -70,6 +71,7 @@ public interface ISoftwareFmApiFactory {
 					builder.register(IProjectTimeGetter.class, projectTimeGetter);
 					builder.register(IRequestGroupReportGeneration.class, requestGroupReportGeneration);
 					builder.register(IUsageReader.class, IUsageReader.Utils.localUsageReader(builder, localConfig.userUrlGenerator));
+					builder.register(IGroupOperations.class, IGroupOperations.Utils.clientGroupOperations(builder, localConfig.timeOutMs));
 				}
 			};
 		}

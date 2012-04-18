@@ -39,18 +39,14 @@ import org.softwareFm.swt.editors.NameAndValuesEditor.NameAndValuesEditorComposi
 import org.softwareFm.swt.swt.Swts;
 
 public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
-	public void testKickButtonRemovesUserFromGroup() {
-		createGroup(groupId0, groupCryptoKey0);
-		createUser(softwareFmId1, email1);
-		createUser(softwareFmId2, email2);
-		createUser(softwareFmId3, email3);
-		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
-
-		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
-		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
-		checkCanAddAndKick(new int[] { 1 }, softwareFmId0, softwareFmId2, softwareFmId3);
-		checkCanAddAndKick(new int[] { 2 }, softwareFmId0, softwareFmId1, softwareFmId3);
-		checkCanAddAndKick(new int[] { 3 }, softwareFmId0, softwareFmId1, softwareFmId2);
+	
+	public void testButtonsEnabledStatusWhenNotMemberOfAnyGroup() {
+		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
+		dispatchUntilJobsFinished();
+		MyGroupsButtons buttons = myGroupsComposite.getFooter();
+		assertFalse(buttons.accept.getEnabled());
+		assertFalse(buttons.invite.getEnabled());
+		assertTrue(buttons.create.getEnabled());
 	}
 
 	public void testAcceptInvite() throws InterruptedException {
@@ -73,9 +69,11 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 				if (masterDetailSocial.getDetailContent() instanceof MyGroupsComposite) {
 					MyGroupsComposite myGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
 					Table table = getMyGroupsTable(myGroupsComposite);
-					TableItem item = table.getItem(0);
-					IdNameAndStatus idNameAndStatus = (IdNameAndStatus) item.getData();
-					return idNameAndStatus.status.equals(GroupConstants.memberStatus);
+					if (table.getItemCount() > 0) {
+						TableItem item = table.getItem(0);
+						IdNameAndStatus idNameAndStatus = (IdNameAndStatus) item.getData();
+						return idNameAndStatus.status.equals(GroupConstants.memberStatus);
+					}
 				}
 				return false;
 			}
@@ -105,6 +103,20 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 			}
 		});
 
+	}
+
+	public void testKickButtonRemovesUserFromGroup() {
+		createGroup(groupId0, groupCryptoKey0);
+		createUser(softwareFmId1, email1);
+		createUser(softwareFmId2, email2);
+		createUser(softwareFmId3, email3);
+		addUserToGroup(softwareFmId0, email0, groupId0, groupCryptoKey0, GroupConstants.adminStatus);
+
+		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
+		checkCanAddAndKick(new int[] { 1, 2 }, softwareFmId0, softwareFmId3);
+		checkCanAddAndKick(new int[] { 1 }, softwareFmId0, softwareFmId2, softwareFmId3);
+		checkCanAddAndKick(new int[] { 2 }, softwareFmId0, softwareFmId1, softwareFmId3);
+		checkCanAddAndKick(new int[] { 3 }, softwareFmId0, softwareFmId1, softwareFmId2);
 	}
 
 	public void testLeaveIsEnabledIfAdminAndNoOtherMembers() {
@@ -292,6 +304,7 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 				if (masterDetailSocial.getDetailContent() instanceof MyGroupsComposite) {
 					MyGroupsComposite myGroupsComposite = (MyGroupsComposite) masterDetailSocial.getDetailContent();
 					final Table membershipTable = getMembershipTable(myGroupsComposite);
+					Swts.layoutDump(myGroupsComposite);
 					System.out.println("membershipTable: " + membershipTable + " " + (membershipTable == null ? "" : membershipTable.getItemCount()));
 					if (membershipTable == null)
 						return false;
@@ -511,14 +524,6 @@ public class GroupClientOperationsTest extends AbstractMyGroupsIntegrationTest {
 		};
 		getServerApi().makeContainer().accessWithCallback(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn, callback).get();
 		getLocalApi().makeContainer().accessWithCallback(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, checkFn, callback).get();
-	}
-
-	public void testButtonsEnabledStatusWhenNotMemberOfAnyGroup() {
-		MyGroupsComposite myGroupsComposite = displayMySoftwareClickMyGroup();
-		MyGroupsButtons buttons = myGroupsComposite.getFooter();
-		assertFalse(buttons.accept.getEnabled());
-		assertFalse(buttons.invite.getEnabled());
-		assertTrue(buttons.create.getEnabled());
 	}
 
 	public void testButtonsEnabledStatusWhenNotSelectedAnyGroup() {
