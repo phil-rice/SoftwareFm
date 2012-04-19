@@ -58,6 +58,7 @@ public interface IGitOperations extends IGitReader {
 	String getConfig(String url, String section, String subsection, String name);
 
 	void delete(IFileDescription fileDescription);
+
 	abstract public static class Utils {
 		public static IGitOperations gitOperations(File root) {
 			return new GitOperations(root);

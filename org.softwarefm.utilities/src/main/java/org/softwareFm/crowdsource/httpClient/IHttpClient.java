@@ -10,23 +10,11 @@ import org.apache.http.NameValuePair;
 import org.softwareFm.crowdsource.httpClient.internal.ClientBuilder;
 import org.softwareFm.crowdsource.utilities.constants.HttpClientConstants;
 
+import twitter4j.internal.logging.Logger;
+
 public interface IHttpClient {
-	public static class Utils {
-		public static IClientBuilder builder() {
-			return new ClientBuilder();
-		}
 
-		public static IClientBuilder builderWithThreads(String host, int port, int threadCount) {
-			return new ClientBuilder(host, port, threadCount);
-		}
-		public static IClientBuilder builder(String host, int port) {
-			return new ClientBuilder(host, port);
-		}
-
-		public static IHttpClient defaultClient() {
-			return builder().withCredentials(HttpClientConstants.userName, HttpClientConstants.password);
-		}
-	}
+	public static Logger logger = Logger.getLogger(IHttpClient.class);
 
 	IHttpClient setDefaultHeaders(List<NameValuePair> headers);
 
@@ -39,5 +27,23 @@ public interface IHttpClient {
 	IRequestBuilder delete(String url);
 
 	void shutdown();
+
+	public static class Utils {
+		public static IClientBuilder builder() {
+			return new ClientBuilder();
+		}
+
+		public static IClientBuilder builderWithThreads(String host, int port, int threadCount) {
+			return new ClientBuilder(host, port, threadCount);
+		}
+
+		public static IClientBuilder builder(String host, int port) {
+			return new ClientBuilder(host, port);
+		}
+
+		public static IHttpClient defaultClient() {
+			return builder().withCredentials(HttpClientConstants.userName, HttpClientConstants.password);
+		}
+	}
 
 }

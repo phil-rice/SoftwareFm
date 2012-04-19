@@ -94,7 +94,6 @@ public class CachedUsageStrategyTest extends TestCase {
 		cachesToClear.clearCaches();
 	}
 
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

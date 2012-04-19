@@ -16,7 +16,6 @@ import org.apache.log4j.Logger;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.api.user.IUser;
 import org.softwareFm.crowdsource.user.internal.ServerUser;
-import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.processors.AbstractLoginDataAccessor;
@@ -28,11 +27,10 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 public interface ICrowdSourcedServer {
 
 	public static Logger logger = Logger.getLogger(ICrowdSourcedServer.class);
-	
+
 	void shutdown();
 
 	abstract public static class Utils {
-
 
 		public static File makeSfmRoot() {
 			File root = new File(System.getProperty("user.home"));
@@ -60,7 +58,6 @@ public interface ICrowdSourcedServer {
 			};
 		}
 
-
 		public static IUser makeUserForServer(IGitOperations gitOperations, IUrlGenerator userUrlGenerator, IFunction1<String, String> userRepositoryDefn, Map<String, Callable<Object>> defaultValues) {
 			return new ServerUser(gitOperations, userUrlGenerator, userRepositoryDefn, defaultValues);
 		}
@@ -73,7 +70,7 @@ public interface ICrowdSourcedServer {
 			if (args.length > 0)
 				return Integer.parseInt(args[0]);
 			else
-				return CommonConstants.serverPort;
+				return 8080;
 		}
 
 	}

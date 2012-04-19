@@ -17,7 +17,7 @@ public class ForgottonPasswordMailer implements IForgottonPasswordMailer {
 	private final IMailer mailer;
 	private final IMagicStringForPassword magicStringForPassword;
 
-	public ForgottonPasswordMailer( IMailer mailer, IMagicStringForPassword magicStringForPassword) {
+	public ForgottonPasswordMailer(IMailer mailer, IMagicStringForPassword magicStringForPassword) {
 		this.mailer = mailer;
 		this.magicStringForPassword = magicStringForPassword;
 	}
@@ -35,6 +35,5 @@ public class ForgottonPasswordMailer implements IForgottonPasswordMailer {
 		}
 		return magicString;
 	}
-
 
 }

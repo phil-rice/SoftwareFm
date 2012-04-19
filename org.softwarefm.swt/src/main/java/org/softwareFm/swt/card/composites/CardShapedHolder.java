@@ -85,9 +85,9 @@ public class CardShapedHolder<Body extends IHasControl> implements IHasComposite
 			e.gc.setClipping(clipRectangle); // way to wide...but who cares. Don't know why need +1, but without it bottom right doesnt appear
 			// notifyListeners("drawRight-clip", clipRectangle);
 
-			int x = ca.x + ca.width - ts.rightIndent -comp;
+			int x = ca.x + ca.width - ts.rightIndent - comp;
 			int y = ca.y - comp;
-			int width = ts.rightIndent+2*comp;
+			int width = ts.rightIndent + 2 * comp;
 			int height = ca.height - cc.titleHeight + 2 * comp;
 			e.gc.drawRoundRectangle(x, y + cc.titleHeight, width, height, cc.cornerRadius, cc.cornerRadius);
 			// notifyListeners("drawRight-round", new Rectangle(x, y, width, height));
@@ -151,7 +151,7 @@ public class CardShapedHolder<Body extends IHasControl> implements IHasComposite
 	public CardShapedHolder(Composite parent, CardConfig cardConfig, TitleSpec titleSpec, IFunction1<Composite, IHasControl> titleMaker, IFunction1<Composite, Body> bodyMaker) {
 		super();
 		this.composite = new CardShapedComposite(parent, SWT.NULL, cardConfig, titleSpec);
-		 Functions.call(titleMaker, composite);
+		Functions.call(titleMaker, composite);
 		body = Functions.call(bodyMaker, composite);
 		composite.setTitleSpec(titleSpec);
 		composite.setLayout(new CardShapedLayout());
@@ -165,6 +165,7 @@ public class CardShapedHolder<Body extends IHasControl> implements IHasComposite
 	public Control getControl() {
 		return composite;
 	}
+
 	public Body getBody() {
 		return body;
 	}
@@ -173,6 +174,5 @@ public class CardShapedHolder<Body extends IHasControl> implements IHasComposite
 	public Composite getComposite() {
 		return composite;
 	}
-
 
 }

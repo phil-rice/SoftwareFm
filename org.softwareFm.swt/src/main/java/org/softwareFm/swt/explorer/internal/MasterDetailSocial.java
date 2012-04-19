@@ -89,7 +89,7 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 	@Override
 	public void dispose() {
 		content.dispose();
-		for (Control control: preserve)
+		for (Control control : preserve)
 			control.dispose();
 	}
 
@@ -179,7 +179,6 @@ public class MasterDetailSocial implements IMasterDetailSocial {
 	public void showSocial() {
 		setMaximizedControlAndLayout(content.detailSocial, null);
 	}
-
 
 	private void setMaximizedControlAndLayout(SashForm sashForm, Control control) {
 		if (sashForm.getMaximizedControl() != control) {

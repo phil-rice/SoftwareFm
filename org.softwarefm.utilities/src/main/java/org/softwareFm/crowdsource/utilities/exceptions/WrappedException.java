@@ -11,9 +11,9 @@ public class WrappedException extends RuntimeException {
 	public WrappedException(Throwable e) {
 		super(e);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public <T extends Throwable> T unwrap(){
+	public <T extends Throwable> T unwrap() {
 		return (T) unwrap(this);
 	}
 

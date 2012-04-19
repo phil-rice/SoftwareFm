@@ -36,7 +36,7 @@ public class SnippetFeedConfigurator implements IBrowserConfigurator {
 	private final ICardDataStore cardDataStore;
 	private final IFunction1<String, IResourceGetter> resourceGetterFn;
 
-	public SnippetFeedConfigurator(ICardDataStore cardDataStore, IFunction1<String, IResourceGetter>  resourceGetterFn) {
+	public SnippetFeedConfigurator(ICardDataStore cardDataStore, IFunction1<String, IResourceGetter> resourceGetterFn) {
 		this.cardDataStore = cardDataStore;
 		this.resourceGetterFn = resourceGetterFn;
 	}

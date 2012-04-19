@@ -130,6 +130,7 @@ class MutableCardDataStoreMock implements IMutableCardDataStore {
 	public void delete(String url, IAfterEditCallback callback) {
 		throw new UnsupportedOperationException();
 	}
+
 	@Override
 	public void refresh(String url) {
 		throw new UnsupportedOperationException();

@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.api;
 
 import java.util.Map;
@@ -72,8 +76,7 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	private CrowdSourcedServerApi serverApi;
 	private CrowdSourcedLocalApi localApi;
 	private JdbcTemplate template;
-	private ITransactionManagerBuilder localTransactionManager;
-	private ITransactionManagerBuilder serverTransactionManager;
+	private ITransactionManagerBuilder transactionManager;
 
 	protected JdbcTemplate getTemplate() {
 		return template == null ? new JdbcTemplate(dataSource) : template;
@@ -84,31 +87,28 @@ abstract public class ApiTest extends GitWithHttpClientTest {
 	}
 
 	protected ICrowdSourcedApi getServerApi() {
-		return serverApi == null ? serverApi = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(getServerConfig(), makeServerTransactionManager()) : serverApi;
+		return serverApi == null ? serverApi = (CrowdSourcedServerApi) ICrowdSourcedApi.Utils.forServer(getServerConfig(), makeTransactionManager()) : serverApi;
 	}
 
-	protected ITransactionManager makeServerTransactionManager() {
-		return serverTransactionManager == null ? serverTransactionManager = ITransactionManager.Utils.standard(CommonConstants.serverThreadPoolSizeForTests) : serverTransactionManager;
+	protected ITransactionManager makeTransactionManager() {
+		return transactionManager == null ? transactionManager = ITransactionManager.Utils.standard(CommonConstants.threadPoolSizeForTests, CommonConstants.testTimeOutMs) : transactionManager;
 	}
 
-	protected ITransactionManager makeLocalTransactionManager() {
-		return localTransactionManager == null ? localTransactionManager = ITransactionManager.Utils.standard(CommonConstants.localThreadPoolSizeForTests) : localTransactionManager;
-	}
 
 	protected ICrowdSourcedApi getLocalApi() {
-		return localApi == null ? localApi = (CrowdSourcedLocalApi) ICrowdSourcedApi.Utils.forClient(getLocalConfig(), makeLocalTransactionManager()) : localApi;
+		return localApi == null ? localApi = (CrowdSourcedLocalApi) ICrowdSourcedApi.Utils.forClient(getLocalConfig(), makeTransactionManager()) : localApi;
 	}
 
 	protected ServerConfig getServerConfig() {
-		return serverConfig == null ? serverConfig = new ServerConfig(CommonConstants.testPort, 10, CommonConstants.testTimeOutMs,CommonConstants.staleCachePeriodForTest,  remoteRoot, dataSource, //
+		return serverConfig == null ? serverConfig = new ServerConfig(CommonConstants.testPort, 10, CommonConstants.testTimeOutMs, CommonConstants.staleCachePeriodForTest, remoteRoot, dataSource, //
 				getTakeOnEnrichment(), getExtraProcessCalls(), getUsage(), getIdAndSaltGenerator(), getCryptoGenerators(), //
 				getUserCryptoAccess(), getUrlPrefix(), getDefaultUserValues(), getDefaultGroupValues(), //
 				getErrorHandler(), getMailer(), getTimeGetter(), getServerExtraReaderWriterConfigurator()) : serverConfig;
 	}
 
 	protected LocalConfig getLocalConfig() {
-		return localConfig == null ? localConfig = new LocalConfig(CommonConstants.testPort, 20, CommonConstants.testTimeOutMs, CommonConstants.staleCachePeriodForTest, "localhost", localRoot, getUrlPrefix(), remoteAsUri, CommonConstants.staleCachePeriodForTest,  getErrorHandler(), getLocalExtraReaderWriterConfigurator(), getTimeGetter()) : localConfig;
-	} 
+		return localConfig == null ? localConfig = new LocalConfig(CommonConstants.testPort, 20, CommonConstants.testTimeOutMs, CommonConstants.staleCachePeriodForTest, "localhost", localRoot, getUrlPrefix(), remoteAsUri, CommonConstants.staleCachePeriodForTest, getErrorHandler(), getLocalExtraReaderWriterConfigurator(), getTimeGetter()) : localConfig;
+	}
 
 	protected IExtraReaderWriterConfigurator<ServerConfig> getServerExtraReaderWriterConfigurator() {
 		return IExtraReaderWriterConfigurator.Utils.noExtras();

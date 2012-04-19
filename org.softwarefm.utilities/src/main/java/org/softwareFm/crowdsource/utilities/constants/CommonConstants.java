@@ -9,6 +9,8 @@ import java.util.Set;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
 
 public class CommonConstants {
+	public static final int serverPort = 80; //normally 80 
+	public static final int testPort = 8080;
 
 	public final static String dataFileName = "data.json";
 	public static final String DOT_GIT = ".git";
@@ -18,8 +20,7 @@ public class CommonConstants {
 	public static final String collectionType = "collection";
 	public static final String dataParameterName = "data";
 	public static final String repoUrlKey = "repoUrl";
- 
-	public static final long testTimeOutMs = 3000;
+
 
 	public static final String GET = "GET";
 	public static final String POST = "POST";
@@ -35,16 +36,17 @@ public class CommonConstants {
 	public static final int notFoundStatusCode = 404;
 	public static final int serverErrorCode = 500;
 
-	public static final int testPort = 8080;
 	public static final String dataKey = "data";
 	public static final Set<Integer> okStatusCodes = Sets.makeSet(okStatusCode);
 	public static final int staleCachePeriodForTest = 1000;
-	public static final int staleCachePeriod = 5*60*1000;
-	public static final long clientTimeOut = 2000;
-	public static final int serverPort = 8080;
+	public static final int staleCachePeriod = 5 * 60 * 1000;
+
+	public static final long clientTimeOut = 10000;
+	public static final long serverTimeOut = 10000;
+	public static final long testTimeOutMs = 3000;
+	
 	public static final Object errorKey = "error";
 	public static final String debugCardType = "debug";
-	public static final int localThreadPoolSizeForTests = 10;
-	public static final int serverThreadPoolSizeForTests = 10;
+	public static final int threadPoolSizeForTests = 10;
 
 }

@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.api;
 
 import java.io.File;
@@ -29,7 +33,7 @@ public class ServerConfig extends ApiConfig {
 		IIdAndSaltGenerator idGenerators = IIdAndSaltGenerator.Utils.uuidGenerators();
 		ICryptoGenerators cryptoGenerators = ICryptoGenerators.Utils.cryptoGenerators();
 		IUserCryptoAccess userCryptoAccess = IUserCryptoAccess.Utils.database(dataSource, idGenerators);
-		
+
 		return new ServerConfig(CommonConstants.testPort, 10, CommonConstants.testTimeOutMs, CommonConstants.staleCachePeriodForTest, root, dataSource, takeOnEnrichment, IExtraCallProcessorFactory.Utils.noExtraCalls(), IUsage.Utils.noUsage(),//
 				idGenerators, cryptoGenerators, userCryptoAccess, "testPrefix", defaultUserValues, defaultGroupValues, ICallback.Utils.rethrow(), mailer, //
 				Callables.valueFromList(1000l, 2000l, 3000l, 4000l), IExtraReaderWriterConfigurator.Utils.<ServerConfig> noExtras());
@@ -54,7 +58,7 @@ public class ServerConfig extends ApiConfig {
 
 	public final IMailer mailer;
 
-	public ServerConfig(int port, int workerThreads, long timeOutMs, long staleCacheTimeMs, File root, BasicDataSource dataSource, ITakeOnEnrichmentProvider takeOnEnrichment, IExtraCallProcessorFactory extraCallProcessors, IUsage usage, IIdAndSaltGenerator idAndSaltGenerator, ICryptoGenerators cryptoGenerators, IUserCryptoAccess userCryptoAccess, String prefix, Map<String, Callable<Object>> defaultUserValues, Map<String, Callable<Object>> defaultGroupValues, ICallback<Throwable> errorHandler, IMailer mailer, Callable<Long> timeGetter, IExtraReaderWriterConfigurator<ServerConfig> extraReaderWriterConfigurator) {
+	public ServerConfig(int port, int workerThreads, long timeOutMs, long staleCacheTimeMs, File root, BasicDataSource dataSource, ITakeOnEnrichmentProvider takeOnEnrichment, IExtraCallProcessorFactory extraCallProcessors, IUsage usage, IIdAndSaltGenerator idAndSaltGenerator, ICryptoGenerators cryptoGenerators, IUserCryptoAccess userCryptoAccess, String prefix, Map<String, Callable<Object>> defaultUserValues, Map<String, Callable<Object>> defaultGroupProperties, ICallback<Throwable> errorHandler, IMailer mailer, Callable<Long> timeGetter, IExtraReaderWriterConfigurator<ServerConfig> extraReaderWriterConfigurator) {
 		super(port, workerThreads, timeOutMs, staleCacheTimeMs, root, prefix, errorHandler, extraReaderWriterConfigurator, timeGetter);
 		this.dataSource = dataSource;
 		this.takeOnEnrichment = takeOnEnrichment;
@@ -63,10 +67,15 @@ public class ServerConfig extends ApiConfig {
 		this.idAndSaltGenerator = idAndSaltGenerator;
 		this.cryptoGenerators = cryptoGenerators;
 		this.userCryptoAccess = userCryptoAccess;
-		this.defaultGroupProperties = defaultGroupValues;
+		this.defaultGroupProperties = defaultGroupProperties;
 		this.mailer = mailer;
 		this.timeGetter = timeGetter;
 		this.defaultUserValues = Collections.unmodifiableMap(new HashMap<String, Callable<Object>>(defaultUserValues));
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ServerConfig withExtraProcessCalls(IExtraCallProcessorFactory extraCallProcessorFactory){
+		return new ServerConfig(port, workerThreads, timeOutMs, staleCacheTimeMs, root, dataSource, takeOnEnrichment, extraCallProcessorFactory, usage, idAndSaltGenerator, cryptoGenerators, userCryptoAccess, prefix, defaultUserValues, defaultGroupProperties, errorHandler, mailer, timeGetter, extraReaderWriterConfigurator);
 	}
 
 }

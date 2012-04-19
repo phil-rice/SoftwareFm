@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.jarAndClassPath.api;
 
 import java.io.File;
@@ -53,12 +57,12 @@ public interface ISoftwareFmApiFactory {
 		public static LocalConfig getLocalConfig(boolean local, long timeOutMs) {
 			File home = new File(System.getProperty("user.home"));
 			String host = local ? "localhost" : JarAndPathConstants.softwareFmServerUrl;
-			int port = local ? 8080 : 80;
+			int port = local ? CommonConstants.testPort : CommonConstants.serverPort;
 			String remoteGitPrefix = local ? new File(home, ".sfm_remote").getAbsolutePath() : JarAndPathConstants.gitProtocolAndGitServerName;
 			File root = new File(home, ".sfm");
 			final String urlPrefix = JarAndPathConstants.urlPrefix;
 			IExtraReaderWriterConfigurator<LocalConfig> extraReaderWriterConfigurator = getLocalExtraReaderWriterConfigurator();
-			LocalConfig localConfig = new LocalConfig(port, 10, timeOutMs,CommonConstants.staleCachePeriod, host, root, urlPrefix, remoteGitPrefix, CommonConstants.staleCachePeriod, ICallback.Utils.rethrow(), extraReaderWriterConfigurator, Callables.time());
+			LocalConfig localConfig = new LocalConfig(port, 10, timeOutMs, CommonConstants.staleCachePeriod, host, root, urlPrefix, remoteGitPrefix, CommonConstants.staleCachePeriod, ICallback.Utils.rethrow(), extraReaderWriterConfigurator, Callables.time());
 			return localConfig;
 		}
 
@@ -96,7 +100,7 @@ public interface ISoftwareFmApiFactory {
 			Callable<Long> timeGetter = Callables.time();
 			final String urlPrefix = JarAndPathConstants.urlPrefix;
 			IExtraReaderWriterConfigurator<ServerConfig> extraReadWriterConfigurator = Utils.getServerExtraReaderWriterConfigurator(urlPrefix, timeOutMs);
-			ServerConfig serverConfig = new ServerConfig(port, 1000, timeOutMs,CommonConstants.staleCachePeriod, root, dataSource, takeOnEnrichment, extraCallProcessors, usage, idAndSaltGenerator, cryptoGenerators, userCryptoAccess, urlPrefix, defaultUserValues, defaultGroupValues, errorHandler, mailer, timeGetter, extraReadWriterConfigurator);//
+			ServerConfig serverConfig = new ServerConfig(port, 1000, timeOutMs, CommonConstants.staleCachePeriod, root, dataSource, takeOnEnrichment, extraCallProcessors, usage, idAndSaltGenerator, cryptoGenerators, userCryptoAccess, urlPrefix, defaultUserValues, defaultGroupValues, errorHandler, mailer, timeGetter, extraReadWriterConfigurator);//
 			return serverConfig;
 		}
 

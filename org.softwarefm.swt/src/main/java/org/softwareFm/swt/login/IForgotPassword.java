@@ -4,7 +4,6 @@
 
 package org.softwareFm.swt.login;
 
-
 import org.eclipse.swt.widgets.Composite;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.configuration.CardConfig;

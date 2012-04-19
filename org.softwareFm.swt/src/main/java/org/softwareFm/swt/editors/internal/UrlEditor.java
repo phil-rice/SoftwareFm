@@ -85,7 +85,6 @@ public class UrlEditor implements IValueEditorForTests {
 		return content.getEditor().getText();
 	}
 
-
 	@Override
 	public String getTitleText() {
 		return content.getTitle().getText();

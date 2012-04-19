@@ -40,7 +40,7 @@ import org.softwareFm.swt.dataStore.ICardDataStore;
  */
 @SuppressWarnings("deprecation")
 public class Activator extends AbstractUIPlugin {
-	boolean localServer = true;
+	public static boolean localServer = false;
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.softwareFm.explorer.eclipse.ExplorerView"; //$NON-NLS-1$

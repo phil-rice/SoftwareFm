@@ -12,3 +12,4 @@ Require-Bundle: org.eclipse.jdt.core;visibility:=reexport,
  org.softwarefm.swt;bundle-version="1.0.0";visibility:=reexport
 Bundle-Activator: org.softwareFm.eclipse.plugin.Activator
 Bundle-ActivationPolicy: lazy
+Export-Package: org.softwareFm.eclipse.plugin

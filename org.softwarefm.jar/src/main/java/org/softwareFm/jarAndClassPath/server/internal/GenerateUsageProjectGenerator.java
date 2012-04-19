@@ -43,7 +43,7 @@ public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenera
 				Iterable<Map<String, Object>> users = groupsReader.users(groupId, groupCryptoKey);
 				for (Map<String, Object> userData : users) {
 					final String usersProjectCryptoKey = (String) userData.get(JarAndPathConstants.projectCryptoKey);
-					if (usersProjectCryptoKey== null)
+					if (usersProjectCryptoKey == null)
 						throw new IllegalStateException(MessageFormat.format(CommonMessages.userProjectKeyNotPresent, userData));
 					final String softwareFmId = (String) userData.get(LoginConstants.softwareFmIdKey);
 					logger.debug("user: " + softwareFmId);
@@ -56,6 +56,6 @@ public class GenerateUsageProjectGenerator implements IGenerateUsageReportGenera
 				}
 				return result;
 			}
-		}, ICallback.Utils.<Map<String, Map<String, Map<String, List<Integer>>>>>noCallback()).get(timeOutMs);
+		}, ICallback.Utils.<Map<String, Map<String, Map<String, List<Integer>>>>> noCallback()).get(timeOutMs);
 	}
 }

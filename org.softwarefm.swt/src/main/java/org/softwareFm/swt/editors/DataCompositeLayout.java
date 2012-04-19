@@ -32,7 +32,7 @@ public class DataCompositeLayout extends Layout {
 		CardConfig cc = c.getCardConfig();
 		Control header = c.getTitle().getControl();
 		header.setBounds(ca.x, ca.y, ca.width, cc.titleHeight + cc.topMargin);
-		
+
 		c.getBody().setBounds(ca.x, ca.y + cc.topMargin + cc.titleHeight, ca.width, ca.height - cc.topMargin - cc.titleHeight);
 
 		c.getInnerBody().setBounds(c.getBody().getClientArea());

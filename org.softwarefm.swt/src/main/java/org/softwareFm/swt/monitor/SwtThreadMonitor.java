@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.swt.monitor;
 
 import java.util.List;
@@ -169,7 +173,7 @@ public class SwtThreadMonitor implements IHasComposite, IMonitorFactory {
 	public static void main(String[] args) {
 		final int stages = 5;
 		final int tasks = 30;
-		final IServiceExecutor helper = IServiceExecutor.Utils.defaultExecutor(SwtThreadMonitor.class.getSimpleName() + "-helper-{0}", CommonConstants.localThreadPoolSizeForTests);
+		final IServiceExecutor helper = IServiceExecutor.Utils.defaultExecutor(SwtThreadMonitor.class.getSimpleName() + "-helper-{0}", CommonConstants.threadPoolSizeForTests);
 		final AtomicReference<IServiceExecutor> ref = new AtomicReference<IServiceExecutor>();
 		try {
 			Swts.Show.display(SwtThreadMonitor.class.getSimpleName(), new IFunction1<Composite, Composite>() {
@@ -177,7 +181,7 @@ public class SwtThreadMonitor implements IHasComposite, IMonitorFactory {
 				public Composite apply(Composite from) throws Exception {
 					CardConfig cardConfig = ICardConfigurator.Utils.cardConfigForTests(from.getDisplay());
 					SwtThreadMonitor swtThreadMonitor = new SwtThreadMonitor(from, cardConfig, "Threads", IMonitorFactory.Utils.sysoutMonitors);
-					final IServiceExecutor executor = IServiceExecutor.Utils.executor(SwtThreadMonitor.class.getSimpleName() + "-main-{0}",5, swtThreadMonitor);
+					final IServiceExecutor executor = IServiceExecutor.Utils.executor(SwtThreadMonitor.class.getSimpleName() + "-main-{0}", 5, swtThreadMonitor);
 					ref.set(executor);
 					helper.submit(new IFunction1<IMonitor, Void>() {
 						@Override

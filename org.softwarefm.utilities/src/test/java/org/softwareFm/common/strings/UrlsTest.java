@@ -14,15 +14,15 @@ import org.softwareFm.crowdsource.utilities.url.Urls;
 
 public class UrlsTest extends TestCase {
 
-	public void testUrlsToRoot(){
+	public void testUrlsToRoot() {
 		checkUrlToRoot(null);
 		checkUrlToRoot("");
 		checkUrlToRoot("a", "a");
 		checkUrlToRoot("a/b/c", "a", "a/b", "a/b/c");
 		checkUrlToRoot("ab/cd/ef", "ab", "ab/cd", "ab/cd/ef");
 	}
-	
-	private void checkUrlToRoot(String url, String ...expected) {
+
+	private void checkUrlToRoot(String url, String... expected) {
 		assertEquals(Arrays.asList(expected), Urls.urlsToRoot(url));
 	}
 
@@ -32,6 +32,7 @@ public class UrlsTest extends TestCase {
 		assertEquals("a/b", Urls.composeFirst(2, "a", "b"));
 		assertEquals("a/b", Urls.composeFirst(2, "a/b", ""));
 	}
+
 	public void testCompose() {
 		assertEquals("a/b", Urls.compose("a", "b"));
 		assertEquals("a/b", Urls.compose("a/", "b"));

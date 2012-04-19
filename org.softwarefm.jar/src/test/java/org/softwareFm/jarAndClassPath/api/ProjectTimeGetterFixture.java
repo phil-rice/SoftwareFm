@@ -6,8 +6,6 @@ package org.softwareFm.jarAndClassPath.api;
 
 import java.util.Arrays;
 
-import org.softwareFm.jarAndClassPath.api.IProjectTimeGetter;
-
 public class ProjectTimeGetterFixture implements IProjectTimeGetter {
 
 	@Override

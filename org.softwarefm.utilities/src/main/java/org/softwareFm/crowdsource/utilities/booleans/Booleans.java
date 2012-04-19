@@ -7,5 +7,4 @@ package org.softwareFm.crowdsource.utilities.booleans;
 public class Booleans {
 	public final static Boolean[] falseTrue = new Boolean[] { false, true };
 
-
 }

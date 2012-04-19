@@ -71,8 +71,6 @@ public class TextInCompositeWithCardMargin implements IHasControl {
 		textWithBold.setText(text);
 	}
 
-	
-	
 	public void addClickedListener(final Runnable whenClicked) {
 		textWithBold.getControl().addListener(SWT.MouseUp, new Listener() {
 			@Override

@@ -136,7 +136,7 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 	private void clickOkButton() {
 		IDataCompositeWithOkCancel<Composite> detailContent = (IDataCompositeWithOkCancel<Composite>) masterDetailSocial.getDetailContent();
 		assertTrue(detailContent.getFooter().isOkEnabled());
-		Swts.Buttons.press( detailContent.getFooter().okButton());
+		Swts.Buttons.press(detailContent.getFooter().okButton());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -149,7 +149,7 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 	private void checkTextEditorAndChangeTo(int index, String expected, String newValue) {
 		IDataCompositeWithOkCancel<Composite> detailContent = (IDataCompositeWithOkCancel<Composite>) masterDetailSocial.getDetailContent();
 		Composite snippetComposite = detailContent.getEditor();
-		Text text = (Text) snippetComposite.getChildren()[index*2+1];
+		Text text = (Text) snippetComposite.getChildren()[index * 2 + 1];
 		assertEquals(expected, text.getText());
 		text.setText(newValue);
 		text.notifyListeners(SWT.Modify, new Event());
@@ -159,7 +159,7 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 	private void checkStyledTextEditorAndChangeTo(int index, String expected, String newValue) {
 		IDataCompositeWithOkCancel<Composite> detailContent = (IDataCompositeWithOkCancel<Composite>) masterDetailSocial.getDetailContent();
 		Composite snippetComposite = detailContent.getEditor();
-		StyledText text = (StyledText) snippetComposite.getChildren()[index*2+1];
+		StyledText text = (StyledText) snippetComposite.getChildren()[index * 2 + 1];
 		assertEquals(expected, text.getText());
 		text.setText(newValue);
 		text.notifyListeners(SWT.Modify, new Event());
@@ -169,7 +169,7 @@ public class SnippetIntegrationTest extends AbstractExplorerIntegrationTest {
 	private void checkLabel(int labelIndex, String expected) {
 		IDataCompositeWithOkCancel<Composite> detailContent = (IDataCompositeWithOkCancel<Composite>) masterDetailSocial.getDetailContent();
 		Composite snippetComposite = detailContent.getEditor();
-		Label label = (Label) snippetComposite.getChildren()[labelIndex*2];
+		Label label = (Label) snippetComposite.getChildren()[labelIndex * 2];
 		assertEquals(expected, label.getText());
 	}
 

@@ -24,7 +24,7 @@ public interface IUserReader {
 				public String apply(IUserReader from) throws Exception {
 					return from.getUserProperty(softwareFmId, userCrypto, propertyName);
 				}
-			}, ICallback.Utils.<String>noCallback()).get();
+			}, ICallback.Utils.<String> noCallback()).get();
 		}
 
 		public static void setUserProperty(IUserAndGroupsContainer readWriteApi, final String softwareFmId, final String userCrypto, final String propertyName, final String value) {
@@ -74,7 +74,7 @@ public interface IUserReader {
 					from.refresh(softwareFmId);
 					return null;
 				}
-			},  ICallback.Utils.<Void>noCallback());
+			}, ICallback.Utils.<Void> noCallback());
 			transaction.get();
 		}
 

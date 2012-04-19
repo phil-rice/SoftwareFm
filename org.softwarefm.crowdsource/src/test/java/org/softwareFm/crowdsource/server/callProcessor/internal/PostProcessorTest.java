@@ -21,7 +21,6 @@ public class PostProcessorTest extends AbstractProcessCallTest<PostProcessor> {
 		checkContents(remoteRoot, "a/b", v11);
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	public void testMergesTheNewDataWithOldData() {
 		remoteOperations.init("a");
@@ -48,7 +47,6 @@ public class PostProcessorTest extends AbstractProcessCallTest<PostProcessor> {
 		checkContents(remoteRoot, "a/b", v12);
 
 	}
-
 
 	@Override
 	protected PostProcessor makeProcessor() {

@@ -27,7 +27,7 @@ public class DeleteProcessorTest extends AbstractProcessCallTest<DeleteProcessor
 		processor.process(makeRequestLine(CommonConstants.DELETE, "a/b/c"), Collections.<String, Object> emptyMap());
 
 		checkContentsDontExist(remoteRoot, "a/b/c");
-		
+
 		createAndPull("a/b");
 		checkContentsDontExist(localRoot, "a/b/c");
 	}

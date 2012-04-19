@@ -4,8 +4,8 @@
 
 package org.softwareFm.crowdsource.utilities.maps;
 
-public interface IHasUrlCache extends IHasCache{
+public interface IHasUrlCache extends IHasCache {
 
 	void clearCache(String url);
-	
+
 }

@@ -111,13 +111,15 @@ public class NavBarTest extends ApiAndSwtTest {
 	@Override
 	protected IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
 		final IExtraReaderWriterConfigurator<LocalConfig> parent = super.getLocalExtraReaderWriterConfigurator();
-		return new IExtraReaderWriterConfigurator<LocalConfig>(){
+		return new IExtraReaderWriterConfigurator<LocalConfig>() {
 			@Override
 			public void builder(IContainerBuilder builder, LocalConfig apiConfig) {
 				parent.builder(builder, apiConfig);
 				builder.register(IRepoNavigation.class, new RepoNavigationMock(CardDataStoreFixture.dataForMocks));
-			}};
+			}
+		};
 	}
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

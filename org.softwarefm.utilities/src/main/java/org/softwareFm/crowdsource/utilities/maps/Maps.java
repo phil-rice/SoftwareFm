@@ -239,7 +239,7 @@ public class Maps {
 		}
 	}
 
-	private static <K, V> Map<K, V> putInto( Map<K, V> result, Object... attributesAndValues) {
+	private static <K, V> Map<K, V> putInto(Map<K, V> result, Object... attributesAndValues) {
 		return putInto(true, result, attributesAndValues);
 	}
 
@@ -550,7 +550,7 @@ public class Maps {
 		};
 	}
 
-	public static <K, V>Map<K, V> newSynchronisedMap() {
+	public static <K, V> Map<K, V> newSynchronisedMap() {
 		return Collections.synchronizedMap(new HashMap<K, V>());
 	}
 

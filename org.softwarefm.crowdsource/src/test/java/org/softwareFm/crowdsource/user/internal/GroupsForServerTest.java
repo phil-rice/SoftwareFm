@@ -49,7 +49,7 @@ public class GroupsForServerTest extends ApiTest {
 	}
 
 	public void testRemoveUser() {
-  	}
+	}
 
 	@Override
 	protected Map<String, Callable<Object>> getDefaultGroupValues() {
@@ -113,7 +113,7 @@ public class GroupsForServerTest extends ApiTest {
 				assertEquals("value3", localGroupsReader.getGroupProperty(groupId, groupCrypto, "property3"));
 
 				groups.setGroupProperty(groupId, groupCrypto, "property2", "value2a");
-//				assertEquals("value2", localGroupsReader.getGroupProperty(groupId, groupCrypto, "property2"));
+				// assertEquals("value2", localGroupsReader.getGroupProperty(groupId, groupCrypto, "property2"));
 				localGroupsReader.refresh(groupId);
 				assertEquals("value2a", localGroupsReader.getGroupProperty(groupId, groupCrypto, "property2"));
 
@@ -233,7 +233,7 @@ public class GroupsForServerTest extends ApiTest {
 						callback.process(groupsReader, groups);
 						return null;
 					}
-				}, ICallback.Utils.<Void>noCallback()).get();
+				}, ICallback.Utils.<Void> noCallback()).get();
 			}
 		}).get();
 	}
@@ -255,7 +255,7 @@ public class GroupsForServerTest extends ApiTest {
 				assertEquals("value3", localGroupsReader.getGroupProperty(groupId, groupCrypto, "property3"));
 
 				groups.setGroupProperty(groupId, groupCrypto, "property2", "value2a");
-//				assertEquals("value2", localGroupsReader.getGroupProperty(groupId, groupCrypto, "property2"));
+				// assertEquals("value2", localGroupsReader.getGroupProperty(groupId, groupCrypto, "property2"));
 				localGroupsReader.refresh(groupId);
 				assertEquals("value2a", localGroupsReader.getGroupProperty(groupId, groupCrypto, "property2"));
 			}

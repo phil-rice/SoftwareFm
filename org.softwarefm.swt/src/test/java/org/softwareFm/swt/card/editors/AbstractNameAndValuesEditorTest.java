@@ -39,7 +39,7 @@ public abstract class AbstractNameAndValuesEditorTest<T extends IHasComposite> e
 		IDataCompositeWithOkCancel<SashForm> composite = (IDataCompositeWithOkCancel<SashForm>) editor.getComposite();
 		okCancel = (IOkCancelForTests) composite.getFooter();
 	}
-	
+
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();

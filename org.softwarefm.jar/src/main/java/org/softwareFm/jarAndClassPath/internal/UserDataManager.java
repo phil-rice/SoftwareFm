@@ -17,7 +17,7 @@ public class UserDataManager implements IUserDataManager {
 	private final List<IUserDataListener> listeners = new CopyOnWriteArrayList<IUserDataListener>();
 
 	@Override
-	public void setUserData(Object  source, UserData userData) {
+	public void setUserData(Object source, UserData userData) {
 		this.userData = userData;
 		for (IUserDataListener listener : listeners)
 			listener.userDataChanged(source, userData);

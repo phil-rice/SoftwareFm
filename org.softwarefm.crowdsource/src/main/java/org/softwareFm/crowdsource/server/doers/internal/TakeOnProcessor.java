@@ -26,7 +26,6 @@ import org.softwareFm.crowdsource.utilities.url.Urls;
 
 public class TakeOnProcessor implements ITakeOnProcessor {
 
-
 	private final ServerConfig serverConfig;
 	private final IUserAndGroupsContainer container;
 
@@ -40,7 +39,7 @@ public class TakeOnProcessor implements ITakeOnProcessor {
 		container.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
-				String userCrypto = serverConfig.userCryptoAccess.getCryptoForUser( softwareFmId);
+				String userCrypto = serverConfig.userCryptoAccess.getCryptoForUser(softwareFmId);
 				if (userCrypto == null)
 					throw new IllegalStateException(MessageFormat.format("Cannot add existing user {0} to group {1} as cannot determine usercrypto", softwareFmId, groupId));
 				Map<String, Object> initialData = Maps.stringObjectMap(LoginConstants.emailKey, email, LoginConstants.softwareFmIdKey, softwareFmId, GroupConstants.membershipStatusKey, status);

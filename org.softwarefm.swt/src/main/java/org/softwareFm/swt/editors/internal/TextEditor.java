@@ -89,7 +89,6 @@ public class TextEditor implements IValueEditorForTests {
 		return content.getTitle().getText();
 	}
 
-
 	@Override
 	public void setValue(String newValue) {
 		content.getEditor().setText(newValue);

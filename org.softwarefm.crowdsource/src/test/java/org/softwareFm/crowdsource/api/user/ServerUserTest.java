@@ -10,7 +10,6 @@ import java.util.concurrent.Callable;
 
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
 import org.softwareFm.crowdsource.api.git.GitTest;
-import org.softwareFm.crowdsource.api.user.IUser;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
@@ -58,19 +57,19 @@ public class ServerUserTest extends GitTest {
 		assertEquals("someValue", user.getUserProperty(sfmId1, crypto1Key, "someProperty"));
 		assertEquals("someValue", user.getUserProperty(sfmId2, crypto2Key, "someProperty"));
 	}
-	
-	public void testGetWithDefaultValue(){
+
+	public void testGetWithDefaultValue() {
 		user.setUserProperty(sfmId1, crypto1Key, "someProperty", "someValue");
-		
-		assertEquals("defValue1",  user.getUserProperty(sfmId1, crypto1Key, "def1"));
-		assertEquals("defValue1",  user.getUserProperty(sfmId1, crypto1Key, "def1"));
+
+		assertEquals("defValue1", user.getUserProperty(sfmId1, crypto1Key, "def1"));
+		assertEquals("defValue1", user.getUserProperty(sfmId1, crypto1Key, "def1"));
 	}
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
 		IUrlGenerator userUrlGenerator = IUrlGenerator.Utils.generator("user/{0}/{1}/{2}", LoginConstants.softwareFmIdKey);
-		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot, Maps.<String,Callable<Object>>makeMap("def1", Callables.valueFromList("defValue1")));
+		user = ICrowdSourcedServer.Utils.makeUserForServer(remoteOperations, userUrlGenerator, findRepositoryRoot, Maps.<String, Callable<Object>> makeMap("def1", Callables.valueFromList("defValue1")));
 		sfmId1File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId1/", CommonConstants.dataFileName));
 		sfmId2File = new File(remoteRoot, Urls.compose("user/sf/mI/sfmId2/", CommonConstants.dataFileName));
 	}

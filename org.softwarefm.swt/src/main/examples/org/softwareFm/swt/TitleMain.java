@@ -21,7 +21,7 @@ import org.softwareFm.swt.title.TitleSpec;
 public class TitleMain {
 	public static void main(String[] args) {
 		Show.displayNoLayout(Title.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-	
+
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				Composite parent = new Composite(from, SWT.NULL);
@@ -37,5 +37,5 @@ public class TitleMain {
 			}
 		});
 	}
-	
+
 }

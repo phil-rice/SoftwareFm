@@ -51,7 +51,6 @@ public class NewJarImporter {
 		public String toString() {
 			return "ImportStage [url=" + url + ", data=" + data + ", command=" + command + "]";
 		}
-		
 
 	}
 
@@ -111,13 +110,14 @@ public class NewJarImporter {
 		}, stages);
 	}
 
-	public ITransaction<?> processImport( final ICallback<String> afterOk) {
+	public ITransaction<?> processImport(final ICallback<String> afterOk) {
 		return processImport(UUID.randomUUID().toString(), afterOk);
-		
+
 	}
+
 	public ITransaction<?> processImport(String jarNameUuid, final ICallback<String> afterOk) {
 		return process(afterOk,//
-				
+
 				makeRepo(CardConstants.jarUrlKey),//
 				map(CardConstants.jarUrlKey, groupIdArtifactIdVersionMap), //
 

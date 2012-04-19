@@ -28,13 +28,12 @@ public class MakeSaltForLoginProcessorTest extends AbstractProcessCallTest<MakeS
 		checkStringResult(result, salt);
 		assertNotNull(result);
 
-
 	}
 
 	@Override
 	protected MakeSaltForLoginProcessor makeProcessor() {
 		saltProcessor = new SaltProcessorMock();
-		return new MakeSaltForLoginProcessor( saltProcessor);
+		return new MakeSaltForLoginProcessor(saltProcessor);
 	}
 
 }

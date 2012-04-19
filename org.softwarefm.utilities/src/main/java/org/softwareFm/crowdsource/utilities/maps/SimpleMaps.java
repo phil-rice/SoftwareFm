@@ -44,8 +44,6 @@ public class SimpleMaps {
 		};
 	}
 
-
-
 	public static <K, V> Map<K, V> merge(Iterable<? extends ISimpleMap<K, V>> maps) {
 		Map<K, V> result = new HashMap<K, V>();
 		for (ISimpleMap<K, V> map : maps)

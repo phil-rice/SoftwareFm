@@ -8,7 +8,6 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
-import org.softwareFm.crowdsource.api.user.IUser;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 public class UserMock implements IUser {

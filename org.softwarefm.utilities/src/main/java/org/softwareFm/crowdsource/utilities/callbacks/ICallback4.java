@@ -4,7 +4,7 @@
 
 package org.softwareFm.crowdsource.utilities.callbacks;
 
-public interface ICallback4<T1, T2, T3,T4> {
+public interface ICallback4<T1, T2, T3, T4> {
 	void process(T1 first, T2 second, T3 third, T4 fourth) throws Exception;
 
 	abstract static class Utils {

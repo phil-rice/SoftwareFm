@@ -212,7 +212,6 @@ public class GitOperations implements IGitOperations {
 		return null;
 	}
 
-
 	@Override
 	public Map<String, Object> getFileAndDescendants(IFileDescription fileDescription, int depth) {
 		Map<String, Object> map = getFile(fileDescription);
@@ -223,12 +222,12 @@ public class GitOperations implements IGitOperations {
 		File directory = fileDescription.getDirectory(root);
 		for (File child : Files.listChildDirectoriesIgnoringDot(directory)) {
 			IFileDescription childFileDescription = IFileDescription.Utils.plain(Urls.compose(fileDescription.url(), Files.noExtension(child.getName())));
-			Map<String, Object> childFileAndDescendants = getFileAndDescendants(childFileDescription, depth-1);
+			Map<String, Object> childFileAndDescendants = getFileAndDescendants(childFileDescription, depth - 1);
 			map.put(child.getName(), childFileAndDescendants);
 		}
 		return map;
 	}
-	
+
 	@Override
 	public File getRoot() {
 		return root;

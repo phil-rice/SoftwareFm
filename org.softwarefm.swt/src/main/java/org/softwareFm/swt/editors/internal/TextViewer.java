@@ -59,8 +59,8 @@ public class TextViewer implements IHasComposite {
 	static class TextViewComposite extends Composite implements IHasCardConfig {
 
 		private CardConfig cardConfig;
-		@SuppressWarnings("unused")
 
+		@SuppressWarnings("unused")
 		public TextViewComposite(Composite parent, final ICard card, String key) {
 			super(parent, SWT.NULL);
 			cardConfig = card.getCardConfig();
@@ -107,5 +107,4 @@ public class TextViewer implements IHasComposite {
 		return content;
 	}
 
-	
 }

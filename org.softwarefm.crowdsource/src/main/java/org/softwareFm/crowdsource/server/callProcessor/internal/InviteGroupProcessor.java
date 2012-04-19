@@ -34,7 +34,7 @@ public class InviteGroupProcessor extends AbstractAddToGroupProcessor {
 	@Override
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupIdKey, GroupConstants.takeOnFromKey, GroupConstants.takeOnEmailPattern, GroupConstants.takeOnEmailListKey);
-		container.accessUserMembership(new ICallback2<IGroups, IUserMembership>(){
+		container.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				String groupId = (String) parameters.get(GroupConstants.groupIdKey);
@@ -50,18 +50,19 @@ public class InviteGroupProcessor extends AbstractAddToGroupProcessor {
 					throw new IllegalStateException(MessageFormat.format(GroupConstants.groupNameIsNull, groupId));
 				if (!Strings.isEmail(fromEmail))
 					throw new IllegalArgumentException(MessageFormat.format(GroupConstants.invalidEmail, fromEmail));
-				
+
 				String expectedSfmId = userCryptoAccess.emailToSoftwareFmId(fromEmail);
 				if (!softwareFmId.equals(expectedSfmId))
 					throw new IllegalArgumentException(MessageFormat.format(GroupConstants.emailSfmMismatch, fromEmail, expectedSfmId, softwareFmId));
-				
+
 				List<String> memberList = getEmailList(parameters);
 				addUsersToGroup(groupId, groupCrypto, memberList);
-				
+
 				sendInvitationEmails(parameters, groupName, memberList);
-				
-			}}).get();
-		
+
+			}
+		}).get();
+
 		return IProcessResult.Utils.processString("");
 	}
 }

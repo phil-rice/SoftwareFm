@@ -10,10 +10,10 @@ public interface IUrlGenerator {
 
 	String findUrlFor(Map<String, Object> data);
 
-	public static class Utils{
-		public static IUrlGenerator generator(String pattern, String ...keys){
+	public static class Utils {
+		public static IUrlGenerator generator(String pattern, String... keys) {
 			return new UrlGenerator(pattern, keys);
 		}
 	}
-	
+
 }

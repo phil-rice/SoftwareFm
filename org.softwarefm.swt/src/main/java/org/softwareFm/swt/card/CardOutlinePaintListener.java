@@ -27,7 +27,7 @@ public class CardOutlinePaintListener implements PaintListener {
 	@Override
 	public void paintControl(PaintEvent e) {
 		TitleSpec titleSpec = Callables.call(titleSpecGetter);
-		
+
 		Composite cardComposite = (Composite) e.widget;
 		Rectangle clientArea = cardComposite.getClientArea();
 

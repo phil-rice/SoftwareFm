@@ -6,7 +6,6 @@ package org.softwareFm.crowdsource.httpClient.internal;
 
 import org.softwareFm.crowdsource.httpClient.IResponse;
 
-
 public class Response implements IResponse {
 
 	private final int statusCode;

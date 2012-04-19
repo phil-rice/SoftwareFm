@@ -39,7 +39,6 @@ public abstract class GitTest extends TemporaryFileTest {
 
 	protected IRepoFinder repoFinder;
 
-
 	protected void put(String url, Map<String, Object> data) {
 		put(root, url, data);
 	}
@@ -89,7 +88,6 @@ public abstract class GitTest extends TemporaryFileTest {
 		return IRepoFinder.Utils.forTests(remoteOperations);
 	}
 
-
 	protected void checkNoData(IGitLocal reader, String url) {
 		IFileDescription plain = IFileDescription.Utils.plain(url);
 		assertNull(reader.getFile(plain));
@@ -111,7 +109,6 @@ public abstract class GitTest extends TemporaryFileTest {
 	protected void checkGetFile(IContainer container, IFileDescription fileDescription, Map<String, Object> data) {
 		assertEquals(data, IGitReader.Utils.getFileAsMap(container, fileDescription));
 	}
-
 
 	protected void checkCreateRepository(final IGitOperations gitOperations, final String url) {
 		gitOperations.init(url);

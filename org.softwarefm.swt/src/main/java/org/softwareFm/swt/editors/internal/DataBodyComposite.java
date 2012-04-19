@@ -15,10 +15,10 @@ import org.softwareFm.swt.title.TitleSpec;
 
 public class DataBodyComposite extends Composite {
 
-	public 	final CardConfig cardConfig;
+	public final CardConfig cardConfig;
 	public final Composite innerBody;
 
-	public DataBodyComposite(Composite parent, CardConfig cardConfig,Callable<TitleSpec> titleSpecGetter) {
+	public DataBodyComposite(Composite parent, CardConfig cardConfig, Callable<TitleSpec> titleSpecGetter) {
 		super(parent, SWT.NULL);
 		this.cardConfig = cardConfig;
 		this.innerBody = new Composite(this, SWT.NULL);

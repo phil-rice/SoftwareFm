@@ -7,5 +7,5 @@ package org.softwareFm.crowdsource.utilities.maps;
 public interface IHasCache {
 
 	void clearCaches();
-	
+
 }

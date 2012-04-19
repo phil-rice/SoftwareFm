@@ -43,7 +43,7 @@ public class SignupProcessor extends AbstractCallProcessor {
 
 		String salt = Strings.nullSafeToString(parameters.get(LoginConstants.sessionSaltKey));
 		if (saltProcessor.invalidateSalt(salt)) {
-			String softwareFmId =idGenerators.makeNewUserId();
+			String softwareFmId = idGenerators.makeNewUserId();
 			if (email == null || moniker == null || passwordHash == null || softwareFmId == null)
 				throw new IllegalArgumentException(parameters.toString());
 			SignUpResult result = checker.signUp(email, moniker, salt, passwordHash, softwareFmId);

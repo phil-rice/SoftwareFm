@@ -14,7 +14,7 @@ import org.softwareFm.crowdsource.utilities.constants.LoginMessages;
 import org.softwareFm.crowdsource.utilities.processors.AbstractLoginDataAccessor;
 import org.softwareFm.crowdsource.utilities.runnable.Callables;
 
-public class MagicStringForPassword extends AbstractLoginDataAccessor implements IMagicStringForPassword{
+public class MagicStringForPassword extends AbstractLoginDataAccessor implements IMagicStringForPassword {
 
 	private final Callable<String> magicStringGenerator;
 

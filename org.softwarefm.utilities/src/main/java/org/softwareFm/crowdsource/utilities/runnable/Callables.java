@@ -51,15 +51,18 @@ public class Callables {
 			public T call() throws Exception {
 				return value;
 			}
+
 			@Override
 			public String toString() {
 				return "Callable.value(" + value + ")";
 			}
 		};
 	}
+
 	public static <T> Callable<T> valueFromList(final T... value) {
 		return new Callable<T>() {
 			private final AtomicInteger index = new AtomicInteger();
+
 			@Override
 			public T call() throws Exception {
 				return value[index.getAndIncrement()];
@@ -86,6 +89,7 @@ public class Callables {
 			}
 		};
 	}
+
 	public static <T> Callable<T> exceptionIfCalled(final Throwable throwable) {
 		return new Callable<T>() {
 			@Override
@@ -118,7 +122,7 @@ public class Callables {
 			@Override
 			public Calendar call() throws Exception {
 				Calendar calendar = Calendar.getInstance();
-				calendar.set(year, month,day, hour, minute);
+				calendar.set(year, month, day, hour, minute);
 				return calendar;
 			}
 		};

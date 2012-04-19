@@ -25,7 +25,6 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 	private SignUpCheckerMock checker;
 	private final RequestLine requestLine = makeRequestLine(CommonConstants.POST, url);
 
-
 	public void testIgnoresEverythingExceptGetWithPrefix() {
 		checkIgnoresNoneGet();
 		checkIgnores(CommonConstants.GET);
@@ -87,7 +86,7 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 
 		checker = new SignUpCheckerMock(null, "someCrypto");
 
-		IIdAndSaltGenerator generators = IIdAndSaltGenerator.Utils.mockGenerators("someSoftwareFmId{0}", null, null,null);
+		IIdAndSaltGenerator generators = IIdAndSaltGenerator.Utils.mockGenerators("someSoftwareFmId{0}", null, null, null);
 		return new SignupProcessor(checker, saltProcessor, generators);
 	}
 

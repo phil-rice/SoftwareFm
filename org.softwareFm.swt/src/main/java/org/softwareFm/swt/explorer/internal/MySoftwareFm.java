@@ -48,7 +48,7 @@ public class MySoftwareFm implements IHasComposite, ILoginDisplayStrategy {
 	private final IUserDataManager userDataManager;
 	private final IUserAndGroupsContainer container;
 
-	public MySoftwareFm(Composite parent,IUserAndGroupsContainer container,  CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserDataManager userDataManager) {
+	public MySoftwareFm(Composite parent, IUserAndGroupsContainer container, CardConfig cardConfig, ILoginStrategy loginStrategy, IShowMyData showMyData, IShowMyGroups showMyGroups, IUserDataManager userDataManager) {
 		this.container = container;
 		this.cardConfig = cardConfig;
 		this.loginStrategy = loginStrategy;

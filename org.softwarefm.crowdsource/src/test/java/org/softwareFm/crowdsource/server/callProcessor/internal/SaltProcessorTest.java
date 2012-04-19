@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import org.softwareFm.crowdsource.server.doers.internal.SaltProcessor;
 
-public class SaltProcessorTest extends TestCase{
+public class SaltProcessorTest extends TestCase {
 
 	@Test
 	public void test() {
@@ -17,10 +17,10 @@ public class SaltProcessorTest extends TestCase{
 		String uuid1 = saltProcessor.makeSalt();
 		String uuid2 = saltProcessor.makeSalt();
 		assertFalse(uuid1.equals(uuid2));
-		
+
 		assertTrue(saltProcessor.invalidateSalt(uuid1));
 		assertTrue(saltProcessor.invalidateSalt(uuid2));
-		
+
 		assertFalse(saltProcessor.invalidateSalt(uuid1));
 		assertFalse(saltProcessor.invalidateSalt(uuid2));
 	}

@@ -7,6 +7,7 @@ package org.softwareFm.crowdsource.server.internal;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,7 @@ public class CrowdSourcedServer implements ICrowdSourcedServer {
 
 	public CrowdSourcedServer(final int port, final IContainer container, final ICallback<Throwable> errorHandler, final IUsage usage) throws IOException {
 		this.usage = usage;
+		ICrowdSourcedServer.logger.debug(MessageFormat.format("Starting server on port {0} ", port));
 		this.serverSocket = new ServerSocket(port);
 
 		socketListeningThread = new Thread() {

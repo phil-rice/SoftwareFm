@@ -7,7 +7,6 @@ package org.softwareFm.jarAndClassPath.api;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.jarAndClassPath.internal.UserDataManager;
 
-
 public interface IUserDataManager {
 
 	void setUserData(Object source, UserData userData);

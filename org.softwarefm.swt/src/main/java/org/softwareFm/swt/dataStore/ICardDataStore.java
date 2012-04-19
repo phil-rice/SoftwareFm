@@ -4,7 +4,6 @@
 
 package org.softwareFm.swt.dataStore;
 
-
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
@@ -26,6 +25,7 @@ public interface ICardDataStore {
 
 		/**
 		 * The control is used to ensure that call backs are in the correct thread, and everything ceases to work if the control is disposed
+		 * 
 		 * @param readWriteApi
 		 */
 		public static IMutableCardDataStore repositoryCardDataStore(Control from, IContainer readWriteApi) {

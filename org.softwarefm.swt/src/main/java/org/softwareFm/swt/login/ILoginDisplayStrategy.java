@@ -16,7 +16,6 @@ public interface ILoginDisplayStrategy {
 
 	abstract public static class Utils {
 
-
 		public static ILoginDisplayStrategy sysoutDisplayStrategy() {
 			return new ILoginDisplayStrategy() {
 

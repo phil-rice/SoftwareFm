@@ -179,7 +179,7 @@ public class Card implements ICard {
 			long startTime = profile ? System.currentTimeMillis() : 0;
 			lineSelectedListener.selected(Card.this, key, content.data.get(key));
 			if (profile)
-				System.out.println("    " + lineSelectedListener +" took: " +(System.currentTimeMillis()-startTime));
+				System.out.println("    " + lineSelectedListener + " took: " + (System.currentTimeMillis() - startTime));
 		}
 	}
 

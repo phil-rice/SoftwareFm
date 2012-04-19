@@ -26,7 +26,7 @@ public class MasterDetailSocialTest extends SwtTest {
 
 		checkSocialOverDetail(detail, social);
 		checkSocialOverDetail(detail, social);
-		
+
 		checkDetailOverSocial(detail, social);
 		checkDetailOverSocial(detail, social);
 

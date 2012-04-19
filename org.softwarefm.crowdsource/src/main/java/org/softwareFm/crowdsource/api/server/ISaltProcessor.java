@@ -4,10 +4,9 @@
 
 package org.softwareFm.crowdsource.api.server;
 
-public interface ISaltProcessor extends IServerDoer{
+public interface ISaltProcessor extends IServerDoer {
 
 	String makeSalt();
-
 
 	boolean invalidateSalt(String salt);
 }

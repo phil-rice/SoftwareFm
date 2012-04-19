@@ -45,7 +45,7 @@ public class Sets {
 	}
 
 	public static String getOnly(Set<String> set) {
-		if (set.size()!= 1)
+		if (set.size() != 1)
 			throw new IllegalArgumentException(set.toString());
 		return set.iterator().next();
 	}

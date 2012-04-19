@@ -26,7 +26,7 @@ public class ServerUser implements IUser {
 	private final IFunction1<String, String> userRepositoryDefn;
 	private final Map<String, Callable<Object>> defaultValues;
 
-	public ServerUser(IGitOperations gitOperations, IUrlGenerator userUrlGenerator, IFunction1<String, String> userRepositoryDefn, Map<String, Callable<Object>>  defaultValues) {
+	public ServerUser(IGitOperations gitOperations, IUrlGenerator userUrlGenerator, IFunction1<String, String> userRepositoryDefn, Map<String, Callable<Object>> defaultValues) {
 		this.gitOperations = gitOperations;
 		this.userUrlGenerator = userUrlGenerator;
 		this.userRepositoryDefn = userRepositoryDefn;

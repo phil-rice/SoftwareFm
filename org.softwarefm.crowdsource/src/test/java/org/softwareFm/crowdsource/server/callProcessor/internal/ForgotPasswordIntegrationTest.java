@@ -15,13 +15,12 @@ public class ForgotPasswordIntegrationTest extends AbstractProcessorMockIntegrat
 	public void testMakeSaltThenForgotPassword() throws Exception {
 		String salt = "salt 0";
 		getHttpClient().get(LoginConstants.makeSaltPrefix).execute(IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, salt)).get(); // salt won't be used but we want it removed
-		
+
 		assertEquals(salt, Sets.getOnly(saltProcessor.legalSalts));
-		
+
 		forgotPassword("someEmail", salt, IResponseCallback.Utils.checkCallback(CommonConstants.okStatusCode, ""));
-		
+
 		assertEquals(0, saltProcessor.legalSalts.size());
 	}
-
 
 }

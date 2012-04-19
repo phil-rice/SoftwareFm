@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.eclipse.usage.internal;
 
 import java.util.Map;
@@ -27,15 +31,12 @@ abstract public class ApiAndSwtTest extends ApiTest {
 	protected Display display;
 
 	@Override
-	protected ITransactionManager makeLocalTransactionManager() {
-		return ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.localThreadPoolSizeForTests, CommonConstants.testTimeOutMs);
+	//need to share transaction manager between server and local.
+	//shared because in tests we can hop from one transaction to another, when for example we read locally and write to the server
+	protected ITransactionManager makeTransactionManager() {
+		return ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.threadPoolSizeForTests, CommonConstants.testTimeOutMs);
 	}
 
-	@Override
-	/** Needed because there are tests that have callbacks running on the server*/
-	protected ITransactionManager makeServerTransactionManager() {
-		return ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(display, CommonConstants.serverThreadPoolSizeForTests, CommonConstants.testTimeOutMs);
-	}
 
 	@Override
 	protected void setUp() throws Exception {
@@ -66,7 +67,7 @@ abstract public class ApiAndSwtTest extends ApiTest {
 	private int allOtherJobsClosedCount() {
 		boolean inTransaction = getLocalContainer().getTransactionManager().inTransaction();
 		boolean inSwtCallbackFunction = ISwtSoftwareFmFactory.Utils.inSwtCallbackFunction(display);
-		return inTransaction||inSwtCallbackFunction ? 0 : 0;
+		return inTransaction || inSwtCallbackFunction ? 0 : 0;
 	}
 
 	protected void dispatchUntilJobsFinished() {
@@ -96,8 +97,8 @@ abstract public class ApiAndSwtTest extends ApiTest {
 				int jobs = getLocalContainer().activeJobs();
 				int count = allOtherJobsClosedCount();
 				boolean swtFunctionsFinished = ISwtSoftwareFmFactory.Utils.swtFunctionsFinished();
-				//				System.out.println("jobs: " + jobs + " target: " + count + " in sync: "  + ISwtSoftwareFmFactory.Utils.inSwtCallbackFunction(display) + " swts finished: " + swtFunctionsFinished);
-				
+				// System.out.println("jobs: " + jobs + " target: " + count + " in sync: " + ISwtSoftwareFmFactory.Utils.inSwtCallbackFunction(display) + " swts finished: " + swtFunctionsFinished);
+
 				return callable.call() && jobs == count && swtFunctionsFinished;
 			}
 		});

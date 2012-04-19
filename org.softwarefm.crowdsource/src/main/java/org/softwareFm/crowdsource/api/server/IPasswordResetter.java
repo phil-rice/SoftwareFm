@@ -4,10 +4,9 @@
 
 package org.softwareFm.crowdsource.api.server;
 
-public interface IPasswordResetter extends IServerDoer{
+public interface IPasswordResetter extends IServerDoer {
 
 	/** returns new password */
 	String reset(String magicString);
 
-	
 }

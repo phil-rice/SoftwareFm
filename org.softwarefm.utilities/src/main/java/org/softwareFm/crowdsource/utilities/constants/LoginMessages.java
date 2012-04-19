@@ -29,5 +29,4 @@ public class LoginMessages {
 	public static final String forgotPassword = "Forgot Password for {0}";
 	public static final String requestEmailSalt = "Request Email Salt for {0}";
 
-	
 }

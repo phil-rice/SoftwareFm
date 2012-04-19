@@ -47,7 +47,7 @@ public class LocalUserReader implements IUserReader {
 				Map<String, Object> data = from.getFile(fileDescription);
 				return data;
 			}
-		}, ICallback.Utils.<Map<String, Object>>noCallback()).get();
+		}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
 	}
 
 	@Override

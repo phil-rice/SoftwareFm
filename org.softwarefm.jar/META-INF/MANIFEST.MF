@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Jar
+Bundle-Name: org.softwarefm.jar
 Bundle-SymbolicName: org.softwarefm.jar
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: SoftwareFm

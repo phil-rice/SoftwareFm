@@ -77,5 +77,4 @@ public class StyledTextEditor implements IValueEditor {
 		return content.getTitleSpec();
 	}
 
-
 }

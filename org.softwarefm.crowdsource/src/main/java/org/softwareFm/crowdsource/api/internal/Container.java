@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.api.internal;
 
 import java.text.MessageFormat;
@@ -140,7 +144,7 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 	public <Result, Intermediate, A1, A2, A3> ITransaction<Result> accessWithCallbackFn(final Class<A1> clazz1, final Class<A2> clazz2, final Class<A3> clazz3, final IFunction3<A1, A2, A3, Intermediate> function, final IFunction1<Intermediate, Result> resultCallback) {
 		final A1 one = getReadWriter(clazz1);
 		final A2 two = getReadWriter(clazz2);
-		final A3 three= getReadWriter(clazz3);
+		final A3 three = getReadWriter(clazz3);
 		return transactionManager.start(new IFunction1<IMonitor, Intermediate>() {
 			@Override
 			public Intermediate apply(IMonitor from) throws Exception {
@@ -154,6 +158,7 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 			}
 		}, resultCallback, one, two);
 	}
+
 	@Override
 	public <A1, A2, A3> ITransaction<Void> access(final Class<A1> clazz1, final Class<A2> clazz2, final Class<A3> clazz3, final ICallback3<A1, A2, A3> callback) {
 		final A1 one = getReadWriter(clazz1);

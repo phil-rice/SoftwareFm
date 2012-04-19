@@ -45,7 +45,7 @@ public class MyDetails implements IHasComposite {
 		return new IShowMyData() {
 			@Override
 			public void show(final UserData userData) {
-				container.accessWithCallbackFn(IGitReader.class, Functions.<IGitReader, Void>constant(null), new ISwtFunction1<Void, Void>() {
+				container.accessWithCallbackFn(IGitReader.class, Functions.<IGitReader, Void> constant(null), new ISwtFunction1<Void, Void>() {
 					@Override
 					public Void apply(Void from) throws Exception {
 						masterDetailSocial.hideSocial();

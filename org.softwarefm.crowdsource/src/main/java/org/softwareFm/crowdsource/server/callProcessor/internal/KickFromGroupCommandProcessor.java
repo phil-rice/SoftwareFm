@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.server.callProcessor.internal;
 
 import java.text.MessageFormat;
@@ -30,13 +34,13 @@ public class KickFromGroupCommandProcessor extends AbstractCallProcessor {
 	@Override
 	protected IProcessResult execute(String actualUrl, final Map<String, Object> parameters) {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, GroupConstants.groupIdKey, GroupConstants.objectSoftwareFmId);
-		api.accessUserMembership(new ICallback2<IGroups, IUserMembership>(){
+		api.accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				String softwareFmId = (String) parameters.get(LoginConstants.softwareFmIdKey);
 				List<String> objectSoftwareFmIds = Strings.splitIgnoreBlanks((String) parameters.get(GroupConstants.objectSoftwareFmId), ",");
 				String groupId = (String) parameters.get(GroupConstants.groupIdKey);
-				String userCrypto = cryptoAccess.getCryptoForUser( softwareFmId);
+				String userCrypto = cryptoAccess.getCryptoForUser(softwareFmId);
 				String groupCrypto = IUserMembershipReader.Utils.findGroupCrytpo(userMembership, softwareFmId, userCrypto, groupId);
 				checkMainUserIsAdminAndNoOthersAreAdmin(userMembership, softwareFmId, userCrypto, objectSoftwareFmIds, groupId);
 				for (String objectSoftwareFmId : objectSoftwareFmIds) {
@@ -44,8 +48,9 @@ public class KickFromGroupCommandProcessor extends AbstractCallProcessor {
 					userMembership.remove(objectSoftwareFmId, objectCrypto, groupId, groupCrypto);
 				}
 				groups.removeUsers(groupId, groupCrypto, objectSoftwareFmIds);
-				
-			}}).get();
+
+			}
+		}).get();
 		return IProcessResult.Utils.processString("");
 	}
 

@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.eclipse.mysoftwareFm;
 
 import java.util.Map;
@@ -22,7 +26,7 @@ public class MyPeopleIntegrationTest extends AbstractMyGroupsIntegrationTest {
 		Table table = myPeopleComposite.getEditor();
 		Swts.checkTableColumns(table, "Person", "Jan 2012", "Feb 2012", "Mar 2012", "Groups");
 		assertEquals(2, table.getItemCount());
-		Swts.checkTable(table, 0, null, email0, "4", "4", "4", groupName0+", " + groupName1);
+		Swts.checkTable(table, 0, null, email0, "4", "4", "4", groupName0 + ", " + groupName1);
 		Swts.checkTable(table, 1, null, email1, "2", "", "1", groupName0);
 	}
 

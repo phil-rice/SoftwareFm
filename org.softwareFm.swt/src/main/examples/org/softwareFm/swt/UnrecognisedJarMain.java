@@ -4,7 +4,6 @@
 
 package org.softwareFm.swt;
 
-
 import java.io.File;
 import java.util.List;
 
@@ -27,7 +26,7 @@ import org.softwareFm.swt.unrecognisedJar.UnrecognisedJarData;
 
 public class UnrecognisedJarMain {
 	public static void main(String[] args) {
-	
+
 		Swts.Show.display(UnrecognisedJar.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
@@ -48,7 +47,7 @@ public class UnrecognisedJarMain {
 				Swts.Row.setRowDataFor(30, SWT.DEFAULT, titleBar.getChildren());
 				return composite;
 			}
-	
+
 			private Button makeButton(Composite titleBar, final CardShapedHolder<UnrecognisedJar> holder, final int count) {
 				return Swts.Buttons.makePushButton(titleBar, null, Integer.toString(count), false, new Runnable() {
 					@Override
@@ -60,8 +59,8 @@ public class UnrecognisedJarMain {
 					}
 				});
 			}
-	
+
 		});
 	}
-	
+
 }

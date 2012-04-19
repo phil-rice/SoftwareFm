@@ -262,8 +262,6 @@ public class MapsTest extends TestCase {
 		Maps.add(map, "a", 3);
 		assertEquals(Maps.makeMap("a", 4, "b", 2), map);
 	}
-	
-	
 
 	@SuppressWarnings("rawtypes")
 	public void testIntFor() {

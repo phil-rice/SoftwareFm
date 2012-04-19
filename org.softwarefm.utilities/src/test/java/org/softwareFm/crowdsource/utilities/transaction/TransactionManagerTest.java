@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.utilities.transaction;
 
 import java.util.Arrays;
@@ -61,27 +65,27 @@ public class TransactionManagerTest extends TestCase {
 		ConstantFnWithKick<String, String> cb4 = new ConstantFnWithKick<String, String>("res4");
 
 		assertEquals(0, manager.activeJobs());
-		ITransaction<String> t1 = manager.start(fn1, cb1);
-		ITransaction<String> t2 = manager.start(fn2, cb2);
-		ITransaction<String> t3 = manager.start(fn3, cb3);
-		ITransaction<String> t4 = manager.start(fn4, cb4);
+		manager.start(fn1, cb1);
+		manager.start(fn2, cb2);
+		manager.start(fn3, cb3);
+		manager.start(fn4, cb4);
 
-	Tests.	waitUntil(activeJobsAre(manager, 4));
+		Tests.waitUntil(activeJobsAre(manager, 4));
 		fn1.kick();
 		fn2.kick();
-		Thread.sleep(10);//giving it time to go wrong
-		Tests.	waitUntil(activeJobsAre(manager, 4));
+		Thread.sleep(10);// giving it time to go wrong
+		Tests.waitUntil(activeJobsAre(manager, 4));
 		cb1.kick();
-		Tests.	waitUntil(activeJobsAre(manager, 3));
+		Tests.waitUntil(activeJobsAre(manager, 3));
 		cb2.kick();
-		Tests.	waitUntil(activeJobsAre(manager, 2));
+		Tests.waitUntil(activeJobsAre(manager, 2));
 		fn3.kick();
 		fn4.kick();
-		Thread.sleep(10);//giving it time to go wrong
-		Tests.	waitUntil(activeJobsAre(manager, 2));
+		Thread.sleep(10);// giving it time to go wrong
+		Tests.waitUntil(activeJobsAre(manager, 2));
 		cb3.kick();
 		cb4.kick();
-		Tests.	waitUntil(activeJobsAre(manager, 0));
+		Tests.waitUntil(activeJobsAre(manager, 0));
 	}
 
 	public static Callable<Boolean> activeJobsAre(final ITransactionManager manager, final int value) {
@@ -92,7 +96,6 @@ public class TransactionManagerTest extends TestCase {
 			}
 		};
 	}
-
 
 	public void testNestedTransactionsExecutedOnSameThread() {
 		ConstantFunctionWithMemoryOfFroms<String, String> postFunction1 = new ConstantFunctionWithMemoryOfFroms<String, String>("value1-b");
@@ -382,7 +385,7 @@ public class TransactionManagerTest extends TestCase {
 		final IServiceExecutor defaultExecutor = IServiceExecutor.Utils.defaultExecutor(getClass().getSimpleName() + "-{0}", 10);
 		registered1Count = new AtomicInteger();
 		registered2Count = new AtomicInteger();
-		manager = new TransactionManager(defaultExecutor, new TransactionManager.DefaultFutureToTransactionDn()).//
+		manager = new TransactionManager(defaultExecutor, new TransactionManager.DefaultFutureToTransactionDn(CommonConstants.testTimeOutMs)).//
 				registerCallbackExecutor(IFunctionWithMarker1.class, new IFunction3<IServiceExecutor, IFunction1<Object, Object>, Object, Object>() {
 
 					@Override

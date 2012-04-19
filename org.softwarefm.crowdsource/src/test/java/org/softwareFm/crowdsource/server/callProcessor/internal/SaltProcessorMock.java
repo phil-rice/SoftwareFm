@@ -17,6 +17,7 @@ public class SaltProcessorMock implements ISaltProcessor {
 	public final List<String> createdSalts = Lists.newList();
 	public final Set<String> legalSalts = Sets.newSet();
 	public final AtomicInteger checkAndInvalidateCount = new AtomicInteger();
+
 	@Override
 	public String makeSalt() {
 		String salt = "salt " + createdSalts.size();
@@ -25,10 +26,9 @@ public class SaltProcessorMock implements ISaltProcessor {
 		return salt;
 	}
 
-
 	@Override
 	public boolean invalidateSalt(String salt) {
-		checkAndInvalidateCount .incrementAndGet();
+		checkAndInvalidateCount.incrementAndGet();
 		return legalSalts.remove(salt);
 	}
 

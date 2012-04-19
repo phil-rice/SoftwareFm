@@ -10,7 +10,6 @@ import junit.framework.Assert;
 
 import org.softwareFm.crowdsource.httpClient.IResponse;
 
-
 public class CheckCallback implements IResponseCallback {
 
 	private final int status;

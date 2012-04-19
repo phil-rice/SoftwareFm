@@ -69,11 +69,11 @@ public class CardDataStoreMock implements IMutableCardDataStore {
 		return ITransaction.Utils.doneTransaction(null);
 	}
 
-
 	@Override
 	public void delete(String url, IAfterEditCallback callback) {
 		throw new UnsupportedOperationException();
 	}
+
 	@Override
 	public void refresh(String url) {
 		throw new UnsupportedOperationException();

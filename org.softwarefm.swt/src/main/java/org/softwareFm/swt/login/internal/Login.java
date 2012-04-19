@@ -32,7 +32,7 @@ public class Login implements ILogin {
 
 	public Login(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final ILoginCallback callback) {
 		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, cardType);
-		String title = IResourceGetter.Utils.getOrException(resourceGetter,  CardConstants.loginTitle);
+		String title = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.loginTitle);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, "email"),//
 				INamesAndValuesEditor.Utils.password(cardConfig, "password")),//
@@ -108,7 +108,5 @@ public class Login implements ILogin {
 	public Control getControl() {
 		return content.getControl();
 	}
-
-
 
 }

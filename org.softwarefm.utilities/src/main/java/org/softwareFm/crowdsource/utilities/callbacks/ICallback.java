@@ -56,6 +56,7 @@ public interface ICallback<T> {
 
 			};
 		}
+
 		@SuppressWarnings("rawtypes")
 		public static NoCallback noCallback = new NoCallback<Object>();
 
@@ -66,6 +67,7 @@ public interface ICallback<T> {
 		public static final <T> MemoryCallback<T> memory() {
 			return new MemoryCallback<T>();
 		}
+
 		public static final <T> MemoryWithThreadCallback<T> memoryWithThread() {
 			return new MemoryWithThreadCallback<T>();
 		}
@@ -120,7 +122,7 @@ public interface ICallback<T> {
 			return new EnsureSameParameter<T>();
 		}
 
-		public static <T>ICallback<T> exception(final Exception e) {
+		public static <T> ICallback<T> exception(final Exception e) {
 			return new ICallback<T>() {
 				@Override
 				public void process(T t) throws Exception {

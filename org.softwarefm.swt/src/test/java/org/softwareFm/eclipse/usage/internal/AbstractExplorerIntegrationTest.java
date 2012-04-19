@@ -112,7 +112,7 @@ abstract public class AbstractExplorerIntegrationTest extends ApiAndSwtTest impl
 
 	protected void displayCard(final String url, final CardHolderAndCardCallback cardHolderAndCardCallback) {
 		try {
-			ICard card = explorer.displayCard(rootArtifactUrl + url, new CardAndCollectionDataStoreAdapter() ).get();
+			ICard card = explorer.displayCard(rootArtifactUrl + url, new CardAndCollectionDataStoreAdapter()).get();
 			cardHolderAndCardCallback.process(explorer.getCardHolder(), card);
 			dispatchUntilJobsFinished();
 		} catch (Exception e) {

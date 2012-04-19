@@ -4,7 +4,7 @@
 
 package org.softwareFm.crowdsource.api.server;
 
-public interface IMagicStringForPassword extends IServerDoer{
+public interface IMagicStringForPassword extends IServerDoer {
 
 	String allowResetPassword(String emailAddress);
 

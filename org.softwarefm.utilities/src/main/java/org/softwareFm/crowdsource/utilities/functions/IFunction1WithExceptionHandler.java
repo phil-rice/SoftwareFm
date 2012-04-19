@@ -4,7 +4,7 @@
 
 package org.softwareFm.crowdsource.utilities.functions;
 
-public interface IFunction1WithExceptionHandler<From, To> extends IFunction1<From, To>{
+public interface IFunction1WithExceptionHandler<From, To> extends IFunction1<From, To> {
 
 	void handle(Exception e);
 }

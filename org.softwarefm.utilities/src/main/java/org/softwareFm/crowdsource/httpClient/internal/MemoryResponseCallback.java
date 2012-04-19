@@ -10,7 +10,6 @@ import junit.framework.Assert;
 
 import org.softwareFm.crowdsource.httpClient.IResponse;
 
-
 public class MemoryResponseCallback implements IResponseCallback {
 
 	public IResponse response;

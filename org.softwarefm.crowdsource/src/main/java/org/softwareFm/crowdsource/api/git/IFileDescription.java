@@ -25,9 +25,9 @@ public interface IFileDescription {
 	File findRepositoryUrl(File root);
 
 	String url();
-	
+
 	String crypto();
-	
+
 	String name();
 
 	String encode(Map<String, Object> data);
@@ -78,7 +78,7 @@ public interface IFileDescription {
 			return result;
 		}
 
-		public static void merge( IGitOperations gitOperations, IFileDescription fileDescription, Map<String, Object> toMerge) {
+		public static void merge(IGitOperations gitOperations, IFileDescription fileDescription, Map<String, Object> toMerge) {
 			Map<String, Object> initialData = gitOperations.getFile(fileDescription);
 			@SuppressWarnings("unchecked")
 			Map<String, Object> map = Maps.merge(initialData, toMerge);

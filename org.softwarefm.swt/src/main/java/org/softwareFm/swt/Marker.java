@@ -4,6 +4,6 @@
 
 package org.softwareFm.swt;
 
- public interface Marker {
+public interface Marker {
 
 }

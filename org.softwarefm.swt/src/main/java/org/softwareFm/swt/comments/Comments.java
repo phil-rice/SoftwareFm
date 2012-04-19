@@ -30,6 +30,7 @@ import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.resources.IResourceGetter;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
+import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.swt.ISwtFunction1;
 import org.softwareFm.swt.composites.IHasComposite;
 import org.softwareFm.swt.composites.IHasControl;
@@ -76,7 +77,7 @@ public class Comments implements IHasControl {
 	public static class CommentsComposite extends DataComposite<Table> implements IDataCompositeWithFooter<Table, CommentsButtons> {
 
 		private final Table table;
-		protected List<Map<String, Object>> allComments;
+		protected ITransaction<List<Map<String, Object>>> allComments;
 		private String url;
 		private final CommentsButtons footer;
 		private final IContainer readWriteApi;
@@ -94,9 +95,12 @@ public class Comments implements IHasControl {
 			table.addListener(SWT.Selection, new Listener() {
 				@Override
 				public void handleEvent(Event event) {
+					if (!allComments.isDone())
+						return;
+					List<Map<String, Object>> comments = allComments.get();
 					int index = table.getSelectionIndex();
-					if (index != -1 && index < allComments.size()) {
-						Map<String, Object> comment = allComments.get(index);
+					if (index != -1 && index < comments.size()) {
+						Map<String, Object> comment = comments.get(index);
 						callback.selected(getCardType(), url, index, comment);
 					}
 				}
@@ -154,7 +158,7 @@ public class Comments implements IHasControl {
 					}
 					Swts.packColumns(table);
 				}
-			}).get();
+			});
 		}
 
 	}

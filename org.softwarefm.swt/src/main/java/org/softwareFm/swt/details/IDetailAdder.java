@@ -17,7 +17,6 @@ import org.softwareFm.swt.editors.internal.TextViewerDetailAdder;
 
 public interface IDetailAdder {
 
-
 	IHasControl add(Composite parentComposite, IContainer container, ICard parentCard, CardConfig cardConfig, String key, Object value, IDetailsFactoryCallback callback);
 
 	public static class Utils {

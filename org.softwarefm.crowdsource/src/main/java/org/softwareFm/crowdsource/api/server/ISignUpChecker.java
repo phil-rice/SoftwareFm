@@ -4,7 +4,7 @@
 
 package org.softwareFm.crowdsource.api.server;
 
-public interface ISignUpChecker extends IServerDoer{
+public interface ISignUpChecker extends IServerDoer {
 
 	SignUpResult signUp(String email, String moniker, String salt, String passwordHash, String softwareFmId);
 

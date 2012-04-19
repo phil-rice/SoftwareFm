@@ -105,5 +105,4 @@ public class CardCollectionHolder implements IHasComposite {
 		return content.value;
 	}
 
-
 }

@@ -65,8 +65,8 @@ public class Crypto {
 	public static String aesDecrypt(String hexKey, String hexCoded) {
 		try {
 			init();
-			SecretKeySpec key = new SecretKeySpec(Strings.fromHex(hexKey),algorithm);
-			Cipher cipher = Cipher.getInstance(algorithm+"/ECB/PKCS5Padding", provider);
+			SecretKeySpec key = new SecretKeySpec(Strings.fromHex(hexKey), algorithm);
+			Cipher cipher = Cipher.getInstance(algorithm + "/ECB/PKCS5Padding", provider);
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			byte[] codedBytes = Strings.fromHex(hexCoded);
 			CipherInputStream inputStream = new CipherInputStream(new ByteArrayInputStream(codedBytes), cipher);

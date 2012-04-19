@@ -68,7 +68,7 @@ abstract public class AbstractLoginSignupForgotCheckerTest extends ApiTest imple
 				assertEquals(moniker, user.getUserProperty(softwareFmId, crypto, LoginConstants.monikerKey));
 				return null;
 			}
-		}, ICallback.Utils.<Void>noCallback());
+		}, ICallback.Utils.<Void> noCallback());
 		return crypto;
 	}
 

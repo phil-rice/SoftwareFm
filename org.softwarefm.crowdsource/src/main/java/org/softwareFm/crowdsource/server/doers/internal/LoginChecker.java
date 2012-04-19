@@ -27,9 +27,9 @@ public class LoginChecker extends AbstractLoginDataAccessor implements ILoginChe
 
 	@Override
 	public Map<String, String> login(final String email, final String passwordHash) {
-		Map<String, String> result = template.query(selectUsersWithEmailAndPasswordHashSql, new Object[] { email, passwordHash }, new ResultSetExtractor<Map<String,String>>() {
+		Map<String, String> result = template.query(selectUsersWithEmailAndPasswordHashSql, new Object[] { email, passwordHash }, new ResultSetExtractor<Map<String, String>>() {
 			@Override
-			public Map<String,String> extractData(ResultSet rs) throws SQLException, DataAccessException {
+			public Map<String, String> extractData(ResultSet rs) throws SQLException, DataAccessException {
 				if (rs.next()) {
 					String crypto = rs.getString("crypto");
 					String softwareFmId = rs.getString("softwarefmid");

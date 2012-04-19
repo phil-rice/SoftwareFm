@@ -27,7 +27,7 @@ public class MultiThreadedTimeTester<Context> {
 		this.threads = threads;
 		this.timePerThread = timePerThread;
 		this.toBeTested = toBeTested;
-		serviceExecutor = IServiceExecutor.Utils.executor(getClass().getSimpleName()+"-{0}", threads);
+		serviceExecutor = IServiceExecutor.Utils.executor(getClass().getSimpleName() + "-{0}", threads);
 	}
 
 	public void testMe() {
@@ -35,7 +35,7 @@ public class MultiThreadedTimeTester<Context> {
 			final CountDownLatch latch = new CountDownLatch(threads);
 			for (int i = 0; i < threads; i++) {
 				final int thread = i;
-				serviceExecutor.submit(new IFunction1<IMonitor,Void>() {
+				serviceExecutor.submit(new IFunction1<IMonitor, Void>() {
 					@Override
 					public Void apply(IMonitor monitor) throws Exception {
 						Stats stats = new Stats();

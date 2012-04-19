@@ -17,7 +17,6 @@ public interface IMySoftwareFmLoggedInStrategy {
 
 	void showMyGroups();
 
-
 	List<String> displayProperties();
 
 	public static class Utils {

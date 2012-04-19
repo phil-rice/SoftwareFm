@@ -39,9 +39,9 @@ public class SoftwareFmServerTest extends ApiTest {
 				assertEquals("value", Crypto.aesDecrypt(crypto1, encrypted));
 				return null;
 			}
-		}, ICallback.Utils.<Void>noCallback()).get();
+		}, ICallback.Utils.<Void> noCallback()).get();
 	}
-	
+
 	@Override
 	protected Map<String, Callable<Object>> getDefaultUserValues() {
 		return Utils.getDefaultUserValues();

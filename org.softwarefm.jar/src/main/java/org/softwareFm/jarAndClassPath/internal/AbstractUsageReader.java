@@ -28,7 +28,7 @@ abstract public class AbstractUsageReader implements IUsageReader {
 
 	@Override
 	public Map<String, Map<String, List<Integer>>> getProjectDetails(String softwareFmId, String projectCryptoKey, String month) {
-		
+
 		String userUrl = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
 		IFileDescription projectFileDescription = IFileDescription.Utils.encrypted(Urls.compose(userUrl, JarAndPathConstants.projectDirectoryName), month, projectCryptoKey);
 
@@ -37,7 +37,5 @@ abstract public class AbstractUsageReader implements IUsageReader {
 	}
 
 	abstract protected Map<String, Map<String, List<Integer>>> getProjectDetails(IFileDescription projectFileDescription);
-
-
 
 }

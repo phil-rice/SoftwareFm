@@ -15,7 +15,7 @@ import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 
 public class Futures {
 
-	public static <T> Future<T> bindToMonitor(final Future<T> rawFuture, final IMonitor rawMonitor){
+	public static <T> Future<T> bindToMonitor(final Future<T> rawFuture, final IMonitor rawMonitor) {
 		return new Future<T>() {
 
 			@Override
@@ -43,14 +43,14 @@ public class Futures {
 			public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 				return rawFuture.get(timeout, unit);
 			}
-			
+
 			@Override
 			public String toString() {
-				return "BindToMonitor(" + rawFuture +", " + rawMonitor +")";
+				return "BindToMonitor(" + rawFuture + ", " + rawMonitor + ")";
 			}
 		};
 	}
-	
+
 	public static <T> Future<T> doneFuture(final T value) {
 		return new Future<T>() {
 

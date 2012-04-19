@@ -52,6 +52,7 @@ public class StyledTextEditorDetailAdderTest extends AbstractDetailsAdderTest<St
 				withImageFn(imageFn).//
 				withResourceGetterFn(Functions.<String, IResourceGetter> constant(resourceGetter));
 	}
+
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();

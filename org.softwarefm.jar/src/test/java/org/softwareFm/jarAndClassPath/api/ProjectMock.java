@@ -11,7 +11,6 @@ import java.util.Map;
 import junit.framework.Assert;
 
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.jarAndClassPath.api.IProject;
 
 public class ProjectMock implements IProject {
 

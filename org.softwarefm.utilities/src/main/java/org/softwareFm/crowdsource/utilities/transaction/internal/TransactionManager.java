@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.utilities.transaction.internal;
 
 import java.util.LinkedHashMap;
@@ -30,8 +34,12 @@ import org.softwareFm.crowdsource.utilities.transaction.ITransactional;
 
 public class TransactionManager implements ITransactionManagerBuilder {
 
-	
 	public static class DefaultFutureToTransactionDn implements IFunction1<Future<?>, ITransaction<?>> {
+		private final long timeOutMs;
+
+		public DefaultFutureToTransactionDn(long timeOutMs) {
+			this.timeOutMs = timeOutMs;
+		}
 
 		@Override
 		public ITransaction<?> apply(final Future<?> future) throws Exception {
@@ -41,11 +49,11 @@ public class TransactionManager implements ITransactionManagerBuilder {
 				@Override
 				public Object get() {
 					try {
-						return future.get();
-					} catch (InterruptedException e) {
-						throw WrappedException.wrap(e);
+						return future.get(timeOutMs, TimeUnit.MILLISECONDS);
 					} catch (ExecutionException e) {
 						throw WrappedException.wrap(e.getCause());
+					} catch (Exception e) {
+						throw WrappedException.wrap(e);
 					}
 				}
 
@@ -125,7 +133,7 @@ public class TransactionManager implements ITransactionManagerBuilder {
 	}
 
 	private <Result, Intermediate> ITransaction<Result> newTransaction(final IFunction1<IMonitor, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback, Object... potentialTransactionals) {
-		
+
 		final CountDownLatch latch = new CountDownLatch(1);
 		final IFunction1<IMonitor, Result> fullJob = new IFunction1<IMonitor, Result>() {
 			@Override
@@ -201,7 +209,7 @@ public class TransactionManager implements ITransactionManagerBuilder {
 					}
 				} finally {
 					if (logger.isDebugEnabled())
-						logger.debug("committed (" + Strings.idString(this) +": " + this.toString());
+						logger.debug("committed (" + Strings.idString(this) + ": " + this.toString());
 				}
 			}
 

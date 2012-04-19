@@ -35,7 +35,8 @@ public class LoginProcessor extends AbstractCallProcessor {
 		String salt = Strings.nullSafeToString(parameters.get(LoginConstants.sessionSaltKey));
 		saltProcessor.invalidateSalt(salt);
 		String email = Strings.nullSafeToString(parameters.get(LoginConstants.emailKey));
-		if (!Strings.isEmail(email))throw new IllegalArgumentException(MessageFormat.format(LoginMessages.invalidEmail, email));
+		if (!Strings.isEmail(email))
+			throw new IllegalArgumentException(MessageFormat.format(LoginMessages.invalidEmail, email));
 		String passwordHash = Strings.nullSafeToString(parameters.get(LoginConstants.passwordHashKey));
 		Map<String, String> map = checker.login(email, passwordHash);
 		if (map == null)

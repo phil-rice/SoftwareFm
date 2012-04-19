@@ -29,7 +29,7 @@ public class TakeOnGroupProcessor extends AbstractAddToGroupProcessor {
 	private final IUserAndGroupsContainer container;
 	private final ICryptoGenerators cryptoGenerators;
 
-	public TakeOnGroupProcessor( IServerDoers serverDoers, IUserCryptoAccess userCryptoAccess, IIdAndSaltGenerator idAndSaltGenerator, ICryptoGenerators cryptoGenerators, IUserAndGroupsContainer container) {
+	public TakeOnGroupProcessor(IServerDoers serverDoers, IUserCryptoAccess userCryptoAccess, IIdAndSaltGenerator idAndSaltGenerator, ICryptoGenerators cryptoGenerators, IUserAndGroupsContainer container) {
 		super(CommonConstants.POST, GroupConstants.takeOnCommandPrefix, serverDoers, userCryptoAccess, idAndSaltGenerator);
 		this.cryptoGenerators = cryptoGenerators;
 		this.container = container;

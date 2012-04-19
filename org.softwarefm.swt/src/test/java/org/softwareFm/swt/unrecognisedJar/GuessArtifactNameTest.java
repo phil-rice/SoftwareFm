@@ -30,7 +30,6 @@ public class GuessArtifactNameTest extends TestCase {
 		assertEquals(false, guesser.matches("rt1", "runtime"));
 	}
 
-
 	private void checkGuess(String expected, String raw) {
 		GuessArtifactAndVersionDetails guesser = new GuessArtifactAndVersionDetails();
 		String actual = guesser.guessArtifactName(new File(raw + ".something"));

@@ -39,12 +39,13 @@ public class SignUpChecker extends AbstractLoginDataAccessor implements ISignUpC
 			return new SignUpResult(MessageFormat.format(LoginMessages.existingSoftwareFmId, softwareFmId), null);
 		final String key = cryptoGenerator.userCrypto();
 		template.update(addNewUserSql, email, salt, passwordHash, key, softwareFmId);
-		container.accessUser(new ICallback<IUser>(){
+		container.accessUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {
 				user.setUserProperty(softwareFmId, key, LoginConstants.emailKey, email);
 				user.setUserProperty(softwareFmId, key, LoginConstants.monikerKey, moniker);
-			}}).get();
+			}
+		}).get();
 		return new SignUpResult(null, key);
 	}
 

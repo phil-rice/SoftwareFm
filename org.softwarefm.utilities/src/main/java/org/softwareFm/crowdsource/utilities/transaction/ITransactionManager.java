@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.utilities.transaction;
 
 import java.util.concurrent.Future;
@@ -9,7 +13,6 @@ import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.services.IShutdown;
 import org.softwareFm.crowdsource.utilities.transaction.internal.TransactionManager;
-
 
 public interface ITransactionManager extends IShutdown {
 	public static Logger logger = Logger.getLogger(ITransactionManager.class);
@@ -28,9 +31,9 @@ public interface ITransactionManager extends IShutdown {
 	public static class Utils {
 		public static AtomicInteger count = new AtomicInteger();
 
-		public static ITransactionManagerBuilder standard(int workerThreads) {
+		public static ITransactionManagerBuilder standard(int workerThreads, long timeOutMs) {
 			IServiceExecutor serviceExecutor = IServiceExecutor.Utils.defaultExecutor("ITransactionManager" + count.getAndIncrement() + "-{0}", workerThreads);
-			return new TransactionManager(serviceExecutor, new TransactionManager.DefaultFutureToTransactionDn());
+			return new TransactionManager(serviceExecutor, new TransactionManager.DefaultFutureToTransactionDn(timeOutMs));
 		}
 
 		/** This is used when (for example) you want to do something while waiting in the get method: such as process swt dispatch thread queues */

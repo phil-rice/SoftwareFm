@@ -40,7 +40,7 @@ public class FilesTest extends TestCase {
 		byte[] digest1 = Files.digest(inputStream);
 		byte[] digest2 = Files.digest(resource.getFile());
 		assertTrue(Arrays.equals(digest1, digest2));
-		assertTrue(Lists.asList(digest2).toString(), Arrays.equals(new byte[] {-21, 4, 4, 10, -79, -82, -107, 88, -69, -96, -91, 74, 46, 122, -104, 38, -24, 16, -56, -45}, digest2));
+		assertTrue(Lists.asList(digest2).toString(), Arrays.equals(new byte[] { -21, 4, 4, 10, -79, -82, -107, 88, -69, -96, -91, 74, 46, 122, -104, 38, -24, 16, -56, -45 }, digest2));
 	}
 
 	@Test

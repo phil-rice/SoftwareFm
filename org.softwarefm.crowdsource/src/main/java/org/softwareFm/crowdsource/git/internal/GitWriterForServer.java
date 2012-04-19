@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.git.internal;
 
 import java.io.File;
@@ -30,7 +34,7 @@ public class GitWriterForServer implements IGitWriter {
 	public Map<String, Object> getFile(IFileDescription fileDescription) {
 		return gitOperations.getFile(fileDescription);
 	}
-	
+
 	@Override
 	public Map<String, Object> getFileAndDescendants(IFileDescription fileDescription, int depth) {
 		return gitOperations.getFileAndDescendants(fileDescription, depth);
@@ -45,6 +49,7 @@ public class GitWriterForServer implements IGitWriter {
 	public int countOfFileAsListsOfMap(IFileDescription fileDescription) {
 		return gitOperations.countOfFileAsListsOfMap(fileDescription);
 	}
+
 	@Override
 	public void clearCaches() {
 		gitOperations.clearCaches();

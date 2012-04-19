@@ -26,8 +26,8 @@ public class ChangePasswordProcessorTest extends AbstractProcessCallTest<ChangeP
 	public void testResetsPasswordWhenOk() {
 		checkCalls("email", "hash", "newHash", true);
 	}
-	
-	public void testWhenPasswordDoesntChange(){
+
+	public void testWhenPasswordDoesntChange() {
 		checkCalls("email", "hash", "newHash", false);
 	}
 

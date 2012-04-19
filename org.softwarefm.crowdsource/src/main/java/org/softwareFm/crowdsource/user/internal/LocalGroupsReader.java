@@ -32,6 +32,6 @@ public class LocalGroupsReader extends AbstractGroupReader {
 				gitReader.clearCaches();
 				return null;
 			}
-		}, ICallback.Utils.<Void>noCallback()).get();
+		}, ICallback.Utils.<Void> noCallback()).get();
 	}
 }

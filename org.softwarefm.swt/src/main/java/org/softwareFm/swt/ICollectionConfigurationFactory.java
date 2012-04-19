@@ -58,7 +58,7 @@ public interface ICollectionConfigurationFactory {
 					CardConstants.digestUrlKey, new UrlGenerator(dataPrefix + "{3}/{2}/artifact/{4}/version/{6}/digest/{8}", JarAndPathConstants.groupId, JarAndPathConstants.artifactId, JarAndPathConstants.version, JarAndPathConstants.digest),// 0,1: hash, 2,3: groupId, 4,5: artifactId, 6,7: version, 8,9: digest
 					CardConstants.jarUrlKey, JarAndPathConstants.jarUrlGenerator(prefix),//
 					CardConstants.jarUrlRootKey, new UrlGenerator(prefix + "/jars/{0}/{1}", JarAndPathConstants.digest),// 0,1: hash, 2,3: digest
-//					CardConstants.projectUrlKey, ServerConstants.projectGenerator(),//
+					// CardConstants.projectUrlKey, ServerConstants.projectGenerator(),//
 					CardConstants.userUrlKey, LoginConstants.userGenerator(prefix));
 			return urlGeneratorMap;
 		}

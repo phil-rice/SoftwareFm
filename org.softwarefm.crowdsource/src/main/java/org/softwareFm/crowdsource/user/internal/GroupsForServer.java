@@ -34,7 +34,6 @@ public class GroupsForServer extends AbstractGroupReader implements IGroups {
 	private final Map<String, Callable<Object>> defaultProperties;
 	private final IContainer container;
 
-
 	public GroupsForServer(IContainer container, IUrlGenerator groupUrlGenerator, IFunction1<String, String> repoUrlGenerator, Map<String, Callable<Object>> defaultProperties) {
 		super(container, groupUrlGenerator);
 		this.container = container;
@@ -130,11 +129,11 @@ public class GroupsForServer extends AbstractGroupReader implements IGroups {
 		container.gitOperations().append(fileDescription, userDetails);
 		addAllAndCommit(fileDescription, "addUser " + userDetails);
 	}
-	
+
 	@Override
 	public void removeUsers(String groupId, String groupCryptoKey, final List<String> softwareFmIds) {
 		IFileDescription fileDescription = findFileDescription(groupId, groupCryptoKey);
-		container.gitOperations().removeLine(fileDescription, new IFunction1<Map<String,Object>, Boolean>() {
+		container.gitOperations().removeLine(fileDescription, new IFunction1<Map<String, Object>, Boolean>() {
 			@Override
 			public Boolean apply(Map<String, Object> from) throws Exception {
 				boolean result = softwareFmIds.contains(from.get(LoginConstants.softwareFmIdKey));

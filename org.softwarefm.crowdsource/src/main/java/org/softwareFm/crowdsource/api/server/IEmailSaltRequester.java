@@ -4,7 +4,7 @@
 
 package org.softwareFm.crowdsource.api.server;
 
-public interface IEmailSaltRequester extends IServerDoer{
+public interface IEmailSaltRequester extends IServerDoer {
 
 	String getSalt(String email);
 }

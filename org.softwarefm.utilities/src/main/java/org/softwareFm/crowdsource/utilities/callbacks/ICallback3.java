@@ -17,7 +17,7 @@ public interface ICallback3<T1, T2, T3> {
 				throw WrappedException.wrap(e);
 			}
 		}
-		
+
 		public static final <T1, T2, T3> ICallback3<T1, T2, T3> noCallback() {
 			return new ICallback3<T1, T2, T3>() {
 				@Override

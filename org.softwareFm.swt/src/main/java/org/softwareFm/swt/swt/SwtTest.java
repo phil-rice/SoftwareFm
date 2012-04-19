@@ -34,8 +34,6 @@ abstract public class SwtTest extends TestCase {
 		}
 	}
 
-
-
 	protected void dispatchUntilQueueEmpty() {
 		Swts.Dispatch.dispatchUntilQueueEmpty(display);
 	}
@@ -43,7 +41,7 @@ abstract public class SwtTest extends TestCase {
 	protected void kickAndDispatch(Future<?> future) {
 		Swts.Dispatch.kickAndDispatch(display, future);
 	}
-	
+
 	protected void kickAndDispatch(ITransaction<?> transaction) {
 		Swts.Dispatch.kickAndDispatch(display, transaction);
 	}

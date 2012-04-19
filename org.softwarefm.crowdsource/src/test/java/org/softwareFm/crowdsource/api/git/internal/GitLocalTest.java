@@ -188,7 +188,7 @@ public class GitLocalTest extends ApiTest {
 
 		checkGetFileAndDescendants(container, 1, IFileDescription.Utils.plain("a/b"), map);
 		checkGetFileAndDescendants(container, 1, IFileDescription.Utils.plain("a/b/c"), v12);
-		checkGetFileAndDescendants(container,1,  IFileDescription.Utils.plain("a/b/d"), v21);
+		checkGetFileAndDescendants(container, 1, IFileDescription.Utils.plain("a/b/d"), v21);
 	}
 
 	public void testGetFileAndDescendantsDepth2() {

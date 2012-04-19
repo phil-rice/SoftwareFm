@@ -7,7 +7,7 @@ package org.softwareFm.jarAndClassPath.api;
 import java.util.List;
 import java.util.Map;
 
-public interface IGroupUsageReader{
+public interface IGroupUsageReader {
 	/** group -> artifact -> person -> list of the days */
 	Map<String, Map<String, Map<String, List<Integer>>>> getProjectDetails(String groupId, String groupCryptoKey, String month);
 }

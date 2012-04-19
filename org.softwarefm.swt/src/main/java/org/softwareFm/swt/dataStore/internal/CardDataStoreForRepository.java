@@ -161,6 +161,7 @@ public class CardDataStoreForRepository implements IMutableCardDataStore {
 				afterEdit.afterEdit(url);
 				return null;
 			}
+
 			@Override
 			public String toString() {
 				return "afterEdit";

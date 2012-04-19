@@ -72,7 +72,7 @@ public class TakeOnProcessorTest extends ApiTest {
 				assertEquals(expected, actualUsers);
 				return null;
 			}
-		}, ICallback.Utils.<Void>noCallback()).get();
+		}, ICallback.Utils.<Void> noCallback()).get();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -96,7 +96,7 @@ public class TakeOnProcessorTest extends ApiTest {
 				assertEquals(expected, membership.walkGroupsFor(softwareFmId2, userKey1));
 				return null;
 			}
-		}, ICallback.Utils.<Void>noCallback()).get();
+		}, ICallback.Utils.<Void> noCallback()).get();
 	}
 
 	public void testWhenUserDoesntExist() {

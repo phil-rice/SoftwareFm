@@ -15,12 +15,12 @@ import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.url.Urls;
 
-public class HttpGitWriter  {
+public class HttpGitWriter {
 
 	private final IHttpClient httpClient;
 	private final long delayMs;
 
-	public HttpGitWriter(IHttpClient httpClient ) {
+	public HttpGitWriter(IHttpClient httpClient) {
 		this(httpClient, CommonConstants.clientTimeOut);
 	}
 
@@ -55,6 +55,5 @@ public class HttpGitWriter  {
 			throw WrappedException.wrap(e);
 		}
 	}
-
 
 }

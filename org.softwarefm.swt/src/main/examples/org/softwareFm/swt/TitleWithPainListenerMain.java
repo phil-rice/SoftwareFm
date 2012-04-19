@@ -21,7 +21,7 @@ import org.softwareFm.swt.title.TitleWithTitlePaintListener;
 public class TitleWithPainListenerMain {
 	public static void main(String[] args) {
 		Show.displayNoLayout(TitleWithTitlePaintListener.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-	
+
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				Composite parent = new Composite(from, SWT.NULL);

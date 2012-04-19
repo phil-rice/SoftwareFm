@@ -20,7 +20,7 @@ public class CheckMapCallback implements IResponseCallback {
 	private final AtomicInteger succeeded = new AtomicInteger();
 	private final Map<String, Object> expected;
 
-	public CheckMapCallback(int status, Object...namesAndValues) {
+	public CheckMapCallback(int status, Object... namesAndValues) {
 		this.status = status;
 		this.expected = Maps.stringObjectLinkedMap(namesAndValues);
 	}

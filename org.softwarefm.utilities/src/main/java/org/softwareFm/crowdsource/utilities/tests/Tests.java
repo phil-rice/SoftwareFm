@@ -23,11 +23,12 @@ import org.softwareFm.crowdsource.utilities.reflection.IClassAcceptor;
 
 public class Tests {
 
-	public static <T> T assertNotNull(T t){
+	public static <T> T assertNotNull(T t) {
 		Assert.assertNotNull(t);
 		return t;
 	}
-	public static  void waitUntil(Callable<Boolean> callable) {
+
+	public static void waitUntil(Callable<Boolean> callable) {
 		long startTime = System.currentTimeMillis();
 		try {
 			while (!callable.call() && System.currentTimeMillis() < startTime + CommonConstants.testTimeOutMs)

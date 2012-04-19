@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.user.internal;
 
 import java.util.Arrays;
@@ -62,7 +66,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 						Iterables.list(groupsReader.users(groupId0, groupCryptoKey0)));
 				return null;
 			}
-		}, ICallback.Utils.<Void>noCallback()).get();
+		}, ICallback.Utils.<Void> noCallback()).get();
 		MailerMock mailer = getMailer();
 		String subject = "subject " + email0 + ", someNewGroup";
 		String message = "email " + email0 + ", someNewGroup";
@@ -185,7 +189,6 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			}
 		}).get();
 
-		
 		localContainer.access(IGroupOperations.class, new ICallback<IGroupOperations>() {
 			@Override
 			public void process(IGroupOperations groupOperations) throws Exception {
@@ -200,7 +203,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 			@SuppressWarnings("unchecked")
 			@Override
 			public void process(IGroupsReader groupsReader, IUserReader userReader, IUserMembershipReader userMembershipReader) throws Exception {
-				
+
 				checkUserExistsAndIsMember(userReader, userMembershipReader, softwareFmId0, userKey0, email0, GroupConstants.adminStatus);
 				assertEquals(Collections.emptyList(), userMembershipReader.walkGroupsFor(softwareFmId1, userKey1));
 
@@ -261,7 +264,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 	protected IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
 		return new IExtraReaderWriterConfigurator<LocalConfig>() {
 			@Override
-			public void builder(IContainerBuilder builder,LocalConfig apiConfig) {
+			public void builder(IContainerBuilder builder, LocalConfig apiConfig) {
 				builder.register(IGroupOperations.class, IGroupOperations.Utils.clientGroupOperations(builder, CommonConstants.testTimeOutMs));
 			}
 		};

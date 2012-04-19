@@ -15,7 +15,6 @@ import org.softwareFm.crowdsource.utilities.constants.LoginMessages;
 
 public class ChangePasswordProcessor extends AbstractCallProcessor {
 
-
 	private final IUserCryptoAccess userCryptoAccess;
 
 	public ChangePasswordProcessor(IUserCryptoAccess userCryptoAccess) {

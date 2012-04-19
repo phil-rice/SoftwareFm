@@ -52,13 +52,11 @@ public class DisplayConstants {
 			rssFeedType, "http://www.theregister.co.uk/cloud/headlines.atom",//
 			rssFeedType, "http://www.theregister.co.uk/science/headlines.atom",//
 			rssFeedType, "http://feeds.geekzone.co.nz/GeekzoneBlogUsers" };//
-	public static final  String browsing = "Browsing {0} {1}";
+	public static final String browsing = "Browsing {0} {1}";
 	public static final String buttonCancelTitle = "button.cancel.title";
 	public static final String buttonOkTitle = "button.ok.title";
 	public static final String illegalMenuId = "Illegal Menu Id [{0}]. Legal values are {1}";
 	public static final String buttonCancelImage = "general.cancel";
 	public static final String buttonOkImage = "general.ok";
-	
-	
 
 }

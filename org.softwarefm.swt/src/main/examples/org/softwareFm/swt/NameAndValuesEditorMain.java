@@ -32,28 +32,28 @@ public class NameAndValuesEditorMain {
 						INamesAndValuesEditor.Utils.text(cardConfig, "confirmPassword"),//
 						INamesAndValuesEditor.Utils.styledText(cardConfig, "address"),//
 						INamesAndValuesEditor.Utils.styledText(cardConfig, "comment")), new ICardEditorCallback() {
-	
+
 					@Override
 					public void ok(ICardData cardData) {
 						System.out.println("Ok: " + cardData.data());
-	
+
 					}
-	
+
 					@Override
 					public void cancel(ICardData cardData) {
 						System.out.println("Cancel: " + cardData.data());
-	
+
 					}
-	
+
 					@Override
 					public boolean canOk(Map<String, Object> data) {
 						return true;
 					}
-	
+
 				});
 				return editor.getComposite();
 			}
 		});
 	}
-	
+
 }

@@ -63,5 +63,4 @@ public class Title implements IHasControl {
 		return title;
 	}
 
-
 }

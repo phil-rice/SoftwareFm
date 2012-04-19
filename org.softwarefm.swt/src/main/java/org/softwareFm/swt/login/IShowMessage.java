@@ -4,7 +4,6 @@
 
 package org.softwareFm.swt.login;
 
-
 public interface IShowMessage {
 
 	void showMessage(String cardType, String title, String message);

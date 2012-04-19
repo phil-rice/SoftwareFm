@@ -56,7 +56,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 
 	public void testOkButtonNotEnabledIfTextNotChanged() {
 		TE textEditor = makeHolder(stringValue);
-		Control okButton =textEditor.getOkCancel().okButton();
+		Control okButton = textEditor.getOkCancel().okButton();
 		assertFalse(okButton.isEnabled());
 
 		textEditor.setValue("someothervalue");
@@ -81,7 +81,7 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 
 	public void testUpdatesWhenOKPressed() {
 		TE textEditor = makeHolder(stringValue);
-		Control okButton =  textEditor.getOkCancel().okButton();
+		Control okButton = textEditor.getOkCancel().okButton();
 		textEditor.setValue("some other value");
 		checkCardDataStoreNotUpdated();
 		okButton.setEnabled(true);
@@ -91,20 +91,20 @@ public abstract class AbstractValueEditorDetailAdderTest<T extends IDetailAdder,
 
 	public void testDisposesWhenOkPressed() {
 		TE textEditor = makeHolder(stringValue);
-		Control okButton =  textEditor.getOkCancel().okButton();
+		Control okButton = textEditor.getOkCancel().okButton();
 		checkPressCausesDispose(textEditor, okButton);
 	}
 
 	public void testDisposesWhenCancelPressed() {
 		TE textEditor = makeHolder(stringValue);
-		Control cancelButton =  textEditor.getOkCancel().cancelButton();
+		Control cancelButton = textEditor.getOkCancel().cancelButton();
 		checkPressCausesDispose(textEditor, cancelButton);
 	}
 
 	public void testDoesntUpdateWhenCancelPressed() {
 		TE textEditor = makeHolder(stringValue);
 		textEditor.setValue("some other value");
-		Control cancelButton =  textEditor.getOkCancel().cancelButton();
+		Control cancelButton = textEditor.getOkCancel().cancelButton();
 		checkPressCausesDispose(textEditor, cancelButton);
 		checkCardDataStoreNotUpdated();
 	}

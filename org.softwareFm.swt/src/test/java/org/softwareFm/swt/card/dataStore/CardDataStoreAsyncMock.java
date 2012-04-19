@@ -80,7 +80,7 @@ public class CardDataStoreAsyncMock implements IMutableCardDataStore {
 	@Override
 	public void delete(String url, IAfterEditCallback callback) {
 		throw new UnsupportedOperationException();
-		
+
 	}
 
 	@Override

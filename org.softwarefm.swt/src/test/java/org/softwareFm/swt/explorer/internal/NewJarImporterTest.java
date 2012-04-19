@@ -57,7 +57,7 @@ public class NewJarImporterTest extends SwtTest {
 		assertEquals("<artifact>/someGroupId/someArtifactId/someVersion", afterOk.getOnlyResult());
 	}
 
-	public void testProcessImport()  {
+	public void testProcessImport() {
 		MemoryCallback<String> afterOk = ICallback.Utils.memory();
 		String randomUuid = UUID.randomUUID().toString();
 		Object actual = newJarImporter.processImport(randomUuid, afterOk).get(CommonConstants.testTimeOutMs);
@@ -71,7 +71,7 @@ public class NewJarImporterTest extends SwtTest {
 				"POST_DATA:<version>/someGroupId/someArtifactId/someVersion/digest:{sling:resourceType=collection}\n" + //
 				"POST_DATA:<digest>/someGroupId/someArtifactId/someVersion/someDigest:{digest=someDigest, found=foundFromTest, sling:resourceType=jar}\n" + //
 				"MAKE_REPO:<jarName>/someJarStem:{}\n" + //
-				"POST_DATA:<jarName>/someJarStem:{sling:resourceType=collection}\n" +//
+				"POST_DATA:<jarName>/someJarStem:{sling:resourceType=collection}\n" + //
 				"POST_DATA:<jarName>/someJarStem/" + randomUuid + ":{artifactId=someArtifactId, group=someGroupId, sling:resourceType=jarname}\n"//
 		, actual);
 
@@ -96,6 +96,7 @@ public class NewJarImporterTest extends SwtTest {
 						CardConstants.digestUrlKey, urlKeyWithDigest("digest")));
 		newJarImporter = new NewJarImporter(new ChainImporterMock(), cardConfig, "foundFromTest", "someDigest", "someGroupId", "someArtifactId", "someVersion", "someJarStem");
 	}
+
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();

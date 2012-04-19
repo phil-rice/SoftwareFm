@@ -85,11 +85,11 @@ public class NameAndValuesEditor implements INamesAndValuesEditor {
 		public boolean forceFocus() {
 			Control[] editors = getEditor().getChildren();
 			for (int i = 0; i < editors.length; i += 2) {
-				Control editor = editors[i+1];
+				Control editor = editors[i + 1];
 				IEditableControlStrategy<Control> editableControlStrategy = (IEditableControlStrategy<Control>) keyAndEditStrategy.get(i / 2).editableControlStrategy;
 				if (editor.isEnabled())
 					if (editableControlStrategy.forceFocus(editor))
-							return true;
+						return true;
 			}
 			return false;
 		}

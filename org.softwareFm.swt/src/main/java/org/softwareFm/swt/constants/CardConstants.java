@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 
-
 public class CardConstants {
 	public static final String softwareFmPrefix = "/softwareFm";
 	public static final String dataPrefix = "data";
@@ -102,13 +101,13 @@ public class CardConstants {
 	public static final String forgotPasswordCardType = "forgotpassword";
 	public static final String loginTitle = "login.title.text";
 	public static final String forgotPasswordTitle = "forgotPassword.title.text";
-	public static final String forgotPasswordMessage ="forgotPassword.message.text";
+	public static final String forgotPasswordMessage = "forgotPassword.message.text";
 	public static final String signupTitle = "signup.title.text";
 
 	public static final String signUpButtonTitle = "signup.button.text";
 	public static final String loginButtonTitle = "login.button.text";
 	public static final String forgotPasswordButtonTitle = "forgotPassword.button.text";
-	
+
 	public static final String contactingServerTitle = "login.contactingServer.title";
 	public static final String contactingServerText = "login.contactingServer.text";
 
@@ -132,7 +131,7 @@ public class CardConstants {
 
 	public static final String failedToSignupTitle = "signup.failedtosignup.title";
 	public static final String failedToSignupText = "signup.failedtosignup.text";
-	
+
 	public static final String changePasswordCardType = "changepassword";
 	public static final String changedPasswordTitle = "changepassword.changedpassword.title";
 	public static final String changedPasswordText = "changepassword.changedpassword.text";

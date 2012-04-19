@@ -31,11 +31,11 @@ public class ForgotPassword implements IForgotPassword {
 
 	public ForgotPassword(Composite parent, final CardConfig cardConfig, final String sessionSalt, String initialEmail, final ILoginStrategy loginStrategy, final ILoginDisplayStrategy loginDisplayStrategy, final IForgotPasswordCallback forgotPasswordCallback) {
 		IResourceGetter resourceGetter = Functions.call(cardConfig.resourceGetterFn, cardType);
-		String title = IResourceGetter.Utils.getOrException(resourceGetter,  CardConstants.forgotPasswordTitle);
+		String title = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.forgotPasswordTitle);
 		String message = IResourceGetter.Utils.getOrException(resourceGetter, CardConstants.forgotPasswordMessage);
 		content = INamesAndValuesEditor.Utils.editor(parent, cardConfig, cardType, title, "", Maps.stringObjectLinkedMap(LoginConstants.emailKey, initialEmail, "message", message), Arrays.asList(//
 				INamesAndValuesEditor.Utils.text(cardConfig, LoginConstants.emailKey),//
-				INamesAndValuesEditor.Utils.message( cardConfig, "message")//
+				INamesAndValuesEditor.Utils.message(cardConfig, "message")//
 				),//
 				new ICardEditorCallback() {
 					@Override

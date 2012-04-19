@@ -6,7 +6,6 @@ package org.softwareFm.crowdsource.server.callProcessor.internal;
 
 import org.softwareFm.crowdsource.api.server.AbstractProcessorDatabaseIntegrationTests;
 
-
 public class EmailSaltRequestIntegrationTest extends AbstractProcessorDatabaseIntegrationTests {
 
 	public void testWithNoError() throws Exception {
@@ -14,9 +13,9 @@ public class EmailSaltRequestIntegrationTest extends AbstractProcessorDatabaseIn
 
 		String salt1 = makeSalt();
 		signup(email, salt1, "someMoniker", "hash", "someNewSoftwareFmId0");
-		
+
 		String sessionSalt = makeSalt();
-		String emailSalt = requestEmailSalt( sessionSalt, email);
+		String emailSalt = requestEmailSalt(sessionSalt, email);
 		assertEquals(salt1, emailSalt);
 	}
 }

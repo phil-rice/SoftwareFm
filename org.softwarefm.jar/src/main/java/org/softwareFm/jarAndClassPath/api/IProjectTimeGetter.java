@@ -25,8 +25,9 @@ public interface IProjectTimeGetter {
 
 		public static IProjectTimeGetter mockJanFebMar(final int day) {
 			return mock(day, "january_12", "febuary_12", "march_12");
-			
+
 		}
+
 		public static IProjectTimeGetter mock(final int day, final String... months) {
 			return new IProjectTimeGetter() {
 

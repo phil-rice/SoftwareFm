@@ -47,10 +47,10 @@ public class Strings {
 		return buf.toString();
 	}
 
-	
-	public static String idString(Object object){
+	public static String idString(Object object) {
 		return Integer.toHexString(object.hashCode() % 0xFFFF);
 	}
+
 	/**
 	 * Return the passed in byte array as a hex string.
 	 * 
@@ -576,7 +576,7 @@ public class Strings {
 	}
 
 	public static String firstNCharacters(String raw, int i) {
-		if (i<0)
+		if (i < 0)
 			throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.cannotGetFirstNCharacters, i));
 		return raw == null ? null : raw.substring(0, Math.min(i, raw.length()));
 	}

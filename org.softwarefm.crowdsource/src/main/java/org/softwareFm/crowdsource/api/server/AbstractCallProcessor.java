@@ -38,7 +38,7 @@ public abstract class AbstractCallProcessor implements ICallProcessor {
 	protected void checkForParameter(Map<String, Object> parameters, String... keys) {
 		for (String key : keys)
 			if (!parameters.containsKey(key))
-				throw new IllegalArgumentException(key + ", " + Maps.sortByKey(parameters, Comparators.<String>naturalOrder()));
+				throw new IllegalArgumentException(key + ", " + Maps.sortByKey(parameters, Comparators.<String> naturalOrder()));
 	}
 
 }

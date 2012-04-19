@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.navigation;
 
 import java.util.List;
@@ -17,13 +21,13 @@ public class RepoNavigationMock implements IRepoNavigation {
 	private final Map<String, Map<String, Object>> data;
 
 	public RepoNavigationMock(Object... data) {
-		Map<String,Map<String,Object>> rawMap = Maps.makeMap(data);
-		this.data = Maps.mapTheMap(rawMap, new IFunction1<String,String>() {
+		Map<String, Map<String, Object>> rawMap = Maps.makeMap(data);
+		this.data = Maps.mapTheMap(rawMap, new IFunction1<String, String>() {
 			@Override
 			public String apply(String from) throws Exception {
-				return Urls.compose(from);//gets rid of any pre and post slashes
+				return Urls.compose(from);// gets rid of any pre and post slashes
 			}
-		}, Functions.<Map<String,Object>, Map<String,Object>>identity());
+		}, Functions.<Map<String, Object>, Map<String, Object>> identity());
 	}
 
 	@SuppressWarnings({ "unused" })

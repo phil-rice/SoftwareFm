@@ -10,8 +10,8 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.swt.configuration.CardConfig;
 
 public class TextInBorderWithClick extends TextInCompositeWithCardMargin {
-	
-	//TODO this makes the wrong sort of class to be in here, but it is easy to discover. Clean this us
+
+	// TODO this makes the wrong sort of class to be in here, but it is easy to discover. Clean this us
 	public static IFunction1<Composite, TextInBorder> makeTextFromString(final int textStyle, final CardConfig cardConfig, final String cardType, final String titleText, final String bodyText, final Runnable whenClicked) {
 		return new IFunction1<Composite, TextInBorder>() {
 			@Override

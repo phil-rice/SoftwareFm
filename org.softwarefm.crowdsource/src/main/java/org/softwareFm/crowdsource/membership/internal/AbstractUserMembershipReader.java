@@ -47,7 +47,7 @@ public abstract class AbstractUserMembershipReader implements IUserMembershipRea
 	}
 
 	protected String getMembershipCrypto(String softwareFmId, String userCrypto) {
-		String usersMembershipCrypto =IUserReader.Utils.getUserProperty(container, softwareFmId, userCrypto,  GroupConstants.membershipCryptoKey);
+		String usersMembershipCrypto = IUserReader.Utils.getUserProperty(container, softwareFmId, userCrypto, GroupConstants.membershipCryptoKey);
 		return usersMembershipCrypto;
 	}
 

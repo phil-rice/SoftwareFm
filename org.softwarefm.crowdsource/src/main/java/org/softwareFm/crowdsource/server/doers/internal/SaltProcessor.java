@@ -10,16 +10,16 @@ import java.util.UUID;
 import org.softwareFm.crowdsource.api.server.ISaltProcessor;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
 
-public class SaltProcessor implements ISaltProcessor{
+public class SaltProcessor implements ISaltProcessor {
 
 	private final Set<String> legal = Sets.newSet();
+
 	@Override
 	public String makeSalt() {
 		String salt = UUID.randomUUID().toString();
 		legal.add(salt);
 		return salt;
 	}
-
 
 	@Override
 	public boolean invalidateSalt(String salt) {

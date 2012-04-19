@@ -36,7 +36,7 @@ import org.softwareFm.crowdsource.server.doers.internal.PostProcessor;
 import org.softwareFm.crowdsource.utilities.arrays.ArrayHelper;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 
-public interface ICallProcessor extends IServerDoer{
+public interface ICallProcessor extends IServerDoer {
 	IProcessResult process(RequestLine requestLine, Map<String, Object> parameters);
 
 	abstract public static class Utils {
@@ -69,12 +69,11 @@ public interface ICallProcessor extends IServerDoer{
 			return "<" + requestLine + ", " + parameters + ">";
 		}
 
-
 		public static ICallProcessor softwareFmProcessCall(IUserAndGroupsContainer container, IServerDoers serverDoers, ServerConfig serverConfig) {
 			IUserCryptoAccess userCryptoAccess = serverConfig.userCryptoAccess;
 			IIdAndSaltGenerator idAndSaltGenerator = serverConfig.idAndSaltGenerator;
 			ICallProcessor[] rawProcessCalls = new ICallProcessor[] {//
-					new MakeRootProcessor(serverConfig.aboveRepostoryUrlCache, container), //
+			new MakeRootProcessor(serverConfig.aboveRepostoryUrlCache, container), //
 
 					new LoginProcessor(serverDoers.getSaltProcessor(), serverDoers.getLoginChecker()), //
 					new SignupProcessor(serverDoers.getSignUpChecker(), serverDoers.getSaltProcessor(), idAndSaltGenerator), //
@@ -98,7 +97,7 @@ public interface ICallProcessor extends IServerDoer{
 			return chain(processCalls);
 		}
 
-		public static IUser makeUser(IGitOperations gitOperations, Map<String, Callable<Object>>nameAndCallables, String prefix) {
+		public static IUser makeUser(IGitOperations gitOperations, Map<String, Callable<Object>> nameAndCallables, String prefix) {
 			IUser user = ICrowdSourcedServer.Utils.makeUserForServer(gitOperations, Strings.firstNSegments(3), nameAndCallables, prefix);
 			return user;
 		}

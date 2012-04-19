@@ -50,6 +50,7 @@ public class CommentsTest extends ApiAndSwtTest {
 		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Collections.<Map<String, Object>> emptyList());
 		replayMocks();
 		comments.showCommentsFor(UserData.blank(), "artefact", "someUrl");
+		dispatchUntilJobsFinished();
 		Table table = comments.getTable();
 		assertEquals(0, table.getItemCount());
 		checkTitleAndTableColumnNames(table, "No comments");
@@ -61,6 +62,7 @@ public class CommentsTest extends ApiAndSwtTest {
 		EasyMock.expect(commentsReader.myComments("someUrl", "someSfmId", "someCrypto", CommentConstants.mySource)).andReturn(Collections.<Map<String, Object>> emptyList());
 		replayMocks();
 		comments.showCommentsFor(loggedInUserData, "artefact", "someUrl");
+		dispatchUntilJobsFinished();
 		Table table = comments.getTable();
 		assertEquals(0, table.getItemCount());
 		checkTitleAndTableColumnNames(table, "No comments");
@@ -71,6 +73,7 @@ public class CommentsTest extends ApiAndSwtTest {
 		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Arrays.asList(comment1, comment2, comment3));
 		replayMocks();
 		comments.showCommentsFor(UserData.blank(), "artefact", "someUrl");
+		dispatchUntilJobsFinished();
 		Table table = comments.getTable();
 		assertEquals(3, table.getItemCount());
 		checkTitleAndTableColumnNames(table, "Comments");
@@ -86,6 +89,7 @@ public class CommentsTest extends ApiAndSwtTest {
 		EasyMock.expect(commentsReader.myComments("someUrl", "someSfmId", "someCrypto", CommentConstants.mySource)).andReturn(Arrays.asList(comment3));
 		replayMocks();
 		comments.showCommentsFor(loggedInUserData, "artefact", "someUrl");
+		dispatchUntilJobsFinished();
 		Table table = comments.getTable();
 		assertEquals(3, table.getItemCount());
 		checkTitleAndTableColumnNames(table, "Comments");
@@ -99,6 +103,7 @@ public class CommentsTest extends ApiAndSwtTest {
 		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Arrays.asList(comment1, comment2, comment3));
 		replayMocks();
 		comments.showCommentsFor(UserData.blank(), "artefact", "someUrl");
+		dispatchUntilJobsFinished();
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
 		assertFalse(composite.getFooter().addCommentButton.isEnabled());
 	}
@@ -111,6 +116,7 @@ public class CommentsTest extends ApiAndSwtTest {
 
 		replayMocks();
 		comments.showCommentsFor(loggedInUserData, "artefact", "someUrl");
+		dispatchUntilJobsFinished();
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
 		assertTrue(composite.getFooter().addCommentButton.isEnabled());
 	}
@@ -123,6 +129,7 @@ public class CommentsTest extends ApiAndSwtTest {
 		addComment.run();
 		replayMocks();
 		comments.showCommentsFor(loggedInUserData, "artefact", "someUrl");
+		dispatchUntilJobsFinished();
 
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
 		composite.getFooter().addCommentButton.notifyListeners(SWT.MouseUp, new Event());
@@ -138,6 +145,7 @@ public class CommentsTest extends ApiAndSwtTest {
 		replayMocks();
 
 		comments.showCommentsFor(loggedInUserData, "artefact", "someUrl");
+		dispatchUntilJobsFinished();
 		Table table = comments.getTable();
 		table.select(1);
 		table.notifyListeners(SWT.Selection, new Event());
@@ -149,6 +157,7 @@ public class CommentsTest extends ApiAndSwtTest {
 		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Arrays.asList(comment1S2T3, comment1S3T2, comment1));
 		replayMocks();
 		comments.showCommentsFor(UserData.blank(), "artefact", "someUrl");
+		dispatchUntilJobsFinished();
 		Table table = comments.getTable();
 		assertEquals(3, table.getItemCount());
 		checkTitleAndTableColumnNames(table, "Comments");
@@ -162,6 +171,8 @@ public class CommentsTest extends ApiAndSwtTest {
 		EasyMock.expect(commentsReader.globalComments("someUrl", CommentConstants.globalSource)).andReturn(Arrays.asList(comment1S1T2, comment1S1T3, comment1));
 		replayMocks();
 		comments.showCommentsFor(UserData.blank(), "artefact", "someUrl");
+		dispatchUntilJobsFinished();
+		dispatchUntilJobsFinished();
 		Table table = comments.getTable();
 		assertEquals(3, table.getItemCount());
 		checkTitleAndTableColumnNames(table, "Comments");
@@ -169,9 +180,8 @@ public class CommentsTest extends ApiAndSwtTest {
 		Swts.checkTable(table, 1, 1, "creator1", "source1", "text1");
 		Swts.checkTable(table, 2, 2, "creator1", "source1", "text1");
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
-		assertEquals(Arrays.asList(comment1S1T3, comment1S1T2, comment1), composite.allComments);
+		assertEquals(Arrays.asList(comment1S1T3, comment1S1T2, comment1), composite.allComments.get());
 	}
-
 
 	protected void checkTitleAndTableColumnNames(Table table, String expectedTitle) {
 		CommentsComposite composite = (CommentsComposite) comments.getControl();
@@ -194,6 +204,7 @@ public class CommentsTest extends ApiAndSwtTest {
 			}
 		};
 	}
+
 	@Override
 	protected void setUp() throws Exception {
 		commentsReader = EasyMock.createMock(ICommentsReader.class);

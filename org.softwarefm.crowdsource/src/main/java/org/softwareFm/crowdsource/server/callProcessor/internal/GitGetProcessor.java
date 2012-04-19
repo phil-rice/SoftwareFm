@@ -65,7 +65,7 @@ public class GitGetProcessor implements ICallProcessor {
 			}
 		}).get();
 		return result;
-		
+
 	}
 
 }

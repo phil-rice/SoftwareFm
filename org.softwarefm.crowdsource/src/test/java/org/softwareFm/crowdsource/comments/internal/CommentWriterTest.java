@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.comments.internal;
 
 import java.util.Arrays;
@@ -78,12 +82,12 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 				}, expectedText);
 				return null;
 			}
-		},  ICallback.Utils.<Void>noCallback()).get();
+		}, ICallback.Utils.<Void> noCallback()).get();
 	}
 
 	protected void checkAddMyComment(final String text, final String... expectedText) {
-		 final IUserAndGroupsContainer container = getLocalUserAndGroupsContainer();
-		 container.access(ICommentsReader.class, IUserReader.class, new ICallback2<ICommentsReader, IUserReader>() {
+		final IUserAndGroupsContainer container = getLocalUserAndGroupsContainer();
+		container.access(ICommentsReader.class, IUserReader.class, new ICallback2<ICommentsReader, IUserReader>() {
 			@Override
 			public void process(final ICommentsReader commentsReader, final IUserReader userReader) throws Exception {
 				checkAdd("someSource", text, new Callable<ICommentDefn>() {
@@ -131,6 +135,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 				List<Map<String, Object>> globalComments = Callables.call(actualGetter);
 				List<Map<String, Object>> expected = Lists.map(Arrays.asList(expectedText), new IFunction1<String, Map<String, Object>>() {
 					private long time = 0;
+
 					@Override
 					public Map<String, Object> apply(String from) throws Exception {
 						return comment(source, from, time += 1000);
@@ -138,7 +143,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 				});
 				assertEquals(expected, globalComments);
 			}
-		});
+		}).get();
 
 	}
 
@@ -150,7 +155,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 	protected Callable<Long> getTimeGetter() {
 		return Callables.valueFromList(1000L, 2000L, 3000L, 4000L);
 	}
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

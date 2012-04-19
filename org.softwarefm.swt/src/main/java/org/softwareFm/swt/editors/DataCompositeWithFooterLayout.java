@@ -45,12 +45,12 @@ public class DataCompositeWithFooterLayout extends Layout {
 		int footerWidth = footerControl.getSize().x;
 		int footerHeight = footerControl.getSize().y;
 		footerControl.setBounds(//
-				cb_ca.x + cb_ca.width - footerWidth ,//
+				cb_ca.x + cb_ca.width - footerWidth,//
 				cb_ca.y + cb_ca.height - footerHeight,//
 				footerWidth, footerHeight);
 
 		Control editor = c.getEditor();
-		int editorHeight = c.useAllHeight() ? cb_ca.height - 2 * cc.editorIndentY - footerHeight: editor.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
+		int editorHeight = c.useAllHeight() ? cb_ca.height - 2 * cc.editorIndentY - footerHeight : editor.computeSize(SWT.DEFAULT, SWT.DEFAULT).y;
 
 		editor.setBounds(cb_ca.x + 1 + cc.editorIndentX,//
 				cb_ca.y + cc.editorIndentY, //

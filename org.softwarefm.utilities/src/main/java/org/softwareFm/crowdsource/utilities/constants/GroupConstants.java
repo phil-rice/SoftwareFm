@@ -10,7 +10,7 @@ public class GroupConstants {
 	public static final long usageReportPeriod = 6 * 60 * 60 * 1000;// hrs
 	public static final String myGroupsCardType = "myGroups";
 
-	public static final String objectSoftwareFmId= "objectSoftwareFmId"; //used when admin is doing things to other people
+	public static final String objectSoftwareFmId = "objectSoftwareFmId"; // used when admin is doing things to other people
 	public static final String groupIdKey = "groupId";
 	public static final String groupCryptoKey = "groupCrypto";
 	public static final String groupNameKey = "groupName";

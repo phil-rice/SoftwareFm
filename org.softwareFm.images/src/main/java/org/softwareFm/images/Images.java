@@ -18,7 +18,6 @@ public class Images {
 
 	private static List<Image> images = Lists.newList();
 
-
 	public static Image makeImageOrNull(Device device, Class<?> clazz, String classPath) {
 		try {
 			ClassPathResource resource = new ClassPathResource(classPath, clazz);

@@ -25,7 +25,6 @@ public class MyDetailsTest extends AbstractMyGroupsIntegrationTest {
 	private final String email = "someEmail";
 	private CardConfig cardConfig;
 
-
 	public void testMyDetails() {
 		assertNotNull(IUserReader.Utils.getUserProperty(getServerApi().makeUserAndGroupsContainer(), softwareFmId0, userKey0, JarAndPathConstants.projectCryptoKey));
 		UserData userData = new UserData(email, softwareFmId0, userKey0);
@@ -33,7 +32,7 @@ public class MyDetailsTest extends AbstractMyGroupsIntegrationTest {
 		MyDetails myDetails = new MyDetails(shell, localReadWriter, cardConfig, userData);
 		checkProjectDetails(myDetails);
 	}
-	
+
 	@Override
 	protected IExtraReaderWriterConfigurator<LocalConfig> getLocalExtraReaderWriterConfigurator() {
 		return new IExtraReaderWriterConfigurator<LocalConfig>() {
@@ -42,7 +41,7 @@ public class MyDetailsTest extends AbstractMyGroupsIntegrationTest {
 				builder.register(IProjectTimeGetter.class, new ProjectTimeGetterFixture());
 				builder.register(IUsageReader.class, getProjectTimeGetterFixture(builder));
 			}
-		}; 
+		};
 	}
 
 	@SuppressWarnings("unchecked")

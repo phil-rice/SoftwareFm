@@ -31,7 +31,6 @@ public class CommentsIntegrationTest extends AbstractExplorerIntegrationTest {
 		});
 	}
 
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

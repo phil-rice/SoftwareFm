@@ -53,7 +53,7 @@ public class MySoftwareFmIntegrationTest extends ApiAndSwtTest implements IInteg
 	private final String email = "a.b@c.com";
 	private final String password = "pass1";
 	private final String moniker = "moniker";
-	
+
 	private CardConfig cardConfig;
 	private File userFile;
 	private IUserDataManager userDataManager;
@@ -194,13 +194,14 @@ public class MySoftwareFmIntegrationTest extends ApiAndSwtTest implements IInteg
 		return (IOkCancelForTests) displayUntilValueComposite("Email", "Password").getFooter();
 	}
 
-	private String resetPassword(final String magicString)  {
+	private String resetPassword(final String magicString) {
 		final MemoryResponseCallback memoryCallback = IResponseCallback.Utils.memoryCallback();
-		getLocalApi().makeContainer().access(IHttpClient.class, new ICallback<IHttpClient>(){
+		getLocalApi().makeContainer().access(IHttpClient.class, new ICallback<IHttpClient>() {
 			@Override
 			public void process(IHttpClient client) throws Exception {
 				client.get(Urls.compose(LoginConstants.passwordResetLinkPrefix, magicString)).execute(memoryCallback).get(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
-			}}).get();
+			}
+		}).get();
 		String html = memoryCallback.response.asString();
 		int start = html.indexOf(": ") + 2;
 		int end = html.indexOf("</html");

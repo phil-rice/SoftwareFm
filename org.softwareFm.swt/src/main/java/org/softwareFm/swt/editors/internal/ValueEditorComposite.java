@@ -17,7 +17,7 @@ import org.softwareFm.swt.details.IDetailsFactoryCallback;
 import org.softwareFm.swt.editors.DataWithOkCancelComposite;
 import org.softwareFm.swt.title.TitleSpec;
 
-abstract public class ValueEditorComposite<T extends Control> extends DataWithOkCancelComposite<T>{
+abstract public class ValueEditorComposite<T extends Control> extends DataWithOkCancelComposite<T> {
 
 	private final T editorControl;
 	protected final String originalValue;

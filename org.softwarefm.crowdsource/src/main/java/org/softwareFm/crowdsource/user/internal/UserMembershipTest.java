@@ -62,7 +62,7 @@ public class UserMembershipTest extends ApiTest {
 				assertEquals(expected, membershipForLocal.walkGroupsFor(user1Id, userKey0));
 				return null;
 			}
-		}, ICallback.Utils.<Void>noCallback()).get();
+		}, ICallback.Utils.<Void> noCallback()).get();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -129,7 +129,7 @@ public class UserMembershipTest extends ApiTest {
 				assertNotNull(user.getUserProperty(user1Id, userKey0, GroupConstants.membershipCryptoKey));
 				return null;
 			}
-		}, ICallback.Utils.<Void>noCallback()).get();
+		}, ICallback.Utils.<Void> noCallback()).get();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -149,7 +149,7 @@ public class UserMembershipTest extends ApiTest {
 
 						membershipForServer.setMembershipProperty(user1Id, userKey0, groupId1, "someProperty", "value2");
 						assertEquals("value2", membershipForServer.getMembershipProperty(user1Id, userKey0, groupId1, "someProperty"));
-//						assertEquals("value1", membershipForLocal.getMembershipProperty(user1Id, userKey0, groupId1, "someProperty"));// oftens intermittantly fails
+						// assertEquals("value1", membershipForLocal.getMembershipProperty(user1Id, userKey0, groupId1, "someProperty"));// oftens intermittantly fails
 
 						gitReader.clearCaches();
 						assertEquals("value2", membershipForServer.getMembershipProperty(user1Id, userKey0, groupId1, "someProperty"));

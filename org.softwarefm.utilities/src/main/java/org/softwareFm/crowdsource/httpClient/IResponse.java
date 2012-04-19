@@ -6,8 +6,6 @@ package org.softwareFm.crowdsource.httpClient;
 
 import org.softwareFm.crowdsource.httpClient.internal.Response;
 
-
-
 public interface IResponse {
 
 	String url();

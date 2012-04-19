@@ -73,7 +73,7 @@ public class IExplorerTest extends ApiAndSwtTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		service = IServiceExecutor.Utils.defaultExecutor(getClass().getSimpleName()+"-{0}",2);
+		service = IServiceExecutor.Utils.defaultExecutor(getClass().getSimpleName() + "-{0}", 2);
 	}
 
 	@Override

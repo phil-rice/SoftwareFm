@@ -4,7 +4,7 @@
 
 package org.softwareFm.crowdsource.api.server;
 
-public interface IForgottonPasswordMailer extends IServerDoer{
+public interface IForgottonPasswordMailer extends IServerDoer {
 
 	/** returns magic string. Throws exception if errors */
 	String process(String email);

@@ -16,7 +16,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
 import org.softwareFm.crowdsource.httpClient.IHttpClient;
 import org.softwareFm.crowdsource.httpClient.IRequestBuilder;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
@@ -25,8 +24,6 @@ import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 
 public abstract class AbstractRequestBuilder implements IRequestBuilder {
-
-	protected final static Logger logger = Logger.getLogger(IHttpClient.class);
 
 	public final HttpHost host;
 	public final HttpClient client;
@@ -80,10 +77,10 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 				HttpRequestBase base = getRequestBase(protocolHostAndUrl);
 				for (NameValuePair pair : Lists.nullSafe(defaultHeaders))
 					base.addHeader(pair.getName(), pair.getValue());
-				String message = base.getClass().getSimpleName() + " " + url + " " + parameters;
+				String message = base.getClass().getSimpleName() + "/" + host + "/" + url + " " + parameters;
 				from.beginTask(message, 2);
 				try {
-					logger.debug(message);
+					IHttpClient.logger.debug(message);
 					HttpResponse httpResponse = client.execute(base);
 					HttpEntity entity = httpResponse.getEntity();
 					String mimeType = findMimeType(entity);
@@ -93,7 +90,7 @@ public abstract class AbstractRequestBuilder implements IRequestBuilder {
 							url,//
 							entity == null ? "" : EntityUtils.toString(entity),//
 							mimeType);
-					logger.debug("end of " + message + "\n" + response);
+					IHttpClient.logger.debug("end of " + message + "\n" + response);
 					callback.process(response);
 					return null;
 				} finally {

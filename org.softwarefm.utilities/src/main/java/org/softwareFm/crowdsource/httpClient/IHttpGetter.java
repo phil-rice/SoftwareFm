@@ -12,5 +12,4 @@ public interface IHttpGetter {
 
 	Future<Response> getFromUrl(String type, String url, IHttpGetterCallback callback);
 
-
 }

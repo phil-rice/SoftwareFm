@@ -14,14 +14,14 @@ public class RequestEmailSaltProcessorTest extends AbstractProcessCallTest<Reque
 
 	private final String uri = "/" + CommonConstants.emailSaltPrefix;
 
-	public void testIgnoresNonePrefix(){
+	public void testIgnoresNonePrefix() {
 		checkIgnoresNonePosts();
 		checkIgnores(CommonConstants.GET, uri);
 	}
 
 	public void testEmail() {
 		RequestLineMock requestLine = new RequestLineMock(CommonConstants.POST, uri);
-		IProcessResult result = processor.process(requestLine,  Maps.stringObjectMap(LoginConstants.emailKey, "someEmail"));
+		IProcessResult result = processor.process(requestLine, Maps.stringObjectMap(LoginConstants.emailKey, "someEmail"));
 		checkStringResult(result, "theSalt");
 	}
 

@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.swt;
 
 import java.util.concurrent.Callable;
@@ -64,7 +68,7 @@ public class ISwtSoftwareFmFactoryTest extends ApiAndSwtTest {
 									System.out.println("Started nested in swt");
 									assertEquals(reader1.get(), from);
 									System.out.println("Nested in swt assertion 1");
-//									assertEquals(thread1.get(), Thread.currentThread());
+									// assertEquals(thread1.get(), Thread.currentThread());
 									System.out.println("Nested in swt assertion 2");
 									inLatch2.countDown();
 									System.out.println("Nested in swt waiting for latch 2");
@@ -100,11 +104,11 @@ public class ISwtSoftwareFmFactoryTest extends ApiAndSwtTest {
 					swtLatch1.countDown();
 					inLatch2.await();
 					System.out.println("latch2");
-//					assertFalse(bigTransaction.isDone());// at this point in the standard function launched from the swt thread
+					// assertFalse(bigTransaction.isDone());// at this point in the standard function launched from the swt thread
 					latch2.countDown();
 					System.out.println("counted down latch 2");
 					inSwtLatch2.await();
-//					assertFalse(bigTransaction.isDone());// at this point in the standard function launched from the swt thread
+					// assertFalse(bigTransaction.isDone());// at this point in the standard function launched from the swt thread
 					System.out.println("swtLatch2");
 					swtLatch2.countDown();
 					assertEquals("from4", bigTransaction.get());
@@ -115,7 +119,7 @@ public class ISwtSoftwareFmFactoryTest extends ApiAndSwtTest {
 				} finally {
 					finished.countDown();
 				}
-			};
+			}
 		}.start();
 		dispatchUntil(new Callable<Boolean>() {
 

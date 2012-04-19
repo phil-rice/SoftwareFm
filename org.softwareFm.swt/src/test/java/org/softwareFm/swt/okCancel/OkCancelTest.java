@@ -36,10 +36,10 @@ public class OkCancelTest extends SwtTest {
 		checkCounts(0, 1);
 	}
 
-//	public void testLabels() {
-//		assertEquals("OK-Title", okCancel.okButton.getText());
-//		assertEquals("Cancel-Title", okCancel.cancelButton.getText());
-//	}
+	// public void testLabels() {
+	// assertEquals("OK-Title", okCancel.okButton.getText());
+	// assertEquals("Cancel-Title", okCancel.cancelButton.getText());
+	// }
 
 	public void testOKButtonIsDisabledWhenSelected() {
 		assertTrue(okCancel.okButton.getEnabled());
@@ -101,7 +101,6 @@ public class OkCancelTest extends SwtTest {
 		okCancel = new OkCancel(shell, resourceGetter, imageFn, ok, cancel);
 	}
 
-	
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();

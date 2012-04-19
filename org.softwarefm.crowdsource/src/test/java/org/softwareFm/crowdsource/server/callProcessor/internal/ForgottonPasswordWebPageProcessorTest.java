@@ -24,12 +24,13 @@ public class ForgottonPasswordWebPageProcessorTest extends AbstractProcessCallTe
 		checkIgnores(CommonConstants.GET, uri);
 	}
 
-	public void testSendsEmailToMailer(){
+	public void testSendsEmailToMailer() {
 		RequestLineMock requestLine = new RequestLineMock(CommonConstants.POST, uri);
 		Map<String, Object> data = Maps.stringObjectMap(LoginConstants.emailKey, "someEmail", LoginConstants.sessionSaltKey, "");
 		IProcessResult result = processor.process(requestLine, data);
 		checkStringResult(result, "");
 	}
+
 	@Override
 	protected ForgottonPasswordProcessor makeProcessor() {
 		saltProcessor = new SaltProcessorMock();

@@ -57,7 +57,7 @@ public class ChangePassword implements IChangePassword {
 								String newHash = Crypto.digest(salt, newPassword);
 								loginStrategy.changePassword(email, oldHash, newHash, callback);
 							}
-							
+
 							@Override
 							public void problemGettingSalt(String message) {
 								callback.failedToChangePassword(email, message);

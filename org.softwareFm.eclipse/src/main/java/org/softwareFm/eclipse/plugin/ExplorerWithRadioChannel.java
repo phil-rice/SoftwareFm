@@ -56,13 +56,14 @@ import org.softwareFm.swt.swt.Swts.Grid;
 import org.softwareFm.swt.timeline.IPlayListGetter;
 
 public class ExplorerWithRadioChannel {
-	private static boolean local = true;
+	private static boolean local = false;
 
 	public static void main(String[] args) {
 		BasicConfigurator.configure();
 		Logger.getRootLogger().setLevel(Level.ERROR);
 		// Logger.getLogger(IGitLocal.class).setLevel(Level.DEBUG);
 		Logger.getLogger(IHttpClient.class).setLevel(Level.DEBUG);
+		Logger.getLogger(ICardDataStore.class).setLevel(Level.DEBUG);
 
 		final IServiceExecutor serviceExecutor = IServiceExecutor.Utils.defaultExecutor("Explorer-{0}", 10);
 		final AtomicReference<ICrowdSourcedApi> forShutdown = new AtomicReference<ICrowdSourcedApi>();
@@ -78,7 +79,7 @@ public class ExplorerWithRadioChannel {
 					final IMasterDetailSocial masterDetailSocial = IMasterDetailSocial.Utils.masterDetailSocial(explorerAndButton);
 					explorerAndButton.setLayout(new GridLayout());
 					buttonPanel.setLayout(Swts.Row.getHorizonalNoMarginRowLayout());
-					ITransactionManager transactionManager = ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(from.getDisplay(), CommonConstants.localThreadPoolSizeForTests, CommonConstants.clientTimeOut);
+					ITransactionManager transactionManager = ISwtSoftwareFmFactory.Utils.getSwtTransactionManager(from.getDisplay(), CommonConstants.threadPoolSizeForTests, CommonConstants.clientTimeOut);
 					ICrowdSourcedApi api = local ? ISoftwareFmApiFactory.Utils.makeClientApiForLocalHost(CommonConstants.clientTimeOut, transactionManager) : ISoftwareFmApiFactory.Utils.makeClientApiForSoftwareFmServer(CommonConstants.clientTimeOut, transactionManager);
 					final IUserAndGroupsContainer container = api.makeUserAndGroupsContainer();
 					forShutdown.set(api);

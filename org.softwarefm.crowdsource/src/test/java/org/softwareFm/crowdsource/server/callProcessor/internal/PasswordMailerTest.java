@@ -22,6 +22,4 @@ public class PasswordMailerTest extends AbstractLoginSignupForgotCheckerTest {
 		checkCannotSendEMailPassword("email3@a");
 	}
 
-	
-	
 }

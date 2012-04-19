@@ -17,18 +17,18 @@ import org.softwareFm.swt.constants.CardConstants;
 public interface IMutableCardDataStore extends ICardDataStore {
 
 	void refresh(String url);
-	
+
 	void clearCache(String url);
 
 	ITransaction<?> put(String url, Map<String, Object> map, IAfterEditCallback callback);
 
-	void delete(String url,IAfterEditCallback callback);
+	void delete(String url, IAfterEditCallback callback);
 
 	ITransaction<?> makeRepo(String url, IAfterEditCallback callback);
 
 	public static class Utils {
-		
-		public static IMutableCardDataStore mock(Object... urlsAndMaps){
+
+		public static IMutableCardDataStore mock(Object... urlsAndMaps) {
 			return new CardDataStoreAsyncMock(urlsAndMaps);
 		}
 

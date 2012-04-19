@@ -25,5 +25,4 @@ public class UnrecognisedJarData {
 		return "UnrecognisedJarData [projectName=" + projectName + ", jarFile=" + jarFile + "]";
 	}
 
-
 }

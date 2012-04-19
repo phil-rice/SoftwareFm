@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.api.server;
 
 import java.util.Arrays;
@@ -86,19 +90,21 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		api.makeUserAndGroupsContainer().accessUser(new ICallback<IUser>(){
+		api.makeUserAndGroupsContainer().accessUser(new ICallback<IUser>() {
 			@Override
 			public void process(IUser user) throws Exception {
 				user.setUserProperty(softwareFmId, userCrypto, GroupConstants.membershipCryptoKey, groupCrypto);
 				user.setUserProperty(softwareFmId, userCrypto, CommentConstants.commentCryptoKey, userCommentCrypto);
 				user.setUserProperty(softwareFmId, userCrypto, LoginConstants.monikerKey, monikor);
-			}}).get();
-		api.makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>(){
+			}
+		}).get();
+		api.makeUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@Override
 			public void process(IGroups groups, IUserMembership userMembership) throws Exception {
 				groups.setGroupProperty(groupId, groupCrypto, CommentConstants.commentCryptoKey, groupCommentCrypto);
 				userMembership.addMembership(softwareFmId, userCrypto, groupId, groupCrypto, "someStatus");
-			}}).get();
+			}
+		}).get();
 
 		remoteOperations.init("a");
 		remoteOperations.put(IFileDescription.Utils.plain("a/b"), v11);
@@ -107,8 +113,8 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 	@Override
 	protected CommentProcessor makeProcessor() {
 		ServerConfig serverConfig = ServerConfig.serverConfigForTests(remoteRoot, IMailer.Utils.noMailer());
-		api = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard(CommonConstants.serverThreadPoolSizeForTests));
-		comments = new CommentsForServer(api.makeUserAndGroupsContainer(),Callables.valueFromList(1000l, 2000l, 3000l));
+		api = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard(CommonConstants.threadPoolSizeForTests, CommonConstants.testTimeOutMs));
+		comments = new CommentsForServer(api.makeUserAndGroupsContainer(), Callables.valueFromList(1000l, 2000l, 3000l));
 		return new CommentProcessor(api.makeUserAndGroupsContainer(), IUserCryptoAccess.Utils.mock(softwareFmId, userCrypto));
 	}
 }

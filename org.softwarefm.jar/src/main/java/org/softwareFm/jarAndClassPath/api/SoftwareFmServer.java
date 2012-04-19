@@ -4,6 +4,7 @@
 
 package org.softwareFm.jarAndClassPath.api;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.ICrowdSourcedServer;
@@ -16,10 +17,11 @@ public class SoftwareFmServer {
 
 	public static void main(String[] args) {
 		DOMConfigurator.configure(System.getProperty("user.home") + "/log4j.xml");
+		ICrowdSourcedServer.logger.setLevel(Level.DEBUG);
 		int port = ICrowdSourcedServer.Utils.port(args);
 
-		ServerConfig serverConfig = Utils.getServerConfig(port, CommonConstants.clientTimeOut);
-		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard(serverConfig.workerThreads));
+		ServerConfig serverConfig = Utils.getServerConfig(port, CommonConstants.clientTimeOut).withExtraProcessCalls(ISoftwareFmApiFactory.Utils.getExtraProcessCalls());
+		ICrowdSourcedApi api = ICrowdSourcedApi.Utils.forServer(serverConfig, ITransactionManager.Utils.standard(serverConfig.workerThreads, CommonConstants.serverTimeOut));
 		api.getServer();
 	}
 

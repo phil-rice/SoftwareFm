@@ -26,35 +26,35 @@ import org.softwareFm.swt.swt.Swts.Size;
 
 public class CardHolderMain {
 	public static void main(String[] args) {
-			Show.display(CardHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-				@Override
-				public Composite apply(final Composite from) throws Exception {
-					final CardConfig cardConfig = CardDataStoreFixture.asyncCardConfig(from.getDisplay());
-					IContainer container = null;
-					Assert.fail("need to set up container");
-					final ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, container, Arrays.asList(CardDataStoreFixture.url), ICallback.Utils.<String> noCallback());
-					final ITransaction<ICard> future = ICardFactory.Utils.makeCard(cardHolder, cardConfig, CardDataStoreFixture.url1a, new ICallback<ICard>() {
-						@Override
-						public void process(ICard card) throws Exception {
-							if (card == null)
-								return;
-							cardHolder.setCard(card);
+		Show.display(CardHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+			@Override
+			public Composite apply(final Composite from) throws Exception {
+				final CardConfig cardConfig = CardDataStoreFixture.asyncCardConfig(from.getDisplay());
+				IContainer container = null;
+				Assert.fail("need to set up container");
+				final ICardHolder cardHolder = ICardHolder.Utils.cardHolderWithLayout(from, cardConfig, container, Arrays.asList(CardDataStoreFixture.url), ICallback.Utils.<String> noCallback());
+				final ITransaction<ICard> future = ICardFactory.Utils.makeCard(cardHolder, cardConfig, CardDataStoreFixture.url1a, new ICallback<ICard>() {
+					@Override
+					public void process(ICard card) throws Exception {
+						if (card == null)
+							return;
+						cardHolder.setCard(card);
+					}
+				});
+				new Thread() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {
+							throw WrappedException.wrap(e);
 						}
-					});
-					new Thread() {
-						@Override
-						public void run() {
-							try {
-								Thread.sleep(2000);
-							} catch (InterruptedException e) {
-								throw WrappedException.wrap(e);
-							}
-							((GatedMockFuture<?, ?>) future).kick();
-						}
-					}.start();
-					Size.resizeMeToParentsSize(cardHolder.getControl());
-					return cardHolder.getComposite();
-				}
-			});
-		}
+						((GatedMockFuture<?, ?>) future).kick();
+					}
+				}.start();
+				Size.resizeMeToParentsSize(cardHolder.getControl());
+				return cardHolder.getComposite();
+			}
+		});
+	}
 }

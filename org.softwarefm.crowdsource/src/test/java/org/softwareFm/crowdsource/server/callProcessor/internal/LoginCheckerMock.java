@@ -34,6 +34,6 @@ public class LoginCheckerMock implements ILoginChecker {
 
 	public void setResultToNull() {
 		this.map = null;
-		
+
 	}
 }

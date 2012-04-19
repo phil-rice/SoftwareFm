@@ -17,7 +17,7 @@ import org.softwareFm.swt.title.TitleSpec;
 
 public class CardShapedHolderMain {
 	public static void main(String[] args) {
-	
+
 		Swts.Show.display(CardShapedHolder.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(final Composite from) throws Exception {
@@ -26,11 +26,11 @@ public class CardShapedHolderMain {
 				cardShapedHolder.setTitleSpec(TitleSpec.noTitleSpec(getColor(from, SWT.COLOR_CYAN), getColor(from, SWT.COLOR_GREEN)));
 				return cardShapedHolder.getComposite();
 			}
-	
+
 			private Color getColor(final Composite from, int color) {
 				return from.getDisplay().getSystemColor(color);
 			}
 		});
 	}
-	
+
 }

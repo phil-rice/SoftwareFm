@@ -52,16 +52,16 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 				return text.contains("SoftwareFM has not seen");
 			}
 		});
-		
+
 		IDataCompositeWithFooter<Table, IOkCancel> detailContent = (IDataCompositeWithFooter<Table, IOkCancel>) masterDetailSocial.getDetailContent();
 
-		Table table = detailContent.getEditor(); 
+		Table table = detailContent.getEditor();
 		checkAndSet(table, 0, "Group Id", "Please specify the group id", "some.group");
 		checkAndSet(table, 1, "Artifact Id", "ant", "someArtifact");
 		checkAndSet(table, 2, "Version", "1.2.3", "someVersion");
 		clickOk(detailContent);
 		dispatchUntilJobsFinished();
-//		dispatchUntilHasImportingMessage(); it would be nice to test for this...but its rather difficult!
+		// dispatchUntilHasImportingMessage(); it would be nice to test for this...but its rather difficult!
 		dispatchUntilHasCardInHolder();
 		ICardHolder cardHolder = explorer.getCardHolder();
 		ICard card = cardHolder.getCard();
@@ -79,12 +79,12 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 	public void testRtJar() {
 		explorer.displayUnrecognisedJar(rtFile, "012345", "someProject");
 		Control originalMessage = masterDetailSocial.getMasterContent();
-		StyledText originalText = Swts.<StyledText>getDescendant(originalMessage, 1, 0, 0);
+		StyledText originalText = Swts.<StyledText> getDescendant(originalMessage, 1, 0, 0);
 		assertTrue(originalText.getText().contains("This is a version of the Java runtime that"));
 		originalText.notifyListeners(SWT.MouseUp, new Event());
 		Control importingMessage = masterDetailSocial.getMasterContent();
 		// possible race condition here...the card may arrive before we have tested that the import text occured. I think that because we are not dispatching this won't take place
-		StyledText importingText = Swts.<StyledText>getDescendant(importingMessage, 1, 0, 0);
+		StyledText importingText = Swts.<StyledText> getDescendant(importingMessage, 1, 0, 0);
 		assertTrue(importingText.getText().startsWith("Importing"));
 		dispatchUntil(new Callable<Boolean>() {
 			@Override
@@ -101,27 +101,9 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		checkRepositoryPopulated("012345", "sun.jdk", "runtime", "1.2.3");
 	}
 
-	private void clickOk(IDataCompositeWithFooter<Table, IOkCancel>  detailContent) {
-		final Control okButton = detailContent.getFooter().okButton(); 
+	private void clickOk(IDataCompositeWithFooter<Table, IOkCancel> detailContent) {
+		final Control okButton = detailContent.getFooter().okButton();
 		Swts.Buttons.press(okButton);
-	}
-
-	private void dispatchUntilHasImportingMessage() {
-		dispatchUntil(new Callable<Boolean>() {
-			@Override
-			public Boolean call() throws Exception {
-				// this is race condition territory. We may get a importing message (normally takes a while to import), then the card will appear
-				Control masterContent = masterDetailSocial.getMasterContent();
-				try {
-					Swts.layoutDump(masterContent);
-					StyledText text = Swts.<StyledText>getDescendant(masterContent, 1, 0, 0);
-					System.out.println("text: " + text.getText());
-					return text.getText().startsWith("Importing");
-				} catch (Exception e) {
-					return false;
-				}
-			}
-		});
 	}
 
 	private void dispatchUntilHasCardInHolder() {
@@ -149,7 +131,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 	private String findSearchText() {
 		Control searchingMessage = masterDetailSocial.getMasterContent();
 		// Swts.layoutDump(searchingMessage);
-		StyledText importingText = Swts.<StyledText>getDescendant(searchingMessage, 1, 1);
+		StyledText importingText = Swts.<StyledText> getDescendant(searchingMessage, 1, 1);
 		String text = importingText.getText();
 		// System.out.println(text);
 		return text;
@@ -158,7 +140,7 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 	private void checkNonRtNoticeAppearsAndClickPanel() {
 		explorer.displayUnrecognisedJar(antFile, "012345", "someProject");
 		Control originalMessage = masterDetailSocial.getMasterContent();
-		StyledText originalText = Swts.<StyledText>getDescendant(originalMessage, 1, 0, 0);
+		StyledText originalText = Swts.<StyledText> getDescendant(originalMessage, 1, 0, 0);
 		System.out.println(originalText.getText());
 		assertTrue(originalText.getText(), originalText.getText().contains("Click this panel to add it to SoftwareFm"));
 		assertTrue(originalText.getText(), !originalText.getText().contains("This is a version of the Java runtime that"));
@@ -188,12 +170,13 @@ public class ExplorerUnrecognisedJarIntegrationTest extends AbstractExplorerInte
 		IUrlGenerator jarUrlGenerator = cardConfig.urlGeneratorMap.get(urlKey);
 		final String url = jarUrlGenerator.findUrlFor(urlMap);
 		final Map<String, Object> expectedJarData = Maps.stringObjectMap(expectedNamesAndValues);
-		getLocalApi().makeContainer().access(IGitLocal.class, new ICallback<IGitLocal>(){
+		getLocalApi().makeContainer().access(IGitLocal.class, new ICallback<IGitLocal>() {
 			@Override
 			public void process(IGitLocal gitLocal) throws Exception {
 				assertEquals(expectedJarData, gitLocal.getFile(IFileDescription.Utils.plain(url)));
 				assertEquals(expectedJarData, Json.parseFile(new File(localRoot, Urls.compose(url, CommonConstants.dataFileName))));
-			}});
+			}
+		});
 	}
 
 	private void checkRuntimeJarPopulated() {

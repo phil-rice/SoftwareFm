@@ -4,14 +4,17 @@
 
 package org.softwareFm.crowdsource.api.server;
 
-
-public interface ITakeOnProcessor extends IServerDoer{
+public interface ITakeOnProcessor extends IServerDoer {
 
 	/** returns the new group id */
 	String createGroup(String groupName, String groupCrypto);
-	
-	/** Adds the user to the group, and updates the group with the users data. 
-	 * @param status TODO*/
-	void addExistingUserToGroup(String groupId, String groupCryptoKey, String softwareFmId, String email,  String status);
+
+	/**
+	 * Adds the user to the group, and updates the group with the users data.
+	 * 
+	 * @param status
+	 *            TODO
+	 */
+	void addExistingUserToGroup(String groupId, String groupCryptoKey, String softwareFmId, String email, String status);
 
 }

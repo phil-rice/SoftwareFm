@@ -4,11 +4,8 @@
 
 package org.softwareFm.crowdsource.api.user;
 
-
-
 public interface IUser extends IUserReader {
 
-	<T>void setUserProperty(String userId, String cryptoKey, String property, T value);
-
+	<T> void setUserProperty(String userId, String cryptoKey, String property, T value);
 
 }

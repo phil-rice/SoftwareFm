@@ -30,7 +30,7 @@ public class ProjectTimeGetter implements IProjectTimeGetter {
 
 	protected String monthForCalendar(Calendar calendar) {
 		int month = calendar.get(Calendar.MONTH);
-		int year = calendar.get(Calendar.YEAR)%100;
+		int year = calendar.get(Calendar.YEAR) % 100;
 		return MessageFormat.format("{0}_{1}", month2String[month], year);
 	}
 
@@ -46,7 +46,7 @@ public class ProjectTimeGetter implements IProjectTimeGetter {
 		Calendar calendar = makeCalendar();
 		Calendar copy = (Calendar) calendar.clone();
 		List<String> result = Lists.newList();
-		for (int i = 0; i<n; i++){
+		for (int i = 0; i < n; i++) {
 			result.add(monthForCalendar(copy));
 			copy.add(Calendar.MONTH, -1);
 		}

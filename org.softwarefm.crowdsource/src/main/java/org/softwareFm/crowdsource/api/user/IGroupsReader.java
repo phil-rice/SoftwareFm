@@ -24,7 +24,6 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
  */
 public interface IGroupsReader {
 
-
 	<T> T getGroupProperty(String groupId, String groupCryptoKey, String propertyName);
 
 	/** Iterates through the users one at a time. The map is of the form {softwareFmId -> "someSoftwareFmId", email -> "someEmail", "moniker"->"someMoniker", status -> "admin/member/invited/requesting"}. Email or monikor are optional */
@@ -35,8 +34,9 @@ public interface IGroupsReader {
 
 	Map<String, Object> getUsageReport(String groupId, String groupCryptoKey, String month);
 
-	int membershipCount(String groupId,String groupCryptoKey);
-	public static class  Utils {
+	int membershipCount(String groupId, String groupCryptoKey);
+
+	public static class Utils {
 
 		public static String getGroupProperty(IUserAndGroupsContainer container, final String groupId, final String groupCrypto, final String propertyName) {
 			return container.accessGroupReader(new IFunction1<IGroupsReader, String>() {
@@ -44,8 +44,8 @@ public interface IGroupsReader {
 				public String apply(IGroupsReader from) throws Exception {
 					return from.getGroupProperty(groupId, groupCrypto, propertyName);
 				}
-			}, ICallback.Utils.<String>noCallback()).get();
+			}, ICallback.Utils.<String> noCallback()).get();
 		}
-		
+
 	}
 }

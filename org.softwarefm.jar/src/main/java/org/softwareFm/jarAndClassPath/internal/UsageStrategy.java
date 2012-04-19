@@ -57,7 +57,7 @@ public class UsageStrategy implements IUsageStrategy {
 			@Override
 			public void process(IResponse response) throws Exception {
 				callback.process(response);
-				
+
 			}
 		});
 

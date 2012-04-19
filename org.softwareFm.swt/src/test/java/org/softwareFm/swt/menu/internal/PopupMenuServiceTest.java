@@ -100,7 +100,7 @@ public class PopupMenuServiceTest extends SwtTest {
 		menu = new Menu(shell);
 		event = new Event();
 	}
-	
+
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();

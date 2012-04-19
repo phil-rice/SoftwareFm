@@ -45,7 +45,7 @@ public class Signup implements ISignUp {
 						String password = getPassword(data);
 						String passwordHash = Crypto.digest(salt, password);
 						final String email = getEmail(cardData.data());
-						String moniker  = getMoniker(cardData.data());
+						String moniker = getMoniker(cardData.data());
 						strategy.signup(email, moniker, salt, passwordHash, callback);
 					}
 

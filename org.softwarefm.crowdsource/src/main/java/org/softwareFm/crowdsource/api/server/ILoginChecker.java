@@ -6,9 +6,9 @@ package org.softwareFm.crowdsource.api.server;
 
 import java.util.Map;
 
-public interface ILoginChecker extends IServerDoer{
+public interface ILoginChecker extends IServerDoer {
 
 	/** returns null if failed, crypto and softwareFmId if succeeded */
-	Map<String,String> login(String email, String passwordHash);
+	Map<String, String> login(String email, String passwordHash);
 
 }

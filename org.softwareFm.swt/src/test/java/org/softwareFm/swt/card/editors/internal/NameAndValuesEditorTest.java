@@ -26,12 +26,10 @@ public class NameAndValuesEditorTest extends AbstractNameAndValuesEditorTest<Nam
 	private int changeValueIndex;
 
 	public void testInitialValuesWhenDisplayed() {
-	Swts.	checkLabelsMatch(editorComposite, "One", "Two", "Three");
-	Swts.	checkTextMatches(editorComposite, "1", "2", "");
+		Swts.checkLabelsMatch(editorComposite, "One", "Two", "Three");
+		Swts.checkTextMatches(editorComposite, "1", "2", "");
 		assertFalse(okCancel.isOkEnabled());
 	}
-
-
 
 	public void testEditorUpdatesOKEnabledAndCardData() {
 		checkChangeValue(0, "newOne", false);

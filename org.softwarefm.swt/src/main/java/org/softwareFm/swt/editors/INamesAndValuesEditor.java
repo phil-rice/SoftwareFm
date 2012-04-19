@@ -34,12 +34,13 @@ public interface INamesAndValuesEditor extends IValueEditor, ICardData {
 		public static KeyAndEditStrategy readOnlyText(CardConfig cardConfig, String key) {
 			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.text(SWT.READ_ONLY));
 		}
+
 		public static KeyAndEditStrategy text(CardConfig cardConfig, String key) {
 			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.text(SWT.NULL));
 		}
 
 		public static KeyAndEditStrategy styledText(CardConfig cardConfig, String key) {
-			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.styledText(SWT.WRAP|SWT.V_SCROLL));
+			return new KeyAndEditStrategy(key, IEditableControlStrategy.Utils.styledText(SWT.WRAP | SWT.V_SCROLL));
 		}
 
 		public static KeyAndEditStrategy message(CardConfig cardConfig, String key) {

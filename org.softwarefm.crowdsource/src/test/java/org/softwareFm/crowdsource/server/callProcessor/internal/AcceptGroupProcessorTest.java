@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.server.callProcessor.internal;
 
 import java.util.Arrays;
@@ -40,11 +44,11 @@ public class AcceptGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 				assertEquals(Arrays.asList(Maps.stringObjectMap(GroupConstants.groupIdKey, groupId, GroupConstants.groupCryptoKey, groupCryptoKey0, GroupConstants.membershipStatusKey, GroupConstants.memberStatus)), membership.walkGroupsFor(softwareFmId, userKey0));
 				return null;
 			}
-		}, ICallback.Utils.<Void>noCallback()).get();
+		}, ICallback.Utils.<Void> noCallback()).get();
 	}
 
 	private void createSoftwareFmUserAndGroupId0() {
-		softwareFmId= createUser();
+		softwareFmId = createUser();
 		userAndGroupsContainer.accessGroups(new ICallback<IGroups>() {
 			@Override
 			public void process(IGroups groups) throws Exception {
@@ -83,7 +87,8 @@ public class AcceptGroupProcessorTest extends AbstractProcessorDatabaseIntegrati
 			requestBuilder.addParam(key, value);
 	}
 
-	public void testThrowsExceptionIfNotAMemberOfGroup() throws Exception {createSoftwareFmUserAndGroupId0();
+	public void testThrowsExceptionIfNotAMemberOfGroup() throws Exception {
+		createSoftwareFmUserAndGroupId0();
 		getHttpClient().post(GroupConstants.acceptInvitePrefix).//
 				addParam(GroupConstants.groupIdKey, groupId).//
 				addParam(LoginConstants.softwareFmIdKey, softwareFmId).//

@@ -1,3 +1,7 @@
+/* SoftwareFm is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.*/
+/* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
+/* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
+
 package org.softwareFm.crowdsource.api;
 
 import java.io.File;
@@ -35,7 +39,7 @@ public interface ICrowdSourcedApi {
 			});
 		}
 
-		public static ICrowdSourcedApi forServer(ServerConfig serverConfig, ITransactionManager transactionManager,  IFunction1<IUserAndGroupsContainer, IServerDoers> serverDoersCreator) {
+		public static ICrowdSourcedApi forServer(ServerConfig serverConfig, ITransactionManager transactionManager, IFunction1<IUserAndGroupsContainer, IServerDoers> serverDoersCreator) {
 			return new CrowdSourcedServerApi(serverConfig, transactionManager, serverDoersCreator);
 		}
 
@@ -48,7 +52,7 @@ public interface ICrowdSourcedApi {
 			final IGitOperations gitOperations = IGitOperations.Utils.gitOperations(root);
 			final Container readWriter = new Container(transactionManager, gitOperations) {
 			};
-			configurator.builder(readWriter, new ApiConfig(1, 1, CommonConstants.testTimeOutMs, CommonConstants.staleCachePeriodForTest, root, "junk", null, IExtraReaderWriterConfigurator.Utils.noExtras(), Callables.<Long>exceptionIfCalled()));
+			configurator.builder(readWriter, new ApiConfig(1, 1, CommonConstants.testTimeOutMs, CommonConstants.staleCachePeriodForTest, root, "junk", null, IExtraReaderWriterConfigurator.Utils.noExtras(), Callables.<Long> exceptionIfCalled()));
 			return new AbstractCrowdSourcesApi() {
 
 				@Override

@@ -8,7 +8,6 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
@@ -57,7 +56,6 @@ import org.softwareFm.swt.swt.Swts;
 
 public class MyGroups implements IHasComposite {
 	final static String membershipCountKey = "membershipCount";
-	final static AtomicInteger id = new AtomicInteger();
 
 	public static IShowMyGroups showMyGroups(final IMasterDetailSocial masterDetailSocial, final IUserAndGroupsContainer container, final boolean showDialogs, final CardConfig cardConfig) {
 		return new IShowMyGroups() {
@@ -69,7 +67,6 @@ public class MyGroups implements IHasComposite {
 					@Override
 					public MyGroups apply(Composite from) throws Exception {
 						final MyGroups myGroups = new MyGroups(from, masterDetailSocial, container, showDialogs, cardConfig, userData, new ICallback<String>() {
-							private final int myId = id.incrementAndGet();
 
 							@Override
 							public void process(String groupId) throws Exception {
@@ -251,7 +248,6 @@ public class MyGroups implements IHasComposite {
 		}
 
 		private void populate(final ICallback<IScrollableToId> postPopulate) {
-			final int myId = id.get();
 			container.accessWithCallbackFn(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, List<Map<String, Object>>>() {
 				@Override
 				public List<Map<String, Object>> apply(final IGroupsReader groupsReader, IUserMembershipReader userMembershipReader) throws Exception {

@@ -141,7 +141,7 @@ public class MyPeople implements IHasComposite {
 
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" , "provide composite object for result"})
+	@SuppressWarnings({ "unchecked", "rawtypes", "provide composite object for result" })
 	public void setData(final String groupId, final String artifactId) {
 		final Set<String> softwareFmIds = Sets.newSet();
 		final Map<String, String> softwareFmIdToName = Maps.newMap();

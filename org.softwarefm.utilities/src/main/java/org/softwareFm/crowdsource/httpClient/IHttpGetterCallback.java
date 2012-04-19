@@ -4,7 +4,6 @@
 
 package org.softwareFm.crowdsource.httpClient;
 
-
 public interface IHttpGetterCallback {
 
 	void processGet(String url, IResponse response);

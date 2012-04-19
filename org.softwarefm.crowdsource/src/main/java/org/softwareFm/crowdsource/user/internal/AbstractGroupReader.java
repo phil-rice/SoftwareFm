@@ -50,7 +50,7 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 					throw new IllegalStateException(groupFileDescription.toString());
 				return iterator.next();
 			}
-		}, ICallback.Utils.<Map<String, Object>>noCallback()).get();
+		}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
 	}
 
 	@Override
@@ -61,7 +61,7 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 				IFileDescription groupFileDescription = findReportFileDescription(groupId, groupCryptoKey, month);
 				return git.getFile(groupFileDescription);
 			}
-		}, ICallback.Utils.<Map<String, Object>>noCallback()).get();
+		}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
 	}
 
 	@Override
@@ -97,6 +97,6 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 				List<String> listOfLines = Strings.splitIgnoreBlanks(lines, "\n");
 				return listOfLines.size() - 1;
 			}
-		}, ICallback.Utils.<Integer>noCallback()).get();
+		}, ICallback.Utils.<Integer> noCallback()).get();
 	}
 }

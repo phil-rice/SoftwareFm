@@ -2,7 +2,7 @@
 <feature
       id="SoftwareFmFeatures"
       label="SoftwareFM"
-      version="1.6.15"
+      version="1.6.16"
       provider-name="SoftwareFM">
 
    <description url="http://www.softwareFm.com">
@@ -368,14 +368,7 @@ I HEREBY ACKNOWLEDGE THAT I HAVE READ AND UNDERSTAND THE FOREGOING GENERAL PURPO
    </url>
 
    <plugin
-         id="org.softwarefm.client"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.softwarefm.common"
+         id="org.softwarefm.crowdsource"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -403,7 +396,7 @@ I HEREBY ACKNOWLEDGE THAT I HAVE READ AND UNDERSTAND THE FOREGOING GENERAL PURPO
          unpack="false"/>
 
    <plugin
-         id="org.softwarefm.server"
+         id="org.softwarefm.jar"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -417,14 +410,7 @@ I HEREBY ACKNOWLEDGE THAT I HAVE READ AND UNDERSTAND THE FOREGOING GENERAL PURPO
          unpack="false"/>
 
    <plugin
-         id="org.softwarefm.softwarefmcommon"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="org.softwarefm.softwarefmserver"
+         id="org.softwarefm.utilities"
          download-size="0"
          install-size="0"
          version="0.0.0"

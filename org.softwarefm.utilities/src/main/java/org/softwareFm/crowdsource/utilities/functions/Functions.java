@@ -445,7 +445,7 @@ public class Functions {
 		}
 	}
 
-	public static <T> IFunction1<T, T> identityWithCallback(final ICallback<T>callback) {
+	public static <T> IFunction1<T, T> identityWithCallback(final ICallback<T> callback) {
 		return new IFunction1<T, T>() {
 			@Override
 			public T apply(T from) throws Exception {

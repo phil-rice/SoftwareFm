@@ -19,17 +19,17 @@ public interface IUsage {
 		public static IUsage defaultUsage() {
 			return new Usage(dataSource());
 		}
-		
-		public static IUsage noUsage(){
+
+		public static IUsage noUsage() {
 			return new IUsage() {
 				@Override
 				public void start() {
 				}
-				
+
 				@Override
 				public void shutdown() {
 				}
-				
+
 				@Override
 				public void monitor(String ip, String url, long duration) {
 				}

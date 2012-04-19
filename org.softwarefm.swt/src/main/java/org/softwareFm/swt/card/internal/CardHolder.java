@@ -142,7 +142,7 @@ public class CardHolder implements ICardHolderForTests {
 	public final CardHolderComposite content;
 	private final List<String> rootUrls;
 
-	public CardHolder(Composite parent, CardConfig cardConfig,IContainer container, List<String> rootUrls, ICallback<String> callbackToGotoUrl) {
+	public CardHolder(Composite parent, CardConfig cardConfig, IContainer container, List<String> rootUrls, ICallback<String> callbackToGotoUrl) {
 		this.rootUrls = rootUrls;
 		content = new CardHolderComposite(parent, cardConfig, container, rootUrls, callbackToGotoUrl);
 	}
@@ -196,8 +196,6 @@ public class CardHolder implements ICardHolderForTests {
 	public Composite getComposite() {
 		return content;
 	}
-
-	
 
 	@Override
 	public CardConfig getCardConfig() {

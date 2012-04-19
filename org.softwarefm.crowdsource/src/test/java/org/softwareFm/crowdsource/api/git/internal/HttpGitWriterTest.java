@@ -52,7 +52,6 @@ public class HttpGitWriterTest extends AbstractProcessorDatabaseIntegrationTests
 		assertEquals(v12, Json.parseFile(remoteAbdData));
 	}
 
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
