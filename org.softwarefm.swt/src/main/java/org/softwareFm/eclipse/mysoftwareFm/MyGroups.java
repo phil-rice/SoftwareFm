@@ -244,7 +244,9 @@ public class MyGroups implements IHasComposite {
 				}
 			});
 			sashForm.setWeights(new int[] { 2, 3 });
+
 			populate(postPopulate);
+
 		}
 
 		private void populate(final ICallback<IScrollableToId> postPopulate) {
@@ -273,6 +275,8 @@ public class MyGroups implements IHasComposite {
 			}, new ISwtFunction1<List<Map<String, Object>>, Void>() {
 				@Override
 				public Void apply(List<Map<String, Object>> groupsWithName) throws Exception {
+					if (isDisposed())
+						return null;
 					for (Map<String, Object> map : Lists.sort(groupsWithName, Comparators.mapKey(GroupConstants.groupNameKey))) {
 						if (map.containsKey(CommonConstants.errorKey)) {
 							TableItem item = new TableItem(summaryTable, SWT.NULL);
@@ -289,11 +293,12 @@ public class MyGroups implements IHasComposite {
 							item.setData(data);
 							item.setText(new String[] { groupName, membershipCountString, myStatus });
 							idToCrypto.put(groupId, groupCryptoKey);
-							Swts.packTables(summaryTable, membershipTable);
+							Swts.packColumns(summaryTable, membershipTable);
 						}
 					}
 					sortOutButtonsEnabledStatus();
 					postPopulate.process(MyGroupsComposite.this);
+					layout();
 					return null;
 				}
 
