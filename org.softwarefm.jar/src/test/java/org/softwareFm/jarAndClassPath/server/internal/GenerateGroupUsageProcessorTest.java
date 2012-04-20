@@ -10,6 +10,7 @@ import java.util.Map;
 import org.softwareFm.crowdsource.api.server.ITakeOnProcessor;
 import org.softwareFm.crowdsource.api.user.IGroups;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -61,7 +62,7 @@ public class GenerateGroupUsageProcessorTest extends GroupsTest {
 						"aid4", Maps.stringObjectMap(sfmId2, Arrays.asList(1l)),//
 						"aid5", Maps.stringObjectMap(sfmId2, Arrays.asList(1l)))), month2SecondReport);
 			}
-		}).get();
+		}).get(2* CommonConstants.testTimeOutMs*3);//this test takes a bit longer than most
 	}
 
 	@Override

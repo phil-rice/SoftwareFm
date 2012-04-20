@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 import java.util.concurrent.Future;
 
+import org.softwareFm.crowdsource.constants.NewsConstants;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.future.Futures;
@@ -147,7 +148,7 @@ public class ArtifactPlayListGetter implements IPlayListGetter {
 			}
 
 			private void processNoPlayItems() {
-				processResult(Arrays.asList(new PlayItem(DisplayConstants.browserFeedType, "www.bbc.co.uk/news")));
+				processResult(Arrays.asList(new PlayItem(DisplayConstants.browserFeedType, NewsConstants.pageIfNoNews)));
 			}
 
 			@Override

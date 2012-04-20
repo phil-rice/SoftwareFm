@@ -4,6 +4,7 @@
 
 package org.softwareFm.crowdsource.api.internal;
 
+import org.apache.http.client.HttpClient;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.git.IRepoFinder;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
@@ -15,6 +16,11 @@ public class CrowdSourceLocalReadWriteApiTest extends AbstractCrowdReadWriterApi
 		IFunction1<IRepoFinder, Integer> repoFinderFn = Functions.<IRepoFinder> ensureSameParameters();
 		getApi().makeContainer().access(IRepoFinder.class, repoFinderFn).get();
 		getApi().makeContainer().access(IRepoFinder.class, repoFinderFn).get();
+
+		IFunction1<HttpClient, Integer> httpClientFn = Functions.<HttpClient> ensureSameParameters();
+		getApi().makeContainer().access(HttpClient.class, httpClientFn);
+		getApi().makeContainer().access(HttpClient.class, httpClientFn);
+		
 	}
 
 	@Override

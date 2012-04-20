@@ -7,18 +7,16 @@ package org.softwareFm.swt.browser;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.util.EntityUtils;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwareFm.crowdsource.api.IContainer;
-import org.softwareFm.crowdsource.httpClient.IHttpClient;
-import org.softwareFm.crowdsource.httpClient.IResponse;
-import org.softwareFm.crowdsource.httpClient.internal.IResponseCallback;
-import org.softwareFm.crowdsource.httpClient.internal.MemoryResponseCallback;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
-import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.ISimpleMap;
@@ -40,6 +38,8 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 		this.content = Swts.newComposite(parent, style, "BrowserComposite");
 		stackLayout = new StackLayout();
 		content.setLayout(stackLayout);
+	
+
 	}
 
 	@Override
@@ -47,6 +47,7 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 		final IBrowserPart transformer = transformerMap.get(feedType);
 		if (transformer == null)
 			throw new IllegalArgumentException(MessageFormat.format(DisplayConstants.unrecognisedFeedType, feedType, Lists.sort(transformerMap.keySet())));
+		final String trimmedUrl = url.trim();
 		if (transformer.usesUrl()) {
 			Swts.asyncExec(transformer, new Runnable() {
 				@Override
@@ -63,21 +64,21 @@ public class BrowserComposite implements IBrowserCompositeBuilder, ISimpleMap<St
 			});
 			return ITransaction.Utils.doneTransaction(null);
 		} else
-			return container.accessWithCallbackFn(IHttpClient.class, new IFunction1<IHttpClient, IResponse>() {
+			return container.accessWithCallbackFn(HttpClient.class, new IFunction1<HttpClient, HttpResponse>() {
 				@Override
-				public IResponse apply(IHttpClient client) throws Exception {
-					MemoryResponseCallback memory = IResponseCallback.Utils.memoryCallback();
-					client.get(url.trim()).execute(memory).get(CommonConstants.clientTimeOut, TimeUnit.MILLISECONDS);
-					final IResponse response = memory.response;
+				public HttpResponse apply(HttpClient client) throws Exception {
+					HttpResponse response = client.execute(new HttpGet(trimmedUrl));
 					return response;
+					
 				}
-			}, new ISwtFunction1<IResponse, String>() {
+			}, new ISwtFunction1<HttpResponse, String>() {
 				@Override
-				public String apply(IResponse httpResponse) throws Exception {
-					String result = httpResponse.asString();
-					transformer.displayReply(httpResponse.statusCode(), result);
+				public String apply(HttpResponse response) throws Exception {
+					String string = EntityUtils.toString(response.getEntity());
+					int statusCode = response.getStatusLine().getStatusCode();
+					transformer.displayReply(statusCode, string);
 					makeOnlyVisible(transformer);
-					return result;
+					return string;
 				}
 			});
 	}

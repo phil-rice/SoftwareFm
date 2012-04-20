@@ -4,6 +4,10 @@
 
 package org.softwareFm.crowdsource.api.internal;
 
+import org.apache.http.client.HttpClient;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.IContainer;
@@ -53,8 +57,14 @@ public class CrowdSourcedLocalApi extends AbstractCrowdSourcesApi {
 		MeteredRepoNavigation repoNavigation = new MeteredRepoNavigation(new HttpRepoNavigation(container));
 		CachedRepoNavigation cachedRepoNavigation = new CachedRepoNavigation(repoNavigation, localConfig.staleCacheTimeMs, localConfig.timeGetter);
 
+		DefaultHttpClient rawClient = new DefaultHttpClient();
+		ClientConnectionManager mgr = rawClient.getConnectionManager();
+		HttpClient rawHttpClient = new DefaultHttpClient(new ThreadSafeClientConnManager(mgr.getSchemeRegistry()));
+		
+		
 		container.register(IGitLocal.class, gitLocal);
 		container.register(IHttpClient.class, httpClient);
+		container.register(HttpClient.class, rawHttpClient);
 		container.register(IUserReader.class, userReader);
 		container.register(IGroupsReader.class, new LocalGroupsReader(container, localConfig.groupUrlGenerator));
 		container.register(IUserMembershipReader.class, new UserMembershipReaderForLocal(container, userUrlGenerator));
