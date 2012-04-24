@@ -20,6 +20,7 @@ import org.softwareFm.crowdsource.api.newGit.facard.AlreadyUnderRepoException;
 import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
 import org.softwareFm.crowdsource.api.newGit.facard.NotRepoException;
 import org.softwareFm.crowdsource.api.newGit.facard.NotUnderRepoException;
+import org.softwareFm.crowdsource.api.newGit.facard.RepoRlAndText;
 import org.softwareFm.crowdsource.api.newGit.facard.TryingToLockUnderRepoException;
 import org.softwareFm.crowdsource.constants.GitMessages;
 import org.softwareFm.crowdsource.utilities.collections.Files;
@@ -80,9 +81,11 @@ public class GitFacard implements IGitFacard {
 	}
 
 	@Override
-	public String getFile(String rl) throws NotUnderRepoException {
-		findMustExistRepoRl(rl);
-		return Files.getText(new File(root, rl));
+	public RepoRlAndText getFile(String rl) throws NotUnderRepoException {
+		File repoRl = findMustExistRepoRl(rl);
+		File file = new File(root, rl);
+		String text = file.exists() ? Files.getText(file): "";
+		return new RepoRlAndText(offset(repoRl), text);
 	}
 
 	@Override

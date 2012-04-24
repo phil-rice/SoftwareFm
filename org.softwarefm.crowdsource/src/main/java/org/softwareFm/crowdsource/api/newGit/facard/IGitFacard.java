@@ -16,7 +16,7 @@ public interface IGitFacard {
 
 	void init(String repoRl) throws AlreadyUnderRepoException;
 
-	String getFile(String rl) throws NotUnderRepoException;
+	RepoRlAndText getFile(String rl) throws NotUnderRepoException;
 
 	String putFileReturningRepoRl(String rl, String text) throws NotUnderRepoException;
 

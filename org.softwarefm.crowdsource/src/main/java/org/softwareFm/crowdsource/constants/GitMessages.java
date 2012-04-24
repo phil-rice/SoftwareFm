@@ -9,5 +9,6 @@ public class GitMessages {
 	public static final String cannotRelock = "{0} already locked";
 	public static final String overlappingFileLock = "Overlapping file lock";
 	public static final String init = "Initial commit";
+	public static final String cannotUseRepoAfterCommitOrRollback = "Cannot use after Commit or Rollback. Method {0} Args {1}";
 
 }

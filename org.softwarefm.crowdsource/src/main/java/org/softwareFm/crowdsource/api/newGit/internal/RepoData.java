@@ -67,7 +67,7 @@ public class RepoData implements IRepoData {
 	}
 
 	@Override
-	public String[] read(ISingleSource singleSource) {
+	public List<String> read(ISingleSource singleSource) {
 		return delegate.read(singleSource);
 	}
 

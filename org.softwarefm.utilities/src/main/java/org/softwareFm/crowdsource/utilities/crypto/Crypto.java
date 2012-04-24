@@ -112,4 +112,13 @@ public class Crypto {
 			}
 		};
 	}
+
+	public static IFunction1<String, String> encryptFn(final String key) {
+		return new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				return Crypto.aesEncrypt(key, from);
+			}
+		};
+	}
 }

@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.channels.FileLock;
 
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.softwareFm.crowdsource.api.newGit.facard.RepoRlAndText;
 import org.softwareFm.crowdsource.api.newGit.facard.TryingToLockUnderRepoException;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -14,7 +15,6 @@ public class GitFacardTest extends RepoTest {
 
 	private File abLockFile;
 	private File acLockFile;
-	private File abDataFile;
 	private GitFacard gitFacard;
 	private FileLock abLock;
 	private FileLock acLock;
@@ -38,14 +38,22 @@ public class GitFacardTest extends RepoTest {
 		assertEquals("a", repoRl);
 	}
 
-	public void testGetFilereturnsContentOfFile() {
+	public void testGetFileReturnsContentOfFile() {
 		String text = "some\ntext";
 		gitFacard.init("a");
 		File dataFile = new File(abDir, "data.text");
 		Files.makeDirectoryForFile(dataFile);
 		Files.setText(dataFile, text);
 
-		assertEquals(text, gitFacard.getFile("a/b/data.text"));
+		assertEquals(new RepoRlAndText("a", text), gitFacard.getFile("a/b/data.text"));
+	}
+
+	public void testGetFileReturnsEmptyStringIfNotIn() {
+		gitFacard.init("a");
+		File dataFile = new File(abDir, "data.text");
+		Files.makeDirectoryForFile(dataFile);
+		assertEquals(new RepoRlAndText("a", ""), gitFacard.getFile("a/b/data.text"));
+		assertFalse(dataFile.exists());
 	}
 
 	public void testAddAllAndRollbackRemovesNewFiles() {
@@ -68,8 +76,8 @@ public class GitFacardTest extends RepoTest {
 		FileRepository fileRepository = gitFacard.addAll("a");
 		gitFacard.commit(fileRepository, "some message");
 
-		assertEquals("a/b/c", gitFacard.getFile("a/b/c.txt"));
-		assertEquals("a/b/d", gitFacard.getFile("a/b/d.txt"));
+		assertEquals(new RepoRlAndText("a", "a/b/c"), gitFacard.getFile("a/b/c.txt"));
+		assertEquals(new RepoRlAndText("a", "a/b/d"), gitFacard.getFile("a/b/d.txt"));
 	}
 
 	public void testAddAllAndCommitThenRollbackLeavesFilesAsTheyWereAfterTheFirstCommit() {
@@ -80,8 +88,8 @@ public class GitFacardTest extends RepoTest {
 		FileRepository fileRepository = gitFacard.addAll("a");
 		gitFacard.commit(fileRepository, "some message");
 
-		assertEquals("a/b/c", gitFacard.getFile("a/b/c.txt"));
-		assertEquals("a/b/d", gitFacard.getFile("a/b/d.txt"));
+		assertEquals(new RepoRlAndText("a", "a/b/c"), gitFacard.getFile("a/b/c.txt"));
+		assertEquals(new RepoRlAndText("a", "a/b/d"), gitFacard.getFile("a/b/d.txt"));
 
 		gitFacard.putFileReturningRepoRl("a/b/c.txt", "a/b/c_changed");
 		gitFacard.putFileReturningRepoRl("a/b/d.txt", "a/b/d_changed");
@@ -89,8 +97,8 @@ public class GitFacardTest extends RepoTest {
 		FileRepository fileRepository2 = gitFacard.addAll("a");
 		gitFacard.rollback(fileRepository2);
 
-		assertEquals("a/b/c", gitFacard.getFile("a/b/c.txt"));
-		assertEquals("a/b/d", gitFacard.getFile("a/b/d.txt"));
+		assertEquals(new RepoRlAndText("a", "a/b/c"), gitFacard.getFile("a/b/c.txt"));
+		assertEquals(new RepoRlAndText("a", "a/b/d"), gitFacard.getFile("a/b/d.txt"));
 	}
 
 	public void testLockCreatesAFile() {

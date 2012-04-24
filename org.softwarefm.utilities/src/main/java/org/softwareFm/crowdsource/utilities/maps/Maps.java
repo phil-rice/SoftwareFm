@@ -12,12 +12,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import junit.framework.Assert;
@@ -222,7 +224,9 @@ public class Maps {
 
 	public static <K, V> void addToList(Map<K, List<V>> map, K key, V value) {
 		Maps.addToCollection(map, ArrayList.class, key, value);
-
+	}
+	public static <K, V> void addToSet(Map<K, Set<V>> map, K key, V value) {
+		Maps.addToCollection(map, HashSet.class, key, value);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -553,5 +557,6 @@ public class Maps {
 	public static <K, V> Map<K, V> newSynchronisedMap() {
 		return Collections.synchronizedMap(new HashMap<K, V>());
 	}
+
 
 }

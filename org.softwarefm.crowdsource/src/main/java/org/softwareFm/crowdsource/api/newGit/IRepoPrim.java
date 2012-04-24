@@ -1,5 +1,6 @@
 package org.softwareFm.crowdsource.api.newGit;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,16 +11,13 @@ import java.util.Map;
  * 
  * */
 public interface IRepoPrim {
-	String[] read(ISingleSource singleSource);
+	List<String> read(ISingleSource singleSource);
 
 	void append(ISingleSource source, Map<String, Object> newItem);
 
-	void change(ISingleSource source, int index, Map<String, Object> newLine);
+	void change(ISingleSource source, int index, Map<String, Object> newMap);
 
 	void delete(ISingleSource source, int index);
 
-	void prepare(RepoLocation repoLocation);
-
-	void commit(RepoLocation repoLocation);
 
 }
