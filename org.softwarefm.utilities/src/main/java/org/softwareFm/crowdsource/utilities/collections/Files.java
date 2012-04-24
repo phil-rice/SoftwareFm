@@ -101,6 +101,19 @@ public class Files {
 		}
 	}
 
+	public static void releaseAndClose(FileLock fileLock) {
+		try {
+			try {
+				fileLock.release();
+			} finally {
+				fileLock.channel().close();
+			}
+		} catch (IOException e) {
+			throw WrappedException.wrap(e);
+		}
+
+	}
+
 	public static int downLoadFile(String url, File target) {
 		try {
 			return downLoadFile(new URL(url), target);

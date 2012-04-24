@@ -17,7 +17,13 @@ import org.softwareFm.crowdsource.utilities.transaction.internal.TransactionMana
 public interface ITransactionManager extends IShutdown {
 	public static Logger logger = Logger.getLogger(ITransactionManager.class);
 
-	/** The job is executed (probably in a different thread. The result callback is called with the result. potentialTransactions are added to the list of transactionals if they implements ITransactional. Transactionals are either commited or rollbacked after the result callback has been called. */
+	/**
+	 * The job is executed (probably in a different thread. The result callback is called with the result. potentialTransactions are added to the list of transactionals if they implements ITransactional. Transactionals are either commited or rollbacked after the result callback has been called. <br />
+	 * 
+	 * If the job throws RedoTransactionException, the transaction will be retried. The retry strategy is up to the implementation, but should deal with poisoned jobs. If resultCallback throws RedoTransactionException, it is an exception that will cause the transaction to be rolled back.<br />
+	 * 
+	 * Note that as the creator of the job, you cannot be sure if the job will be executed multiple times, so ensure that it has no side effects. Sideeffects go in the result callback: thats what it is for
+	 */
 	<Intermediate, Result> ITransaction<Result> start(IFunction1<IMonitor, Intermediate> job, IFunction1<Intermediate, Result> resultCallback, Object... potentialTransactionals);
 
 	/** Adds a resource to the transaction: this will be commited or rollbacked when the transaction concludes */

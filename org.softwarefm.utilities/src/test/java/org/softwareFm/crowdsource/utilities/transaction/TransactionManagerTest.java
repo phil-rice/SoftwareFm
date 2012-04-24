@@ -43,6 +43,18 @@ public class TransactionManagerTest extends TestCase {
 		assertEquals(0, registered1Count.get());
 	}
 
+	public void testIfThrowsRedoTransactionExceptionItIsRedone() {
+		fail();
+	}
+
+	public void testDealsWIthPoisonedRedoTransactionExceptionItIsRedone() {
+		fail();
+	}
+
+	public void testRedoTransactionInResultCallbackCausesRollback() {
+		fail();
+	}
+
 	public void testJobsAreExecutedOnADifferentThread() {
 		ConstantFunctionWithMemoryOfFroms<String, String> postFunction = new ConstantFunctionWithMemoryOfFroms<String, String>("value2");
 		ConstantFunctionWithMemoryOfFroms<IMonitor, String> job = Functions.<String> constantWithMemoryOfMonitor("value");

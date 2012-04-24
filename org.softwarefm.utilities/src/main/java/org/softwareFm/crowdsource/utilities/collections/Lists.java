@@ -331,6 +331,10 @@ public class Lists {
 			return Arrays.asList(array);
 	}
 
+	public static <T>List<T> immutable(T...ts) {
+		return Collections.unmodifiableList(Arrays.asList(ts));
+	}
+
 	// final List<String> list = Arrays.asList(order);
 	// return new Comparator<KeyValue>() {
 	//
