@@ -1,8 +1,6 @@
 package org.softwareFm.crowdsource.api.newGit.internal;
 
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
-import org.softwareFm.crowdsource.utilities.functions.Functions;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 
 public class RawSingleSource implements ISingleSource {
 
@@ -48,14 +46,15 @@ public class RawSingleSource implements ISingleSource {
 		return "RawSingleSource [fullRl=" + fullRl + "]";
 	}
 
-	@Override
-	public IFunction1<String, String> decyptLine() {
-		return Functions.identity();
-	}
 
 	@Override
 	public String encrypt(String string) {
 		return string;
+	}
+
+	@Override
+	public String decypt(String raw) {
+		return raw;
 	}
 
 }

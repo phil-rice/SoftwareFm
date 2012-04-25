@@ -6,17 +6,17 @@ import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 
-public class RepoPrimEncryptedTest extends AbstractRepoPrimTest {
+public class RepoDataEncryptedTest extends AbstractRepoDataTest {
 
 	private final String crypto = Crypto.makeKey();
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		abxFile = "a/b/x/data.txt";
-		acxFile = "a/c/x/data.txt";
 		abxSource = new EncryptedSingleSource(abxFile, crypto);
-		acxSouce = new EncryptedSingleSource(acxFile, crypto);
+		abySource = new EncryptedSingleSource(abyFile, crypto);
+		acxSource = new EncryptedSingleSource(acxFile, crypto);
+		acySource = new EncryptedSingleSource(acyFile, crypto);
 	}
 
 	@Override

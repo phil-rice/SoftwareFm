@@ -4,18 +4,17 @@ import java.util.List;
 
 import org.softwareFm.crowdsource.api.newGit.internal.Sources;
 
-public interface ISources extends Iterable<ISingleSource> {
-	String url();
+public interface ISources{
+	String rl();
 
-	List<String> sources();
-
-	String userId();
-
-	String userCrypto();
+	String file();
+	
+	List<ISingleSource> singleSources(IRepoData repoData);
 
 	public static class Utils {
-		public static ISources make(String url, List<String> sources, String userId, String userCrypto){
-			return new Sources(url, sources, userId, userCrypto);
+		public static ISources make(List<ISourceType> sourceTypes, String rl, String file, String userId, String userCrypto, String cryptoKey) {
+			return new Sources(rl, file, sourceTypes, userId, userCrypto, cryptoKey);
 		}
 	}
+
 }

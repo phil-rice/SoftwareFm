@@ -2,18 +2,15 @@ package org.softwareFm.crowdsource.api.newGit.internal;
 
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 
 public class EncryptedSingleSource implements ISingleSource {
 
 	private final String fullRl;
 	private final String crypto;
-	private final IFunction1<String, String> decryptFn;
 
 	public EncryptedSingleSource(String rl, String crypto) {
 		this.fullRl = rl;
 		this.crypto = crypto;
-		this.decryptFn = Crypto.decryptFn(crypto);
 	}
 
 	@Override
@@ -22,8 +19,8 @@ public class EncryptedSingleSource implements ISingleSource {
 	}
 
 	@Override
-	public IFunction1<String, String> decyptLine() {
-		return decryptFn;
+	public String decypt(String raw) {
+		return Crypto.aesDecrypt(crypto, raw);
 	}
 
 	@Override

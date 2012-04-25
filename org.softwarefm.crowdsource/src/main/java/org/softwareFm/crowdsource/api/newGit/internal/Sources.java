@@ -1,10 +1,11 @@
 package org.softwareFm.crowdsource.api.newGit.internal;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
+import org.softwareFm.crowdsource.api.newGit.IRepoData;
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
+import org.softwareFm.crowdsource.api.newGit.ISourceType;
 import org.softwareFm.crowdsource.api.newGit.ISources;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -12,37 +13,41 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 /** All the data needed to access the data about an item or a collection */
 public class Sources implements ISources {
 
-	public final String url;
-	public final List<String> sources;
-	public final String userId;
-	public final String userCrypto;
+	private final String rl;
+	private final List<ISourceType> sourceTypes;
+	private final String userId;
+	private final String userCrypto;
 	private List<ISingleSource> sourcesList;
+	private final String file;
+	private final String cryptoKey;
 
-	public Sources(String url, List<String> sources, String userId, String userCrypto) {
-		this.url = url;
-		this.sources = Collections.unmodifiableList(sources);
+	public Sources(String rl, String file, List<ISourceType> sourceTypes, String userId, String userCrypto, String cryptoKey) {
+		this.rl = rl;
+		this.file = file;
+		this.cryptoKey = cryptoKey;
+		this.sourceTypes = Collections.unmodifiableList(sourceTypes);
 		this.userId = userId;
 		this.userCrypto = userCrypto;
 	}
 
 	@Override
-	public Iterator<ISingleSource> iterator() {
+	public List<ISingleSource> singleSources(final IRepoData repoData) {
 		if (sourcesList == null)
 			synchronized (this) {
 				if (sourcesList == null)
-					sourcesList = Lists.map(sources, new IFunction1<String, ISingleSource>() {
+					sourcesList = Collections.unmodifiableList(Lists.flatMap(sourceTypes, new IFunction1<ISourceType, List<ISingleSource>>() {
 						@Override
-						public ISingleSource apply(String from) throws Exception {
-							return new SingleSource(url, from, userId, userCrypto);
+						public List<ISingleSource> apply(ISourceType from) throws Exception {
+							return from.makeSourcesFor(repoData, rl, file, userId, userCrypto, cryptoKey);
 						}
-					});
+					}));
 			}
-		return sourcesList.iterator();
+		return sourcesList;
 	}
 
 	@Override
 	public String toString() {
-		return "Sources [url=" + url + ", sources=" + sources + ", userId=" + userId + ", userCrypto=" + userCrypto + "]";
+		return "Sources [url=" + rl + ", sources=" + sourceTypes + ", userId=" + userId + ", userCrypto=" + userCrypto + "]";
 	}
 
 	@Override
@@ -50,7 +55,7 @@ public class Sources implements ISources {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((sourcesList == null) ? 0 : sourcesList.hashCode());
-		result = prime * result + ((url == null) ? 0 : url.hashCode());
+		result = prime * result + ((rl == null) ? 0 : rl.hashCode());
 		result = prime * result + ((userCrypto == null) ? 0 : userCrypto.hashCode());
 		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		return result;
@@ -70,10 +75,10 @@ public class Sources implements ISources {
 				return false;
 		} else if (!sourcesList.equals(other.sourcesList))
 			return false;
-		if (url == null) {
-			if (other.url != null)
+		if (rl == null) {
+			if (other.rl != null)
 				return false;
-		} else if (!url.equals(other.url))
+		} else if (!rl.equals(other.rl))
 			return false;
 		if (userCrypto == null) {
 			if (other.userCrypto != null)
@@ -88,24 +93,14 @@ public class Sources implements ISources {
 		return true;
 	}
 
-
 	@Override
-	public String url() {
-		return url;
+	public String rl() {
+		return rl;
 	}
 
 	@Override
-	public List<String> sources() {
-		return sources;
+	public String file() {
+		return file;
 	}
 
-	@Override
-	public String userId() {
-		return userId;
-	}
-
-	@Override
-	public String userCrypto() {
-		return userCrypto;
-	}
 }

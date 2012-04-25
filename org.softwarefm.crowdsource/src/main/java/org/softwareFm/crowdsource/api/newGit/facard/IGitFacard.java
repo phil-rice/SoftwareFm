@@ -3,6 +3,7 @@ package org.softwareFm.crowdsource.api.newGit.facard;
 import java.nio.channels.FileLock;
 
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.softwareFm.crowdsource.api.newGit.RepoLocation;
 import org.softwareFm.crowdsource.utilities.transaction.RedoTransactionException;
 
 /** Stateless object that is low level accessor to git. Should only be used by tests and by GitDataPrim. DO NOT USE THIS NORMALLY. */
@@ -21,6 +22,8 @@ public interface IGitFacard {
 	String putFileReturningRepoRl(String rl, String text) throws NotUnderRepoException;
 
 	FileRepository addAll(String repoRl) throws NotRepoException;
+
+	RepoLocation findRepoRl(final String rl);
 
 	void commit(FileRepository fileRepository, String commitMessage) throws NotRepoException;
 

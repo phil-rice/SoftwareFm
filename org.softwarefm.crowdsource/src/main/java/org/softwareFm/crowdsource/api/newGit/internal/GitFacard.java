@@ -16,6 +16,7 @@ import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.softwareFm.crowdsource.api.newGit.RepoLocation;
 import org.softwareFm.crowdsource.api.newGit.facard.AlreadyUnderRepoException;
 import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
 import org.softwareFm.crowdsource.api.newGit.facard.NotRepoException;
@@ -39,10 +40,7 @@ public class GitFacard implements IGitFacard {
 
 	@Override
 	public FileLock lock(String repoRl) throws RedoTransactionException, TryingToLockUnderRepoException {
-		File repoDir = findRepoRl(repoRl);
-		File lockDir = new File(root, repoRl);
-		if (repoDir != null && !repoDir.equals(lockDir))
-			throw new TryingToLockUnderRepoException(offset(repoDir), repoRl);
+		File lockDir = checkCanLockRepo(repoRl);
 		lockDir.mkdirs();
 		File lockFile = new File(lockDir, CommonConstants.lockFileName);
 		try {
@@ -63,6 +61,17 @@ public class GitFacard implements IGitFacard {
 		}
 	}
 
+	private File checkCanLockRepo(String repoRl) {
+		File lockDir = new File(root, repoRl);
+		RepoLocation repoLocation = findRepoRl(repoRl);
+		if (repoLocation != null) {
+			File repoDir = repoLocation.dir;
+			if (!repoDir.equals(lockDir))
+				throw new TryingToLockUnderRepoException(offset(repoDir), repoRl);
+		}
+		return lockDir;
+	}
+
 	@Override
 	public void unLock(FileLock lock) {
 		Files.releaseAndClose(lock);
@@ -70,9 +79,9 @@ public class GitFacard implements IGitFacard {
 
 	@Override
 	public void init(String repoRl) throws AlreadyUnderRepoException {
-		File existing = findRepoRl(repoRl);
+		RepoLocation existing = findRepoRl(repoRl);
 		if (existing != null)
-			throw new AlreadyUnderRepoException(offset(existing), repoRl);
+			throw new AlreadyUnderRepoException(existing.url, repoRl);
 		File repoDir = new File(root, repoRl);
 		Git git = Git.init().setDirectory(repoDir).call();
 		git.getRepository().close();
@@ -82,15 +91,15 @@ public class GitFacard implements IGitFacard {
 
 	@Override
 	public RepoRlAndText getFile(String rl) throws NotUnderRepoException {
-		File repoRl = findMustExistRepoRl(rl);
+		File repoRl = findMustExistRepoRl(rl).dir;
 		File file = new File(root, rl);
-		String text = file.exists() ? Files.getText(file): "";
+		String text = file.exists() ? Files.getText(file) : "";
 		return new RepoRlAndText(offset(repoRl), text);
 	}
 
 	@Override
 	public String putFileReturningRepoRl(String rl, String text) throws NotUnderRepoException {
-		File dir = findRepoRl(rl);
+		File dir = findRepoRl(rl).dir;
 		if (dir == null)
 			throw new NotUnderRepoException(rl);
 		File file = new File(root, rl);
@@ -102,7 +111,8 @@ public class GitFacard implements IGitFacard {
 	@Override
 	public FileRepository addAll(String repoRl) throws NotRepoException {
 		try {
-			File repoDir = findMustExistRepoRl(repoRl);
+			RepoLocation repoLocation = findMustExistRepoRl(repoRl);
+			File repoDir = repoLocation.dir;
 			FileRepository fileRepository = makeFileRepository(repoDir);
 			new AddCommand(fileRepository).addFilepattern(".").call();
 			return fileRepository;
@@ -140,18 +150,19 @@ public class GitFacard implements IGitFacard {
 
 	}
 
-	private File findMustExistRepoRl(String rl) {
-		File result = findRepoRl(rl);
+	private RepoLocation findMustExistRepoRl(String rl) {
+		RepoLocation result = findRepoRl(rl);
 		if (result == null)
 			throw new NotUnderRepoException(rl);
 		return result;
 	}
 
-	private File findRepoRl(final String rl) {
+	@Override
+	public RepoLocation findRepoRl(final String rl) {
 		final File dir = new File(root, rl);
 		for (File file : Files.listParentsUntil(root, dir))
 			if (new File(file, CommonConstants.DOT_GIT).exists())// found it
-				return file;
+				return new RepoLocation(file, Files.offset(root, file));
 		return null;
 	}
 

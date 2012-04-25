@@ -1,6 +1,5 @@
 package org.softwareFm.crowdsource.api.newGit;
 
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 
 public interface ISingleSource {
 
@@ -12,7 +11,7 @@ public interface ISingleSource {
 	 */
 	String fullRl();
 
-	IFunction1<String, String> decyptLine();
+	String decypt(String raw);
 
 	String encrypt(String string);
 

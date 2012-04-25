@@ -3,25 +3,25 @@ package org.softwareFm.crowdsource.api.newGit;
 import java.io.File;
 
 public class RepoLocation {
-	public final File root;
+	public final File dir;
 	public final String url;
 
-	public RepoLocation(File root, String url) {
+	public RepoLocation(File dir, String url) {
 		super();
-		this.root = root;
+		this.dir = dir;
 		this.url = url;
 	}
 
 	@Override
 	public String toString() {
-		return "RepositoryLocation [root=" + root + ", url=" + url + "]";
+		return "RepoLocation [dir=" + dir + ", url=" + url + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((root == null) ? 0 : root.hashCode());
+		result = prime * result + ((dir == null) ? 0 : dir.hashCode());
 		result = prime * result + ((url == null) ? 0 : url.hashCode());
 		return result;
 	}
@@ -35,10 +35,10 @@ public class RepoLocation {
 		if (getClass() != obj.getClass())
 			return false;
 		RepoLocation other = (RepoLocation) obj;
-		if (root == null) {
-			if (other.root != null)
+		if (dir == null) {
+			if (other.dir != null)
 				return false;
-		} else if (!root.equals(other.root))
+		} else if (!dir.equals(other.dir))
 			return false;
 		if (url == null) {
 			if (other.url != null)

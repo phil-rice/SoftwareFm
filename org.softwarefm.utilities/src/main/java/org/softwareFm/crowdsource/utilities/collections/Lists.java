@@ -225,6 +225,18 @@ public class Lists {
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
+	public static <From, To> List<To> flatMap(Iterable<From> fromList, IFunction1<From, List<To>> mappingFunction) {
+		try {
+			List<To> result = (fromList instanceof List) ? new ArrayList<To>(((List) fromList).size()) : new ArrayList<To>();
+			for (From from : fromList)
+				result.addAll(mappingFunction.apply(from));
+			return result;
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
 	public static <T> List<T> merge(Collection<T>... ts) {
 		List<T> result = newList();
 		for (Collection<T> t : ts)
@@ -331,7 +343,7 @@ public class Lists {
 			return Arrays.asList(array);
 	}
 
-	public static <T>List<T> immutable(T...ts) {
+	public static <T> List<T> immutable(T... ts) {
 		return Collections.unmodifiableList(Arrays.asList(ts));
 	}
 

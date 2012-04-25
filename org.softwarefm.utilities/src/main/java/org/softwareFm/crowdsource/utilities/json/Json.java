@@ -62,6 +62,16 @@ public class Json {
 		return Json.mapFromString(text);
 	}
 
+	public static IFunction1<Map<String,Object>, String> toStringAndEncryptFn(final String key) {
+		return new IFunction1<Map<String,Object>, String>() {
+			@Override
+			public String apply(Map<String, Object> from) throws Exception {
+				String string = Json.toString(from);
+				return Crypto.aesEncrypt(key, string);
+			}
+		};
+		
+	}
 	public static IFunction1<String, Map<String, Object>> decryptAndMapMakeFn(final String key) {
 		return new IFunction1<String, Map<String, Object>>() {
 			@Override
