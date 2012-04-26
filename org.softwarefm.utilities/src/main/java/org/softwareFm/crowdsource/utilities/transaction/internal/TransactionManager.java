@@ -30,7 +30,9 @@ import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactionManagerBuilder;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionStrategy;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactional;
+import org.softwareFm.crowdsource.utilities.transaction.NotInTransactionException;
 
 public class TransactionManager implements ITransactionManagerBuilder {
 
@@ -100,9 +102,12 @@ public class TransactionManager implements ITransactionManagerBuilder {
 	private final ThreadLocal<IMonitor> monitors = new ThreadLocal<IMonitor>();
 	private final AtomicInteger activeJobs = new AtomicInteger();
 
-	public TransactionManager(IServiceExecutor serviceExecutor, IFunction1<Future<?>, ITransaction<?>> futureToTransactionFn) {
+	private final ITransactionStrategy transactionStrategy;
+
+	public TransactionManager(IServiceExecutor serviceExecutor, IFunction1<Future<?>, ITransaction<?>> futureToTransactionFn, ITransactionStrategy transactionStrategy) {
 		this.serviceExecutor = serviceExecutor;
 		this.futureToTransactionFn = futureToTransactionFn;
+		this.transactionStrategy = transactionStrategy;
 	}
 
 	@Override
@@ -144,7 +149,7 @@ public class TransactionManager implements ITransactionManagerBuilder {
 					assert monitors.get() == null;
 					monitors.set(monitor);
 					latch.await();
-					Intermediate intermediate = job.apply(monitor);
+					Intermediate intermediate = transactionStrategy.execute(job, monitor);
 					monitor.worked(1);
 					Result result = executeCallbackFunction(resultCallback, intermediate);
 					return result;
@@ -166,6 +171,11 @@ public class TransactionManager implements ITransactionManagerBuilder {
 					}
 
 				}
+			}
+
+			private <Intermediate> Intermediate executeJob(final IFunction1<IMonitor, Intermediate> job, IMonitor monitor) throws Exception {
+				Intermediate intermediate = job.apply(monitor);
+				return intermediate;
 			}
 
 			private void rollback(final IFunction1<Intermediate, Result> resultCallbackFn, AtomicReference<Exception> exception, ITransaction<?> transaction) throws Exception {
@@ -274,4 +284,10 @@ public class TransactionManager implements ITransactionManagerBuilder {
 		return activeJobs.get();
 	}
 
+	@Override
+	public ITransactionStrategy myTransactionStrategy() throws NotInTransactionException {
+		if (monitors.get() == null)
+			throw new NotInTransactionException();
+		return transactionStrategy;
+	}
 }

@@ -9,7 +9,7 @@ import java.util.Map;
  * 
  * These methods must all be called in a transaction, or they will fail. None of the changes will take place until the transaction is committed.<br />
  * 
- * Other transactions are locked out from messing with the repositories accessed by these methods
+ * The interface doesn't define whether it is using pessimistic or optimistic locking. In either case a RedoTransactionException maybe thrown (although it will be thrown from different methods: pessimistic can throw from any method, while optimistic only from the prepare phase)
  */
 public interface IRepoData {
 

@@ -50,7 +50,7 @@ public class ClientGroupOperationsTest extends AbstractProcessorDatabaseIntegrat
 				memory.waitUntilCalled(CommonConstants.testTimeOutMs);
 				assertEquals(GroupOperationResult.groupId(groupId0), memory.getOnlyResult());
 			}
-		}).get();
+		}).get();// has failed intermittently once
 
 		localContainer.accessWithCallback(IGroupsReader.class, IUserReader.class, IUserMembershipReader.class, new IFunction3<IGroupsReader, IUserReader, IUserMembershipReader, Void>() {
 			@Override

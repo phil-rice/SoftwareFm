@@ -26,4 +26,5 @@ public class UtilityMessages {
 	public static final String cannotCloseServer = "Cannot close server";
 	public static final String expectedButGot = "Expected {0} but got {1}";
 	public static final String cannotGetFirstNCharacters = "Cannot get first ({0}) characters";
+	public static final String poisonedTransactionException = "Possible poisoned Transaction {0}\nHave executed it {1} times. Nested exceptions {2}";
 }

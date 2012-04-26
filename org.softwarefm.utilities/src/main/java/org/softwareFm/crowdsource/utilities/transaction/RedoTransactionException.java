@@ -18,4 +18,9 @@ public class RedoTransactionException extends RuntimeException{
 		super(cause);
 	}
 
+	@Override
+	public String toString() {
+		return getClass().getSimpleName();
+	}
+
 }

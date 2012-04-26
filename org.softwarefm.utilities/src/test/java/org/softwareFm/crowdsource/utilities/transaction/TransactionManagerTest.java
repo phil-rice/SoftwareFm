@@ -44,15 +44,66 @@ public class TransactionManagerTest extends TestCase {
 	}
 
 	public void testIfThrowsRedoTransactionExceptionItIsRedone() {
-		fail();
+		ConstantFunctionWithMemoryOfFroms<String, String> postFunction = new ConstantFunctionWithMemoryOfFroms<String, String>("value2");
+		ConstantFunctionWithMemoryOfFroms<IMonitor, String> job = new JobThrowingRedoTransactionException("value", 4); // max tries defined in setup as 5
+		assertEquals("value2", manager.start(job, postFunction).get(CommonConstants.testTimeOutMs));
+		assertEquals("value", Lists.getOnly(postFunction.froms));
+		assertEquals(5, job.froms.size());
+		assertEquals(0, registered1Count.get());
 	}
 
-	public void testDealsWIthPoisonedRedoTransactionExceptionItIsRedone() {
-		fail();
+	public void testThrowsPoisonedTransactionExceptionIfTooManyRedoTransactionExceptions() {
+		final ConstantFunctionWithMemoryOfFroms<String, String> postFunction = new ConstantFunctionWithMemoryOfFroms<String, String>("value2");
+		final ConstantFunctionWithMemoryOfFroms<IMonitor, String> job = new JobThrowingRedoTransactionException("value", 10);
+		Tests.assertThrowsWithMessage("Possible poisoned Transaction JobThrowingRedoTransactionException\nHave executed it 5 times. Nested exceptions [RedoTransactionException, RedoTransactionException, RedoTransactionException, RedoTransactionException, RedoTransactionException]", PoisonedTransactionException.class, new Runnable() {
+			@Override
+			public void run() {
+				manager.start(job, postFunction).get(CommonConstants.testTimeOutMs);
+			}
+		});
+		assertEquals(0, postFunction.froms.size());
+		assertEquals(5, job.froms.size());
+		assertEquals(0, registered1Count.get());
 	}
 
 	public void testRedoTransactionInResultCallbackCausesRollback() {
-		fail();
+		RedoTransactionException exception = new RedoTransactionException("thisone");
+		final IFunction1<String, String> postFunction = Functions.expectionIfCalled(exception);
+		final ConstantFunctionWithMemoryOfFroms<IMonitor, String> job = Functions.<String> constantWithMemoryOfMonitor("value");
+		Tests.assertThrowsWithMessage("thisone", RedoTransactionException.class, new Runnable() {
+			@Override
+			public void run() {
+				manager.start(job, postFunction).get(CommonConstants.testTimeOutMs);
+			}
+		});
+		assertEquals(0, registered1Count.get());
+	}
+
+	public void testGetMyTransactionStrategy() {
+		IFunction1<String, String> postFunction = new IFunction1<String, String>() {
+			@Override
+			public String apply(String from) throws Exception {
+				assertNotNull(manager.myTransactionStrategy());
+				return from;
+			}
+		};
+		IFunction1<IMonitor, String> job = new IFunction1<IMonitor, String>() {
+			@Override
+			public String apply(IMonitor from) throws Exception {
+				assertNotNull(manager.myTransactionStrategy());
+				return "value";
+			}
+		};
+		manager.start(job, postFunction).get(CommonConstants.testTimeOutMs);
+	}
+
+	public void testGetMyTransactionStrategyIfNotInTransactionCausesException() {
+		Tests.assertThrowsWithMessage(null, NotInTransactionException.class, new Runnable() {
+			@Override
+			public void run() {
+				manager.myTransactionStrategy();
+			}
+		});
 	}
 
 	public void testJobsAreExecutedOnADifferentThread() {
@@ -397,7 +448,7 @@ public class TransactionManagerTest extends TestCase {
 		final IServiceExecutor defaultExecutor = IServiceExecutor.Utils.defaultExecutor(getClass().getSimpleName() + "-{0}", 10);
 		registered1Count = new AtomicInteger();
 		registered2Count = new AtomicInteger();
-		manager = new TransactionManager(defaultExecutor, new TransactionManager.DefaultFutureToTransactionDn(CommonConstants.testTimeOutMs)).//
+		manager = new TransactionManager(defaultExecutor, new TransactionManager.DefaultFutureToTransactionDn(CommonConstants.testTimeOutMs), ITransactionStrategy.Utils.backOffAndRetry(1, 5)).//
 				registerCallbackExecutor(IFunctionWithMarker1.class, new IFunction3<IServiceExecutor, IFunction1<Object, Object>, Object, Object>() {
 
 					@Override

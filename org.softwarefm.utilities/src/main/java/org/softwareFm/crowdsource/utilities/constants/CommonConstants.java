@@ -9,7 +9,7 @@ import java.util.Set;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
 
 public class CommonConstants {
-	public static final int serverPort = 80; //normally 80 
+	public static final int serverPort = 80; // normally 80
 	public static final int testPort = 8080;
 
 	public final static String dataFileName = "data.json";
@@ -20,7 +20,6 @@ public class CommonConstants {
 	public static final String collectionType = "collection";
 	public static final String dataParameterName = "data";
 	public static final String repoUrlKey = "repoUrl";
-
 
 	public static final String GET = "GET";
 	public static final String POST = "POST";
@@ -44,9 +43,12 @@ public class CommonConstants {
 	public static final long clientTimeOut = 10000;
 	public static final long serverTimeOut = 10000;
 	public static final long testTimeOutMs = 3000;
-	
+
 	public static final Object errorKey = "error";
 	public static final String debugCardType = "debug";
 	public static final int threadPoolSizeForTests = 10;
+	
+	public static final long transactionBackOffTime = 30;
+	public static final int transactionRetryCount = 10;
 
 }
