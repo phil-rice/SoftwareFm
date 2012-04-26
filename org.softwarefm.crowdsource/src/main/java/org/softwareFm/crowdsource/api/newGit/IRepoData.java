@@ -45,5 +45,7 @@ public interface IRepoData {
 	void change(ISingleSource source, int index, Map<String, Object> newMap);
 
 	void delete(ISingleSource source, int index);
+	
+	void setCommitMessage(String commitMessage);
 
 }

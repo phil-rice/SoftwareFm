@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.monitor.IMonitor;
 import org.softwareFm.crowdsource.utilities.services.IServiceExecutor;
@@ -31,7 +32,7 @@ public interface ITransactionManager extends IShutdown {
 	<T> void addResource(ITransaction<T> transaction, ITransactional transactional);
 
 	int activeJobs();
-	
+
 	/** If you are in a transaction, this returns 'your' transaction strategy. At the moment this is a shared object, but that may change */
 	ITransactionStrategy myTransactionStrategy() throws NotInTransactionException;
 
@@ -49,6 +50,22 @@ public interface ITransactionManager extends IShutdown {
 		/** This is used when (for example) you want to do something while waiting in the get method: such as process swt dispatch thread queues */
 		public static ITransactionManagerBuilder withFutureToTransactionFn(int workerThreads, IFunction1<Future<?>, ITransaction<?>> fn) {
 			return new TransactionManager(IServiceExecutor.Utils.defaultExecutor("ITransactionManager" + count.getAndIncrement() + "-{0}", workerThreads), fn, ITransactionStrategy.Utils.backOffAndRetry(CommonConstants.transactionBackOffTime, CommonConstants.transactionRetryCount));
+		}
+
+		public static boolean waitUntilNoActiveJobs(ITransactionManager manager, long timeOutMs) {
+			try {
+				long startTime = System.currentTimeMillis();
+				while (true)
+					if (manager.activeJobs() == 0)
+						return true;
+					else if (System.currentTimeMillis() > startTime + timeOutMs)
+						return false;
+					else
+						Thread.sleep(1);
+			} catch (InterruptedException e) {
+				throw WrappedException.wrap(e);
+			}
+
 		}
 	}
 }

@@ -144,6 +144,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		assertEquals(v11v12List, repoData.readAllRows(abxSource));
 		assertEquals(v21v22List, repoData.readAllRows(acxSource));
 
+		repoData.setCommitMessage("someMessage");
 		repoData.commit();
 		assertEquals(0, repoData.locks.size());
 	}
@@ -166,6 +167,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 
 		assertEquals(Maps.makeMap(abxSource, v21v22List), repoData.toAppend);
 
+		repoData.setCommitMessage("someMessage");
 		repoData.commit();
 		List<Map<String, Object>> actual = newRepoPrim().readAllRows(abxSource);
 		List<Map<String, Object>> expected = Arrays.asList(v11, v12, v21, v22);
@@ -175,6 +177,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 	public void testAppendWorksOnEmptyFile() {
 		repoData.append(abxSource, v11);
 		repoData.append(abxSource, v12);
+		repoData.setCommitMessage("someMessage");
 		repoData.commit();
 		assertEquals(v11v12List, newRepoPrim().readAllRows(abxSource));
 	}
@@ -203,8 +206,38 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 
 		assertEquals(v11v12List, repoData.readAllRows(abxSource)); // not changedYet
 
+		repoData.setCommitMessage("someMessage");
 		repoData.commit();
 		assertEquals(v21v22List, newRepoPrim().readAllRows(abxSource));
+	}
+
+	public void testNeedsCommitMessageToCommit() {
+		putFile(abxFile, v11v12Json);
+		repoData.change(abxSource, 0, v21);
+		Tests.assertThrowsWithMessage("Commit message not set", IllegalStateException.class, new Runnable() {
+			@Override
+			public void run() {
+				repoData.commit();
+			}
+		});
+	}
+
+	public void testDontNeedToSetCommitMessageUnlessChangesAreMade() {
+		putFile(abxFile, v11v12Json);
+		repoData.readRaw(abxSource);
+		repoData.commit();
+	}
+
+	public void testCannotSetCommitTwice() {
+		putFile(abxFile, v11v12Json);
+		repoData.change(abxSource, 0, v21);
+		repoData.setCommitMessage("someMessage");
+		Tests.assertThrowsWithMessage("Commit message already set\nOld: someMessage\nNew: someNewMessage", IllegalStateException.class, new Runnable() {
+			@Override
+			public void run() {
+				repoData.setCommitMessage("someNewMessage");
+			}
+		});
 	}
 
 	public void testChangeAddsToLocks() {
@@ -250,18 +283,20 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.delete(abxSource, 1);
 		repoData.delete(abxSource, 3);
 		assertEquals(Arrays.asList(v11, v12, v21, v22), repoData.readAllRows(abxSource)); // not changedYet
+		repoData.setCommitMessage("someMessage");
 		repoData.commit();
 		assertEquals(Arrays.asList(v11, v21), newRepoPrim().readAllRows(abxSource));
 	}
 
 	private RepoData newRepoPrim() {
-		return repoData = new RepoData(gitFacard, "someOtherCommitMessage");
+		return repoData = new RepoData(gitFacard);
 	}
 
 	public void testDeleteWorksWithoutRead() {
 		putFile(abxFile, v11v12v21v22Json);
 		repoData.delete(abxSource, 1);
 		repoData.delete(abxSource, 3);
+		repoData.setCommitMessage("someMessage");
 		repoData.commit();
 		assertEquals(Arrays.asList(v11, v21), newRepoPrim().readAllRows(abxSource));
 	}
@@ -271,6 +306,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.delete(abxSource, 1);
 		repoData.change(abxSource, 2, v31);
 		repoData.append(abxSource, v22);
+		repoData.setCommitMessage("someMessage");
 		repoData.commit();
 		assertEquals(Arrays.asList(v11, v31, v22), newRepoPrim().readAllRows(abxSource));
 	}
@@ -301,6 +337,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		putFile(abxFile, Json.mapToString("a", 11l, "b", 12l) + "\n" + Json.mapToString("a", 21l, "b", 22l));
 		repoData.setProperty(abxSource, 0, "a", "newa1");
 		repoData.setProperty(abxSource, 1, "b", "newb2");
+		repoData.setCommitMessage("someMessage");
 		repoData.commit();
 
 		List<Map<String, Object>> expected = Arrays.asList(Maps.stringObjectMap("a", "newa1", "b", 12l), Maps.stringObjectMap("a", 21l, "b", "newb2"));

@@ -5,10 +5,13 @@
 package org.softwareFm.crowdsource.api.git;
 
 import java.io.File;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
 
 import org.softwareFm.crowdsource.utilities.collections.Files;
+import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
 
 abstract public class TemporaryFileTest extends TestCase {
@@ -25,5 +28,9 @@ abstract public class TemporaryFileTest extends TestCase {
 		super.tearDown();
 		if (root.exists())
 			assertTrue(Files.deleteDirectory(root));
+	}
+
+	protected void waitFor(final CountDownLatch latch) throws InterruptedException {
+		latch.await(CommonConstants.testTimeOutMs, TimeUnit.MILLISECONDS);
 	}
 }

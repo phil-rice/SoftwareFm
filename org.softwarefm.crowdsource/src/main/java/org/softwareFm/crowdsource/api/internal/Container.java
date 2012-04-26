@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.IContainerBuilder;
+import org.softwareFm.crowdsource.api.IFactory;
 import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
 import org.softwareFm.crowdsource.api.git.IGitReader;
@@ -61,6 +62,11 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 	@Override
 	public <T, X extends T> void register(Class<T> class1, X x) {
 		map.put(class1, x);
+	}
+
+	@Override
+	public <T, X extends T> void register(Class<T> class1, IFactory<T> factory) {
+		map.put(class1, factory);
 	}
 
 	@Override
@@ -238,12 +244,15 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 	}
 
 	private <API> API getReadWriter(Class<API> clazz) {
-		Object readWriter = map.get(clazz);
-		if (readWriter == null)
+		Object readWriterOrFactory = map.get(clazz);
+		if (readWriterOrFactory == null)
 			throw new NullPointerException(MessageFormat.format(CommonMessages.cannotAccessModifyWithoutRegisteredReader, "modify", "readWriter", clazz, Lists.sort(map.keySet(), Comparators.classComporator())));
-		if (!clazz.isAssignableFrom(readWriter.getClass()))
-			throw new IllegalStateException(MessageFormat.format(CommonMessages.readWriterSetUpIncorrectly, readWriter.getClass().getName(), readWriter));
-		return (API) readWriter;
+		if (readWriterOrFactory instanceof IFactory<?>) {
+			return ((IFactory<API>) readWriterOrFactory).build();
+		}
+		if (!clazz.isAssignableFrom(readWriterOrFactory.getClass()))
+			throw new IllegalStateException(MessageFormat.format(CommonMessages.readWriterSetUpIncorrectly, readWriterOrFactory.getClass().getName(), readWriterOrFactory));
+		return (API) readWriterOrFactory;
 	}
 
 	private <API> API getReader(Class<API> clazz) {

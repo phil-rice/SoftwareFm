@@ -4,29 +4,72 @@
 
 package org.softwareFm.crowdsource.api.internal;
 
-import org.softwareFm.crowdsource.api.ApiTest;
-import org.softwareFm.crowdsource.api.IContainer;
-import org.softwareFm.crowdsource.api.git.IGitReader;
+import java.util.HashSet;
+
+import org.softwareFm.crowdsource.api.IContainerBuilder;
+import org.softwareFm.crowdsource.api.newGit.internal.RepoTest;
+import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
+import org.softwareFm.crowdsource.utilities.callbacks.MemoryCallback;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
 import org.softwareFm.crowdsource.utilities.transaction.ConstantFnWithKick;
 import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
-import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 
-public class ContainerTest extends ApiTest {
+public class ContainerTest extends RepoTest {
+
+	private IContainerBuilder container;
 
 	public void testAccessingContainerAffectsJobCount() {
-		ITransactionManager manager = makeTransactionManager();
-		IContainer container = getLocalContainer();
+		container.register(Object.class, new Object());
 		for (int i = 0; i < 10; i++) {
-			ConstantFnWithKick<IGitReader, String> job = new ConstantFnWithKick<IGitReader, String>("value");
-			ITransaction<String> transaction = container.access(IGitReader.class, job);
-			assertEquals("i: " + i, 1, manager.activeJobs());
+			ConstantFnWithKick<Object, String> job = new ConstantFnWithKick<Object, String>("value");
+			ITransaction<String> transaction = container.access(Object.class, job);
+			assertEquals("i: " + i, 1, transactionManager.activeJobs());
 			assertEquals("i: " + i, 1, container.activeJobs());
 			job.kick();
 			transaction.get();
-			assertEquals("i: " + i, 0, manager.activeJobs());
+			assertEquals("i: " + i, 0, transactionManager.activeJobs());
 			assertEquals("i: " + i, 0, container.activeJobs());
 		}
+	}
+
+	public void testRegisteringFactoryMeansItemBuiltIfRequested() {
+		FactoryForTest factory = new FactoryForTest(false);
+		container.register(MadeObjectForTest.class, factory);
+		MemoryCallback<MadeObjectForTest> memory = ICallback.Utils.memory();
+		container.access(MadeObjectForTest.class, memory).get();
+		container.access(MadeObjectForTest.class, memory).get();
+		assertEquals(factory.list, memory.getResults());
+		assertEquals(2, new HashSet<MadeObjectForTest>(factory.list).size());
+	}
+
+	public void testRegisteringFactoryMeansItemNotBuiltIfNotRequested() {
+		container.register(Object.class, new Object());
+		FactoryForTest factory = new FactoryForTest(false);
+		container.register(MadeObjectForTest.class, factory);
+		MemoryCallback<Object> memory = ICallback.Utils.memory();
+		container.access(Object.class, memory).get();
+		container.access(Object.class, memory).get();
+		assertEquals(0, factory.list.size());
+	}
+
+	public void testRegisteringFactoryMeansItemAddedToTransactionalsIfTransactional() {
+		FactoryForTest factory = new FactoryForTest(true);
+		container.register(MadeObjectForTest.class, factory);
+		MemoryCallback<MadeObjectForTest> memory = ICallback.Utils.memory();
+		container.access(MadeObjectForTest.class, memory).get();
+		container.access(MadeObjectForTest.class, memory).get();
+		assertEquals(factory.list, memory.getResults());
+		for (MadeObjectForTest madeObjectForTest: factory.list){
+			MadeObjectForTestTransactional transactional = (MadeObjectForTestTransactional) madeObjectForTest;
+			assertTrue(transactional.commitCalled());
+		}
+	}
+
+	@Override
+	protected void setUp() throws Exception {
+		super.setUp();
+		container = new Container(transactionManager, null) {
+		};
 	}
 
 	public static void main(String[] args) {

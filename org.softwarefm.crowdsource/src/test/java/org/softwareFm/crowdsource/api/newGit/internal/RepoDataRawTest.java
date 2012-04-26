@@ -6,7 +6,8 @@ import org.softwareFm.crowdsource.utilities.tests.Tests;
 public class RepoDataRawTest extends AbstractRepoDataTest {
 	
 	public void testMethodsDontWorkAfterCommit() {
-		repoData.commit();
+		repoData.setCommitMessage("someMessage");
+	repoData.commit();
 		Tests.assertThrowsWithMessage("Cannot use after Commit or Rollback. Method read Args [RawSingleSource [fullRl=a/b/x/data.txt]]", CannotUseRepoAfterCommitOrRollbackException.class, new Runnable() {
 			@Override
 			public void run() {

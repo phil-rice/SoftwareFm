@@ -1,6 +1,9 @@
 package org.softwareFm.crowdsource.api.newGit.internal;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.softwareFm.crowdsource.api.git.GitTest;
 import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
@@ -13,10 +16,15 @@ import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
+import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 import org.softwareFm.crowdsource.utilities.url.Urls;
 
 abstract public class RepoTest extends GitTest {
+
+	// Note for speed reasons, the transaction manager is not remade at the start of each test. Hence it is a static
+	// It may be remade by teardown if the current jobs don't exit. Not perfect but notable time difference!
+	protected ITransactionManager transactionManager = ITransactionManager.Utils.standard(CommonConstants.threadPoolSizeForTests, CommonConstants.testTimeOutMs);
 
 	protected static final IUrlGenerator userUrlGenerator = LoginConstants.userGenerator("data");
 	protected static final IUrlGenerator groupUrlGenerator = GroupConstants.groupsGenerator("data");
@@ -52,13 +60,13 @@ abstract public class RepoTest extends GitTest {
 	protected static final String groupMembershipCrypto1 = Crypto.makeKey();
 	protected static final String groupMembershipCrypto2 = Crypto.makeKey();
 	protected static final String groupMembershipCrypto3 = Crypto.makeKey();
-	
+
 	protected static final String miscCrypto1 = Crypto.makeKey();
 	protected static final String miscCrypto2 = Crypto.makeKey();
 	protected static final String miscCrypto3 = Crypto.makeKey();
 
 	protected static final Map<String, Object> membershipMapForGroup1Admin = makeMembershipMap(groupId1, groupMembershipCrypto1, groupCommentCrypto1, GroupConstants.adminStatus);
-	protected static final Map<String, Object> membershipMapForGroup1Member = makeMembershipMap(groupId1,groupMembershipCrypto1,  groupCommentCrypto1, GroupConstants.memberStatus);
+	protected static final Map<String, Object> membershipMapForGroup1Member = makeMembershipMap(groupId1, groupMembershipCrypto1, groupCommentCrypto1, GroupConstants.memberStatus);
 	protected static final Map<String, Object> membershipMapForGroup1Invited = makeMembershipMap(groupId1, groupMembershipCrypto1, groupCommentCrypto1, GroupConstants.invitedStatus);
 
 	protected static final Map<String, Object> membershipMapForGroup2Admin = makeMembershipMap(groupId2, groupMembershipCrypto2, groupCommentCrypto2, GroupConstants.adminStatus);
@@ -115,6 +123,30 @@ abstract public class RepoTest extends GitTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		gitFacard = new GitFacard(remoteRoot);
-		repoData = new RepoData(gitFacard, "someCommitMessage");
+		repoData = new RepoData(gitFacard);
+	}
+
+	@Override
+	protected void tearDown() throws Exception {
+		super.tearDown();
+		boolean closed = ITransactionManager.Utils.waitUntilNoActiveJobs(transactionManager, CommonConstants.testTimeOutMs);
+		if (!closed) {
+			transactionManager.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
+			System.out.println("CAnnot close down transaction manager: " + transactionManager);
+			transactionManager = ITransactionManager.Utils.standard(CommonConstants.threadPoolSizeForTests, CommonConstants.testTimeOutMs);
+			transactionManagerChanged();
+		}
+	}
+
+	protected void transactionManagerChanged() {
+	}
+
+	protected void putFile(String rl, String crypto, Map<String, Object>... maps) {
+		putFile(rl, crypto, Arrays.asList(maps));
+	}
+
+	protected void putFile(String rl, String crypto, List<Map<String, Object>> lines) {
+		Iterable<String> encodedList = Iterables.map(lines, Json.toStringAndEncryptFn(crypto));
+		gitFacard.putFileReturningRepoRl(rl, Strings.join(encodedList, "\n"));
 	}
 }

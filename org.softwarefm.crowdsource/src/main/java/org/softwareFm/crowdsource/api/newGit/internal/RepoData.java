@@ -1,6 +1,7 @@
 package org.softwareFm.crowdsource.api.newGit.internal;
 
 import java.nio.channels.FileLock;
+import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -33,7 +34,6 @@ import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactional;
-import org.softwareFm.crowdsource.utilities.transaction.RedoTransactionException;
 
 public class RepoData implements IRepoData, ITransactional {
 
@@ -47,11 +47,10 @@ public class RepoData implements IRepoData, ITransactional {
 	private final Map<ISingleSource, List<String>> rawCache = Maps.newMap();
 
 	private boolean commitOrRollbackCalled;
-	private final String commitMessage;
+	private String commitMessage;
 
-	public RepoData(IGitFacard gitFacard, String commitMessage) {
+	public RepoData(IGitFacard gitFacard) {
 		this.gitFacard = gitFacard;
-		this.commitMessage = commitMessage;
 	}
 
 	@Override
@@ -151,6 +150,13 @@ public class RepoData implements IRepoData, ITransactional {
 	}
 
 	@Override
+	public void setCommitMessage(String commitMessage) {
+		if (this.commitMessage != null)
+			throw new IllegalStateException(MessageFormat.format(GitMessages.commitMessageAlreadySet, this.commitMessage, commitMessage));
+		this.commitMessage = commitMessage;
+	}
+
+	@Override
 	public void commit() {
 		List<String> repoRls = Lists.newList();
 		for (Entry<ISingleSource, List<String>> entry : rawCache.entrySet()) {
@@ -184,6 +190,10 @@ public class RepoData implements IRepoData, ITransactional {
 			}
 
 		}
+		if (repoRls.size() > 0)
+			if (commitMessage == null)
+				throw new IllegalStateException(GitMessages.commitMessageNotSet);
+
 		for (String repoRl : repoRls) {
 			FileRepository fileRepository = gitFacard.addAll(repoRl);
 			gitFacard.commit(fileRepository, commitMessage);

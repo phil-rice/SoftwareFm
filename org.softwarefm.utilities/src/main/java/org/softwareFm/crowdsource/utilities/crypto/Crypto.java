@@ -117,7 +117,10 @@ public class Crypto {
 		return new IFunction1<String, String>() {
 			@Override
 			public String apply(String from) throws Exception {
-				return Crypto.aesEncrypt(key, from);
+				if (key == null)
+					return from;
+				else
+					return Crypto.aesEncrypt(key, from);
 			}
 		};
 	}
