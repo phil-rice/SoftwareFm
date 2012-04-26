@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.newGit.internal.Sources;
-
 /**
  * Each transaction will have its own unique IRepoData<br />
  * 
@@ -24,7 +22,7 @@ public interface IRepoData {
 	List<Map<String, Object>> readAllRows(ISingleSource singleSource);
 
 	/** Start from offset, returns empty iterator if offset is too big */
-	Iterable<SourcedMap> read(Sources sources, int offset);
+	Iterable<SourcedMap> read(ISources sources, int offset);
 
 	/** Start from offset, returns empty iterator if offset is too big */
 	Iterable<SourcedMap> read(ISingleSource source, int offset);

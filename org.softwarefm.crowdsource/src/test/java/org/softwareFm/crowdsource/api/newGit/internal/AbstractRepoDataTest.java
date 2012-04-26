@@ -6,10 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
+import org.softwareFm.crowdsource.api.newGit.ISources;
 import org.softwareFm.crowdsource.api.newGit.RepoLocation;
+import org.softwareFm.crowdsource.api.newGit.SourcedMap;
+import org.softwareFm.crowdsource.api.newGit.facard.CannotChangeTwiceException;
+import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.tests.Tests;
 
 abstract public class AbstractRepoDataTest extends RepoTest {
 
@@ -37,13 +42,13 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 
 	abstract protected void putFile(String rl, String lines);
 
-	public void testSetup(){
+	public void testSetup() {
 		assertNotNull(abxSource);
 		assertNotNull(abySource);
 		assertNotNull(acxSource);
 		assertNotNull(acySource);
 	}
-	
+
 	public void testReadAllRows() {
 		putFile(abxFile, v11v12Json);
 
@@ -210,6 +215,18 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 
 	}
 
+	public void testChangesThrowsExceptionIfTryAndChangeTwiceInSameTransaction() {
+		putFile(abxFile, v11v12Json);
+		repoData.change(abxSource, 0, v21);
+		Tests.assertThrowsWithMessage("Cannot make change to same item twice. " + abxSource + " 0 {c=2, v=2}. Currently this is to be changed to {c=2, v=1}", CannotChangeTwiceException.class, new Runnable() {
+			@Override
+			public void run() {
+				repoData.change(abxSource, 0, v22);
+			}
+		});
+
+	}
+
 	public void testChangeIgnoredIfRollback() {
 		putFile(abxFile, v11v12Json);
 		repoData.change(abxSource, 0, v21);
@@ -261,23 +278,86 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 	public void testFindRepositories() {
 		RepoLocation abrepo = new RepoLocation(new File(remoteRoot, "a/b"), "a/b");
 		RepoLocation acrepo = new RepoLocation(new File(remoteRoot, "a/c"), "a/c");
-		
+
 		assertEquals(Sets.makeSet(), repoData.findRepositories(new SourcesMock(repoData, "", "")));
 		assertEquals(Sets.makeSet(abrepo), repoData.findRepositories(new SourcesMock(repoData, "", "", abxSource)));
 		assertEquals(Sets.makeSet(abrepo), repoData.findRepositories(new SourcesMock(repoData, "", "", abxSource, abySource)));
 		assertEquals(Sets.makeSet(abrepo, acrepo), repoData.findRepositories(new SourcesMock(repoData, "", "", abxSource, acxSource)));
 		assertEquals(Sets.makeSet(abrepo, acrepo), repoData.findRepositories(new SourcesMock(repoData, "", "", abxSource, abySource, abySource, acySource)));
 	}
-	
-	public void testFindRepository(){
+
+	public void testFindRepository() {
 		RepoLocation abrepo = new RepoLocation(new File(remoteRoot, "a/b"), "a/b");
 		RepoLocation acrepo = new RepoLocation(new File(remoteRoot, "a/c"), "a/c");
-		
+
 		assertEquals(abrepo, repoData.findRepository(abxSource));
 		assertEquals(abrepo, repoData.findRepository(abySource));
 		assertEquals(acrepo, repoData.findRepository(acxSource));
 		assertEquals(acrepo, repoData.findRepository(acySource));
-		
+	}
+
+	@SuppressWarnings("unchecked")
+	public void testSetProperty() {
+		putFile(abxFile, Json.mapToString("a", 11l, "b", 12l) + "\n" + Json.mapToString("a", 21l, "b", 22l));
+		repoData.setProperty(abxSource, 0, "a", "newa1");
+		repoData.setProperty(abxSource, 1, "b", "newb2");
+		repoData.commit();
+
+		List<Map<String, Object>> expected = Arrays.asList(Maps.stringObjectMap("a", "newa1", "b", 12l), Maps.stringObjectMap("a", 21l, "b", "newb2"));
+		List<Map<String, Object>> actual = newRepoPrim().readAllRows(abxSource);
+		assertEquals(expected, actual);
+	}
+
+	public void testRead_Source() {
+		putFile(abxFile, v11v12Json);
+		putFile(acxFile, v21v22Json);
+
+		SourcedMap abx0v11 = new SourcedMap(abxSource, 0, v11);
+		SourcedMap abx1v12 = new SourcedMap(abxSource, 1, v12);
+		SourcedMap acx0v21 = new SourcedMap(acxSource, 0, v21);
+		SourcedMap acx1v22 = new SourcedMap(acxSource, 1, v22);
+
+		checkRead(abxSource, 0, abx0v11, abx1v12);
+		checkRead(abxSource, 1, abx1v12);
+		checkRead(abxSource, 2);
+		checkRead(abxSource, 100);
+
+		checkRead(acxSource, 0, acx0v21, acx1v22);
+		checkRead(acxSource, 1, acx1v22);
+		checkRead(acxSource, 2);
+		checkRead(acxSource, 100);
+	}
+
+	public void testRead_Sources() {
+		putFile(abxFile, v11v12Json);
+		putFile(acxFile, v21v22Json);
+
+		SourcedMap abx0v11 = new SourcedMap(abxSource, 0, v11);
+		SourcedMap abx1v12 = new SourcedMap(abxSource, 1, v12);
+		SourcedMap acx0v21 = new SourcedMap(acxSource, 0, v21);
+		SourcedMap acx1v22 = new SourcedMap(acxSource, 1, v22);
+
+		checkRead(new SourcesMock(repoData, "", "", abxSource), 0, abx0v11, abx1v12);
+		checkRead(new SourcesMock(repoData, "", "", abxSource), 1, abx1v12);
+		checkRead(new SourcesMock(repoData, "", "", abxSource), 2);
+		checkRead(new SourcesMock(repoData, "", "", abxSource), 100);
+
+		checkRead(new SourcesMock(repoData, "", "", abxSource, acxSource), 0, abx0v11, abx1v12, acx0v21, acx1v22);
+		checkRead(new SourcesMock(repoData, "", "", abxSource, acxSource), 1, abx1v12, acx0v21, acx1v22);
+		checkRead(new SourcesMock(repoData, "", "", abxSource, acxSource), 2, acx0v21, acx1v22);
+		checkRead(new SourcesMock(repoData, "", "", abxSource, acxSource), 3, acx1v22);
+		checkRead(new SourcesMock(repoData, "", "", abxSource, acxSource), 4);
+		checkRead(new SourcesMock(repoData, "", "", abxSource, acxSource), 100);
+	}
+
+	private void checkRead(ISources sources, int index, SourcedMap... expected) {
+		Iterable<SourcedMap> actual = repoData.read(sources, index);
+		assertEquals(Arrays.asList(expected), Iterables.list(actual));
+	}
+
+	private void checkRead(ISingleSource source, int index, SourcedMap... expected) {
+		Iterable<SourcedMap> actual = repoData.read(source, index);
+		assertEquals(Arrays.asList(expected), Iterables.list(actual));
 	}
 
 	@Override

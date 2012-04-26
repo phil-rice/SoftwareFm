@@ -10,5 +10,6 @@ public class GitMessages {
 	public static final String overlappingFileLock = "Overlapping file lock";
 	public static final String init = "Initial commit";
 	public static final String cannotUseRepoAfterCommitOrRollback = "Cannot use after Commit or Rollback. Method {0} Args {1}";
+	public static final String cannotMakeChangeToSameItemTwice = "Cannot make change to same item twice. {0} {1} {2}. Currently this is to be changed to {3}";
 
 }
