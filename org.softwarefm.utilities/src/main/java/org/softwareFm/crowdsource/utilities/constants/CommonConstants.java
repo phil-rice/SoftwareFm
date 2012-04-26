@@ -11,7 +11,7 @@ import org.softwareFm.crowdsource.utilities.collections.Sets;
 public class CommonConstants {
 	public static final long clientTimeOut = 10000;
 	public static final long serverTimeOut = 10000;
-	public static final long testTimeOutMs = 300;
+	public static final long testTimeOutMs = 3000;
 
 	public static final int serverPort = 80; // normally 80
 	public static final int testPort = 8080;

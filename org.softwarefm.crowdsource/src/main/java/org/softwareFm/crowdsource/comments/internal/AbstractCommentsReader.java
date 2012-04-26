@@ -35,13 +35,13 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 	@Override
 	public List<Map<String, Object>> globalComments(String baseUrl, final String source) {
 		final IFileDescription fd = IFileDescription.Utils.plain(baseUrl, CommentConstants.globalCommentsFile);
-		return container.accessGitReader(new IFunction1<IGitReader, List<Map<String, Object>>>() {
+		return container.access(IGitReader.class, new IFunction1<IGitReader, List<Map<String, Object>>>() {
 			@Override
 			public List<Map<String, Object>> apply(IGitReader gitReader) throws Exception {
 				List<Map<String, Object>> result = Lists.map(gitReader.getFileAsListOfMaps(fd), Maps.<String, Object> withFn(CommentConstants.sourceKey, source));
 				return result;
 			}
-		}, ICallback.Utils.<List<Map<String, Object>>> noCallback()).get();
+		}).get();
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 
 	@Override
 	public List<Map<String, Object>> myComments(final String baseUrl, final String softwareFmId, final String userCrypto, final String source) {
-		return container.accessGitReader(new IFunction1<IGitReader, List<Map<String, Object>>>() {
+		return container.access(IGitReader.class, new IFunction1<IGitReader, List<Map<String, Object>>>() {
 			@Override
 			public List<Map<String, Object>> apply(final IGitReader gitReader) throws Exception {
 				return container.accessUserMembershipReader(new IFunction2<IGroupsReader, IUserMembershipReader, List<Map<String, Object>>>() {
@@ -90,6 +90,6 @@ public abstract class AbstractCommentsReader implements ICommentsReader {
 				}, ICallback.Utils.<List<Map<String, Object>>> noCallback()).get();
 			}
 
-		}, ICallback.Utils.<List<Map<String, Object>>> noCallback()).get();
+		}).get();
 	}
 }

@@ -16,13 +16,13 @@ import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
 
+@SuppressWarnings("unchecked")
 abstract public class AbstractRepoDataTest extends RepoTest {
 
 	private final String v11Json = Json.toString(v11);
 	private final String v12Json = Json.toString(v12);
 	private final String v21Json = Json.toString(v21);
 	private final String v22Json = Json.toString(v22);
-	private final String v31Json = Json.toString(v31);
 	private final String v11v12Json = v11Json + "\n" + v12Json;
 	private final String v21v22Json = v21Json + "\n" + v22Json;
 	private final String v11v12v21Json = v11Json + "\n" + v12Json + "\n" + v21Json;
@@ -332,7 +332,6 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		assertEquals(acrepo, repoData.findRepository(acySource));
 	}
 
-	@SuppressWarnings("unchecked")
 	public void testSetProperty() {
 		putFile(abxFile, Json.mapToString("a", 11l, "b", 12l) + "\n" + Json.mapToString("a", 21l, "b", 22l));
 		repoData.setProperty(abxSource, 0, "a", "newa1");

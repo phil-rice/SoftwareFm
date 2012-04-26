@@ -33,19 +33,19 @@ public class ContainerTest extends RepoTest {
 	}
 
 	public void testRegisteringFactoryMeansItemBuiltIfRequested() {
-		FactoryForTest factory = new FactoryForTest(false);
-		container.register(MadeObjectForTest.class, factory);
-		MemoryCallback<MadeObjectForTest> memory = ICallback.Utils.memory();
-		container.access(MadeObjectForTest.class, memory).get();
-		container.access(MadeObjectForTest.class, memory).get();
+		MadeObjectForTestFactory factory = new MadeObjectForTestFactory(false);
+		container.register(MadeObject.class, factory);
+		MemoryCallback<MadeObject> memory = ICallback.Utils.memory();
+		container.access(MadeObject.class, memory).get();
+		container.access(MadeObject.class, memory).get();
 		assertEquals(factory.list, memory.getResults());
-		assertEquals(2, new HashSet<MadeObjectForTest>(factory.list).size());
+		assertEquals(2, new HashSet<MadeObject>(factory.list).size());
 	}
 
 	public void testRegisteringFactoryMeansItemNotBuiltIfNotRequested() {
 		container.register(Object.class, new Object());
-		FactoryForTest factory = new FactoryForTest(false);
-		container.register(MadeObjectForTest.class, factory);
+		MadeObjectForTestFactory factory = new MadeObjectForTestFactory(false);
+		container.register(MadeObject.class, factory);
 		MemoryCallback<Object> memory = ICallback.Utils.memory();
 		container.access(Object.class, memory).get();
 		container.access(Object.class, memory).get();
@@ -53,14 +53,14 @@ public class ContainerTest extends RepoTest {
 	}
 
 	public void testRegisteringFactoryMeansItemAddedToTransactionalsIfTransactional() {
-		FactoryForTest factory = new FactoryForTest(true);
-		container.register(MadeObjectForTest.class, factory);
-		MemoryCallback<MadeObjectForTest> memory = ICallback.Utils.memory();
-		container.access(MadeObjectForTest.class, memory).get();
-		container.access(MadeObjectForTest.class, memory).get();
+		MadeObjectForTestFactory factory = new MadeObjectForTestFactory(true);
+		container.register(MadeObject.class, factory);
+		MemoryCallback<MadeObject> memory = ICallback.Utils.memory();
+		container.access(MadeObject.class, memory).get();
+		container.access(MadeObject.class, memory).get();
 		assertEquals(factory.list, memory.getResults());
-		for (MadeObjectForTest madeObjectForTest: factory.list){
-			MadeObjectForTestTransactional transactional = (MadeObjectForTestTransactional) madeObjectForTest;
+		for (MadeObject madeObject: factory.list){
+			MadeObjectForTestTransactional transactional = (MadeObjectForTestTransactional) madeObject;
 			assertTrue(transactional.commitCalled());
 		}
 	}

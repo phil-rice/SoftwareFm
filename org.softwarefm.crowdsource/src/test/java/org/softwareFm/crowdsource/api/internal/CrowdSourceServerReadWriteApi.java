@@ -4,7 +4,6 @@
 
 package org.softwareFm.crowdsource.api.internal;
 
-import org.softwareFm.crowdsource.api.IComments;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.user.IGroups;
@@ -64,11 +63,6 @@ public class CrowdSourceServerReadWriteApi extends AbstractCrowdReadWriterApiTes
 			}
 		}).get();
 
-		EnsureSameParameter<IComments> commentsCallback = ICallback.Utils.ensureSameParameter();
-		container.accessComments(commentsCallback).get();
-		container.access(IComments.class, commentsCallback).get();
-		container.accessComments(commentsCallback).get();
-		assertEquals(3, commentsCallback.count.get());
 	}
 
 	@Override

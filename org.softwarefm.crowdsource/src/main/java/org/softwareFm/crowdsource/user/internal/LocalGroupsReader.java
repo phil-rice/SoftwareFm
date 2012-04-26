@@ -6,9 +6,7 @@ package org.softwareFm.crowdsource.user.internal;
 
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IGitReader;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
 
@@ -26,12 +24,6 @@ public class LocalGroupsReader extends AbstractGroupReader {
 
 	@Override
 	public void refresh(final String groupId) {
-		container.accessGitReader(new IFunction1<IGitReader, Void>() {
-			@Override
-			public Void apply(IGitReader gitReader) throws Exception {
-				gitReader.clearCaches();
-				return null;
-			}
-		}, ICallback.Utils.<Void> noCallback()).get();
+		IGitReader.Utils.clearCache(container);
 	}
 }

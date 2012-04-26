@@ -66,9 +66,9 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 
 	protected void checkAddGlobalComment(final String text, final String... expectedText) {
 		IContainer container = getLocalContainer();
-		container.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		container.access(ICommentsReader.class, new ICallback<ICommentsReader>() {
 			@Override
-			public Void apply(final ICommentsReader commentsReader) throws Exception {
+			public void process(final ICommentsReader commentsReader) throws Exception {
 				checkAdd("someSource", text, new Callable<ICommentDefn>() {
 					@Override
 					public ICommentDefn call() throws Exception {
@@ -80,9 +80,8 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 						return commentsReader.globalComments("a/b", "someSource");
 					}
 				}, expectedText);
-				return null;
 			}
-		}, ICallback.Utils.<Void> noCallback()).get();
+		}).get();
 	}
 
 	protected void checkAddMyComment(final String text, final String... expectedText) {
@@ -128,7 +127,7 @@ public class CommentWriterTest extends AbstractProcessorDatabaseIntegrationTests
 
 	protected void checkAdd(final String source, final String text, final Callable<ICommentDefn> makeDefinition, final Callable<List<Map<String, Object>>> actualGetter, final String... expectedText) {
 		IContainer localWriterApi = getLocalApi().makeContainer();
-		localWriterApi.accessComments(new ICallback<IComments>() {
+		localWriterApi.access(IComments.class, new ICallback<IComments>() {
 			@Override
 			public void process(IComments comments) throws Exception {
 				comments.addComment(softwareFmId, userKey0, Callables.call(makeDefinition), text);

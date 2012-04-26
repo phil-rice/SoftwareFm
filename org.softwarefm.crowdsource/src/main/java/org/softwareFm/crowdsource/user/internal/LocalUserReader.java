@@ -10,7 +10,6 @@ import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IUserReader;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
@@ -39,7 +38,7 @@ public class LocalUserReader implements IUserReader {
 	}
 
 	protected Map<String, Object> getUserData(final String softwareFmId, final String cryptoKey) {
-		return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
+		return container.access(IGitReader.class, new IFunction1<IGitReader, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(IGitReader from) throws Exception {
 				String url = userGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId));
@@ -47,7 +46,7 @@ public class LocalUserReader implements IUserReader {
 				Map<String, Object> data = from.getFile(fileDescription);
 				return data;
 			}
-		}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
+		}).get();
 	}
 
 	@Override

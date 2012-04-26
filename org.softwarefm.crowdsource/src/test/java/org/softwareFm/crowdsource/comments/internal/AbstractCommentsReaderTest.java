@@ -64,18 +64,17 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 
 		}, ICallback.Utils.<Void> noCallback()).get();
 		IGitReader.Utils.clearCache(container);
-		container.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		container.access(ICommentsReader.class, new ICallback<ICommentsReader>() {
 			@Override
-			public Void apply(ICommentsReader reader) throws Exception {
+			public void process(ICommentsReader reader) throws Exception {
 				String sourcekey = CommentConstants.sourceKey;
 				List<Map<String, Object>> actual = reader.groupComments("a/b", softwareFmId, userKey0);
 				assertEquals(Arrays.asList(//
 						Maps.with(comment1, "a", "groupId1", sourcekey, "groupId1Name"), Maps.with(comment2, sourcekey, "groupId1Name"),//
 						Maps.with(comment1, "a", "groupId2", sourcekey, "groupId2Name"), Maps.with(comment2, sourcekey, "groupId2Name"),//
 						Maps.with(comment1, "a", "groupId3", sourcekey, "groupId3Name"), Maps.with(comment2, sourcekey, "groupId3Name")), actual);
-				return null;
 			}
-		}, ICallback.Utils.<Void> noCallback()).get();
+		}).get();
 	}
 
 	private void ensureUserHasDefaultValues() {
@@ -98,13 +97,12 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 		remoteOperations.append(fd, comment2);
 		remoteOperations.addAllAndCommit("a", "testGlobal");
 		IContainer container = getApi().makeContainer();
-		container.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		container.access(ICommentsReader.class, new ICallback<ICommentsReader>() {
 			@Override
-			public Void apply(ICommentsReader reader) throws Exception {
+			public void process(ICommentsReader reader) throws Exception {
 				assertEquals(addSource("asd", comment1, comment2), reader.globalComments("a/b", "asd"));
-				return null;
 			}
-		}, ICallback.Utils.<Void> noCallback()).get();
+		}).get();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -117,13 +115,12 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 		remoteOperations.append(fd, comment2);
 		remoteOperations.addAllAndCommit("a", "testGlobal");
 		IContainer container = getApi().makeContainer();
-		container.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		container.access(ICommentsReader.class, new ICallback<ICommentsReader>() {
 			@Override
-			public Void apply(ICommentsReader reader) throws Exception {
+			public void process(ICommentsReader reader) throws Exception {
 				assertEquals(addSource("asd", comment1, comment2), reader.myComments("a/b", softwareFmId, userKey0, "asd"));
-				return null;
 			}
-		}, ICallback.Utils.<Void> noCallback()).get();
+		}).get();
 	}
 
 	public void testUserCommentsWhenNoCommentsHaveBeenMade() {
@@ -131,13 +128,12 @@ public abstract class AbstractCommentsReaderTest extends ApiTest {
 		remoteOperations.put(IFileDescription.Utils.plain("a/z"), v11);
 		remoteOperations.addAllAndCommit("a", "testUserCommentsWhenNoCommentsHaveBeenMade");// needed to ensure that the repository is in a good state
 		IContainer container = getApi().makeContainer();
-		container.accessCommentsReader(new IFunction1<ICommentsReader, Void>() {
+		container.access(ICommentsReader.class, new ICallback<ICommentsReader>() {
 			@Override
-			public Void apply(ICommentsReader reader) throws Exception {
+			public void process(ICommentsReader reader) throws Exception {
 				assertEquals(Collections.emptyList(), reader.myComments("a/b", softwareFmId, userKey0, "asd"));
-				return null;
 			}
-		}, ICallback.Utils.<Void> noCallback());
+		});
 	}
 
 	protected Map<String, String> setUpGroups(final String... groupIds) {

@@ -127,7 +127,7 @@ public class GitFacardTest extends RepoTest {
 
 	public void testTryingToRegetALockThrowsRedoTransactionException() {
 		abLock = gitFacard.lock("a/b");
-		Tests.assertThrowsWithMessage("a/b already locked", RedoTransactionException.class, new Runnable() {
+		Tests.assertThrowsWithMessage("RepoRl a/b already locked", RedoTransactionException.class, new Runnable() {
 			@Override
 			public void run() {
 				gitFacard.lock("a/b");

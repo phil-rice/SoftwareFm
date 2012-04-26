@@ -43,7 +43,7 @@ public class CommentProcessor extends AbstractCallProcessor {
 		checkForParameter(parameters, LoginConstants.softwareFmIdKey, CommentConstants.textKey, CommentConstants.filenameKey);
 		String command = Strings.firstSegment(actualUrl.substring(1), "/");
 		if (command.equals(CommentConstants.addCommandSuffix)) {
-			container.accessComments(new ICallback<IComments>() {
+			container.access(IComments.class, new ICallback<IComments>() {
 				@Override
 				public void process(IComments comments) throws Exception {
 					String url = actualUrl.substring(CommentConstants.addCommandSuffix.length() + 1);

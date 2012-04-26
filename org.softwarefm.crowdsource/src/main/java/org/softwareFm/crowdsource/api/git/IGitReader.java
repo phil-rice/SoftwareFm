@@ -8,7 +8,6 @@ import java.io.File;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.IContainer;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.IHasCache;
 
@@ -34,62 +33,62 @@ public interface IGitReader extends IHasCache {
 	public static class Utils {
 
 		public static Iterable<Map<String, Object>> getFileAsListOfMaps(IContainer container, final IFileDescription fileDescription) {
-			return container.accessGitReader(new IFunction1<IGitReader, Iterable<Map<String, Object>>>() {
+			return container.access(IGitReader.class, new IFunction1<IGitReader, Iterable<Map<String, Object>>>() {
 				@Override
 				public Iterable<Map<String, Object>> apply(IGitReader gitReader) throws Exception {
 					Iterable<Map<String, Object>> result = gitReader.getFileAsListOfMaps(fileDescription);
 					return result;
 				}
-			}, ICallback.Utils.<Iterable<Map<String, Object>>> noCallback()).get();
+			}).get();
 		}
 
 		public static String getFileAsString(IContainer container, final IFileDescription fileDescription) {
-			return container.accessGitReader(new IFunction1<IGitReader, String>() {
+			return container.access(IGitReader.class, new IFunction1<IGitReader, String>() {
 				@Override
 				public String apply(IGitReader gitReader) throws Exception {
 					String result = gitReader.getFileAsString(fileDescription);
 					return result;
 				}
-			}, ICallback.Utils.<String> noCallback()).get();
+			}).get();
 		}
 
 		public static Map<String, Object> getFileAsMap(IContainer container, final IFileDescription fileDescription) {
-			return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
+			return container.access(IGitReader.class, new IFunction1<IGitReader, Map<String, Object>>() {
 				@Override
 				public Map<String, Object> apply(IGitReader gitReader) throws Exception {
 					Map<String, Object> result = gitReader.getFile(fileDescription);
 					return result;
 				}
-			}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
+			}).get();
 		}
 
 		public static Integer countOfFileAsListsOfMap(IContainer container, final IFileDescription fileDescription) {
-			return container.accessGitReader(new IFunction1<IGitReader, Integer>() {
+			return container.access(IGitReader.class, new IFunction1<IGitReader, Integer>() {
 				@Override
 				public Integer apply(IGitReader gitReader) throws Exception {
 					int result = gitReader.countOfFileAsListsOfMap(fileDescription);
 					return result;
 				}
-			}, ICallback.Utils.<Integer> noCallback()).get();
+			}).get();
 		}
 
 		public static void clearCache(IContainer container) {
-			container.accessGitReader(new IFunction1<IGitReader, Void>() {
+			container.access(IGitReader.class, new IFunction1<IGitReader, Void>() {
 				@Override
 				public Void apply(IGitReader gitReader) throws Exception {
 					gitReader.clearCaches();
 					return null;
 				}
-			}, ICallback.Utils.<Void> noCallback()).get();
+			}).get();
 		}
 
 		public static Map<String, Object> getFileAndDescendants(IContainer container, final IFileDescription fileDescription, final int depth) {
-			return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
+			return container.access(IGitReader.class, new IFunction1<IGitReader, Map<String, Object>>() {
 				@Override
 				public Map<String, Object> apply(IGitReader gitReader) throws Exception {
 					return gitReader.getFileAndDescendants(fileDescription, depth);
 				}
-			}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
+			}).get();
 		}
 
 	}

@@ -42,7 +42,7 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 		checkAddComment(comment1, CommentConstants.globalSource, ICommentDefn.Utils.everyoneInitial("a/b"), comment1);
 		checkAddComment(comment2, CommentConstants.globalSource, ICommentDefn.Utils.everyoneInitial("a/b"), comment1, comment2);
 
-		getServerContainer().accessComments(new ICallback<IComments>() {
+		getServerContainer().access(IComments.class, new ICallback<IComments>() {
 			@Override
 			public void process(IComments reader) throws Exception {
 				assertEquals(addSource(CommentConstants.globalSource, comment1, comment2), reader.globalComments("a/b", CommentConstants.globalSource));
@@ -70,7 +70,7 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 		checkAddComment(comment1, CommentConstants.mySource, ICommentDefn.Utils.myInitial(serverContainer, softwareFmId, userKey0, "a/b"), comment1);
 		checkAddComment(comment2, CommentConstants.mySource, ICommentDefn.Utils.myInitial(serverContainer, softwareFmId, userKey0, "a/b"), comment1, comment2);
 
-		serverContainer.accessComments(new ICallback<IComments>() {
+		serverContainer.access(IComments.class, new ICallback<IComments>() {
 			@Override
 			public void process(IComments comments) throws Exception {
 				assertEquals(Arrays.asList(), comments.globalComments("a/b", CommentConstants.globalSource));
@@ -97,7 +97,7 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 		checkAddComment(comment1, "groupId1Name", ICommentDefn.Utils.groupInitial(serverContainer, "groupId1", group1Crypto, "a/b"), comment1);
 		checkAddComment(comment2, "groupId1Name", ICommentDefn.Utils.groupInitial(serverContainer, "groupId1", group1Crypto, "a/b"), comment1, comment2);
 
-		serverContainer.accessComments(new ICallback<IComments>() {
+		serverContainer.access(IComments.class, new ICallback<IComments>() {
 			@Override
 			public void process(IComments comments) throws Exception {
 				assertEquals(Arrays.asList(), comments.globalComments("a/b", CommentConstants.globalSource));
@@ -108,7 +108,7 @@ public class CommentsForServerTest extends AbstractCommentsReaderTest {
 	}
 
 	protected void checkAddComment(final Map<String, Object> comment, final String source, final ICommentDefn defn, final Map<String, Object>... rawExpected) {
-		getServerContainer().accessComments(new ICallback<IComments>() {
+		getServerContainer().access(IComments.class, new ICallback<IComments>() {
 			@Override
 			public void process(IComments comments) throws Exception {
 				comments.addComment(softwareFmId, userKey0, defn, (String) comment.get(CommentConstants.textKey));

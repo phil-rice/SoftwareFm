@@ -5,7 +5,6 @@
 package org.softwareFm.crowdsource.api.internal;
 
 import org.softwareFm.crowdsource.api.ApiTest;
-import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.ICrowdSourcedApi;
 import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
@@ -26,12 +25,6 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 
 	public void testGetSameReads() {
 		final IUserAndGroupsContainer container = getApi().makeUserAndGroupsContainer();
-
-		IFunction1<ICommentsReader, Integer> commentsFn = Functions.ensureSameParameters();
-		container.accessCommentsReader(commentsFn, ICallback.Utils.<Integer> noCallback()).get();
-		container.access(ICommentsReader.class, commentsFn).get();
-		container.accessWithCallback(ICommentsReader.class, commentsFn, ICallback.Utils.<Integer> noCallback()).get();
-		assertEquals(4, container.accessCommentsReader(commentsFn, ICallback.Utils.<Integer> noCallback()).get(CommonConstants.testTimeOutMs).intValue());
 
 		IFunction1<IUserReader, Integer> userReaderFn = Functions.ensureSameParameters();
 		container.accessUserReader(userReaderFn, ICallback.Utils.<Integer> noCallback()).get();
@@ -62,10 +55,10 @@ abstract public class AbstractCrowdReadWriterApiTest extends ApiTest {
 		container.accessUserMembershipReader(userMembershipReaderFn, ICallback.Utils.<Void> noCallback());
 
 		final IFunction1<IGitReader, Integer> gitReaderFn = Functions.ensureSameParameters();
-		container.accessGitReader(gitReaderFn, ICallback.Utils.<Integer> noCallback()).get();
+		container.access(IGitReader.class, gitReaderFn).get();
 		container.access(IGitReader.class, gitReaderFn).get();
 		container.accessWithCallback(IGitReader.class, gitReaderFn, ICallback.Utils.<Integer> noCallback()).get();
-		assertEquals(4, container.accessGitReader(gitReaderFn, ICallback.Utils.<Integer> noCallback()).get(CommonConstants.testTimeOutMs).intValue());
+		assertEquals(4, container.access(IGitReader.class, gitReaderFn).get(CommonConstants.testTimeOutMs).intValue());
 
 		container.accessWithCallback(IGroupsReader.class, IUserMembershipReader.class, new IFunction2<IGroupsReader, IUserMembershipReader, Void>() {
 			@Override

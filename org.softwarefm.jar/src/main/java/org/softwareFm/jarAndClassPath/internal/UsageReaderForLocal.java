@@ -11,7 +11,6 @@ import java.util.Map;
 import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -35,7 +34,7 @@ public class UsageReaderForLocal extends AbstractUsageReader {
 	@Override
 	protected Map<String, Map<String, List<Integer>>> getProjectDetails(final IFileDescription projectFileDescription) {
 		if (projectFileDescription != null)
-			return container.accessGitReader(new IFunction1<IGitReader, Map<String, Map<String, List<Integer>>>>() {
+			return container.access(IGitReader.class, new IFunction1<IGitReader, Map<String, Map<String, List<Integer>>>>() {
 				@Override
 				public Map<String, Map<String, List<Integer>>> apply(IGitReader gitReader) throws Exception {
 					Map<String, Map<String, List<Integer>>> data = (Map) gitReader.getFile(projectFileDescription);
@@ -43,7 +42,7 @@ public class UsageReaderForLocal extends AbstractUsageReader {
 						return data;
 					return Collections.emptyMap();
 				}
-			}, ICallback.Utils.<Map<String, Map<String, List<Integer>>>> noCallback()).get();
+			}).get();
 		return Collections.emptyMap();
 	}
 

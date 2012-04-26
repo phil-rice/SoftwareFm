@@ -173,10 +173,6 @@ public class TransactionManager implements ITransactionManagerBuilder {
 				}
 			}
 
-			private <Intermediate> Intermediate executeJob(final IFunction1<IMonitor, Intermediate> job, IMonitor monitor) throws Exception {
-				Intermediate intermediate = job.apply(monitor);
-				return intermediate;
-			}
 
 			private void rollback(final IFunction1<Intermediate, Result> resultCallbackFn, AtomicReference<Exception> exception, ITransaction<?> transaction) throws Exception {
 				CopyOnWriteArrayList<Exception> exceptions = new CopyOnWriteArrayList<Exception>();

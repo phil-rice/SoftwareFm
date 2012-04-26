@@ -12,7 +12,6 @@ import org.softwareFm.crowdsource.api.IContainer;
 import org.softwareFm.crowdsource.api.git.IFileDescription;
 import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
-import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
@@ -41,7 +40,7 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 	}
 
 	protected Map<String, Object> getGroupMap(final IFileDescription groupFileDescription) {
-		return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
+		return container.access(IGitReader.class, new IFunction1<IGitReader, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(IGitReader git) throws Exception {
 				Iterable<Map<String, Object>> maps = git.getFileAsListOfMaps(groupFileDescription);
@@ -50,18 +49,18 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 					throw new IllegalStateException(groupFileDescription.toString());
 				return iterator.next();
 			}
-		}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
+		}).get();
 	}
 
 	@Override
 	public Map<String, Object> getUsageReport(final String groupId, final String groupCryptoKey, final String month) {
-		return container.accessGitReader(new IFunction1<IGitReader, Map<String, Object>>() {
+		return container.access(IGitReader.class, new IFunction1<IGitReader, Map<String, Object>>() {
 			@Override
 			public Map<String, Object> apply(IGitReader git) throws Exception {
 				IFileDescription groupFileDescription = findReportFileDescription(groupId, groupCryptoKey, month);
 				return git.getFile(groupFileDescription);
 			}
-		}, ICallback.Utils.<Map<String, Object>> noCallback()).get();
+		}).get();
 	}
 
 	@Override
@@ -89,7 +88,7 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 
 	@Override
 	public int membershipCount(final String groupId, final String groupCryptoKey) {
-		return container.accessGitReader(new IFunction1<IGitReader, Integer>() {
+		return container.access(IGitReader.class, new IFunction1<IGitReader, Integer>() {
 			@Override
 			public Integer apply(IGitReader git) throws Exception {
 				IFileDescription groupFileDescription = findFileDescription(groupId, groupCryptoKey);
@@ -97,6 +96,6 @@ public abstract class AbstractGroupReader implements IGroupsReader {
 				List<String> listOfLines = Strings.splitIgnoreBlanks(lines, "\n");
 				return listOfLines.size() - 1;
 			}
-		}, ICallback.Utils.<Integer> noCallback()).get();
+		}).get();
 	}
 }

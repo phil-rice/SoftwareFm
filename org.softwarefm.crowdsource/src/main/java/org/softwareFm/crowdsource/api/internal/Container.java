@@ -8,13 +8,10 @@ import java.text.MessageFormat;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.softwareFm.crowdsource.api.IComments;
-import org.softwareFm.crowdsource.api.ICommentsReader;
 import org.softwareFm.crowdsource.api.IContainerBuilder;
 import org.softwareFm.crowdsource.api.IFactory;
 import org.softwareFm.crowdsource.api.IUserAndGroupsContainer;
 import org.softwareFm.crowdsource.api.git.IGitOperations;
-import org.softwareFm.crowdsource.api.git.IGitReader;
 import org.softwareFm.crowdsource.api.user.IGroups;
 import org.softwareFm.crowdsource.api.user.IGroupsReader;
 import org.softwareFm.crowdsource.api.user.IUser;
@@ -70,84 +67,84 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 	}
 
 	@Override
-	public <Result, API> ITransaction<Result> access(Class<API> clazz, IFunction1<API, Result> function) {
-		return accessWithCallbackFn(clazz, function, Functions.<Result, Result> identity());
+	public <Result, API> ITransaction<Result> access(Class<API> clazz, IFunction1<API, Result> job) {
+		return accessWithCallbackFn(clazz, job, Functions.<Result, Result> identity());
 	}
 
 	@Override
-	public <Result, Intermediate, API> ITransaction<Result> accessWithCallbackFn(final Class<API> clazz, final IFunction1<API, Intermediate> function, final IFunction1<Intermediate, Result> resultCallback) {
+	public <Result, Intermediate, API> ITransaction<Result> accessWithCallbackFn(final Class<API> clazz, final IFunction1<API, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback) {
 		final API readWriter = getReadWriter(clazz);
 		return transactionManager.start(new IFunction1<IMonitor, Intermediate>() {
 			@Override
 			public Intermediate apply(IMonitor from) throws Exception {
 				from.beginTask(getTaskName(), 1);
-				return function.apply(readWriter);
+				return job.apply(readWriter);
 			}
 
 			@Override
 			public String toString() {
-				return "accessWithCallbackFn(" + clazz.getSimpleName() + ", " + function + ", " + resultCallback + ")";
+				return "accessWithCallbackFn(" + clazz.getSimpleName() + ", " + job + ", " + resultCallback + ")";
 			}
 		}, resultCallback, readWriter);
 	}
 
 	@Override
-	public <API> ITransaction<Void> access(final Class<API> clazz, final ICallback<API> callback) {
+	public <API> ITransaction<Void> access(final Class<API> clazz, final ICallback<API> job) {
 		final API readWriter = getReadWriter(clazz);
 		return transactionManager.start(new IFunction1<IMonitor, Void>() {
 			@Override
 			public Void apply(IMonitor from) throws Exception {
 				from.beginTask(getTaskName(), 1);
-				callback.process(readWriter);
+				job.process(readWriter);
 				return null;
 			}
 
 			@Override
 			public String toString() {
-				return "access(" + clazz.getSimpleName() + ", " + callback + ")";
+				return "access(" + clazz.getSimpleName() + ", " + job + ")";
 			}
 		}, Functions.<Void, Void> identity(), readWriter);
 	}
 
 	@Override
-	public <A1, A2> ITransaction<Void> access(final Class<A1> clazz1, final Class<A2> clazz2, final ICallback2<A1, A2> callback) {
+	public <A1, A2> ITransaction<Void> access(final Class<A1> clazz1, final Class<A2> clazz2, final ICallback2<A1, A2> job) {
 		final A1 one = getReadWriter(clazz1);
 		final A2 two = getReadWriter(clazz2);
 		return transactionManager.start(new IFunction1<IMonitor, Void>() {
 			@Override
 			public Void apply(IMonitor from) throws Exception {
 				from.beginTask(getTaskName(), 1);
-				callback.process(one, two);
+				job.process(one, two);
 				return null;
 			}
 
 			@Override
 			public String toString() {
-				return "access(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + callback + ")";
+				return "access(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + job + ")";
 			}
 		}, Functions.<Void, Void> identity(), one, two);
 	}
 
 	@Override
-	public <Result, Intermediate, A1, A2> ITransaction<Result> accessWithCallbackFn(final Class<A1> clazz1, final Class<A2> clazz2, final IFunction2<A1, A2, Intermediate> function, final IFunction1<Intermediate, Result> resultCallback) {
+	public <Result, Intermediate, A1, A2> ITransaction<Result> accessWithCallbackFn(final Class<A1> clazz1, final Class<A2> clazz2, final IFunction2<A1, A2, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback) {
 		final A1 one = getReadWriter(clazz1);
 		final A2 two = getReadWriter(clazz2);
 		return transactionManager.start(new IFunction1<IMonitor, Intermediate>() {
 			@Override
 			public Intermediate apply(IMonitor from) throws Exception {
 				from.beginTask(getTaskName(), 1);
-				return function.apply(one, two);
+				return job.apply(one, two);
 			}
 
 			@Override
 			public String toString() {
-				return "accessWithCallbackFn(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + function + ", " + resultCallback + ")";
+				return "accessWithCallbackFn(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + job + ", " + resultCallback + ")";
 			}
 		}, resultCallback, one, two);
 	}
 
 	@Override
-	public <Result, Intermediate, A1, A2, A3> ITransaction<Result> accessWithCallbackFn(final Class<A1> clazz1, final Class<A2> clazz2, final Class<A3> clazz3, final IFunction3<A1, A2, A3, Intermediate> function, final IFunction1<Intermediate, Result> resultCallback) {
+	public <Result, Intermediate, A1, A2, A3> ITransaction<Result> accessWithCallbackFn(final Class<A1> clazz1, final Class<A2> clazz2, final Class<A3> clazz3, final IFunction3<A1, A2, A3, Intermediate> job, final IFunction1<Intermediate, Result> resultCallback) {
 		final A1 one = getReadWriter(clazz1);
 		final A2 two = getReadWriter(clazz2);
 		final A3 three = getReadWriter(clazz3);
@@ -155,18 +152,18 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 			@Override
 			public Intermediate apply(IMonitor from) throws Exception {
 				from.beginTask(getTaskName(), 1);
-				return function.apply(one, two, three);
+				return job.apply(one, two, three);
 			}
 
 			@Override
 			public String toString() {
-				return "accessWithCallbackFn(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + clazz3.getSimpleName() + ", " + function + ", " + resultCallback + ")";
+				return "accessWithCallbackFn(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + clazz3.getSimpleName() + ", " + job + ", " + resultCallback + ")";
 			}
 		}, resultCallback, one, two);
 	}
 
 	@Override
-	public <A1, A2, A3> ITransaction<Void> access(final Class<A1> clazz1, final Class<A2> clazz2, final Class<A3> clazz3, final ICallback3<A1, A2, A3> callback) {
+	public <A1, A2, A3> ITransaction<Void> access(final Class<A1> clazz1, final Class<A2> clazz2, final Class<A3> clazz3, final ICallback3<A1, A2, A3> job) {
 		final A1 one = getReadWriter(clazz1);
 		final A2 two = getReadWriter(clazz2);
 		final A3 three = getReadWriter(clazz3);
@@ -174,57 +171,57 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 			@Override
 			public Void apply(IMonitor from) throws Exception {
 				from.beginTask(getTaskName(), 1);
-				callback.process(one, two, three);
+				job.process(one, two, three);
 				return null;
 			}
 
 			@Override
 			public String toString() {
-				return "access(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + clazz3.getSimpleName() + ", " + callback + ")";
+				return "access(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + clazz3.getSimpleName() + ", " + job + ")";
 			}
 		}, Functions.<Void, Void> identity(), one, two, three);
 
 	}
 
 	@Override
-	public <Result, API> ITransaction<Result> accessWithCallback(final Class<API> clazz, final IFunction1<API, Result> function, final ICallback<Result> resultCallback) {
+	public <Result, API> ITransaction<Result> accessWithCallback(final Class<API> clazz, final IFunction1<API, Result> job, final ICallback<Result> resultCallback) {
 		final API readWriter = getReadWriter(clazz);
 		return transactionManager.start(new IFunction1<IMonitor, Result>() {
 			@Override
 			public Result apply(IMonitor from) throws Exception {
 				from.beginTask(getTaskName(), 1);
-				Result result = function.apply(readWriter);
+				Result result = job.apply(readWriter);
 				return result;
 			}
 
 			@Override
 			public String toString() {
-				return "accessWithCallback(" + clazz.getSimpleName() + ", " + function + ", " + resultCallback + ")";
+				return "accessWithCallback(" + clazz.getSimpleName() + ", " + job + ", " + resultCallback + ")";
 			}
 		}, Functions.identityWithCallback(resultCallback), readWriter);
 	}
 
 	@Override
-	public <Result, A1, A2> ITransaction<Result> accessWithCallback(final Class<A1> clazz1, final Class<A2> clazz2, final IFunction2<A1, A2, Result> function, final ICallback<Result> resultCallback) {
+	public <Result, A1, A2> ITransaction<Result> accessWithCallback(final Class<A1> clazz1, final Class<A2> clazz2, final IFunction2<A1, A2, Result> job, final ICallback<Result> resultCallback) {
 		final A1 one = getReader(clazz1);
 		final A2 two = getReader(clazz2);
 		return transactionManager.start(new IFunction1<IMonitor, Result>() {
 			@Override
 			public Result apply(IMonitor from) throws Exception {
 				from.beginTask(getTaskName(), 1);
-				Result result = function.apply(one, two);
+				Result result = job.apply(one, two);
 				return result;
 			}
 
 			@Override
 			public String toString() {
-				return "access(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + function + ", " + resultCallback + ")";
+				return "access(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + job + ", " + resultCallback + ")";
 			}
 		}, Functions.identityWithCallback(resultCallback), one, two);
 	}
 
 	@Override
-	public <Result, A1, A2, A3> ITransaction<Result> accessWithCallback(final Class<A1> clazz1, final Class<A2> clazz2, final Class<A3> clazz3, final IFunction3<A1, A2, A3, Result> function, final ICallback<Result> resultCallback) {
+	public <Result, A1, A2, A3> ITransaction<Result> accessWithCallback(final Class<A1> clazz1, final Class<A2> clazz2, final Class<A3> clazz3, final IFunction3<A1, A2, A3, Result> job, final ICallback<Result> resultCallback) {
 		final A1 one = getReader(clazz1);
 		final A2 two = getReader(clazz2);
 		final A3 three = getReader(clazz3);
@@ -232,13 +229,13 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 			@Override
 			public Result apply(IMonitor from) throws Exception {
 				from.beginTask(getTaskName(), 1);
-				Result result = function.apply(one, two, three);
+				Result result = job.apply(one, two, three);
 				return result;
 			}
 
 			@Override
 			public String toString() {
-				return "accessWithCallback(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + clazz3.getSimpleName() + ", " + function + ", " + resultCallback + ")";
+				return "accessWithCallback(" + clazz1.getSimpleName() + ", " + clazz2.getSimpleName() + ", " + clazz3.getSimpleName() + ", " + job + ", " + resultCallback + ")";
 			}
 		}, Functions.identityWithCallback(resultCallback), one, two, three);
 	}
@@ -269,20 +266,7 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 		return transactionManager;
 	}
 
-	@Override
-	public ITransaction<Void> accessComments(ICallback<IComments> callback) {
-		return access(IComments.class, callback);
-	}
 
-	@Override
-	public <T> ITransaction<T> accessGitReader(IFunction1<IGitReader, T> function, ICallback<T> resultCallback) {
-		return accessWithCallback(IGitReader.class, function, resultCallback);
-	}
-
-	@Override
-	public <T> ITransaction<T> accessCommentsReader(IFunction1<ICommentsReader, T> function, ICallback<T> resultCallback) {
-		return accessWithCallback(ICommentsReader.class, function, resultCallback);
-	}
 
 	@Override
 	public <T> ITransaction<T> accessGroupReader(IFunction1<IGroupsReader, T> function, ICallback<T> resultCallback) {

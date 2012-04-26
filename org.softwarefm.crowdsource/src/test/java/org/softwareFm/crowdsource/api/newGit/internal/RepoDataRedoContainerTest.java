@@ -14,6 +14,7 @@ public class RepoDataRedoContainerTest extends RepoTest {
 
 	private Container container;
 
+	@SuppressWarnings("unchecked")
 	public void testIfTryToReadSameFileInTwoTransactionsGetRedoTransactionExceptionInSecond() throws Exception {
 		initRepos(gitFacard, "a");
 		putFile("a/b", null, v11, v12);

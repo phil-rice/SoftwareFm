@@ -12,7 +12,7 @@ public interface IComments extends ICommentsReader {
 
 	public static class Utils {
 		public static void addComment(IContainer api, final String softwareFmId, final String userkey, final ICommentDefn call, final String text) {
-			api.accessComments(new ICallback<IComments>() {
+			api.access(IComments.class, new ICallback<IComments>() {
 				@Override
 				public void process(IComments comments) throws Exception {
 					comments.addComment(softwareFmId, userkey, call, text);
