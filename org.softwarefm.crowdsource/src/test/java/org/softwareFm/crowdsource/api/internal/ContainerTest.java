@@ -10,6 +10,9 @@ import org.softwareFm.crowdsource.api.IContainerBuilder;
 import org.softwareFm.crowdsource.api.newGit.internal.RepoTest;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.callbacks.MemoryCallback;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
+import org.softwareFm.crowdsource.utilities.runnable.Callables;
+import org.softwareFm.crowdsource.utilities.runnable.CountCallable;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
 import org.softwareFm.crowdsource.utilities.transaction.ConstantFnWithKick;
 import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
@@ -59,17 +62,44 @@ public class ContainerTest extends RepoTest {
 		container.access(MadeObject.class, memory).get();
 		container.access(MadeObject.class, memory).get();
 		assertEquals(factory.list, memory.getResults());
-		for (MadeObject madeObject: factory.list){
+		for (MadeObject madeObject : factory.list) {
 			MadeObjectForTestTransactional transactional = (MadeObjectForTestTransactional) madeObject;
 			assertTrue(transactional.commitCalled());
 		}
 	}
 
+	public void testRegisterCallableMeansItemBuiltIfRequested() {
+		MadeObject value = new MadeObject();
+		CountCallable<MadeObject> count = Callables.count(value);
+		container.register(MadeObject.class, count);
+		MemoryCallback<MadeObject> memory = ICallback.Utils.memory();
+		container.access(MadeObject.class, memory).get();
+		container.access(MadeObject.class, memory).get();
+		assertEquals(2, count.getCount());
+		assertEquals(Lists.times(2, value), memory.getResults());
+	}
+
+	public void testRegisterCallableMeansItemNotBuiltIfNotRequested() {
+		container.register(Object.class, new Object());
+		CountCallable<MadeObject> count = Callables.count(new MadeObject());
+		container.register(MadeObject.class, count);
+		container.access(Object.class, ICallback.Utils.noCallback()).get();
+		assertEquals(0, count.getCount());
+	}
+
+	public void testRegisterCallableMeansItemAddedToTransactionIfTransactional() {
+		MadeObjectForTestTransactional value = new MadeObjectForTestTransactional();
+		CountCallable<MadeObject> count = Callables.<MadeObject> count(value);
+		container.register(MadeObject.class, count);
+		MemoryCallback<MadeObject> memory = ICallback.Utils.memory();
+		container.access(MadeObject.class, memory).get();
+		assertTrue(value.commitCalled());
+	}
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		container = new Container(transactionManager, null) {
-		};
+		container = new Container(transactionManager, null);
 	}
 
 	public static void main(String[] args) {

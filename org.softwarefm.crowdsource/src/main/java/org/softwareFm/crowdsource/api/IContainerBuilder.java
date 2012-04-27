@@ -4,9 +4,13 @@
 
 package org.softwareFm.crowdsource.api;
 
+import java.util.concurrent.Callable;
+
 public interface IContainerBuilder extends IContainer {
 
 	<T, X extends T> void register(Class<T> class1, X x);
+
+	<T, X extends T> void register(Class<T> class1, Callable<X> callable);
 
 	<T, X extends T> void register(Class<T> class1, IFactory<T> factory);
 

@@ -16,6 +16,7 @@ import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.functions.IFunction2;
 import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 
+/** These are commonly used access methods used within softwarefm. Their main purpose is to make it easy for the IDE to track usage. If you use container on your own project, it is suggested that you consider using a similar pattern */
 public interface IUserAndGroupsContainer extends IContainer {
 	<T> ITransaction<T> accessGroupReader(IFunction1<IGroupsReader, T> function, ICallback<T> resultCallback);
 

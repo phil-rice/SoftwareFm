@@ -9,7 +9,7 @@ import org.softwareFm.crowdsource.api.newGit.ISingleSource;
 import org.softwareFm.crowdsource.api.newGit.ISources;
 import org.softwareFm.crowdsource.api.newGit.RepoLocation;
 import org.softwareFm.crowdsource.api.newGit.SourcedMap;
-import org.softwareFm.crowdsource.api.newGit.facard.CannotChangeTwiceException;
+import org.softwareFm.crowdsource.api.newGit.exceptions.CannotChangeTwiceException;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
 import org.softwareFm.crowdsource.utilities.json.Json;
@@ -402,15 +402,6 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		gitFacard.init("a/b");
 		gitFacard.init("a/c");
 
-	}
-
-	@Override
-	protected void tearDown() throws Exception {
-		try {
-			repoData.rollback();
-		} finally {
-			super.tearDown();
-		}
 	}
 
 }

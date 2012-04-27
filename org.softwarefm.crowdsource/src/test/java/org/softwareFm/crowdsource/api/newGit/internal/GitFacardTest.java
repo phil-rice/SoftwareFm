@@ -4,8 +4,9 @@ import java.io.File;
 import java.nio.channels.FileLock;
 
 import org.eclipse.jgit.storage.file.FileRepository;
+import org.softwareFm.crowdsource.api.newGit.IAccessControlList;
+import org.softwareFm.crowdsource.api.newGit.exceptions.TryingToLockUnderRepoException;
 import org.softwareFm.crowdsource.api.newGit.facard.RepoRlAndText;
-import org.softwareFm.crowdsource.api.newGit.facard.TryingToLockUnderRepoException;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
@@ -140,7 +141,7 @@ public class GitFacardTest extends RepoTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		gitFacard = new GitFacard(remoteRoot);
+		gitFacard = new GitFacard(remoteRoot, IAccessControlList.Utils.noAccessControl());
 		abDir = new File(remoteRoot, "a/b");
 		acDir = new File(remoteRoot, "a/c");
 		abLockFile = new File(abDir, CommonConstants.lockFileName);

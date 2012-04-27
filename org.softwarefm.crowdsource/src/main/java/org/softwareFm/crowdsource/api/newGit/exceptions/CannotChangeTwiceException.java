@@ -1,4 +1,4 @@
-package org.softwareFm.crowdsource.api.newGit.facard;
+package org.softwareFm.crowdsource.api.newGit.exceptions;
 
 import java.util.Map;
 

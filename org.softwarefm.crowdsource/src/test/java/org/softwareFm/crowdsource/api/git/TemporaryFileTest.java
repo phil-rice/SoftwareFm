@@ -26,7 +26,11 @@ abstract public class TemporaryFileTest extends TestCase {
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		if (root.exists())
+		deleteDirectory();
+	}
+
+	private void deleteDirectory() {
+		if (root != null && root.exists())
 			assertTrue(Files.deleteDirectory(root));
 	}
 

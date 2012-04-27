@@ -4,9 +4,13 @@ import java.nio.channels.FileLock;
 
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.softwareFm.crowdsource.api.newGit.RepoLocation;
+import org.softwareFm.crowdsource.api.newGit.exceptions.AlreadyUnderRepoException;
+import org.softwareFm.crowdsource.api.newGit.exceptions.NotRepoException;
+import org.softwareFm.crowdsource.api.newGit.exceptions.NotUnderRepoException;
+import org.softwareFm.crowdsource.api.newGit.exceptions.TryingToLockUnderRepoException;
 import org.softwareFm.crowdsource.utilities.transaction.RedoTransactionException;
 
-/** Stateless object that is low level accessor to git. Should only be used by tests and by GitDataPrim. DO NOT USE THIS NORMALLY. */
+/** DO NOT USE THIS NORMALLY. This is the low level accessor to git and the file system. Should only be used by tests and by GitDataPrim. */
 
 public interface IGitFacard {
 

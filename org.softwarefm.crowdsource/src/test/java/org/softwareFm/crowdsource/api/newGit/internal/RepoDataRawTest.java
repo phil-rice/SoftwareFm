@@ -1,6 +1,6 @@
 package org.softwareFm.crowdsource.api.newGit.internal;
 
-import org.softwareFm.crowdsource.api.newGit.facard.CannotUseRepoAfterCommitOrRollbackException;
+import org.softwareFm.crowdsource.api.newGit.exceptions.CannotUseRepoAfterCommitOrRollbackException;
 import org.softwareFm.crowdsource.utilities.tests.Tests;
 
 public class RepoDataRawTest extends AbstractRepoDataTest {

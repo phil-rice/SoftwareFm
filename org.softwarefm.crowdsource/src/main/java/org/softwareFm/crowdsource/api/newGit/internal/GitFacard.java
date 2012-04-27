@@ -16,13 +16,14 @@ import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.softwareFm.crowdsource.api.newGit.IAccessControlList;
 import org.softwareFm.crowdsource.api.newGit.RepoLocation;
-import org.softwareFm.crowdsource.api.newGit.facard.AlreadyUnderRepoException;
+import org.softwareFm.crowdsource.api.newGit.exceptions.AlreadyUnderRepoException;
+import org.softwareFm.crowdsource.api.newGit.exceptions.NotRepoException;
+import org.softwareFm.crowdsource.api.newGit.exceptions.NotUnderRepoException;
+import org.softwareFm.crowdsource.api.newGit.exceptions.TryingToLockUnderRepoException;
 import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
-import org.softwareFm.crowdsource.api.newGit.facard.NotRepoException;
-import org.softwareFm.crowdsource.api.newGit.facard.NotUnderRepoException;
 import org.softwareFm.crowdsource.api.newGit.facard.RepoRlAndText;
-import org.softwareFm.crowdsource.api.newGit.facard.TryingToLockUnderRepoException;
 import org.softwareFm.crowdsource.constants.GitMessages;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -33,9 +34,11 @@ public class GitFacard implements IGitFacard {
 
 	private final File root;
 	private final FileRepositoryBuilder builder = new FileRepositoryBuilder();
+	private final IAccessControlList acl;
 
-	public GitFacard(File root) {
+	public GitFacard(File root, IAccessControlList acl) {
 		this.root = root;
+		this.acl = acl;
 	}
 
 	@Override
@@ -63,7 +66,7 @@ public class GitFacard implements IGitFacard {
 
 	private File checkCanLockRepo(String repoRl) {
 		File lockDir = new File(root, repoRl);
-		RepoLocation repoLocation = findRepoRl(repoRl);
+		RepoLocation repoLocation = findRepoRl( repoRl);
 		if (repoLocation != null) {
 			File repoDir = repoLocation.dir;
 			if (!repoDir.equals(lockDir))
@@ -79,6 +82,7 @@ public class GitFacard implements IGitFacard {
 
 	@Override
 	public void init(String repoRl) throws AlreadyUnderRepoException {
+		acl.write(repoRl);
 		RepoLocation existing = findRepoRl(repoRl);
 		if (existing != null)
 			throw new AlreadyUnderRepoException(existing.url, repoRl);
@@ -91,6 +95,7 @@ public class GitFacard implements IGitFacard {
 
 	@Override
 	public RepoRlAndText getFile(String rl) throws NotUnderRepoException {
+		acl.read(rl);
 		File repoRl = findMustExistRepoRl(rl).dir;
 		File file = new File(root, rl);
 		String text = file.exists() ? Files.getText(file) : "";
@@ -99,7 +104,11 @@ public class GitFacard implements IGitFacard {
 
 	@Override
 	public String putFileReturningRepoRl(String rl, String text) throws NotUnderRepoException {
-		File dir = findRepoRl(rl).dir;
+		acl.write(rl);
+		RepoLocation repoLocation = findRepoRl(rl);
+		if (repoLocation == null)
+			throw new NotUnderRepoException(rl);
+		File dir = repoLocation.dir;
 		if (dir == null)
 			throw new NotUnderRepoException(rl);
 		File file = new File(root, rl);

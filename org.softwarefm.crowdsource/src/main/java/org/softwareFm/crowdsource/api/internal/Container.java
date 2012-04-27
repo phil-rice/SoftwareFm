@@ -6,6 +6,7 @@ package org.softwareFm.crowdsource.api.internal;
 
 import java.text.MessageFormat;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwareFm.crowdsource.api.IContainerBuilder;
@@ -24,6 +25,7 @@ import org.softwareFm.crowdsource.utilities.callbacks.ICallback3;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.comparators.Comparators;
 import org.softwareFm.crowdsource.utilities.constants.CommonMessages;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.functions.IFunction2;
@@ -34,7 +36,7 @@ import org.softwareFm.crowdsource.utilities.transaction.ITransaction;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 
 @SuppressWarnings("unchecked")
-abstract public class Container implements IContainerBuilder, IUserAndGroupsContainer {
+public class Container implements IContainerBuilder, IUserAndGroupsContainer {
 
 	private final Map<Class<?>, Object> map = Maps.newMap();
 	private final ITransactionManager transactionManager;
@@ -58,6 +60,11 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 
 	@Override
 	public <T, X extends T> void register(Class<T> class1, X x) {
+		map.put(class1, x);
+	}
+
+	@Override
+	public <T, X extends T> void register(Class<T> class1, Callable<X> x) {
 		map.put(class1, x);
 	}
 
@@ -241,15 +248,20 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 	}
 
 	private <API> API getReadWriter(Class<API> clazz) {
-		Object readWriterOrFactory = map.get(clazz);
-		if (readWriterOrFactory == null)
-			throw new NullPointerException(MessageFormat.format(CommonMessages.cannotAccessModifyWithoutRegisteredReader, "modify", "readWriter", clazz, Lists.sort(map.keySet(), Comparators.classComporator())));
-		if (readWriterOrFactory instanceof IFactory<?>) {
-			return ((IFactory<API>) readWriterOrFactory).build();
+		try {
+			Object object = map.get(clazz);
+			if (object == null)
+				throw new NullPointerException(MessageFormat.format(CommonMessages.cannotAccessModifyWithoutRegisteredReader, "modify", "readWriter", clazz, Lists.sort(map.keySet(), Comparators.classComporator())));
+			if (object instanceof IFactory<?>)
+				return ((IFactory<API>) object).build();
+			if (object instanceof Callable<?>)
+				return ((Callable<API>) object).call();
+			if (!clazz.isAssignableFrom(object.getClass()))
+				throw new IllegalStateException(MessageFormat.format(CommonMessages.readWriterSetUpIncorrectly, object.getClass().getName(), object));
+			return (API) object;
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
 		}
-		if (!clazz.isAssignableFrom(readWriterOrFactory.getClass()))
-			throw new IllegalStateException(MessageFormat.format(CommonMessages.readWriterSetUpIncorrectly, readWriterOrFactory.getClass().getName(), readWriterOrFactory));
-		return (API) readWriterOrFactory;
 	}
 
 	private <API> API getReader(Class<API> clazz) {
@@ -265,8 +277,6 @@ abstract public class Container implements IContainerBuilder, IUserAndGroupsCont
 	public ITransactionManager transactionManager() {
 		return transactionManager;
 	}
-
-
 
 	@Override
 	public <T> ITransaction<T> accessGroupReader(IFunction1<IGroupsReader, T> function, ICallback<T> resultCallback) {

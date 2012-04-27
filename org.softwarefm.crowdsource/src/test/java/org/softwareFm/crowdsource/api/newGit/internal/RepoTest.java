@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.git.GitTest;
+import org.softwareFm.crowdsource.api.newGit.IAccessControlList;
 import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
 import org.softwareFm.crowdsource.constants.CommentConstants;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
@@ -77,6 +79,14 @@ abstract public class RepoTest extends GitTest {
 	protected static final Map<String, Object> membershipMapForGroup3Member = makeMembershipMap(groupId3, groupMembershipCrypto3, groupCommentCrypto3, GroupConstants.memberStatus);
 	protected static final Map<String, Object> membershipMapForGroup3Invited = makeMembershipMap(groupId3, groupMembershipCrypto3, groupCommentCrypto3, GroupConstants.invitedStatus);
 
+	protected static final Map<String, Object> v11User1 = Maps.with(v11, LoginConstants.softwareFmIdKey, userId1);
+	protected static final Map<String, Object> v12User1 = Maps.with(v12, LoginConstants.softwareFmIdKey, userId1);
+	protected static final Map<String, Object> v11User2 = Maps.with(v11, LoginConstants.softwareFmIdKey, userId2);
+	protected static final Map<String, Object> v12User2 = Maps.with(v12, LoginConstants.softwareFmIdKey, userId2);
+
+	protected static final UserData user1Data = new UserData("someEmail", userId1, userCrypto1);
+	protected static final UserData user2Data = new UserData("someEmail", userId2, userCrypto2);
+
 	protected IGitFacard gitFacard;
 	protected RepoData repoData;
 
@@ -122,19 +132,23 @@ abstract public class RepoTest extends GitTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		gitFacard = new GitFacard(remoteRoot);
+		gitFacard = new GitFacard(remoteRoot, IAccessControlList.Utils.noAccessControl());
 		repoData = new RepoData(gitFacard);
 	}
 
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
-		boolean closed = ITransactionManager.Utils.waitUntilNoActiveJobs(transactionManager, CommonConstants.testTimeOutMs);
-		if (!closed) {
-			transactionManager.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
-			System.out.println("CAnnot close down transaction manager: " + transactionManager);
-			transactionManager = ITransactionManager.Utils.standard(CommonConstants.threadPoolSizeForTests, CommonConstants.testTimeOutMs);
-			transactionManagerChanged();
+		try {
+			boolean closed = ITransactionManager.Utils.waitUntilNoActiveJobs(transactionManager, CommonConstants.testTimeOutMs);
+			if (!closed) {
+				transactionManager.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
+				System.out.println("CAnnot close down transaction manager: " + transactionManager);
+				transactionManager = ITransactionManager.Utils.standard(CommonConstants.threadPoolSizeForTests, CommonConstants.testTimeOutMs);
+				transactionManagerChanged();
+			}
+			repoData.rollback();
+		} finally {
+			super.tearDown();
 		}
 	}
 

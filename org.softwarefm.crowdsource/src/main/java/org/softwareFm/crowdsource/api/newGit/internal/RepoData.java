@@ -15,12 +15,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.softwareFm.crowdsource.api.newGit.IRepoData;
+import org.softwareFm.crowdsource.api.newGit.IRepoReader;
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
 import org.softwareFm.crowdsource.api.newGit.ISources;
 import org.softwareFm.crowdsource.api.newGit.RepoLocation;
 import org.softwareFm.crowdsource.api.newGit.SourcedMap;
-import org.softwareFm.crowdsource.api.newGit.facard.CannotChangeTwiceException;
-import org.softwareFm.crowdsource.api.newGit.facard.CannotUseRepoAfterCommitOrRollbackException;
+import org.softwareFm.crowdsource.api.newGit.exceptions.CannotChangeTwiceException;
+import org.softwareFm.crowdsource.api.newGit.exceptions.CannotUseRepoAfterCommitOrRollbackException;
 import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
 import org.softwareFm.crowdsource.api.newGit.facard.RepoRlAndText;
 import org.softwareFm.crowdsource.constants.GitMessages;
@@ -87,7 +88,7 @@ public class RepoData implements IRepoData, ITransactional {
 	}
 
 	@Override
-	public String readPropertyFromFirstLine(IRepoData reader, ISingleSource singleSource, String cryptoKey) {
+	public String readPropertyFromFirstLine(IRepoReader reader, ISingleSource singleSource, String cryptoKey) {
 		return (String) readFirstRow(singleSource).get(cryptoKey);
 	}
 
