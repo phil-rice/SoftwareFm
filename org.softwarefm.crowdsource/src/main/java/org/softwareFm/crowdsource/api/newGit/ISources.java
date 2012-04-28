@@ -9,7 +9,7 @@ public interface ISources{
 
 	String file();
 	
-	List<ISingleSource> singleSources(IRepoData repoData);
+	List<ISingleSource> singleSources(IRepoReader reader);
 
 	public static class Utils {
 		public static ISources make(List<ISourceType> sourceTypes, String rl, String file, String userId, String userCrypto, String cryptoKey) {

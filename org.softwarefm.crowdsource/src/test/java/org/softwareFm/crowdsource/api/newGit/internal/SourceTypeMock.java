@@ -3,7 +3,7 @@ package org.softwareFm.crowdsource.api.newGit.internal;
 import java.util.Arrays;
 import java.util.List;
 
-import org.softwareFm.crowdsource.api.newGit.IRepoData;
+import org.softwareFm.crowdsource.api.newGit.IRepoReader;
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
 import org.softwareFm.crowdsource.api.newGit.ISourceType;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
@@ -18,7 +18,7 @@ public class SourceTypeMock implements ISourceType {
 	}
 
 	@Override
-	public List<ISingleSource> makeSourcesFor(IRepoData repoData, final String rl, final String file, String userId, final String userCrypto, final String cryptoKey) {
+	public List<ISingleSource> makeSourcesFor(IRepoReader repoData, final String rl, final String file, String userId, final String userCrypto, final String cryptoKey) {
 		return Lists.map(suffixes, new IFunction1<String, ISingleSource>() {
 			@Override
 			public ISingleSource apply(String from) throws Exception {

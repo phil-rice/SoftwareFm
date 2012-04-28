@@ -2,33 +2,25 @@ package org.softwareFm.crowdsource.api.newGit.internal;
 
 import java.nio.channels.FileLock;
 import java.text.MessageFormat;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.softwareFm.crowdsource.api.newGit.IRepoData;
-import org.softwareFm.crowdsource.api.newGit.IRepoReader;
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
-import org.softwareFm.crowdsource.api.newGit.ISources;
 import org.softwareFm.crowdsource.api.newGit.RepoLocation;
-import org.softwareFm.crowdsource.api.newGit.SourcedMap;
 import org.softwareFm.crowdsource.api.newGit.exceptions.CannotChangeTwiceException;
 import org.softwareFm.crowdsource.api.newGit.exceptions.CannotUseRepoAfterCommitOrRollbackException;
 import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
 import org.softwareFm.crowdsource.api.newGit.facard.RepoRlAndText;
 import org.softwareFm.crowdsource.constants.GitMessages;
-import org.softwareFm.crowdsource.utilities.collections.AbstractFindNextIterable;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
-import org.softwareFm.crowdsource.utilities.collections.Sets;
 import org.softwareFm.crowdsource.utilities.comparators.Comparators;
 import org.softwareFm.crowdsource.utilities.exceptions.AggregateException;
 import org.softwareFm.crowdsource.utilities.json.Json;
@@ -71,33 +63,6 @@ public class RepoData implements IRepoData, ITransactional {
 				return Json.mapFromString(singleSource.decypt(raw.get(row)));
 			}
 		});
-		return result;
-	}
-
-	@Override
-	public int countLines(ISingleSource source) {
-		return readRaw(source).size();
-	}
-
-	@Override
-	public Map<String, Object> readFirstRow(ISingleSource singleSource) {
-		if (countLines(singleSource) > 0)
-			return readRow(singleSource, 0);
-		else
-			return Maps.emptyStringObjectMap();
-	}
-
-	@Override
-	public String readPropertyFromFirstLine(IRepoReader reader, ISingleSource singleSource, String cryptoKey) {
-		return (String) readFirstRow(singleSource).get(cryptoKey);
-	}
-
-	@Override
-	public List<Map<String, Object>> readAllRows(ISingleSource singleSource) {
-		List<String> readRaw = readRaw(singleSource);
-		List<Map<String, Object>> result = Lists.newList();
-		for (int i = 0; i < readRaw.size(); i++)
-			result.add(readRow(singleSource, i));
 		return result;
 	}
 
@@ -222,103 +187,10 @@ public class RepoData implements IRepoData, ITransactional {
 	}
 
 	@Override
-	public Map<ISingleSource, Integer> countLines(ISources sources) {
-		Map<ISingleSource, Integer> result = Maps.newMap();
-		for (ISingleSource source : sources.singleSources(this))
-			result.put(source, countLines(source));
-		return result;
-	}
-
-	@Override
-	public Collection<RepoLocation> findRepositories(ISources sources) {
-		Set<RepoLocation> result = Sets.newSet();
-		for (ISingleSource source : sources.singleSources(this)) {
-			RepoLocation repoLocation = findRepository(source);
-			result.add(repoLocation);
-		}
-		return result;
-	}
-
-	@Override
 	public RepoLocation findRepository(ISingleSource source) {
 		String fullRl = source.fullRl();
 		RepoLocation repoLocation = gitFacard.findRepoRl(fullRl);
 		return repoLocation;
-	}
-
-	@Override
-	public void setProperty(ISingleSource source, int index, String name, Object value) {
-		Map<String, Object> existing = readRow(source, index);
-		Map<String, Object> newMap = Maps.with(existing, name, value);
-		change(source, index, newMap);
-
-	}
-
-	@Override
-	public Iterable<SourcedMap> read(final ISingleSource source, final int offset) {
-		List<String> raw = readRaw(source);
-		final int size = raw.size();
-		if (offset >= size)
-			return Collections.emptyList();
-		return new AbstractFindNextIterable<SourcedMap, AtomicInteger>() {
-			@Override
-			protected SourcedMap findNext(AtomicInteger context) throws Exception {
-				int index = context.getAndIncrement();
-				if (index >= size)
-					return null;
-				return new SourcedMap(source, index, readRow(source, index));
-			}
-
-			@Override
-			protected AtomicInteger reset() throws Exception {
-				return new AtomicInteger(offset);
-			}
-		};
-	}
-
-	static class ReadContext {
-
-		final Iterator<ISingleSource> singleSouceIterator;
-		Iterator<SourcedMap> iterator;
-
-		public ReadContext(Iterator<ISingleSource> singleSouceIterator, Iterator<SourcedMap> iterator) {
-			this.singleSouceIterator = singleSouceIterator;
-			this.iterator = iterator;
-		}
-
-	}
-
-	@Override
-	public Iterable<SourcedMap> read(final ISources sources, final int offset) {
-		return new AbstractFindNextIterable<SourcedMap, ReadContext>() {
-
-			@Override
-			protected SourcedMap findNext(ReadContext context) throws Exception {
-				if (context == null)
-					return null;
-				while (!context.iterator.hasNext() && context.singleSouceIterator.hasNext())
-					context.iterator = read(context.singleSouceIterator.next(), 0).iterator();
-				if (!context.iterator.hasNext())
-					return null;
-				return context.iterator.next();
-			}
-
-			@Override
-			protected ReadContext reset() throws Exception {
-				List<ISingleSource> singleSources = sources.singleSources(RepoData.this);
-				int sum = 0;
-				Iterator<ISingleSource> singleSouceIterator = singleSources.iterator();
-				while (true) {
-					if (!singleSouceIterator.hasNext())
-						return null;
-					ISingleSource singleSource = singleSouceIterator.next();
-					int lines = countLines(singleSource);
-					if (sum + lines >= offset)
-						return new ReadContext(singleSouceIterator, read(singleSource, offset - sum).iterator());
-					sum += lines;
-				}
-			}
-		};
 	}
 
 }

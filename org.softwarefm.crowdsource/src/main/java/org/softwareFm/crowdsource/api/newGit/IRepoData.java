@@ -2,6 +2,8 @@ package org.softwareFm.crowdsource.api.newGit;
 
 import java.util.Map;
 
+import org.softwareFm.crowdsource.utilities.maps.Maps;
+
 /**
  * Each transaction will have its own unique IRepoData<br />
  * 
@@ -11,9 +13,6 @@ import java.util.Map;
  */
 public interface IRepoData extends IRepoReader {
 
-	/** The current value is merged with the existing map at that index */
-	void setProperty(ISingleSource source, int index, String name, Object value);
-
 	void append(ISingleSource source, Map<String, Object> newItem);
 
 	void change(ISingleSource source, int index, Map<String, Object> newMap);
@@ -22,4 +21,13 @@ public interface IRepoData extends IRepoReader {
 
 	void setCommitMessage(String commitMessage);
 
+	public static class Utils {
+		/** The current value is merged with the existing map at that index */
+		public static void setProperty(IRepoData repoData, ISingleSource source, int index, String name, Object value) {
+			Map<String, Object> existing = repoData.readRow(source, index);
+			Map<String, Object> newMap = Maps.with(existing, name, value);
+			repoData.change(source, index, newMap);
+		}
+
+	}
 }

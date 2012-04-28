@@ -6,6 +6,7 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.softwareFm.crowdsource.api.newGit.IRepoData;
+import org.softwareFm.crowdsource.api.newGit.IRepoReader;
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
 import org.softwareFm.crowdsource.api.newGit.ISources;
 
@@ -35,7 +36,7 @@ public class SourcesMock implements ISources {
 	}
 
 	@Override
-	public List<ISingleSource> singleSources(IRepoData repoData) {
+	public List<ISingleSource> singleSources(IRepoReader repoData) {
 		Assert.assertSame(expectedRepoData, repoData);
 		return singleSources;
 	}

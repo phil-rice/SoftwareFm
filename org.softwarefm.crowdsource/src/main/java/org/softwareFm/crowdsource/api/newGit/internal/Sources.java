@@ -3,7 +3,7 @@ package org.softwareFm.crowdsource.api.newGit.internal;
 import java.util.Collections;
 import java.util.List;
 
-import org.softwareFm.crowdsource.api.newGit.IRepoData;
+import org.softwareFm.crowdsource.api.newGit.IRepoReader;
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
 import org.softwareFm.crowdsource.api.newGit.ISourceType;
 import org.softwareFm.crowdsource.api.newGit.ISources;
@@ -31,14 +31,14 @@ public class Sources implements ISources {
 	}
 
 	@Override
-	public List<ISingleSource> singleSources(final IRepoData repoData) {
+	public List<ISingleSource> singleSources(final IRepoReader reader) {
 		if (sourcesList == null)
 			synchronized (this) {
 				if (sourcesList == null)
 					sourcesList = Collections.unmodifiableList(Lists.flatMap(sourceTypes, new IFunction1<ISourceType, List<ISingleSource>>() {
 						@Override
 						public List<ISingleSource> apply(ISourceType from) throws Exception {
-							return from.makeSourcesFor(repoData, rl, file, userId, userCrypto, cryptoKey);
+							return from.makeSourcesFor(reader, rl, file, userId, userCrypto, cryptoKey);
 						}
 					}));
 			}

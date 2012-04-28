@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import org.softwareFm.crowdsource.api.newGit.IRepoData;
+import org.softwareFm.crowdsource.api.newGit.IRepoReader;
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
 import org.softwareFm.crowdsource.api.newGit.ISources;
 import org.softwareFm.crowdsource.api.newGit.RepoLocation;
@@ -52,28 +54,28 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 	public void testReadAllRows() {
 		putFile(abxFile, v11v12Json);
 
-		assertEquals(v11v12List, repoData.readAllRows(abxSource));
-		assertEquals(v11v12List, repoData.readAllRows(abxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
 	}
 
 	public void testCountLines() {
 		putFile(abxFile, v11v12Json);
 		putFile(acxFile, v11v12v21v22Json);
-		assertEquals(2, repoData.countLines(abxSource));
-		assertEquals(4, repoData.countLines(acxSource));
+		assertEquals(2, IRepoReader.Utils.countLines(repoData, abxSource));
+		assertEquals(4, IRepoReader.Utils.countLines(repoData, acxSource));
 	}
 
 	public void testCountLinesSources() {
 		putFile(abxFile, v11v12Json);
 		putFile(acxFile, v11v12v21v22Json);
-		assertEquals(Maps.makeMap(), repoData.countLines(new SourcesMock(repoData, "", "")));
-		assertEquals(Maps.makeMap(abxSource, 2), repoData.countLines(new SourcesMock(repoData, "", "", abxSource)));
-		assertEquals(Maps.makeMap(abxSource, 2, acxSource, 4), repoData.countLines(new SourcesMock(repoData, "", "", abxSource, acxSource)));
+		assertEquals(Maps.makeMap(), IRepoReader.Utils.countLines(repoData, new SourcesMock(repoData, "", "")));
+		assertEquals(Maps.makeMap(abxSource, 2), IRepoReader.Utils.countLines(repoData, new SourcesMock(repoData, "", "", abxSource)));
+		assertEquals(Maps.makeMap(abxSource, 2, acxSource, 4), IRepoReader.Utils.countLines(repoData, new SourcesMock(repoData, "", "", abxSource, acxSource)));
 	}
 
 	public void testCountLinesWithNoDataReturns0() {
-		assertEquals(0, repoData.countLines(abxSource));
-		assertEquals(0, repoData.countLines(acxSource));
+		assertEquals(0, IRepoReader.Utils.countLines(repoData, abxSource));
+		assertEquals(0, IRepoReader.Utils.countLines(repoData, acxSource));
 	}
 
 	public void testReadRawCachesResults() {
@@ -89,8 +91,8 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 	public void testReadAllRowsCachesResults() {
 		putFile(abxFile, v11v12Json);
 
-		List<Map<String, Object>> first = repoData.readAllRows(abxSource);
-		List<Map<String, Object>> second = repoData.readAllRows(abxSource);
+		List<Map<String, Object>> first = IRepoReader.Utils.readAllRows(repoData, abxSource);
+		List<Map<String, Object>> second = IRepoReader.Utils.readAllRows(repoData, abxSource);
 		assertEquals(first.size(), second.size());
 		for (int i = 0; i < first.size(); i++)
 			assertSame(first.get(i), second.get(i));
@@ -99,7 +101,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 	public void testReadAllRowsAndReadRowsAreSameValue() {
 		putFile(abxFile, v11v12Json);
 
-		List<Map<String, Object>> all = repoData.readAllRows(abxSource);
+		List<Map<String, Object>> all = IRepoReader.Utils.readAllRows(repoData, abxSource);
 		for (int i = 0; i < all.size(); i++)
 			assertSame(all.get(i), repoData.readRow(abxSource, i));
 	}
@@ -107,9 +109,9 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 	public void testReadFirstRow() {
 		putFile(abxFile, v11v12Json);
 
-		List<Map<String, Object>> all = repoData.readAllRows(abxSource);
-		assertSame(all.get(0), repoData.readFirstRow(abxSource));
-		assertEquals(Maps.emptyStringObjectMap(), repoData.readFirstRow(acxSource));
+		List<Map<String, Object>> all = IRepoReader.Utils.readAllRows(repoData, abxSource);
+		assertSame(all.get(0), IRepoReader.Utils.readFirstRow(repoData, abxSource));
+		assertEquals(Maps.emptyStringObjectMap(), IRepoReader.Utils.readFirstRow(repoData, acxSource));
 
 	}
 
@@ -119,19 +121,19 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 
 		assertEquals(0, repoData.locks.size());
 
-		assertEquals(v11v12List, repoData.readAllRows(abxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
 		assertEquals(1, repoData.locks.size());
 		assertNotNull(repoData.locks.get("a/b"));
 
-		assertEquals(v11v12List, repoData.readAllRows(abxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
 		assertEquals(1, repoData.locks.size());
 		assertNotNull(repoData.locks.get("a/b"));
 
-		assertEquals(v11v12List, repoData.readAllRows(abxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
 		assertEquals(1, repoData.locks.size());
 		assertNotNull(repoData.locks.get("a/b"));
 
-		assertEquals(v21v22List, repoData.readAllRows(acxSource));
+		assertEquals(v21v22List, IRepoReader.Utils.readAllRows(repoData, acxSource));
 		assertEquals(2, repoData.locks.size());
 		assertNotNull(repoData.locks.get("a/b"));
 		assertNotNull(repoData.locks.get("a/c"));
@@ -141,8 +143,8 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		putFile(abxFile, v11v12Json);
 		putFile(acxFile, v21v22Json);
 
-		assertEquals(v11v12List, repoData.readAllRows(abxSource));
-		assertEquals(v21v22List, repoData.readAllRows(acxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
+		assertEquals(v21v22List, IRepoReader.Utils.readAllRows(repoData, acxSource));
 
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
@@ -153,8 +155,8 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		putFile(abxFile, v11v12Json);
 		putFile(acxFile, v21v22Json);
 
-		assertEquals(v11v12List, repoData.readAllRows(abxSource));
-		assertEquals(v21v22List, repoData.readAllRows(acxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
+		assertEquals(v21v22List, IRepoReader.Utils.readAllRows(repoData, acxSource));
 		repoData.rollback();
 		assertEquals(0, repoData.locks.size());
 	}
@@ -163,13 +165,13 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		putFile(abxFile, v11v12Json);
 		repoData.append(abxSource, v21);
 		repoData.append(abxSource, v22);
-		assertEquals(v11v12List, repoData.readAllRows(abxSource)); // not changedYet
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource)); // not changedYet
 
 		assertEquals(Maps.makeMap(abxSource, v21v22List), repoData.toAppend);
 
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		List<Map<String, Object>> actual = newRepoPrim().readAllRows(abxSource);
+		List<Map<String, Object>> actual = IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource);
 		List<Map<String, Object>> expected = Arrays.asList(v11, v12, v21, v22);
 		assertEquals(expected, actual);
 	}
@@ -179,7 +181,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.append(abxSource, v12);
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		assertEquals(v11v12List, newRepoPrim().readAllRows(abxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
 	}
 
 	public void testAppendAddsToLock() {
@@ -196,7 +198,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.append(abxSource, v22);
 
 		repoData.rollback();
-		assertEquals(v11v12List, newRepoPrim().readAllRows(abxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
 	}
 
 	public void testChangeDoesntChangeBeforeCommitThenChanges() {
@@ -204,11 +206,11 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.change(abxSource, 0, v21);
 		repoData.change(abxSource, 1, v22);
 
-		assertEquals(v11v12List, repoData.readAllRows(abxSource)); // not changedYet
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource)); // not changedYet
 
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		assertEquals(v21v22List, newRepoPrim().readAllRows(abxSource));
+		assertEquals(v21v22List, IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
 	}
 
 	public void testNeedsCommitMessageToCommit() {
@@ -265,10 +267,10 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.change(abxSource, 0, v21);
 		repoData.change(abxSource, 1, v22);
 
-		assertEquals(v11v12List, repoData.readAllRows(abxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
 
 		repoData.rollback();
-		assertEquals(v11v12List, newRepoPrim().readAllRows(abxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
 	}
 
 	public void testDeleteAddsToLocks() {
@@ -282,10 +284,10 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		putFile(abxFile, v11v12v21v22Json);
 		repoData.delete(abxSource, 1);
 		repoData.delete(abxSource, 3);
-		assertEquals(Arrays.asList(v11, v12, v21, v22), repoData.readAllRows(abxSource)); // not changedYet
+		assertEquals(Arrays.asList(v11, v12, v21, v22), IRepoReader.Utils.readAllRows(repoData, abxSource)); // not changedYet
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		assertEquals(Arrays.asList(v11, v21), newRepoPrim().readAllRows(abxSource));
+		assertEquals(Arrays.asList(v11, v21), IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
 	}
 
 	private RepoData newRepoPrim() {
@@ -298,7 +300,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.delete(abxSource, 3);
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		assertEquals(Arrays.asList(v11, v21), newRepoPrim().readAllRows(abxSource));
+		assertEquals(Arrays.asList(v11, v21), IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
 	}
 
 	public void testChangeAppendAndDeleteAllWorkTogether() {
@@ -308,18 +310,18 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.append(abxSource, v22);
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		assertEquals(Arrays.asList(v11, v31, v22), newRepoPrim().readAllRows(abxSource));
+		assertEquals(Arrays.asList(v11, v31, v22), IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
 	}
 
 	public void testFindRepositories() {
 		RepoLocation abrepo = new RepoLocation(new File(remoteRoot, "a/b"), "a/b");
 		RepoLocation acrepo = new RepoLocation(new File(remoteRoot, "a/c"), "a/c");
 
-		assertEquals(Sets.makeSet(), repoData.findRepositories(new SourcesMock(repoData, "", "")));
-		assertEquals(Sets.makeSet(abrepo), repoData.findRepositories(new SourcesMock(repoData, "", "", abxSource)));
-		assertEquals(Sets.makeSet(abrepo), repoData.findRepositories(new SourcesMock(repoData, "", "", abxSource, abySource)));
-		assertEquals(Sets.makeSet(abrepo, acrepo), repoData.findRepositories(new SourcesMock(repoData, "", "", abxSource, acxSource)));
-		assertEquals(Sets.makeSet(abrepo, acrepo), repoData.findRepositories(new SourcesMock(repoData, "", "", abxSource, abySource, abySource, acySource)));
+		assertEquals(Sets.makeSet(), IRepoReader.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "")));
+		assertEquals(Sets.makeSet(abrepo), IRepoReader.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "", abxSource)));
+		assertEquals(Sets.makeSet(abrepo), IRepoReader.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "", abxSource, abySource)));
+		assertEquals(Sets.makeSet(abrepo, acrepo), IRepoReader.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "", abxSource, acxSource)));
+		assertEquals(Sets.makeSet(abrepo, acrepo), IRepoReader.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "", abxSource, abySource, abySource, acySource)));
 	}
 
 	public void testFindRepository() {
@@ -334,13 +336,13 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 
 	public void testSetProperty() {
 		putFile(abxFile, Json.mapToString("a", 11l, "b", 12l) + "\n" + Json.mapToString("a", 21l, "b", 22l));
-		repoData.setProperty(abxSource, 0, "a", "newa1");
-		repoData.setProperty(abxSource, 1, "b", "newb2");
+		IRepoData.Utils.setProperty(repoData, abxSource, 0, "a", "newa1");
+		IRepoData.Utils.setProperty(repoData, abxSource, 1, "b", "newb2");
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
 
 		List<Map<String, Object>> expected = Arrays.asList(Maps.stringObjectMap("a", "newa1", "b", 12l), Maps.stringObjectMap("a", 21l, "b", "newb2"));
-		List<Map<String, Object>> actual = newRepoPrim().readAllRows(abxSource);
+		List<Map<String, Object>> actual = IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource);
 		assertEquals(expected, actual);
 	}
 
@@ -387,12 +389,12 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 	}
 
 	private void checkRead(ISources sources, int index, SourcedMap... expected) {
-		Iterable<SourcedMap> actual = repoData.read(sources, index);
+		Iterable<SourcedMap> actual = IRepoReader.Utils.read(repoData,sources, index);
 		assertEquals(Arrays.asList(expected), Iterables.list(actual));
 	}
 
 	private void checkRead(ISingleSource source, int index, SourcedMap... expected) {
-		Iterable<SourcedMap> actual = repoData.read(source, index);
+		Iterable<SourcedMap> actual = IRepoReader.Utils.read(repoData, source, index);
 		assertEquals(Arrays.asList(expected), Iterables.list(actual));
 	}
 

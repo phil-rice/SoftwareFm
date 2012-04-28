@@ -3,7 +3,7 @@ package org.softwareFm.crowdsource.api.newGit.internal;
 import java.util.List;
 import java.util.Map;
 
-import org.softwareFm.crowdsource.api.newGit.IRepoData;
+import org.softwareFm.crowdsource.api.newGit.IRepoReader;
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
 import org.softwareFm.crowdsource.api.newGit.ISourceType;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
@@ -25,15 +25,15 @@ public class GroupSourceType implements ISourceType {
 	}
 
 	@Override
-	public List<ISingleSource> makeSourcesFor(IRepoData repoData, final String rl, final String file, String userId, String userCrypto, final String cryptoKey) {
+	public List<ISingleSource> makeSourcesFor(IRepoReader repoData, final String rl, final String file, String userId, String userCrypto, final String cryptoKey) {
 		String userRl = userUrlGenerator.findUrlFor(Maps.stringObjectMap(LoginConstants.softwareFmIdKey, userId));
 		String userDataRl = Urls.compose(userRl, CommonConstants.dataFileName);
 		EncryptedSingleSource userDataSource = new EncryptedSingleSource(userDataRl, userCrypto);
-		String userMembershipCrypto = repoData.readPropertyFromFirstLine(repoData, userDataSource, GroupConstants.membershipCryptoKey);
+		String userMembershipCrypto = IRepoReader.Utils.readPropertyFromFirstLine(repoData, userDataSource, GroupConstants.membershipCryptoKey);
 		String userMembershipRl = Urls.compose(userRl, GroupConstants.membershipFileName);
 		EncryptedSingleSource membershipDataSource = new EncryptedSingleSource(userMembershipRl, userMembershipCrypto);
 
-		List<Map<String, Object>> membershipList = repoData.readAllRows(membershipDataSource);
+		List<Map<String, Object>> membershipList = IRepoReader.Utils.readAllRows(repoData, membershipDataSource);
 		List<ISingleSource> result = Lists.newList();
 		for (Map<String, Object> groupData : membershipList) {
 			String crypto = (String) groupData.get(cryptoKey);
