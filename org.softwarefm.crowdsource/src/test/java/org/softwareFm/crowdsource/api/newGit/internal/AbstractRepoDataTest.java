@@ -1,6 +1,5 @@
 package org.softwareFm.crowdsource.api.newGit.internal;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -8,11 +7,10 @@ import java.util.Map;
 import org.softwareFm.crowdsource.api.newGit.IRepoData;
 import org.softwareFm.crowdsource.api.newGit.IRepoReader;
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
-import org.softwareFm.crowdsource.api.newGit.ISources;
 import org.softwareFm.crowdsource.api.newGit.RepoLocation;
 import org.softwareFm.crowdsource.api.newGit.SourcedMap;
 import org.softwareFm.crowdsource.api.newGit.exceptions.CannotChangeTwiceException;
-import org.softwareFm.crowdsource.utilities.collections.Iterables;
+import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -42,13 +40,63 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 	private final List<Map<String, Object>> v11v12List = Arrays.asList(v11, v12);
 	private final List<Map<String, Object>> v21v22List = Arrays.asList(v21, v22);
 
-	abstract protected void putFile(String rl, String lines);
+	abstract protected void putFilePrim(String rl, String lines);
+
+	protected void putFile(String rl, String lines) {
+		cloneIfNeeded();
+		putFilePrim(rl, lines);
+	}
+
+	private void cloneIfNeeded() {
+		if (!haveCloned) {
+			IGitFacard.Utils.clone(localFacard, "a/b");
+			IGitFacard.Utils.clone(localFacard, "a/c");
+		}
+		haveCloned = true;
+	}
+
+	boolean haveCloned;
 
 	public void testSetup() {
 		assertNotNull(abxSource);
 		assertNotNull(abySource);
 		assertNotNull(acxSource);
 		assertNotNull(acySource);
+	}
+
+	public void testFindRepositoryReturnsTheRemoteLocationIfLocalDoesntExist() {
+		RepoLocation abRemote = RepoLocation.remote(localRoot, "a/b");
+		RepoLocation acRemote = RepoLocation.remote(localRoot, "a/c");
+
+		assertEquals(abRemote, repoData.findRepository(abxSource));
+		assertEquals(abRemote, repoData.findRepository(abySource));
+		assertEquals(acRemote, repoData.findRepository(acxSource));
+		assertEquals(acRemote, repoData.findRepository(acySource));
+	}
+
+	public void testFindRepositoryReturnsTheLocalLocationIfLocalExists() {
+		cloneIfNeeded();
+
+		RepoLocation abLocal = RepoLocation.local(localRoot, "a/b");
+		RepoLocation acLocal = RepoLocation.local(localRoot, "a/c");
+
+		assertEquals(abLocal, repoData.findRepository(abxSource));
+		assertEquals(abLocal, repoData.findRepository(abySource));
+		assertEquals(acLocal, repoData.findRepository(acxSource));
+		assertEquals(acLocal, repoData.findRepository(acySource));
+	}
+
+	public void testFindRepositories() {
+		IGitFacard.Utils.clone(localFacard, "a/b");
+
+		RepoLocation abrepo = RepoLocation.local(localRoot, "a/b");
+		RepoLocation acrepo = RepoLocation.remote(localRoot, "a/c");
+
+		assertEquals(Sets.makeSet(), IRepoData.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "")));
+		assertEquals(Sets.makeSet(abrepo), IRepoData.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "", abxSource)));
+		assertEquals(Sets.makeSet(abrepo), IRepoData.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "", abxSource, abySource)));
+		assertEquals(Sets.makeSet(abrepo, acrepo), IRepoData.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "", abxSource, acxSource)));
+		assertEquals(Sets.makeSet(abrepo, acrepo), IRepoData.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "", abxSource, abySource, abySource, acySource)));
 	}
 
 	public void testReadAllRows() {
@@ -119,27 +167,27 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		putFile(abxFile, v11v12Json);
 		putFile(acxFile, v21v22Json);
 
-		assertEquals(0, repoData.locks.size());
+		assertEquals(0, repoData.locks().size());
 
 		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
-		assertEquals(1, repoData.locks.size());
-		assertNotNull(repoData.locks.get("a/b"));
+		assertEquals(1, repoData.locks().size());
+		assertNotNull(repoData.locks().get("a/b"));
 
 		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
-		assertEquals(1, repoData.locks.size());
-		assertNotNull(repoData.locks.get("a/b"));
+		assertEquals(1, repoData.locks().size());
+		assertNotNull(repoData.locks().get("a/b"));
 
 		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
-		assertEquals(1, repoData.locks.size());
-		assertNotNull(repoData.locks.get("a/b"));
+		assertEquals(1, repoData.locks().size());
+		assertNotNull(repoData.locks().get("a/b"));
 
 		assertEquals(v21v22List, IRepoReader.Utils.readAllRows(repoData, acxSource));
-		assertEquals(2, repoData.locks.size());
-		assertNotNull(repoData.locks.get("a/b"));
-		assertNotNull(repoData.locks.get("a/c"));
+		assertEquals(2, repoData.locks().size());
+		assertNotNull(repoData.locks().get("a/b"));
+		assertNotNull(repoData.locks().get("a/c"));
 	}
 
-	public void testCommitReleasesLocks() {
+	public void testCommitReleaseslocks() {
 		putFile(abxFile, v11v12Json);
 		putFile(acxFile, v21v22Json);
 
@@ -148,17 +196,33 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		assertEquals(0, repoData.locks.size());
+		assertEquals(0, repoData.locks().size());
 	}
 
-	public void testRollbackReleasesLocks() {
+	public void testRollbackReleaseslocks() {
 		putFile(abxFile, v11v12Json);
 		putFile(acxFile, v21v22Json);
 
 		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
 		assertEquals(v21v22List, IRepoReader.Utils.readAllRows(repoData, acxSource));
 		repoData.rollback();
-		assertEquals(0, repoData.locks.size());
+		assertEquals(0, repoData.locks().size());
+	}
+
+	public void testCommitCausesHasPulledToBeCommitted() {
+		putFile(abxFile, v11v12Json);
+		assertEquals(0, hasPulledCommitCount.get());
+		repoData.commit();
+		assertEquals(1, hasPulledCommitCount.get());
+		assertEquals(0, hasPulledRollbackCount.get());
+	}
+
+	public void testRollbackCausesHasPulledToBeRollbacked() {
+		putFile(abxFile, v11v12Json);
+		assertEquals(0, hasPulledRollbackCount.get());
+		repoData.rollback();
+		assertEquals(0, hasPulledCommitCount.get());
+		assertEquals(1, hasPulledRollbackCount.get());
 	}
 
 	public void testAppendDoesntChangeBeforeCommitButAddsToAppendList() {
@@ -171,7 +235,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		List<Map<String, Object>> actual = IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource);
+		List<Map<String, Object>> actual = IRepoReader.Utils.readAllRows(newRepo(), abxSource);
 		List<Map<String, Object>> expected = Arrays.asList(v11, v12, v21, v22);
 		assertEquals(expected, actual);
 	}
@@ -181,14 +245,14 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.append(abxSource, v12);
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(newRepo(), abxSource));
 	}
 
 	public void testAppendAddsToLock() {
 		putFile(abxFile, v11v12Json);
 		repoData.append(abxSource, v21);
-		assertEquals(1, repoData.locks.size());
-		assertNotNull(repoData.locks.get("a/b"));
+		assertEquals(1, repoData.locks().size());
+		assertNotNull(repoData.locks().get("a/b"));
 	}
 
 	public void testAppendIgnoredWithRollback() {
@@ -198,7 +262,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.append(abxSource, v22);
 
 		repoData.rollback();
-		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(newRepo(), abxSource));
 	}
 
 	public void testChangeDoesntChangeBeforeCommitThenChanges() {
@@ -210,7 +274,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		assertEquals(v21v22List, IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
+		assertEquals(v21v22List, IRepoReader.Utils.readAllRows(newRepo(), abxSource));
 	}
 
 	public void testNeedsCommitMessageToCommit() {
@@ -242,11 +306,11 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		});
 	}
 
-	public void testChangeAddsToLocks() {
+	public void testChangeAddsTolocks() {
 		putFile(abxFile, v11v12Json);
 		repoData.change(abxSource, 0, v21);
-		assertEquals(1, repoData.locks.size());
-		assertNotNull(repoData.locks.get("a/b"));
+		assertEquals(1, repoData.locks().size());
+		assertNotNull(repoData.locks().get("a/b"));
 
 	}
 
@@ -270,14 +334,14 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(repoData, abxSource));
 
 		repoData.rollback();
-		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
+		assertEquals(v11v12List, IRepoReader.Utils.readAllRows(newRepo(), abxSource));
 	}
 
-	public void testDeleteAddsToLocks() {
+	public void testDeleteAddsTolocks() {
 		putFile(abxFile, v11v12Json);
 		repoData.delete(abxSource, 0);
-		assertEquals(1, repoData.locks.size());
-		assertNotNull(repoData.locks.get("a/b"));
+		assertEquals(1, repoData.locks().size());
+		assertNotNull(repoData.locks().get("a/b"));
 	}
 
 	public void testDeleteRemovesItemWhenCommitOccurs() {
@@ -287,11 +351,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		assertEquals(Arrays.asList(v11, v12, v21, v22), IRepoReader.Utils.readAllRows(repoData, abxSource)); // not changedYet
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		assertEquals(Arrays.asList(v11, v21), IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
-	}
-
-	private RepoData newRepoPrim() {
-		return repoData = new RepoData(gitFacard);
+		assertEquals(Arrays.asList(v11, v21), IRepoReader.Utils.readAllRows(newRepo(), abxSource));
 	}
 
 	public void testDeleteWorksWithoutRead() {
@@ -300,7 +360,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.delete(abxSource, 3);
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		assertEquals(Arrays.asList(v11, v21), IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
+		assertEquals(Arrays.asList(v11, v21), IRepoReader.Utils.readAllRows(newRepo(), abxSource));
 	}
 
 	public void testChangeAppendAndDeleteAllWorkTogether() {
@@ -310,28 +370,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.append(abxSource, v22);
 		repoData.setCommitMessage("someMessage");
 		repoData.commit();
-		assertEquals(Arrays.asList(v11, v31, v22), IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource));
-	}
-
-	public void testFindRepositories() {
-		RepoLocation abrepo = new RepoLocation(new File(remoteRoot, "a/b"), "a/b");
-		RepoLocation acrepo = new RepoLocation(new File(remoteRoot, "a/c"), "a/c");
-
-		assertEquals(Sets.makeSet(), IRepoReader.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "")));
-		assertEquals(Sets.makeSet(abrepo), IRepoReader.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "", abxSource)));
-		assertEquals(Sets.makeSet(abrepo), IRepoReader.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "", abxSource, abySource)));
-		assertEquals(Sets.makeSet(abrepo, acrepo), IRepoReader.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "", abxSource, acxSource)));
-		assertEquals(Sets.makeSet(abrepo, acrepo), IRepoReader.Utils.findRepositories(repoData, new SourcesMock(repoData, "", "", abxSource, abySource, abySource, acySource)));
-	}
-
-	public void testFindRepository() {
-		RepoLocation abrepo = new RepoLocation(new File(remoteRoot, "a/b"), "a/b");
-		RepoLocation acrepo = new RepoLocation(new File(remoteRoot, "a/c"), "a/c");
-
-		assertEquals(abrepo, repoData.findRepository(abxSource));
-		assertEquals(abrepo, repoData.findRepository(abySource));
-		assertEquals(acrepo, repoData.findRepository(acxSource));
-		assertEquals(acrepo, repoData.findRepository(acySource));
+		assertEquals(Arrays.asList(v11, v31, v22), IRepoReader.Utils.readAllRows(newRepo(), abxSource));
 	}
 
 	public void testSetProperty() {
@@ -342,7 +381,7 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		repoData.commit();
 
 		List<Map<String, Object>> expected = Arrays.asList(Maps.stringObjectMap("a", "newa1", "b", 12l), Maps.stringObjectMap("a", 21l, "b", "newb2"));
-		List<Map<String, Object>> actual = IRepoReader.Utils.readAllRows(newRepoPrim(), abxSource);
+		List<Map<String, Object>> actual = IRepoReader.Utils.readAllRows(newRepo(), abxSource);
 		assertEquals(expected, actual);
 	}
 
@@ -388,21 +427,12 @@ abstract public class AbstractRepoDataTest extends RepoTest {
 		checkRead(new SourcesMock(repoData, "", "", abxSource, acxSource), 100);
 	}
 
-	private void checkRead(ISources sources, int index, SourcedMap... expected) {
-		Iterable<SourcedMap> actual = IRepoReader.Utils.read(repoData,sources, index);
-		assertEquals(Arrays.asList(expected), Iterables.list(actual));
-	}
-
-	private void checkRead(ISingleSource source, int index, SourcedMap... expected) {
-		Iterable<SourcedMap> actual = IRepoReader.Utils.read(repoData, source, index);
-		assertEquals(Arrays.asList(expected), Iterables.list(actual));
-	}
-
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		gitFacard.init("a/b");
-		gitFacard.init("a/c");
+		initRepos(remoteFacard, "a/b", "a/c");
+		hasPulledCommitCount.set(0);
+		hasPulledRollbackCount.set(0);
 
 	}
 

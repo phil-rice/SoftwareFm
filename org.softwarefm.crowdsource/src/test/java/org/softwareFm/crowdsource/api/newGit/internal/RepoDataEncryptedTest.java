@@ -20,8 +20,9 @@ public class RepoDataEncryptedTest extends AbstractRepoDataTest {
 	}
 
 	@Override
-	protected void putFile(String rl, String lines) {
+	protected void putFilePrim(String rl, String lines) {
 		List<String> encodedList = Lists.map(Strings.splitIgnoreBlanks(lines, "\n"), Crypto.encryptFn(crypto));
-		gitFacard.putFileReturningRepoRl(rl, Strings.join(encodedList, "\n"));
+		String repoRl = remoteFacard.putFileReturningRepoRl(rl, Strings.join(encodedList, "\n"));
+		addAllAndCommit(remoteFacard, repoRl);
 	}
 }

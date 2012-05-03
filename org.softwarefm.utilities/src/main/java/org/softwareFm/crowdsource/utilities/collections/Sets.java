@@ -11,8 +11,32 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.softwareFm.crowdsource.utilities.maps.TransactionalSimpleSet;
+
 public class Sets {
 
+	public static <V>ISimpleSet<V> asSimpleSet(final Set <V> set){
+		return new ISimpleSet<V>() {
+			@Override
+			public boolean contains(V value) {
+				return set.contains(value);
+			}
+		};
+	}
+	public static <V>IMutableSimpleSet<V> asMutableSimpleSet(final Set <V> set){
+		return new IMutableSimpleSet<V>() {
+			@Override
+			public boolean contains(V value) {
+				return set.contains(value);
+			}
+
+			@Override
+			public void add(V value) {
+				set.add(value);
+			}
+		};
+	}
+	
 	public static <T> Set<T> makeSet(T... ts) {
 		return new HashSet<T>(Arrays.asList(ts));
 	}
@@ -48,5 +72,12 @@ public class Sets {
 		if (set.size() != 1)
 			throw new IllegalArgumentException(set.toString());
 		return set.iterator().next();
+	}
+
+	public static <T>ITransactionalMutableSimpleSet<T> newTransactionalSet() {
+		return new TransactionalSimpleSet<T>();
+	}
+	public static <T>ITransactionalMutableSimpleSet<T> asTransactionalSet(Set<T> raw) {
+		return new TransactionalSimpleSet<T>(raw);
 	}
 }

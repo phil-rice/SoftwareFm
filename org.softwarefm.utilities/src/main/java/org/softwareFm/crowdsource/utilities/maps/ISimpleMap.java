@@ -6,9 +6,7 @@ package org.softwareFm.crowdsource.utilities.maps;
 
 import java.util.List;
 
-public interface ISimpleMap<K, V> {
-
-	V get(K key);
+public interface ISimpleMap<K, V> extends IGetFromKey<K, V> {
 
 	List<K> keys();
 

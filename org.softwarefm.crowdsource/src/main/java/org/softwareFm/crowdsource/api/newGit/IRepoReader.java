@@ -1,16 +1,13 @@
 package org.softwareFm.crowdsource.api.newGit;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwareFm.crowdsource.utilities.collections.AbstractFindNextIterable;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
-import org.softwareFm.crowdsource.utilities.collections.Sets;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 /**
@@ -24,7 +21,7 @@ public interface IRepoReader extends ISingleRowReader {
 
 	List<String> readRaw(ISingleSource singleSource);
 
-	RepoLocation findRepository(ISingleSource singleSource);
+	
 
 	public static class Utils {
 
@@ -47,14 +44,7 @@ public interface IRepoReader extends ISingleRowReader {
 			return result;
 		}
 
-		public static Collection<RepoLocation> findRepositories(IRepoReader reader, ISources sources) {
-			Set<RepoLocation> result = Sets.newSet();
-			for (ISingleSource source : sources.singleSources(reader)) {
-				RepoLocation repoLocation = reader.findRepository(source);
-				result.add(repoLocation);
-			}
-			return result;
-		}
+		
 
 		public static Map<String, Object> readFirstRow(IRepoReader reader, ISingleSource singleSource) {
 			if (countLines(reader, singleSource) > 0)

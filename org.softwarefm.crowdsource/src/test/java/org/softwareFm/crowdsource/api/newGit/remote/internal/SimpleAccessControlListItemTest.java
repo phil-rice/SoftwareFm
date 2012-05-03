@@ -8,7 +8,8 @@ import org.softwareFm.crowdsource.utilities.tests.Tests;
 public class SimpleAccessControlListItemTest extends RepoTest {
 	private SimpleAccessControlList acl;
 
-	public void testCannotUpdateListItemIfNotLegalPrefix() {
+	// no longer needed
+	public void _testCannotUpdateListItemIfNotLegalPrefix() {
 		checkCannotUpdate("repo/url1", 0, "Cannot write to repo/url1");
 		checkCannotUpdate("repo/url1", 2, "Cannot write to repo/url1");
 		checkCannotUpdate("repo/doesntExist", 0, "Cannot write to repo/doesntExist");
@@ -29,7 +30,8 @@ public class SimpleAccessControlListItemTest extends RepoTest {
 		checkCannotUpdate("repo/prefix1/url1", 5, "Cannot update list item at repo/prefix1/url1 with index 5 as user is uId1 and required user is uId2");
 	}
 
-	public void testCannotDeleteListItemIfNotLegalPrefix() {
+	// no longer needed
+	public void _testCannotDeleteListItemIfNotLegalPrefix() {
 		checkCannotDelete("repo/url1", 0, "Cannot write to repo/url1");
 		checkCannotDelete("repo/url1", 2, "Cannot write to repo/url1");
 		checkCannotDelete("repo/doesntExist", 0, "Cannot write to repo/doesntExist");
@@ -85,11 +87,11 @@ public class SimpleAccessControlListItemTest extends RepoTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		acl = new SimpleAccessControlList(user1Data, "repo/prefix1", "repo/prefix2");
-		initRepos(gitFacard, "repo");
-		putFile("repo/url1", null, v11, v12, v11User1, v12User1, v11User2, v11User2);
-		putFile("repo/prefix1/url1", null, v11, v12, v11User1, v12User1, v11User2, v11User2);
-		putFile("repo/prefix2/url1", null, v11, v12, v11User1, v12User1, v11User2, v11User2);
-		commitRepos(gitFacard, "repo");
+		initRepos(remoteFacard, "repo");
+		putFile(remoteFacard, "repo/url1", null, v11, v12, v11User1, v12User1, v11User2, v11User2);
+		putFile(remoteFacard, "repo/prefix1/url1", null, v11, v12, v11User1, v12User1, v11User2, v11User2);
+		putFile(remoteFacard, "repo/prefix2/url1", null, v11, v12, v11User1, v12User1, v11User2, v11User2);
+		addAllAndCommit(remoteFacard, "repo");
 	}
 
 	public static void main(String[] args) {

@@ -376,6 +376,10 @@ public class TransactionManagerTest extends TestCase {
 		EasyMock.verify(mock1, mock2, mock3);
 	}
 
+	public void testExceptionInCommitMeansThatAllTheRollbacksAreCalled(){
+		fail();
+	}
+	
 	public void testExceptionInRollbackCausesAggregateExceptionButAllRollbacksCalled() {
 		final Exception original = new RuntimeException("orig");
 		final Exception expected1 = new RuntimeException("one");
@@ -402,6 +406,7 @@ public class TransactionManagerTest extends TestCase {
 
 		EasyMock.verify(mock1, mock2, mock3);
 	}
+	
 
 	public void testExceptionInHandlerDoesntStopRollbackAndCausesAggregateException() {
 		final Exception original = new RuntimeException("orig");

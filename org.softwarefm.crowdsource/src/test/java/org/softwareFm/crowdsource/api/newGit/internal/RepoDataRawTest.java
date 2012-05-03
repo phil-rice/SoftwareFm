@@ -4,17 +4,17 @@ import org.softwareFm.crowdsource.api.newGit.exceptions.CannotUseRepoAfterCommit
 import org.softwareFm.crowdsource.utilities.tests.Tests;
 
 public class RepoDataRawTest extends AbstractRepoDataTest {
-	
+
 	public void testMethodsDontWorkAfterCommit() {
 		repoData.setCommitMessage("someMessage");
-	repoData.commit();
-		Tests.assertThrowsWithMessage("Cannot use after Commit or Rollback. Method read Args [RawSingleSource [fullRl=a/b/x/data.txt]]", CannotUseRepoAfterCommitOrRollbackException.class, new Runnable() {
+		repoData.commit();
+		Tests.assertThrowsWithMessage("Cannot use after Commit or Rollback. Method readRaw Args [RawSingleSource [fullRl=a/b/x/data.txt]]", CannotUseRepoAfterCommitOrRollbackException.class, new Runnable() {
 			@Override
 			public void run() {
 				repoData.readRaw(abxSource);
 			}
 		});
-		Tests.assertThrowsWithMessage("Cannot use after Commit or Rollback. Method read Args [RawSingleSource [fullRl=a/b/x/data.txt]]", CannotUseRepoAfterCommitOrRollbackException.class, new Runnable() {
+		Tests.assertThrowsWithMessage("Cannot use after Commit or Rollback. Method append Args [RawSingleSource [fullRl=a/b/x/data.txt], {c=2, v=1}]", CannotUseRepoAfterCommitOrRollbackException.class, new Runnable() {
 			@Override
 			public void run() {
 				repoData.append(abxSource, v21);
@@ -44,8 +44,8 @@ public class RepoDataRawTest extends AbstractRepoDataTest {
 	}
 
 	@Override
-	protected void putFile(String rl, String lines) {
-		gitFacard.putFileReturningRepoRl(rl, lines);
+	protected void putFilePrim(String rl, String lines) {
+		localFacard.putFileReturningRepoRl(rl, lines);
 
 	}
 }

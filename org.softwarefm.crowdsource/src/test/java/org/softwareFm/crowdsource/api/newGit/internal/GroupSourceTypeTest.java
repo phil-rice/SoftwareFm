@@ -23,9 +23,9 @@ public class GroupSourceTypeTest extends AbstractSourceTypeTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		initRepos(gitFacard, "data/users", "data/groups");
-		createFileForUser1(gitFacard);
-		createMembershipFileForUser(gitFacard, userId1, userMembershipCrypto1, membershipMapForGroup1Admin, membershipMapForGroup2Member, membershipMapForGroup3Invited);
-		commitRepos(gitFacard, "data/users", "data/groups");
+		initRepos(remoteFacard, "data/users", "data/groups");
+		createFileForUser1(remoteFacard);
+		createMembershipFileForUser(remoteFacard, userId1, userMembershipCrypto1, membershipMapForGroup1Admin, membershipMapForGroup2Member, membershipMapForGroup3Invited);
+		addAllAndCommit(remoteFacard, "data/users", "data/groups");
 	}
 }

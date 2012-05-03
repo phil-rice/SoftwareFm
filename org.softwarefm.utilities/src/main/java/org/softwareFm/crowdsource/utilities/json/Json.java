@@ -6,11 +6,14 @@ package org.softwareFm.crowdsource.utilities.json;
 
 import java.io.File;
 import java.text.MessageFormat;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.json.simple.JSONValue;
 import org.json.simple.parser.ParseException;
 import org.softwareFm.crowdsource.utilities.collections.Files;
+import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.CommonMessages;
 import org.softwareFm.crowdsource.utilities.constants.UtilityConstants;
@@ -89,5 +92,9 @@ public class Json {
 			}
 
 		};
+	}
+
+	public static List<String> asList(Map<String, Object>... maps) {
+		return Lists.map(Arrays.asList(maps), toStringAndEncryptFn(null));
 	}
 }

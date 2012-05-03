@@ -16,9 +16,9 @@ public class RepoDataRedoContainerTest extends RepoTest {
 
 	@SuppressWarnings("unchecked")
 	public void testIfTryToReadSameFileInTwoTransactionsGetRedoTransactionExceptionInSecond() throws Exception {
-		initRepos(gitFacard, "a");
-		putFile("a/b", null, v11, v12);
-		commitRepos(gitFacard, "a");
+		initRepos(localFacard, "a");
+		putFile(localFacard, "a/b", null, v11, v12);
+		addAllAndCommit(localFacard, "a");
 
 		final CountDownLatch transaction1CanRead = new CountDownLatch(1);
 		final CountDownLatch transaction1HasRead = new CountDownLatch(1);
@@ -68,7 +68,7 @@ public class RepoDataRedoContainerTest extends RepoTest {
 		super.setUp();
 		container = new Container(transactionManager, null) {
 		};
-		container.register(IRepoData.class, IRepoDataFactory.Utils.factory(gitFacard));
+		container.register(IRepoData.class, IRepoDataFactory.Utils.simpleFactory(localFacard));
 	}
 
 }

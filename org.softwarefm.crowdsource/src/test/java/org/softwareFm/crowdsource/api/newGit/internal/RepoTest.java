@@ -3,20 +3,33 @@ package org.softwareFm.crowdsource.api.newGit.internal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.git.GitTest;
 import org.softwareFm.crowdsource.api.newGit.IAccessControlList;
+import org.softwareFm.crowdsource.api.newGit.IRepoDataFactory;
+import org.softwareFm.crowdsource.api.newGit.IRepoLocator;
+import org.softwareFm.crowdsource.api.newGit.IRepoReader;
+import org.softwareFm.crowdsource.api.newGit.ISingleSource;
+import org.softwareFm.crowdsource.api.newGit.ISources;
+import org.softwareFm.crowdsource.api.newGit.RepoLocation;
+import org.softwareFm.crowdsource.api.newGit.SourcedMap;
 import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
+import org.softwareFm.crowdsource.api.newGit.facard.ILinkedGitFacard;
 import org.softwareFm.crowdsource.constants.CommentConstants;
+import org.softwareFm.crowdsource.utilities.collections.ITransactionalMutableSimpleSet;
 import org.softwareFm.crowdsource.utilities.collections.Iterables;
+import org.softwareFm.crowdsource.utilities.collections.Sets;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
+import org.softwareFm.crowdsource.utilities.maps.TransactionalSimpleSet;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
@@ -87,15 +100,33 @@ abstract public class RepoTest extends GitTest {
 	protected static final UserData user1Data = new UserData("someEmail", userId1, userCrypto1);
 	protected static final UserData user2Data = new UserData("someEmail", userId2, userCrypto2);
 
-	protected IGitFacard gitFacard;
+	protected ILinkedGitFacard localFacard;
+	protected IGitFacard remoteFacard;
 	protected RepoData repoData;
+
+	protected Set<String> hasPulledSetRaw = Sets.newSet();
+	protected AtomicInteger hasPulledCommitCount = new AtomicInteger();
+	protected AtomicInteger hasPulledRollbackCount = new AtomicInteger();
+	protected ITransactionalMutableSimpleSet<String> hasPulled = new TransactionalSimpleSet<String>(hasPulledSetRaw) {
+		@Override
+		public void commit() {
+			hasPulledCommitCount.incrementAndGet();
+		}
+
+		@Override
+		public void rollback() {
+			hasPulledRollbackCount.incrementAndGet();
+		}
+	};
+
+	protected IRepoLocator repoLocator;
 
 	protected void initRepos(IGitFacard gitFacard, String... rls) {
 		for (String rl : rls)
 			gitFacard.init(rl);
 	}
 
-	protected void commitRepos(IGitFacard gitFacard, String... rls) {
+	protected void addAllAndCommit(IGitFacard gitFacard, String... rls) {
 		for (String rl : rls)
 			gitFacard.commit(gitFacard.addAll(rl), "someCommitMessage");
 	}
@@ -132,8 +163,20 @@ abstract public class RepoTest extends GitTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		gitFacard = new GitFacard(remoteRoot, IAccessControlList.Utils.noAccessControl());
-		repoData = new RepoData(gitFacard);
+		remoteFacard = IGitFacard.Utils.makeServerGitFacard(remoteRoot, getAccessControl());
+		localFacard = IGitFacard.Utils.makeLocalGitFacard(localRoot, remoteRoot.getCanonicalPath(), getAccessControl());
+		repoLocator = new IRepoLocator() {
+			@Override
+			public RepoLocation findRepository(ISingleSource source) {
+				RepoLocation raw = remoteFacard.findRepoRl(source.fullRl());
+				return RepoLocation.remote(localRoot, raw.rl);
+			}
+		};
+		newRepo();
+	}
+
+	protected IAccessControlList getAccessControl() {
+		return IAccessControlList.Utils.noAccessControl();
 	}
 
 	@Override
@@ -155,12 +198,28 @@ abstract public class RepoTest extends GitTest {
 	protected void transactionManagerChanged() {
 	}
 
-	protected void putFile(String rl, String crypto, Map<String, Object>... maps) {
-		putFile(rl, crypto, Arrays.asList(maps));
+	protected void putFile(IGitFacard gitFacard, String rl, String crypto, Map<String, Object>... maps) {
+		putFile(gitFacard, rl, crypto, Arrays.asList(maps));
 	}
 
-	protected void putFile(String rl, String crypto, List<Map<String, Object>> lines) {
+	protected void putFile(IGitFacard gitFacard, String rl, String crypto, List<Map<String, Object>> lines) {
 		Iterable<String> encodedList = Iterables.map(lines, Json.toStringAndEncryptFn(crypto));
 		gitFacard.putFileReturningRepoRl(rl, Strings.join(encodedList, "\n"));
 	}
+
+	protected RepoData newRepo() {
+		repoData = (RepoData) IRepoDataFactory.Utils.localFactory(localFacard, repoLocator, hasPulled).build();
+		return repoData;
+	}
+
+	protected void checkRead(ISources sources, int index, SourcedMap... expected) {
+		Iterable<SourcedMap> actual = IRepoReader.Utils.read(repoData, sources, index);
+		assertEquals(Arrays.asList(expected), Iterables.list(actual));
+	}
+
+	protected void checkRead(ISingleSource source, int index, SourcedMap... expected) {
+		Iterable<SourcedMap> actual = IRepoReader.Utils.read(repoData, source, index);
+		assertEquals(Arrays.asList(expected), Iterables.list(actual));
+	}
+
 }

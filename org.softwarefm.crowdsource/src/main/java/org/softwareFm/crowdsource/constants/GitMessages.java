@@ -13,5 +13,7 @@ public class GitMessages {
 	public static final String cannotMakeChangeToSameItemTwice = "Cannot make change to same item twice. {0} {1} {2}. Currently this is to be changed to {3}";
 	public static final String commitMessageNotSet = "Commit message not set";
 	public static final String commitMessageAlreadySet = "Commit message already set\nOld: {0}\nNew: {1}";
+	public static final String cannotCloneRepo = "Cannot clone repo {0} because of existing repo {1}";
+	public static final String doNotUnderstandRepoCommand = "Command {0} is not recognised. Url is {1}, Parameters are {2}";
 
 }

@@ -11,9 +11,11 @@ import java.text.MessageFormat;
 import org.eclipse.jgit.api.AddCommand;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.api.ResetCommand;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
 import org.eclipse.jgit.api.errors.NoFilepatternException;
+import org.eclipse.jgit.storage.file.FileBasedConfig;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.softwareFm.crowdsource.api.newGit.IAccessControlList;
@@ -22,22 +24,24 @@ import org.softwareFm.crowdsource.api.newGit.exceptions.AlreadyUnderRepoExceptio
 import org.softwareFm.crowdsource.api.newGit.exceptions.NotRepoException;
 import org.softwareFm.crowdsource.api.newGit.exceptions.NotUnderRepoException;
 import org.softwareFm.crowdsource.api.newGit.exceptions.TryingToLockUnderRepoException;
-import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
+import org.softwareFm.crowdsource.api.newGit.facard.ILinkedGitFacard;
 import org.softwareFm.crowdsource.api.newGit.facard.RepoRlAndText;
 import org.softwareFm.crowdsource.constants.GitMessages;
 import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.transaction.RedoTransactionException;
+import org.softwareFm.crowdsource.utilities.url.Urls;
 
-public class GitFacard implements IGitFacard {
+public class GitFacard implements ILinkedGitFacard {
 
 	private final File root;
-	private final FileRepositoryBuilder builder = new FileRepositoryBuilder();
 	private final IAccessControlList acl;
+	private final String remotePrefix;
 
-	public GitFacard(File root, IAccessControlList acl) {
+	public GitFacard(File root, String remotePrefix, IAccessControlList acl) {
 		this.root = root;
+		this.remotePrefix = remotePrefix;
 		this.acl = acl;
 	}
 
@@ -66,7 +70,7 @@ public class GitFacard implements IGitFacard {
 
 	private File checkCanLockRepo(String repoRl) {
 		File lockDir = new File(root, repoRl);
-		RepoLocation repoLocation = findRepoRl( repoRl);
+		RepoLocation repoLocation = findRepoRl(repoRl);
 		if (repoLocation != null) {
 			File repoDir = repoLocation.dir;
 			if (!repoDir.equals(lockDir))
@@ -81,16 +85,19 @@ public class GitFacard implements IGitFacard {
 	}
 
 	@Override
-	public void init(String repoRl) throws AlreadyUnderRepoException {
+	public RepoLocation init(String repoRl) throws AlreadyUnderRepoException {
 		acl.write(repoRl);
 		RepoLocation existing = findRepoRl(repoRl);
 		if (existing != null)
-			throw new AlreadyUnderRepoException(existing.url, repoRl);
+			throw new AlreadyUnderRepoException(existing.rl, repoRl);
 		File repoDir = new File(root, repoRl);
 		Git git = Git.init().setDirectory(repoDir).call();
 		git.getRepository().close();
 		FileRepository fileRepository = addAll(repoRl);
 		commit(fileRepository, GitMessages.init);
+		RepoLocation result = findMustExistRepoRl(repoRl);
+		assert result.rl.equals(repoRl) : "Result: " + result + " RepoRl: " + repoRl;
+		return result;
 	}
 
 	@Override
@@ -171,7 +178,7 @@ public class GitFacard implements IGitFacard {
 		final File dir = new File(root, rl);
 		for (File file : Files.listParentsUntil(root, dir))
 			if (new File(file, CommonConstants.DOT_GIT).exists())// found it
-				return new RepoLocation(file, Files.offset(root, file));
+				return RepoLocation.local(root, Files.offset(root, file));
 		return null;
 	}
 
@@ -181,6 +188,7 @@ public class GitFacard implements IGitFacard {
 
 	private FileRepository makeFileRepository(final File repoDir) {
 		try {
+			FileRepositoryBuilder builder = new FileRepositoryBuilder();
 			FileRepository repository = builder.//
 					setGitDir(new File(repoDir, CommonConstants.DOT_GIT))//
 					.readEnvironment() // scan environment GIT_* variables
@@ -188,6 +196,43 @@ public class GitFacard implements IGitFacard {
 			return repository;
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
+		}
+	}
+
+	@Override
+	public void setConfigForRemotePull(final String repoRl) {
+		RepoLocation repoLocation = findMustExistRepoRl(repoRl);
+		if (!repoLocation.rl.equals(repoRl))
+			throw new NotRepoException(repoRl);
+		FileRepository fileRepository = makeFileRepository(repoLocation.dir);
+		try {
+			FileBasedConfig config = fileRepository.getConfig();
+			config.setString("remote", "origin", "url", Urls.compose(remotePrefix, repoRl));
+			config.setString("remote", "origin", "fetch", "+refs/heads/*:refs/remotes/origin/*");
+			config.setString("branch", "master", "remote", "origin");
+			config.setString("branch", "master", "merge", "refs/heads/master");
+			config.save();
+		} catch (IOException e) {
+			throw WrappedException.wrap(e);
+		} finally {
+			fileRepository.close();
+		}
+	}
+
+	@Override
+	public void pull(String repoRl) {
+		RepoLocation repoLocation = findMustExistRepoRl(repoRl);
+		if (!repoLocation.rl.equals(repoRl))
+			throw new NotRepoException(repoRl);
+
+		FileRepository fileRepository = makeFileRepository(repoLocation.dir);
+		try {
+			PullCommand pull = new Git(fileRepository).pull();
+			pull.call();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		} finally {
+			fileRepository.close();
 		}
 	}
 

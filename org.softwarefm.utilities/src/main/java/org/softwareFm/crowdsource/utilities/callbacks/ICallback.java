@@ -4,10 +4,12 @@
 
 package org.softwareFm.crowdsource.utilities.callbacks;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.Assert;
 
+import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 
 public interface ICallback<T> {
@@ -130,6 +132,10 @@ public interface ICallback<T> {
 				}
 			};
 		}
+
+		public static <T>EnsureUniqueParameter<T> ensureUniqueParameter() {
+			return new EnsureUniqueParameter<T>();
+		}
 	}
 
 	public static class EnsureSameParameter<T> implements ICallback<T> {
@@ -143,6 +149,18 @@ public interface ICallback<T> {
 			else
 				Assert.assertSame(t, value);
 			count.incrementAndGet();
+		}
+	}
+
+	public static class EnsureUniqueParameter<T> implements ICallback<T> {
+		private T value;
+		public List<T> list = Lists.newList();
+
+		@Override
+		public void process(T t) throws Exception {
+			if (list.contains(t))
+				Assert.fail("Parameter: " + t +", existing: " + list);
+			list.add(t);
 		}
 	}
 

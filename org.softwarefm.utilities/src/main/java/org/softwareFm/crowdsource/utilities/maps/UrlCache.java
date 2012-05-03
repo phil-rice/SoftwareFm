@@ -4,13 +4,15 @@
 
 package org.softwareFm.crowdsource.utilities.maps;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import org.softwareFm.crowdsource.utilities.collections.Iterables;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.url.Urls;
 
-public class UrlCache<V> {
+public class UrlCache<V> implements ISimpleMap<String, V>{
 
 	private final Map<String, V> map = Maps.newMap();
 	// note that there are now two locks involved: the cachedRepoNavigation and this one. I don't think this will ever cause a deadlock, but think about it when changing this code
@@ -22,6 +24,7 @@ public class UrlCache<V> {
 		}
 	}
 
+	@Override
 	public V get(String url) {
 		synchronized (lock) {
 			return map.get(Urls.removeSlash(url));
@@ -65,5 +68,10 @@ public class UrlCache<V> {
 			map.clear();
 		}
 
+	}
+
+	@Override
+	public List<String> keys() {
+		return Iterables.list(map.keySet());
 	}
 }

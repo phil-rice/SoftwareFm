@@ -15,9 +15,9 @@ public class UserSourceTest extends AbstractSourceTypeTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		initRepos(gitFacard, "data/users");
-		createArbitaryFileForUser(gitFacard, userId1, userCrypto1, "cryptoKey", miscCrypto1);
-		commitRepos(gitFacard, "data/users");
+		initRepos(remoteFacard, "data/users");
+		createArbitaryFileForUser(remoteFacard, userId1, userCrypto1, "cryptoKey", miscCrypto1);
+		addAllAndCommit(remoteFacard, "data/users");
 	}
 }
  

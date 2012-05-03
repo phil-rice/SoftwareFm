@@ -7,10 +7,11 @@ import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.git.TemporaryFileTest;
 import org.softwareFm.crowdsource.api.newGit.IAccessControlList;
 import org.softwareFm.crowdsource.api.newGit.ISingleRowReader;
+import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
 
 public class GitFacardAclTest extends TemporaryFileTest {
 
-	private GitFacard gitFacard;
+	private IGitFacard gitFacard;
 	private IAccessControlList acl;
 	private ISingleRowReader reader;
 	private RawSingleSource source;
@@ -69,7 +70,7 @@ public class GitFacardAclTest extends TemporaryFileTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		acl = EasyMock.createMock(IAccessControlList.class);
-		gitFacard = new GitFacard(root, acl);
+		gitFacard = IGitFacard.Utils.makeServerGitFacard(root, acl);
 		reader = EasyMock.createMock(ISingleRowReader.class);
 		repoRl = "repo";
 		rl = "repo/someRl";

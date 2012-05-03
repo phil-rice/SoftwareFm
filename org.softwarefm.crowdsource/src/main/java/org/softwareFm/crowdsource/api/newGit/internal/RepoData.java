@@ -3,87 +3,68 @@ package org.softwareFm.crowdsource.api.newGit.internal;
 import java.nio.channels.FileLock;
 import java.text.MessageFormat;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.Callable;
 
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.softwareFm.crowdsource.api.newGit.IRepoData;
+import org.softwareFm.crowdsource.api.newGit.IRepoLocator;
+import org.softwareFm.crowdsource.api.newGit.IRepoReaderImplementor;
 import org.softwareFm.crowdsource.api.newGit.ISingleSource;
 import org.softwareFm.crowdsource.api.newGit.RepoLocation;
 import org.softwareFm.crowdsource.api.newGit.exceptions.CannotChangeTwiceException;
 import org.softwareFm.crowdsource.api.newGit.exceptions.CannotUseRepoAfterCommitOrRollbackException;
 import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
-import org.softwareFm.crowdsource.api.newGit.facard.RepoRlAndText;
+import org.softwareFm.crowdsource.api.newGit.facard.ILinkedGitFacard;
 import org.softwareFm.crowdsource.constants.GitMessages;
-import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.comparators.Comparators;
-import org.softwareFm.crowdsource.utilities.exceptions.AggregateException;
+import org.softwareFm.crowdsource.utilities.functions.Functions;
+import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.json.Json;
+import org.softwareFm.crowdsource.utilities.maps.IHasUrlCache;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactional;
 
-public class RepoData implements IRepoData, ITransactional {
+public class RepoData implements IRepoData, ITransactional, IHasUrlCache {
 
 	private final IGitFacard gitFacard;
-	final Map<String, FileLock> locks = Maps.newMap();
 	Map<ISingleSource, List<Map<String, Object>>> toAppend = Maps.newMap();
 	Map<ISingleSource, List<IndexAndMap>> toChange = Maps.newMap();
 	Map<ISingleSource, Set<Integer>> toDelete = Maps.newMap();
 
-	private final Map<ISingleSource, Map<Integer, Map<String, Object>>> decryptedCache = Maps.newMap();
-	private final Map<ISingleSource, List<String>> rawCache = Maps.newMap();
+	final IRepoReaderImplementor repoReader;
 
 	private boolean commitOrRollbackCalled;
 	private String commitMessage;
+	private final IRepoLocator repoLocator;
 
-	public RepoData(IGitFacard gitFacard) {
+	public RepoData(ILinkedGitFacard gitFacard, IFunction1<ILinkedGitFacard, IRepoReaderImplementor> repoReaderBuilder, IRepoLocator repoLocator) {
 		this.gitFacard = gitFacard;
+		this.repoLocator = repoLocator;
+		this.repoReader = Functions.call(repoReaderBuilder, gitFacard);
 	}
 
 	@Override
-	public Map<String, Object> readRow(final ISingleSource singleSource, final int row) {
-		Map<Integer, Map<String, Object>> decryptedMap = Maps.findOrCreate(decryptedCache, singleSource, new Callable<Map<Integer, Map<String, Object>>>() {
-			@Override
-			public Map<Integer, Map<String, Object>> call() throws Exception {
-				return new HashMap<Integer, Map<String, Object>>();
-			}
-		});
-		Map<String, Object> result = Maps.findOrCreate(decryptedMap, row, new Callable<Map<String, Object>>() {
-			@Override
-			public Map<String, Object> call() throws Exception {
-				List<String> raw = readRaw(singleSource);
-				if (row < 0 || row > raw.size())
-					throw new IndexOutOfBoundsException();
-				return Json.mapFromString(singleSource.decypt(raw.get(row)));
-			}
-		});
-		return result;
+	public Map<String, Object> readRow(ISingleSource singleSource, int row) {
+		checkOkToUse("readRow", singleSource, row);
+		return repoReader.readRow(singleSource, row);
 	}
 
 	@Override
-	public List<String> readRaw(final ISingleSource singleSource) {
-		checkOkToUse("read", singleSource);
-		return Maps.findOrCreate(rawCache, singleSource, new Callable<List<String>>() {
-			@Override
-			public List<String> call() throws Exception {
-				String fullRl = singleSource.fullRl();
-				final RepoRlAndText repoRlAndText = gitFacard.getFile(fullRl);
-				Maps.findOrCreate(locks, repoRlAndText.repoRl, new Callable<FileLock>() {
-					@Override
-					public FileLock call() throws Exception {
-						return gitFacard.lock(repoRlAndText.repoRl);
-					}
-				});
-				List<String> raw = Strings.splitIgnoreBlanks(repoRlAndText.text, "\n");
-				return raw;
-			}
-		});
+	public List<String> readRaw(ISingleSource singleSource) {
+		checkOkToUse("readRaw", singleSource);
+		return repoReader.readRaw(singleSource);
+	}
+
+	@Override
+	public RepoLocation findRepository(ISingleSource singleSource) {
+		checkOkToUse("findRepository", singleSource);
+		RepoLocation local = gitFacard.findRepoRl(singleSource.fullRl());
+		return local == null ? repoLocator.findRepository(singleSource) : local;
 	}
 
 	private void checkOkToUse(String methodName, Object... args) {
@@ -93,6 +74,7 @@ public class RepoData implements IRepoData, ITransactional {
 
 	@Override
 	public void append(ISingleSource source, Map<String, Object> newItem) {
+		checkOkToUse("append", source, newItem);
 		readRaw(source);
 		Maps.addToList(toAppend, source, newItem);
 	}
@@ -124,8 +106,9 @@ public class RepoData implements IRepoData, ITransactional {
 
 	@Override
 	public void commit() {
+		commitOrRollbackCalled = true;
 		List<String> repoRls = Lists.newList();
-		for (Entry<ISingleSource, List<String>> entry : rawCache.entrySet()) {
+		for (Entry<ISingleSource, List<String>> entry : repoReader.rawCache().entrySet()) {
 			List<String> rawCacheItem = entry.getValue();
 			boolean changed = false;
 			ISingleSource source = entry.getKey();
@@ -164,33 +147,30 @@ public class RepoData implements IRepoData, ITransactional {
 			FileRepository fileRepository = gitFacard.addAll(repoRl);
 			gitFacard.commit(fileRepository, commitMessage);
 		}
-		releaseLocks();
+		repoReader.commit();
+
 	}
 
 	@Override
 	public void rollback() {
-		releaseLocks();
+		commitOrRollbackCalled = true;
+		repoReader.rollback();
 	}
 
-	private void releaseLocks() {
-		commitOrRollbackCalled = true;
-		List<Exception> exceptions = Lists.newList();
-		for (FileLock lock : locks.values())
-			try {
-				Files.releaseAndClose(lock);
-			} catch (Exception e) {
-				exceptions.add(e);
-			}
-		locks.clear();
-		if (exceptions.size() > 0)
-			throw new AggregateException(exceptions);
+	public Map<String, FileLock> locks() {
+		return repoReader.locks();
 	}
 
 	@Override
-	public RepoLocation findRepository(ISingleSource source) {
-		String fullRl = source.fullRl();
-		RepoLocation repoLocation = gitFacard.findRepoRl(fullRl);
-		return repoLocation;
+	public void clearCaches() {
+		if (repoReader instanceof IHasUrlCache)
+			((IHasUrlCache) repoReader).clearCaches();
+	}
+
+	@Override
+	public void clearCache(String url) {
+		if (repoReader instanceof IHasUrlCache)
+			((IHasUrlCache) repoReader).clearCache(url);
 	}
 
 }

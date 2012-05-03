@@ -40,6 +40,7 @@ public class Maps {
 			result.put(key, map.get(key));
 		return result;
 	}
+	
 
 	@SuppressWarnings("unchecked")
 	public static MapAsList toMapAsList(String keyName, Map<String, Object> map, String sortOrder, List<String> keyOrder) {
