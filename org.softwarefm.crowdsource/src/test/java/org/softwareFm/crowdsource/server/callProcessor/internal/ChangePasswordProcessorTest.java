@@ -8,6 +8,7 @@ import org.easymock.EasyMock;
 import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.server.AbstractProcessCallTest;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
+import org.softwareFm.crowdsource.api.server.RequestLineMock;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginMessages;
@@ -36,9 +37,9 @@ public class ChangePasswordProcessorTest extends AbstractProcessCallTest<ChangeP
 		EasyMock.replay(userCryptoAccess);
 		IProcessResult result = processor.process(new RequestLineMock(CommonConstants.POST, url), Maps.stringObjectMap(LoginConstants.emailKey, email, LoginConstants.passwordHashKey, oldHash, LoginConstants.newPasswordHashKey, newHash));
 		if (expected)
-			checkStringResult(result, LoginMessages.passwordChanged);
+			IProcessResult.Utils.	checkStringResult(result, LoginMessages.passwordChanged);
 		else
-			checkErrorResult(result, CommonConstants.notFoundStatusCode, LoginMessages.wrongPassword, LoginMessages.wrongPassword);
+			IProcessResult.Utils.	checkErrorResult(result, CommonConstants.notFoundStatusCode, LoginMessages.wrongPassword, LoginMessages.wrongPassword);
 		EasyMock.verify(userCryptoAccess);
 	}
 

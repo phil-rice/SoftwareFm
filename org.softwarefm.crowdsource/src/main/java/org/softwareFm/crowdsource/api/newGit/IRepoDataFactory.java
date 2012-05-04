@@ -1,44 +1,37 @@
 package org.softwareFm.crowdsource.api.newGit;
 
+import java.util.Set;
+
 import org.softwareFm.crowdsource.api.IFactory;
+import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
 import org.softwareFm.crowdsource.api.newGit.facard.ILinkedGitFacard;
 import org.softwareFm.crowdsource.api.newGit.internal.LinkedRepoReader;
 import org.softwareFm.crowdsource.api.newGit.internal.RepoData;
 import org.softwareFm.crowdsource.api.newGit.internal.SimpleRepoLocator;
 import org.softwareFm.crowdsource.api.newGit.internal.SimpleRepoReader;
-import org.softwareFm.crowdsource.utilities.collections.ITransactionalMutableSimpleSet;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
+import org.softwareFm.crowdsource.utilities.collections.Sets;
 
 public interface IRepoDataFactory extends IFactory<IRepoData> {
 
 	public static class Utils {
-		public static IRepoDataFactory simpleFactory(final ILinkedGitFacard gitFacard) {
+		public static IRepoDataFactory simpleFactory(final IGitFacard gitFacard) {
 			return new IRepoDataFactory() {
 				@Override
 				public IRepoData build() {
-					return new RepoData(gitFacard, new IFunction1<ILinkedGitFacard, IRepoReaderImplementor>() {
-						@Override
-						public IRepoReaderImplementor apply(ILinkedGitFacard from) throws Exception {
-							return new SimpleRepoReader(from);
-						}
-					}, new SimpleRepoLocator(gitFacard));
+					SimpleRepoReader repoReader = new SimpleRepoReader(gitFacard);
+					SimpleRepoLocator repoLocator = new SimpleRepoLocator(gitFacard);
+					return new RepoData(gitFacard, repoReader, repoLocator);
 				}
 			};
 		}
 
-		public static IRepoDataFactory localFactory(final ILinkedGitFacard localGitFacard, final IRepoLocator repoLocator, final ITransactionalMutableSimpleSet<String> hasPulled) {
+		public static IRepoDataFactory localFactory(final ILinkedGitFacard localGitFacard, final IRepoLocator repoLocator, final Set<String> hasPulled) {
 			return new IRepoDataFactory() {
-				
 				@Override
 				public IRepoData build() {
-					return new RepoData(localGitFacard, new IFunction1<ILinkedGitFacard, IRepoReaderImplementor>() {
-						
-						@Override
-						public IRepoReaderImplementor apply(ILinkedGitFacard from) throws Exception {
-							SimpleRepoReader delegate = new SimpleRepoReader(localGitFacard);
-							return new LinkedRepoReader(delegate, from, repoLocator, hasPulled);
-						}
-					}, repoLocator);
+					SimpleRepoReader delegate = new SimpleRepoReader(localGitFacard);
+					LinkedRepoReader repoReader = new LinkedRepoReader(delegate, localGitFacard, repoLocator, Sets.<String> asTransactionalSet(hasPulled));
+					return new RepoData(localGitFacard, repoReader, repoLocator);
 				}
 			};
 		}

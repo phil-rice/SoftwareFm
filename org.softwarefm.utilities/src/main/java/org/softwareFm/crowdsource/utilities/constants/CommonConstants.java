@@ -50,5 +50,6 @@ public class CommonConstants {
 
 	public static final long transactionBackOffTime = 30;
 	public static final int transactionRetryCount = 10;
+	public static final String indexParameterName = "index";
 
 }

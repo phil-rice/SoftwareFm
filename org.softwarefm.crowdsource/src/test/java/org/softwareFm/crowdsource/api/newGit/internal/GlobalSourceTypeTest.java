@@ -6,7 +6,7 @@ public class GlobalSourceTypeTest extends AbstractSourceTypeTest{
 
 	public void testMakesRawSingleSource() {
 		GlobalSourceType globalSourceType = new GlobalSourceType();
-		assertEquals(Arrays.asList(new RawSingleSource("rl/file")), globalSourceType.makeSourcesFor(repoData, "rl", "file", "who", "care", "unused"));
+		assertEquals(Arrays.asList(new RawSingleSource("rl/file")), globalSourceType.makeSourcesFor(linkedRepoData, "rl", "file", "who", "care", "unused"));
 	}
 
 }

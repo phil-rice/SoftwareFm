@@ -24,7 +24,7 @@ public class LocalAndRemoteRepoTest extends RepoTest {
 		putFile(remoteFacard, file1_1, null, v11, v12);
 		addAllAndCommit(remoteFacard, repo1);
 
-		List<Map<String, Object>> actual = IRepoReader.Utils.readAllRows(repoData, source1_1);
+		List<Map<String, Object>> actual = IRepoReader.Utils.readAllRows(linkedRepoData, source1_1);
 		assertEquals(Arrays.asList(v11, v12), actual);
 	}
 
@@ -32,12 +32,12 @@ public class LocalAndRemoteRepoTest extends RepoTest {
 		initRepos(remoteFacard, repo1);
 		putFile(remoteFacard, file1_1, null, v11, v12);
 		addAllAndCommit(remoteFacard, repo1);
-		IGitFacard.Utils.clone(localFacard, repo1);
+		IGitFacard.Utils.clone(linkedFacard, repo1);
 
 		putFile(remoteFacard, file1_1, null, v21, v22);
 		addAllAndCommit(remoteFacard, repo1);
 
-		List<Map<String, Object>> actual = IRepoReader.Utils.readAllRows(repoData, source1_1);
+		List<Map<String, Object>> actual = IRepoReader.Utils.readAllRows(linkedRepoData, source1_1);
 		assertEquals(Arrays.asList(v21, v22), actual);
 	}
 
@@ -45,12 +45,12 @@ public class LocalAndRemoteRepoTest extends RepoTest {
 		initRepos(remoteFacard, repo1);
 		putFile(remoteFacard, file1_1, null, v11, v12);
 		addAllAndCommit(remoteFacard, repo1);
-		IGitFacard.Utils.clone(localFacard, repo1);
+		IGitFacard.Utils.clone(linkedFacard, repo1);
 		putFile(remoteFacard, file1_1, null, v21, v22);
 		addAllAndCommit(remoteFacard, repo1);
 
-		hasPulledSetRaw.add(repo1);
-		List<Map<String, Object>> actual = IRepoReader.Utils.readAllRows(repoData, source1_1);
+		hasPulled.add(repo1);
+		List<Map<String, Object>> actual = IRepoReader.Utils.readAllRows(linkedRepoData, source1_1);
 		assertEquals(Arrays.asList(v11, v12), actual);
 	}
 

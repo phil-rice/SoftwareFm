@@ -53,7 +53,7 @@ public class SimpleAccessControlListItemTest extends RepoTest {
 	}
 
 	private void checkCanUpdate(String rl, int index) {
-		acl.updateListItem(repoData, new RawSingleSource(rl), index);
+		acl.updateListItem(linkedRepoData, new RawSingleSource(rl), index);
 
 	}
 
@@ -61,14 +61,14 @@ public class SimpleAccessControlListItemTest extends RepoTest {
 		Tests.assertThrowsWithMessage(message, CannotWriteException.class, new Runnable() {
 			@Override
 			public void run() {
-				acl.updateListItem(repoData, new RawSingleSource(rl), index);
+				acl.updateListItem(linkedRepoData, new RawSingleSource(rl), index);
 			}
 		});
 
 	}
 
 	private void checkCanDelete(String rl, int index) {
-		acl.deleteListItem(repoData, new RawSingleSource(rl), index);
+		acl.deleteListItem(linkedRepoData, new RawSingleSource(rl), index);
 
 	}
 
@@ -76,7 +76,7 @@ public class SimpleAccessControlListItemTest extends RepoTest {
 		Tests.assertThrowsWithMessage(message, CannotWriteException.class, new Runnable() {
 			@Override
 			public void run() {
-				acl.deleteListItem(repoData, new RawSingleSource(rl), index);
+				acl.deleteListItem(linkedRepoData, new RawSingleSource(rl), index);
 			}
 		});
 

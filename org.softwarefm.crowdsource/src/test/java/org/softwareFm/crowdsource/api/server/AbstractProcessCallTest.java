@@ -4,16 +4,9 @@
 
 package org.softwareFm.crowdsource.api.server;
 
-import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.ProtocolVersion;
-import org.apache.http.RequestLine;
-import org.apache.http.entity.StringEntity;
 import org.softwareFm.crowdsource.api.ApiTest;
-import org.softwareFm.crowdsource.utilities.collections.Files;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.GroupConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
@@ -69,126 +62,20 @@ abstract public class AbstractProcessCallTest<T extends ICallProcessor> extends 
 	protected void checkGetFromProcessor(String url, final Object... expected) {
 		try {
 			IProcessResult result = processor.process(makeRequestLine(CommonConstants.GET, url), emptyMap);
-			checkStringResultWithMap(result, expected);
+			IProcessResult.Utils.checkStringResultWithMap(result, expected);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
 	}
 
-	protected void checkErrorResult(IProcessResult result, final int expectedCode, final String expectedReason, final String expectedString) {
-		final AtomicInteger count = new AtomicInteger();
-		try {
-			result.process(new HttpResponseMock() {
-				@Override
-				public void setEntity(HttpEntity entity) {
-					try {
-						count.incrementAndGet();
-						assertTrue(entity instanceof StringEntity);
-						StringEntity stringEntity = (StringEntity) entity;
-						String string = Files.getText(stringEntity.getContent());
-						assertEquals(expectedString, string);
-					} catch (IOException e) {
-						throw WrappedException.wrap(e);
-					}
-				}
 
-				@Override
-				public void setStatusCode(int code) throws IllegalStateException {
-					assertEquals(expectedCode, code);
-					count.incrementAndGet();
-				}
-
-				@Override
-				public void setReasonPhrase(String reason) throws IllegalStateException {
-					assertEquals(expectedReason, reason);
-					count.incrementAndGet();
-				}
-			});
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-		assertEquals(3, count.get());// not perfect but easy
-	}
-
-	protected void checkStringResultWithMap(IProcessResult result, final Object... expected) {
-		try {
-			result.process(new HttpResponseMock() {
-				@Override
-				public void setEntity(HttpEntity entity) {
-					try {
-						assertTrue(entity instanceof StringEntity);
-						StringEntity stringEntity = (StringEntity) entity;
-						String string = Files.getText(stringEntity.getContent());
-						Map<String, Object> actual = Json.mapFromString(string);
-						assertEquals(Maps.stringObjectMap(expected), actual);
-					} catch (IOException e) {
-						throw WrappedException.wrap(e);
-					}
-				}
-			});
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-	}
-
-	protected void checkStringResult(IProcessResult result, final String expected) {
-		try {
-			result.process(new HttpResponseMock() {
-				@Override
-				public void setEntity(HttpEntity entity) {
-					try {
-						assertTrue(entity instanceof StringEntity);
-						StringEntity stringEntity = (StringEntity) entity;
-						String string = Files.getText(stringEntity.getContent());
-						assertEquals(expected, string);
-					} catch (IOException e) {
-						throw WrappedException.wrap(e);
-					}
-				}
-			});
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
-		}
-	}
 
 	protected void checkGetStringFromProcessor(String url, final String expected) {
 		try {
 			IProcessResult result = processor.process(makeRequestLine(CommonConstants.GET, url), emptyMap);
-			checkStringResult(result, expected);
+			IProcessResult.Utils.checkStringResult(result, expected);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
-	}
-
-	public static class RequestLineMock implements RequestLine {
-
-		private final String method;
-		private final String uri;
-
-		public RequestLineMock(String method, String uri) {
-			this.method = method;
-			this.uri = uri;
-		}
-
-		@Override
-		public String getMethod() {
-			return method;
-		}
-
-		@Override
-		public ProtocolVersion getProtocolVersion() {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public String getUri() {
-			return uri;
-		}
-
-		@Override
-		public String toString() {
-			return "RequestLineMock [method=" + method + ", uri=" + uri + "]";
-		}
-
 	}
 }

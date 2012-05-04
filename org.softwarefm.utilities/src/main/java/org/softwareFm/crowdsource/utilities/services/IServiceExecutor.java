@@ -10,6 +10,8 @@ import org.softwareFm.crowdsource.utilities.services.internal.ServiceExecutor;
 
 public interface IServiceExecutor extends IShutdown {
 
+	public static boolean changeThreadName = false;
+	
 	/** The monitor is provided by the IServiceExecutor. The called task should call beginTask, worked and done. etc,Note that the task may not be finished when this service executor is finished (the task could for example end on the SWT thread). The task can be cancelled using future.cancel, or monitor.cancel */
 	<T> FutureAndMonitor<T> submit(IFunction1<IMonitor, T> job);
 

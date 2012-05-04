@@ -58,7 +58,8 @@ public class ServiceExecutor implements IServiceExecutor {
 			public T call() throws Exception {
 				Thread currentThread = Thread.currentThread();
 				String startName = currentThread.getName();
-				currentThread.setName(startName + ": " + task);
+				if (changeThreadName)
+					currentThread.setName(startName + ": " + task);
 
 				waitUntilSetupComplete.await();
 				try {
@@ -79,7 +80,8 @@ public class ServiceExecutor implements IServiceExecutor {
 					throw e;
 				} finally {
 					monitors.remove(monitor);
-					currentThread.setName(startName);
+					if (changeThreadName)
+						currentThread.setName(startName);
 				}
 			}
 		});

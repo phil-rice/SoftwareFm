@@ -46,7 +46,7 @@ public class AcceptInviteProcessorTest extends AbstractProcessCallTest<AcceptInv
 		}).get();
 
 		IProcessResult result = processor.execute(GroupConstants.acceptInvitePrefix, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, GroupConstants.groupIdKey, groupId0));
-		checkStringResult(result, "");
+		IProcessResult.Utils.	checkStringResult(result, "");
 		getServerUserAndGroupsContainer().accessUserMembership(new ICallback2<IGroups, IUserMembership>() {
 			@SuppressWarnings("unchecked")
 			@Override

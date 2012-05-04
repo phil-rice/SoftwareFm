@@ -15,7 +15,7 @@ public class GroupSourceTypeTest extends AbstractSourceTypeTest {
 
 	public void testReturnsEncryptedSourcePrefixedWithGroupUrl() {
 		GroupSourceType userSourceType = new GroupSourceType(userUrlGenerator, groupUrlGenerator);
-		List<ISingleSource> actual = userSourceType.makeSourcesFor(repoData, "rl", "file", userId1, userCrypto1, CommentConstants.commentCryptoKey);
+		List<ISingleSource> actual = userSourceType.makeSourcesFor(linkedRepoData, "rl", "file", userId1, userCrypto1, CommentConstants.commentCryptoKey);
 		assertEquals(Arrays.asList(group1Source, group2Source, group3Source), actual);
 	}
 

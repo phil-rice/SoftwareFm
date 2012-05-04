@@ -36,7 +36,7 @@ public class UserData {
 
 	@Override
 	public String toString() {
-		return "UserData [email=" + email + ", softwareFmId=" + softwareFmId + ", crypto=" + crypto + "]";
+		return "UserData [email=" + email + ", softwareFmId=" + softwareFmId + ", crypto=" + Strings.firstNCharacters(crypto, 6)+ "]";
 	}
 
 	@Override

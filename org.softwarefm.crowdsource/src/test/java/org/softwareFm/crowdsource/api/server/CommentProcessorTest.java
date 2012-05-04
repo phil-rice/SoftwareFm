@@ -83,7 +83,7 @@ public class CommentProcessorTest extends AbstractProcessCallTest<CommentProcess
 						LoginConstants.softwareFmIdKey, softwareFmId, //
 						CommentConstants.textKey, Crypto.aesEncrypt(userCrypto, (String) text),//
 						CommentConstants.filenameKey, filename));
-		checkStringResult(result, "");
+		IProcessResult.Utils.	checkStringResult(result, "");
 		assertEquals(Lists.map(Arrays.asList(expected), Maps.<String, Object> withFn(CommentConstants.sourceKey, "source")), ICommentsReader.Utils.allComments(comments, url, softwareFmId, userCrypto, "source", "source"));
 	}
 

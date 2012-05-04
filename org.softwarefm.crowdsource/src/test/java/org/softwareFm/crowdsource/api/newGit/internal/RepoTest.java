@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
+import org.softwareFm.crowdsource.api.IUserCryptoAccess;
 import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.git.GitTest;
 import org.softwareFm.crowdsource.api.newGit.IAccessControlList;
@@ -29,7 +29,6 @@ import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.crypto.Crypto;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
-import org.softwareFm.crowdsource.utilities.maps.TransactionalSimpleSet;
 import org.softwareFm.crowdsource.utilities.strings.Strings;
 import org.softwareFm.crowdsource.utilities.transaction.ITransactionManager;
 import org.softwareFm.crowdsource.utilities.url.IUrlGenerator;
@@ -97,28 +96,23 @@ abstract public class RepoTest extends GitTest {
 	protected static final Map<String, Object> v11User2 = Maps.with(v11, LoginConstants.softwareFmIdKey, userId2);
 	protected static final Map<String, Object> v12User2 = Maps.with(v12, LoginConstants.softwareFmIdKey, userId2);
 
-	protected static final UserData user1Data = new UserData("someEmail", userId1, userCrypto1);
-	protected static final UserData user2Data = new UserData("someEmail", userId2, userCrypto2);
+	protected static final String email1 = "email1@softwareFm.com";
+	protected static final String email2 = "email2@softwareFm.com";
+	protected static final String email3 = "email3@softwareFm.com";
+	protected static final UserData user1Data = new UserData(email1, userId1, userCrypto1);
+	protected static final UserData user2Data = new UserData(email2, userId2, userCrypto2);
+	protected static final UserData user3Data = new UserData(email3, userId3, userCrypto3);
 
-	protected ILinkedGitFacard localFacard;
+	protected static final IUserCryptoAccess userCryptoAccess = IUserCryptoAccess.Utils.mock(userId1, userCrypto1, userId2, userCrypto2, userId3, userCrypto3);
+
+	protected ILinkedGitFacard linkedFacard;
 	protected IGitFacard remoteFacard;
-	protected RepoData repoData;
+	protected RepoData linkedRepoData;
+	protected RepoData remoteRepoData;
 
-	protected Set<String> hasPulledSetRaw = Sets.newSet();
-	protected AtomicInteger hasPulledCommitCount = new AtomicInteger();
-	protected AtomicInteger hasPulledRollbackCount = new AtomicInteger();
-	protected ITransactionalMutableSimpleSet<String> hasPulled = new TransactionalSimpleSet<String>(hasPulledSetRaw) {
-		@Override
-		public void commit() {
-			hasPulledCommitCount.incrementAndGet();
-		}
+	protected Set<String> hasPulledRaw = Sets.newSet();
 
-		@Override
-		public void rollback() {
-			hasPulledRollbackCount.incrementAndGet();
-		}
-	};
-
+	protected ITransactionalMutableSimpleSet<String> hasPulled;
 	protected IRepoLocator repoLocator;
 
 	protected void initRepos(IGitFacard gitFacard, String... rls) {
@@ -164,7 +158,7 @@ abstract public class RepoTest extends GitTest {
 	protected void setUp() throws Exception {
 		super.setUp();
 		remoteFacard = IGitFacard.Utils.makeServerGitFacard(remoteRoot, getAccessControl());
-		localFacard = IGitFacard.Utils.makeLocalGitFacard(localRoot, remoteRoot.getCanonicalPath(), getAccessControl());
+		linkedFacard = IGitFacard.Utils.makeLocalGitFacard(localRoot, remoteRoot.getCanonicalPath(), getAccessControl());
 		repoLocator = new IRepoLocator() {
 			@Override
 			public RepoLocation findRepository(ISingleSource source) {
@@ -172,7 +166,7 @@ abstract public class RepoTest extends GitTest {
 				return RepoLocation.remote(localRoot, raw.rl);
 			}
 		};
-		newRepo();
+		newLinkedRepo();
 	}
 
 	protected IAccessControlList getAccessControl() {
@@ -185,11 +179,11 @@ abstract public class RepoTest extends GitTest {
 			boolean closed = ITransactionManager.Utils.waitUntilNoActiveJobs(transactionManager, CommonConstants.testTimeOutMs);
 			if (!closed) {
 				transactionManager.shutdownAndAwaitTermination(CommonConstants.testTimeOutMs, TimeUnit.SECONDS);
-				System.out.println("CAnnot close down transaction manager: " + transactionManager);
+				System.out.println("Cannot close down transaction manager: " + transactionManager);
 				transactionManager = ITransactionManager.Utils.standard(CommonConstants.threadPoolSizeForTests, CommonConstants.testTimeOutMs);
 				transactionManagerChanged();
 			}
-			repoData.rollback();
+			linkedRepoData.rollback();
 		} finally {
 			super.tearDown();
 		}
@@ -207,18 +201,40 @@ abstract public class RepoTest extends GitTest {
 		gitFacard.putFileReturningRepoRl(rl, Strings.join(encodedList, "\n"));
 	}
 
-	protected RepoData newRepo() {
-		repoData = (RepoData) IRepoDataFactory.Utils.localFactory(localFacard, repoLocator, hasPulled).build();
-		return repoData;
+	protected RepoData newLinkedRepo() {
+		if (linkedRepoData != null)
+			if (linkedRepoData.usable())
+				linkedRepoData.rollback();
+		linkedRepoData = (RepoData) IRepoDataFactory.Utils.localFactory(linkedFacard, repoLocator, hasPulledRaw).build();
+		LinkedRepoReader repoReader = (LinkedRepoReader) linkedRepoData.repoReader;
+		hasPulled = repoReader.hasPulled;
+		return linkedRepoData;
+	}
+	protected RepoData newRemoteRepo() {
+		if (remoteRepoData != null)
+			if (remoteRepoData.usable())
+				remoteRepoData.rollback();
+		remoteRepoData = (RepoData) IRepoDataFactory.Utils.simpleFactory(remoteFacard).build();
+		return remoteRepoData;
 	}
 
 	protected void checkRead(ISources sources, int index, SourcedMap... expected) {
-		Iterable<SourcedMap> actual = IRepoReader.Utils.read(repoData, sources, index);
+		Iterable<SourcedMap> actual = IRepoReader.Utils.read(linkedRepoData, sources, index);
+		assertEquals(Arrays.asList(expected), Iterables.list(actual));
+	}
+
+	protected void checkReadAll(IGitFacard gitFacard, String rl, Map<String, Object>... expected) {
+		checkReadAll(gitFacard, rl, null, expected);
+	}
+
+	protected void checkReadAll(IGitFacard gitFacard, String rl, String crypto, Map<String, Object>... expected) {
+		String text = gitFacard.getFile(rl).text;
+		Iterable<Map<String, Object>> actual = Iterables.map(Strings.splitIgnoreBlanks(text, "\n"), Json.decryptAndMapMakeFn(crypto));
 		assertEquals(Arrays.asList(expected), Iterables.list(actual));
 	}
 
 	protected void checkRead(ISingleSource source, int index, SourcedMap... expected) {
-		Iterable<SourcedMap> actual = IRepoReader.Utils.read(repoData, source, index);
+		Iterable<SourcedMap> actual = IRepoReader.Utils.read(linkedRepoData, source, index);
 		assertEquals(Arrays.asList(expected), Iterables.list(actual));
 	}
 

@@ -15,5 +15,7 @@ public class GitMessages {
 	public static final String commitMessageAlreadySet = "Commit message already set\nOld: {0}\nNew: {1}";
 	public static final String cannotCloneRepo = "Cannot clone repo {0} because of existing repo {1}";
 	public static final String doNotUnderstandRepoCommand = "Command {0} is not recognised. Url is {1}, Parameters are {2}";
+	public static final String fileDigestNotPresent = "File Digest not present in {0}. {1} {2}";
+	public static final String tokenNotPresent = "Token not present in {0}. {1} {2}";
 
 }

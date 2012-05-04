@@ -17,12 +17,9 @@ import org.softwareFm.crowdsource.api.newGit.RepoLocation;
 import org.softwareFm.crowdsource.api.newGit.exceptions.CannotChangeTwiceException;
 import org.softwareFm.crowdsource.api.newGit.exceptions.CannotUseRepoAfterCommitOrRollbackException;
 import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
-import org.softwareFm.crowdsource.api.newGit.facard.ILinkedGitFacard;
 import org.softwareFm.crowdsource.constants.GitMessages;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.comparators.Comparators;
-import org.softwareFm.crowdsource.utilities.functions.Functions;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.json.Json;
 import org.softwareFm.crowdsource.utilities.maps.IHasUrlCache;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -42,10 +39,10 @@ public class RepoData implements IRepoData, ITransactional, IHasUrlCache {
 	private String commitMessage;
 	private final IRepoLocator repoLocator;
 
-	public RepoData(ILinkedGitFacard gitFacard, IFunction1<ILinkedGitFacard, IRepoReaderImplementor> repoReaderBuilder, IRepoLocator repoLocator) {
+	public RepoData(IGitFacard gitFacard, IRepoReaderImplementor repoReader, IRepoLocator repoLocator) {
 		this.gitFacard = gitFacard;
 		this.repoLocator = repoLocator;
-		this.repoReader = Functions.call(repoReaderBuilder, gitFacard);
+		this.repoReader = repoReader;
 	}
 
 	@Override
@@ -173,4 +170,8 @@ public class RepoData implements IRepoData, ITransactional, IHasUrlCache {
 			((IHasUrlCache) repoReader).clearCache(url);
 	}
 
+	@Override
+	public boolean usable() {
+		return !commitOrRollbackCalled;
+	}
 }

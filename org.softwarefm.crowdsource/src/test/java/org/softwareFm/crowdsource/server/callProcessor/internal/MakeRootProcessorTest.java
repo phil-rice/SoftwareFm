@@ -35,7 +35,7 @@ public class MakeRootProcessorTest extends AbstractProcessCallTest<MakeRootProce
 	public void testThrowsExceptionWhenTryingToCreateUnderNewRepository() {
 		checkProcessMakesRepo("a/b");
 		IProcessResult result = processor.process(makeRequestLine(CommonConstants.POST, "/" + CommonConstants.makeRootPrefix + "/" + "a/b/c"), makeDataMap(Collections.<String, Object> emptyMap()));
-		checkErrorResult(result, CommonConstants.notFoundStatusCode, "Cannot create git /a/b/c under second repository", "Cannot create git /a/b/c under second repository");
+		IProcessResult.Utils.	checkErrorResult(result, CommonConstants.notFoundStatusCode, "Cannot create git /a/b/c under second repository", "Cannot create git /a/b/c under second repository");
 
 		checkRepositoryDoesntExists(new File(remoteRoot, "a/b/c"));
 	}

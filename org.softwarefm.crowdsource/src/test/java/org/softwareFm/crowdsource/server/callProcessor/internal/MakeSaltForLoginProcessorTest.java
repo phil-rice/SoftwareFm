@@ -25,7 +25,7 @@ public class MakeSaltForLoginProcessorTest extends AbstractProcessCallTest<MakeS
 		RequestLine requestLine = makeRequestLine(CommonConstants.GET, "/" + LoginConstants.makeSaltPrefix);
 		IProcessResult result = processor.process(requestLine, Maps.emptyStringObjectMap());
 		String salt = Lists.getOnly(saltProcessor.createdSalts);
-		checkStringResult(result, salt);
+		IProcessResult.Utils.checkStringResult(result, salt);
 		assertNotNull(result);
 
 	}

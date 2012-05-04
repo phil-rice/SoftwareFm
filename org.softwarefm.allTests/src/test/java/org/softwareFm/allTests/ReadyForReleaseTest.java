@@ -20,6 +20,6 @@ public class ReadyForReleaseTest extends TestCase {
 	}
 
 	public void testTimeout() {
-		assertEquals(3000, CommonConstants.testTimeOutMs);
+		assertEquals(4000, CommonConstants.testTimeOutMs);
 	}
 }

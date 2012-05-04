@@ -36,6 +36,10 @@ public class Functions {
 			froms.add(from);
 			return object;
 		}
+		@Override
+		public String toString() {
+			return "ConstantFunction(" + object + ")";
+		}
 
 	}
 
@@ -70,6 +74,10 @@ public class Functions {
 				if (expectedFrom.equals(from))
 					return to;
 				throw new IllegalArgumentException(MessageFormat.format(UtilityMessages.expectedButGot, expectedFrom, from));
+			}
+			@Override
+			public String toString() {
+				return "expectValueAndReturnConstant(" + to +")";
 			}
 		};
 	}

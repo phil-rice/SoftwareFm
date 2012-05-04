@@ -88,7 +88,7 @@ public class Tests {
 		} catch (Throwable e) {
 			if (class1.isAssignableFrom(e.getClass()))
 				return (E) e;
-			Assert.fail(e.getClass().getName() +"/"+e.toString());
+			throw WrappedException.wrap(e);
 		}
 		return null;
 	}

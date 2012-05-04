@@ -4,15 +4,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-import org.softwareFm.crowdsource.api.IContainerBuilder;
-import org.softwareFm.crowdsource.api.IFactory;
-import org.softwareFm.crowdsource.api.newGit.facard.ILinkedGitFacard;
-import org.softwareFm.crowdsource.api.newGit.internal.LinkedRepoReader;
-import org.softwareFm.crowdsource.api.newGit.internal.RepoData;
-import org.softwareFm.crowdsource.api.newGit.internal.SimpleRepoReader;
-import org.softwareFm.crowdsource.utilities.collections.ITransactionalMutableSimpleSet;
 import org.softwareFm.crowdsource.utilities.collections.Sets;
-import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 /**
@@ -32,6 +24,9 @@ public interface IRepoData extends IRepoReader, IRepoLocator {
 
 	void setCommitMessage(String commitMessage);
 
+	/** If true methods can be called on it */
+	boolean usable();
+
 	public static class Utils {
 
 		/** The current value is merged with the existing map at that index */
@@ -48,26 +43,6 @@ public interface IRepoData extends IRepoReader, IRepoLocator {
 				result.add(repoLocation);
 			}
 			return result;
-		}
-
-		/** Adds the elements to the container to allow the local repo data to work */
-		public static void configureLocalContainer(IContainerBuilder container, final ILinkedGitFacard gitFacard, final IRepoLocator repoLocator, IAccessControlList acl) {
-			final Set<String> hasPulled = Sets.newSet();
-			container.register(IRepoData.class, new IFactory<IRepoData>() {
-				@Override
-				public IRepoData build() {
-					return new RepoData(gitFacard, new IFunction1<ILinkedGitFacard, IRepoReaderImplementor>() {
-						@Override
-						public IRepoReaderImplementor apply(ILinkedGitFacard from) throws Exception {
-							SimpleRepoReader delegate = new SimpleRepoReader(gitFacard);
-							ITransactionalMutableSimpleSet<String> transactionalHasPulled = Sets.asTransactionalSet(hasPulled);
-							LinkedRepoReader repoReader = new LinkedRepoReader(delegate, gitFacard, repoLocator, transactionalHasPulled);
-							return repoReader;
-						}
-					}, repoLocator);
-				}
-
-			});
 		}
 
 	}

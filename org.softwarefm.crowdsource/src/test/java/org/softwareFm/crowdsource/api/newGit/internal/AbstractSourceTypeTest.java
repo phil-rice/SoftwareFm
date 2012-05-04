@@ -12,7 +12,7 @@ abstract public class AbstractSourceTypeTest extends RepoTest{
 
 	@Override
 	protected void tearDown() throws Exception {
-		repoData.rollback();
+		linkedRepoData.rollback();
 		super.tearDown();
 	}
 

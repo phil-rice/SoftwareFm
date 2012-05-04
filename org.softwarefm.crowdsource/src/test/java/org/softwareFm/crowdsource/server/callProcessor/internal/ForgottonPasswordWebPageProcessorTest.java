@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.softwareFm.crowdsource.api.server.AbstractProcessCallTest;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
+import org.softwareFm.crowdsource.api.server.RequestLineMock;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -28,7 +29,7 @@ public class ForgottonPasswordWebPageProcessorTest extends AbstractProcessCallTe
 		RequestLineMock requestLine = new RequestLineMock(CommonConstants.POST, uri);
 		Map<String, Object> data = Maps.stringObjectMap(LoginConstants.emailKey, "someEmail", LoginConstants.sessionSaltKey, "");
 		IProcessResult result = processor.process(requestLine, data);
-		checkStringResult(result, "");
+		IProcessResult.Utils.checkStringResult(result, "");
 	}
 
 	@Override

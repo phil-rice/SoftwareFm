@@ -34,7 +34,7 @@ public class LoginProcessorTest extends AbstractProcessCallTest<LoginProcessor> 
 
 	public void testLogsIn() {
 		IProcessResult processResult = processor.process(requestLine, data);
-		checkStringResultWithMap(processResult, LoginConstants.cryptoKey, "someCrypto", LoginConstants.emailKey, "a@b.com", LoginConstants.softwareFmIdKey, "checkSoftwareFmId");
+		IProcessResult.Utils.	checkStringResultWithMap(processResult, LoginConstants.cryptoKey, "someCrypto", LoginConstants.emailKey, "a@b.com", LoginConstants.softwareFmIdKey, "checkSoftwareFmId");
 		assertEquals("a@b.com", Lists.getOnly(checker.emails));
 		assertEquals("someHash", Lists.getOnly(checker.passwordHashes));
 	}
@@ -60,7 +60,7 @@ public class LoginProcessorTest extends AbstractProcessCallTest<LoginProcessor> 
 	public void testDoesntLogInIfCheckerRespondsBadly() {
 		checker.setResultToNull();
 		IProcessResult processResult = processor.process(requestLine, data);
-		checkErrorResult(processResult, CommonConstants.notFoundStatusCode, LoginMessages.emailPasswordMismatch, LoginMessages.emailPasswordMismatch);
+		IProcessResult.Utils.	checkErrorResult(processResult, CommonConstants.notFoundStatusCode, LoginMessages.emailPasswordMismatch, LoginMessages.emailPasswordMismatch);
 		assertEquals("a@b.com", Lists.getOnly(checker.emails));
 		assertEquals("someHash", Lists.getOnly(checker.passwordHashes));
 

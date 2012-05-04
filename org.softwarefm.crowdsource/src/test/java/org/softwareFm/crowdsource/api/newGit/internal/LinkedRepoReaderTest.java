@@ -24,8 +24,19 @@ public class LinkedRepoReaderTest extends RepoTest {
 		checkReadRaw(v11, v12);
 
 		putData(remoteFacard, v21, v22);
-
+		hasPulledRaw.add("one");
+		hasPulledRaw.add("two");
 		checkReadRaw(v11, v12);
+	}
+
+	public void testReadRawDoesntUpdateHasPulledWithRollback() {
+		initRepos(remoteFacard, "one", "two");
+		putData(remoteFacard, v11, v12);
+
+		checkReadRaw(v11, v12, false);
+
+		assertFalse(hasPulled.contains("one"));
+		assertFalse(hasPulled.contains("two"));
 	}
 
 	public void testReadRawUpdatesHasPulledIfNeeded() {
@@ -35,12 +46,11 @@ public class LinkedRepoReaderTest extends RepoTest {
 		assertFalse(hasPulled.contains("one"));
 		assertFalse(hasPulled.contains("two"));
 
-		checkReadRaw(v11, v12);
+		checkReadRaw(v11, v12, true);
 
 		assertTrue(hasPulled.contains("one"));
 		assertTrue(hasPulled.contains("two"));
 	}
-
 
 	private void checkReadRaw(Map<String, Object> one, Map<String, Object> two) {
 		checkReadRaw(one, two, false);
@@ -48,8 +58,8 @@ public class LinkedRepoReaderTest extends RepoTest {
 
 	@SuppressWarnings("unchecked")
 	private void checkReadRaw(Map<String, Object> one, Map<String, Object> two, boolean commit) {
-		SimpleRepoReader delegate = new SimpleRepoReader(localFacard);
-		LinkedRepoReader repoReader = new LinkedRepoReader(delegate, localFacard, repoLocator, hasPulled);
+		SimpleRepoReader delegate = new SimpleRepoReader(linkedFacard);
+		LinkedRepoReader repoReader = new LinkedRepoReader(delegate, linkedFacard, repoLocator, hasPulled);
 		try {
 
 			assertEquals(Json.asList(one), repoReader.readRaw(oneA));

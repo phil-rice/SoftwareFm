@@ -37,7 +37,7 @@ public class LeaveGroupProcessorTest extends AbstractProcessCallTest<LeaveGroupC
 		});
 
 		IProcessResult result = processor.execute(GroupConstants.leaveGroupPrefix, Maps.stringObjectMap(LoginConstants.softwareFmIdKey, softwareFmId0, GroupConstants.groupIdKey, groupId0));
-		checkStringResult(result, "");
+		IProcessResult.Utils.	checkStringResult(result, "");
 	}
 
 	public void testThrowsExceptionifNeededParametersAreNotPresent() {

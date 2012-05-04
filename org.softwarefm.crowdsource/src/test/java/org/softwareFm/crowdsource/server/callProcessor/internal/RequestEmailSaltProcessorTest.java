@@ -6,6 +6,7 @@ package org.softwareFm.crowdsource.server.callProcessor.internal;
 
 import org.softwareFm.crowdsource.api.server.AbstractProcessCallTest;
 import org.softwareFm.crowdsource.api.server.IProcessResult;
+import org.softwareFm.crowdsource.api.server.RequestLineMock;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.constants.LoginConstants;
 import org.softwareFm.crowdsource.utilities.maps.Maps;
@@ -22,7 +23,7 @@ public class RequestEmailSaltProcessorTest extends AbstractProcessCallTest<Reque
 	public void testEmail() {
 		RequestLineMock requestLine = new RequestLineMock(CommonConstants.POST, uri);
 		IProcessResult result = processor.process(requestLine, Maps.stringObjectMap(LoginConstants.emailKey, "someEmail"));
-		checkStringResult(result, "theSalt");
+		IProcessResult.Utils.checkStringResult(result, "theSalt");
 	}
 
 	@Override

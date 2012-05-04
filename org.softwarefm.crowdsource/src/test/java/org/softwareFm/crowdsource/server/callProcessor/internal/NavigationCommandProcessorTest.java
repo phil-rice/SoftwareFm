@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.easymock.EasyMock;
 import org.softwareFm.crowdsource.api.server.AbstractProcessCallTest;
+import org.softwareFm.crowdsource.api.server.IProcessResult;
+import org.softwareFm.crowdsource.api.server.RequestLineMock;
 import org.softwareFm.crowdsource.navigation.IRepoNavigation;
 import org.softwareFm.crowdsource.utilities.callbacks.ICallback;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
@@ -30,7 +32,7 @@ public class NavigationCommandProcessorTest extends AbstractProcessCallTest<Navi
 		Map<String, List<String>> expected = Maps.<String, List<String>> makeMap("some", "Result");
 		EasyMock.expect(repoNavigation.navigationData("/someUrl", ICallback.Utils.<Map<String, List<String>>> noCallback())).andReturn(ITransaction.Utils.<Map<String, List<String>>> doneTransaction(expected));
 		EasyMock.replay(repoNavigation);
-		checkStringResult(processor.process(new RequestLineMock(CommonConstants.POST, Urls.composeWithSlash(CommonConstants.navigationPrefix, "someUrl")), Maps.emptyStringObjectMap()), Json.toString(expected));
+		IProcessResult.Utils.	checkStringResult(processor.process(new RequestLineMock(CommonConstants.POST, Urls.composeWithSlash(CommonConstants.navigationPrefix, "someUrl")), Maps.emptyStringObjectMap()), Json.toString(expected));
 		EasyMock.verify(repoNavigation);
 	}
 

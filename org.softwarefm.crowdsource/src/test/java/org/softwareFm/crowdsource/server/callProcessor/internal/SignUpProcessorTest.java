@@ -35,7 +35,7 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 		String salt = saltProcessor.makeSalt();
 		Map<String, Object> data = makeData(salt);
 		IProcessResult result = processor.process(requestLine, data);
-		checkStringResultWithMap(result, LoginConstants.cryptoKey, "someCrypto", LoginConstants.softwareFmIdKey, "someSoftwareFmId0");
+		IProcessResult.Utils.checkStringResultWithMap(result, LoginConstants.cryptoKey, "someCrypto", LoginConstants.softwareFmIdKey, "someSoftwareFmId0");
 
 		assertEquals(salt, Lists.getOnly(checker.salts));
 		assertEquals("a@b.com", Lists.getOnly(checker.emails));
@@ -55,7 +55,7 @@ public class SignUpProcessorTest extends AbstractProcessCallTest<SignupProcessor
 		Map<String, Object> data = makeData("not a salt");
 		IProcessResult result = processor.process(requestLine, data);
 		assertNotNull(result);// contents dealt with in integration test
-		checkErrorResult(result, CommonConstants.notFoundStatusCode, LoginMessages.invalidSaltMessage, LoginMessages.invalidSaltMessage);
+		IProcessResult.Utils.checkErrorResult(result, CommonConstants.notFoundStatusCode, LoginMessages.invalidSaltMessage, LoginMessages.invalidSaltMessage);
 		assertEquals(1, saltProcessor.checkAndInvalidateCount.get());
 		assertEquals(0, checker.salts.size());
 	}

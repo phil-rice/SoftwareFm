@@ -5,14 +5,23 @@
 package org.softwareFm.crowdsource.api.server;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import junit.framework.Assert;
+
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
 import org.softwareFm.crowdsource.utilities.collections.Files;
+import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
+import org.softwareFm.crowdsource.utilities.json.Json;
+import org.softwareFm.crowdsource.utilities.maps.Maps;
 
 public interface IProcessResult {
 
@@ -68,6 +77,82 @@ public interface IProcessResult {
 					response.setEntity(new StringEntity(message));
 				}
 			};
+		}
+		
+		public static void checkErrorResult(IProcessResult result, final int expectedCode, final String expectedReason, final String expectedString) {
+			final AtomicInteger count = new AtomicInteger();
+			try {
+				result.process(new HttpResponseMock() {
+					@Override
+					public void setEntity(HttpEntity entity) {
+						try {
+							count.incrementAndGet();
+							Assert.	assertTrue(entity instanceof StringEntity);
+							StringEntity stringEntity = (StringEntity) entity;
+							String string = Files.getText(stringEntity.getContent());
+							Assert.	assertEquals(expectedString, string);
+						} catch (IOException e) {
+							throw WrappedException.wrap(e);
+						}
+					}
+
+					@Override
+					public void setStatusCode(int code) throws IllegalStateException {
+						Assert.	assertEquals(expectedCode, code);
+						count.incrementAndGet();
+					}
+
+					@Override
+					public void setReasonPhrase(String reason) throws IllegalStateException {
+						Assert.	assertEquals(expectedReason, reason);
+						count.incrementAndGet();
+					}
+				});
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			}
+			Assert.	assertEquals(3, count.get());// not perfect but easy
+		}
+
+		public static void checkStringResultWithMap(IProcessResult result, final Object... expected) {
+			try {
+				result.process(new HttpResponseMock() {
+					@Override
+					public void setEntity(HttpEntity entity) {
+						try {
+							Assert.	assertTrue(entity instanceof StringEntity);
+							StringEntity stringEntity = (StringEntity) entity;
+							String string = Files.getText(stringEntity.getContent());
+							Map<String, Object> actual = Json.mapFromString(string);
+							Assert.assertEquals(Maps.stringObjectMap(expected), actual);
+						} catch (IOException e) {
+							throw WrappedException.wrap(e);
+						}
+					}
+				});
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			}
+		}
+
+		public static void checkStringResult(IProcessResult result, final String expected) {
+			try {
+				result.process(new HttpResponseMock() {
+					@Override
+					public void setEntity(HttpEntity entity) {
+						try {
+							Assert.	assertTrue(entity instanceof StringEntity);
+							StringEntity stringEntity = (StringEntity) entity;
+							String string = Files.getText(stringEntity.getContent());
+				Assert.			assertEquals(expected, string);
+						} catch (IOException e) {
+							throw WrappedException.wrap(e);
+						}
+					}
+				});
+			} catch (Exception e) {
+				throw WrappedException.wrap(e);
+			}
 		}
 	}
 }

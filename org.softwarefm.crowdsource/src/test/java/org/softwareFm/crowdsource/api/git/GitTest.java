@@ -5,6 +5,8 @@
 package org.softwareFm.crowdsource.api.git;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.softwareFm.crowdsource.api.IContainer;
@@ -27,6 +29,18 @@ public abstract class GitTest extends TemporaryFileTest {
 	protected final static Map<String, Object> v32 = Maps.stringObjectLinkedMap("c", 3l, "v", 2l);
 	protected final static Map<String, Object> v41 = Maps.stringObjectLinkedMap("c", 4l, "v", 1l);
 	protected final static Map<String, Object> v42 = Maps.stringObjectLinkedMap("c", 4l, "v", 2l);
+
+	protected final String v11Json = Json.toString(v11);
+	protected final String v12Json = Json.toString(v12);
+	protected final String v21Json = Json.toString(v21);
+	protected final String v22Json = Json.toString(v22);
+	protected final String v11v12Json = v11Json + "\n" + v12Json;
+	protected final String v21v22Json = v21Json + "\n" + v22Json;
+	protected final String v11v12v21Json = v11Json + "\n" + v12Json + "\n" + v21Json;
+	protected final String v11v12v21v22Json = v11Json + "\n" + v12Json + "\n" + v21Json + "\n" + v22Json;
+
+	protected final List<Map<String, Object>> v11v12List = Arrays.asList(v11, v12);
+	protected final List<Map<String, Object>> v21v22List = Arrays.asList(v21, v22);
 
 	protected static final Map<String, Object> emptyMap = Maps.stringObjectMap();
 
