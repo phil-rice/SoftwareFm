@@ -145,7 +145,6 @@ public class RepoData implements IRepoData, ITransactional, IHasUrlCache {
 			gitFacard.commit(fileRepository, commitMessage);
 		}
 		repoReader.commit();
-
 	}
 
 	@Override

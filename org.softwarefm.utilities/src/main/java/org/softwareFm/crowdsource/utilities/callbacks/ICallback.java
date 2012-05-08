@@ -153,7 +153,6 @@ public interface ICallback<T> {
 	}
 
 	public static class EnsureUniqueParameter<T> implements ICallback<T> {
-		private T value;
 		public List<T> list = Lists.newList();
 
 		@Override

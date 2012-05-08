@@ -19,6 +19,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.exceptions.AggregateException;
+import org.softwareFm.crowdsource.utilities.exceptions.CommitException;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1;
 import org.softwareFm.crowdsource.utilities.functions.IFunction1WithExceptionHandler;
@@ -162,9 +163,9 @@ public class TransactionManager implements ITransactionManagerBuilder {
 						if (transaction == null)
 							throw new IllegalStateException("The transaction was null");
 						if (exception.get() == null) {
-							commit(transaction);
+							commit(resultCallback, transaction);
 						} else {
-							rollback(resultCallback, exception, transaction);
+							rollback(resultCallback, exception.get(), transaction);
 						}
 					} finally {
 						activeJobs.decrementAndGet();
@@ -173,12 +174,11 @@ public class TransactionManager implements ITransactionManagerBuilder {
 				}
 			}
 
-
-			private void rollback(final IFunction1<Intermediate, Result> resultCallbackFn, AtomicReference<Exception> exception, ITransaction<?> transaction) throws Exception {
+			private void rollback(final IFunction1<Intermediate, Result> resultCallbackFn, Exception exception, ITransaction<?> transaction) throws Exception {
 				CopyOnWriteArrayList<Exception> exceptions = new CopyOnWriteArrayList<Exception>();
 				try {
 					if (resultCallbackFn instanceof IFunction1WithExceptionHandler<?, ?>)
-						((IFunction1WithExceptionHandler<?, ?>) resultCallbackFn).handle(exception.get());
+						((IFunction1WithExceptionHandler<?, ?>) resultCallbackFn).handle(exception);
 				} catch (Exception e) {
 					exceptions.add(e);
 				}
@@ -189,13 +189,13 @@ public class TransactionManager implements ITransactionManagerBuilder {
 						exceptions.add(e);
 					}
 				if (exceptions.size() > 0)
-					throw new AggregateException(Lists.addAtStart(exceptions, exception.get()));
+					throw new AggregateException(Lists.addAtStart(exceptions, exception));
 				if (logger.isDebugEnabled())
 					logger.debug("rolledBack (" + Strings.idString(this) + ": " + this.toString());
 
 			}
 
-			private void commit(ITransaction<?> transaction) throws Exception {
+			private void commit(final IFunction1<Intermediate, Result> resultCallbackFn, ITransaction<?> transaction) throws Exception {
 				try {
 					CopyOnWriteArrayList<Exception> exceptions = new CopyOnWriteArrayList<Exception>();
 					List<ITransactional> transactionals = Maps.getOrEmptyList(transactionalMap, transaction);
@@ -205,13 +205,10 @@ public class TransactionManager implements ITransactionManagerBuilder {
 						} catch (Exception e) {
 							exceptions.add(e);
 						}
-					switch (exceptions.size()) {
-					case 0:
-						break;
-					case 1:
-						throw Lists.getOnly(exceptions);
-					default:
-						throw new AggregateException(exceptions);
+					if (exceptions.size() > 0) {
+						CommitException exception = new CommitException(exceptions);
+						rollback(resultCallbackFn, exception, transaction);
+						throw exception;
 					}
 				} finally {
 					if (logger.isDebugEnabled())

@@ -6,7 +6,12 @@ package org.softwareFm.crowdsource.utilities.transaction;
 
 public interface ITransactional {
 
+	/**
+	 * Commit is the place where the transactional persists the changes. <br />
+	 * Commit <em>should not</em> throw any exceptions, but if it does, the remaining resources will commit, then they will all be rolledback. (actually I am not sure what is best here, so I went with the approach that allowed me to reason with it easiest)
+	 */
 	void commit();
 
+	/** Rollback is called if the transaction fails, and the changes need to be "undone" */
 	void rollback();
 }

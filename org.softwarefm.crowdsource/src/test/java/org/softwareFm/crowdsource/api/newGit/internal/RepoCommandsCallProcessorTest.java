@@ -52,10 +52,6 @@ public class RepoCommandsCallProcessorTest extends RepoTest {
 		checkNeedsParameter(GitConstants.appendCommand, MissingParameterException.class, "Missing critical parameters [data] in {", rl);
 	}
 
-	public void testAppendDataMustBeMap() {
-		fail();
-	}
-
 	public void testDelete() {
 		putFile(remoteFacard, rl, null, v11, v12, v21, v22, v31, v32);
 		addAllAndCommit(remoteFacard, "a/b");
@@ -86,10 +82,6 @@ public class RepoCommandsCallProcessorTest extends RepoTest {
 		checkNeedsParameter(GitConstants.changeCommand, MissingParameterException.class, "Missing critical parameters [data, index] in {", rl);
 	}
 
-	public void testChangeDataMustBeMap() {
-				fail();
-	}
-
 	public void testCommandsObeySecurityToken() {
 		checkCommandsObjectSecurityToken(GitConstants.appendCommand, rl, blankReply, CommonConstants.dataParameterName, v11Json);
 		checkCommandsObjectSecurityToken(GitConstants.deleteCommand, rl, blankReply, CommonConstants.dataParameterName, v11Json);
@@ -103,7 +95,7 @@ public class RepoCommandsCallProcessorTest extends RepoTest {
 				LoginConstants.softwareFmIdKey, user1Data.softwareFmId,//
 				LoginConstants.emailKey, user1Data.email,//
 				SecurityConstants.fileDigestKey, token.fileDigest,//
-				SecurityConstants.securityTokenKey, token.token), extraParameters);
+				SecurityConstants.securityTokenKey, token.token), (Object[]) extraParameters);
 		IProcessResult result = processor.process(requestLine, parameters);
 		IProcessResult.Utils.checkStringResult(result, expectedReply);
 	}
@@ -116,7 +108,7 @@ public class RepoCommandsCallProcessorTest extends RepoTest {
 				LoginConstants.softwareFmIdKey, user1Data.softwareFmId,//
 				LoginConstants.emailKey, user1Data.email,//
 				SecurityConstants.fileDigestKey, token.fileDigest,//
-				SecurityConstants.securityTokenKey, token.token), extraParameters);
+				SecurityConstants.securityTokenKey, token.token), (Object[]) extraParameters);
 		MissingParameterException e = Tests.assertThrows(class1, new Runnable() {
 			@Override
 			public void run() {
@@ -132,7 +124,7 @@ public class RepoCommandsCallProcessorTest extends RepoTest {
 
 		SecurityToken differentDigest = new SecurityToken(correctToken.token, "WrongDigest");
 		SecurityToken differentToken = new SecurityToken("WrongToken", correctToken.fileDigest);
-		Map<String, Object> baseParameters = Maps.with(Maps.stringObjectMap(GitConstants.commandKey, command), extraParameters);//
+		Map<String, Object> baseParameters = Maps.with(Maps.stringObjectMap(GitConstants.commandKey, command), (Object[]) extraParameters);//
 
 		checkCommandsObjectSecurityToken(FileDigestMismatchException.class, differentDigest, command, baseParameters, LoginConstants.softwareFmIdKey, user1Data.softwareFmId, LoginConstants.emailKey, user1Data.email);
 		checkCommandsObjectSecurityToken(SecurityTokenMismatchException.class, differentToken, command, baseParameters, LoginConstants.softwareFmIdKey, user1Data.softwareFmId, LoginConstants.emailKey, user1Data.email);

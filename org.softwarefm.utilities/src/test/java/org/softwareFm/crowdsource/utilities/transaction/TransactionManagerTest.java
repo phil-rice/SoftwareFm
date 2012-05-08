@@ -17,6 +17,7 @@ import org.easymock.EasyMock;
 import org.softwareFm.crowdsource.utilities.collections.Lists;
 import org.softwareFm.crowdsource.utilities.constants.CommonConstants;
 import org.softwareFm.crowdsource.utilities.exceptions.AggregateException;
+import org.softwareFm.crowdsource.utilities.exceptions.CommitException;
 import org.softwareFm.crowdsource.utilities.exceptions.WrappedException;
 import org.softwareFm.crowdsource.utilities.functions.Functions;
 import org.softwareFm.crowdsource.utilities.functions.Functions.ConstantFunctionWithMemoryOfFroms;
@@ -309,7 +310,7 @@ public class TransactionManagerTest extends TestCase {
 		EasyMock.verify(mock1, mock2, mock3);
 	}
 
-	public void testCommitsAreCalledEvenIfEarlierCommitFails_withOneExceptionThrowsIt() {
+	public void testAllCommitsAreCalledThenRollbacksAreCalledIfCommitExceptions_withOneExceptionThrowsIt() {
 		RuntimeException expected = new RuntimeException();
 
 		final ITransactional mock1 = EasyMock.createMock(ITransactional.class);
@@ -319,19 +320,24 @@ public class TransactionManagerTest extends TestCase {
 		mock2.commit();
 		EasyMock.expectLastCall().andThrow(expected);
 		mock3.commit();
+		
+		mock1.rollback();
+		mock2.rollback();
+		mock3.rollback();
+		
 		EasyMock.replay(mock1, mock2, mock3);
 
-		RuntimeException actual = Tests.assertThrows(RuntimeException.class, new Runnable() {
+		CommitException actual = Tests.assertThrows(CommitException.class, new Runnable() {
 			@Override
 			public void run() {
 				manager.start(Functions.<Object> constantWithMemoryOfMonitor("value"), Functions.identity(), mock1, mock2, mock3).get(CommonConstants.testTimeOutMs);
 			}
 		});
-		assertEquals(expected, actual);
+		assertEquals(expected, Lists.getOnly(actual.getExceptions()));
 		EasyMock.verify(mock1, mock2, mock3);
 	}
 
-	public void testCommitsAreCalledEvenIfEarlierCommitFails_withMultipleExceptionThrowsAggregate() {
+	public void testAllCommitsAreCalledThenRollbacksAreCalledIfCommitExceptions_withMultipleExceptionThrowsIt() {
 		RuntimeException expected1 = new RuntimeException("mess1");
 		RuntimeException expected2 = new RuntimeException();
 
@@ -343,6 +349,11 @@ public class TransactionManagerTest extends TestCase {
 		mock2.commit();
 		EasyMock.expectLastCall().andThrow(expected2);
 		mock3.commit();
+
+		mock1.rollback();
+		mock2.rollback();
+		mock3.rollback();
+
 		EasyMock.replay(mock1, mock2, mock3);
 
 		AggregateException actual = Tests.assertThrows(AggregateException.class, new Runnable() {
@@ -376,10 +387,7 @@ public class TransactionManagerTest extends TestCase {
 		EasyMock.verify(mock1, mock2, mock3);
 	}
 
-	public void testExceptionInCommitMeansThatAllTheRollbacksAreCalled(){
-		fail();
-	}
-	
+
 	public void testExceptionInRollbackCausesAggregateExceptionButAllRollbacksCalled() {
 		final Exception original = new RuntimeException("orig");
 		final Exception expected1 = new RuntimeException("one");
@@ -406,7 +414,6 @@ public class TransactionManagerTest extends TestCase {
 
 		EasyMock.verify(mock1, mock2, mock3);
 	}
-	
 
 	public void testExceptionInHandlerDoesntStopRollbackAndCausesAggregateException() {
 		final Exception original = new RuntimeException("orig");

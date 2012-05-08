@@ -67,6 +67,7 @@ public class ISecurityTokenCheckerTest extends RepoTest {
 		});
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();

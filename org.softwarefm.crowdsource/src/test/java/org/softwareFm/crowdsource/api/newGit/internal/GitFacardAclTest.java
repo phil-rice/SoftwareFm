@@ -3,7 +3,6 @@ package org.softwareFm.crowdsource.api.newGit.internal;
 import java.nio.channels.FileLock;
 
 import org.easymock.EasyMock;
-import org.softwareFm.crowdsource.api.UserData;
 import org.softwareFm.crowdsource.api.git.TemporaryFileTest;
 import org.softwareFm.crowdsource.api.newGit.IAccessControlList;
 import org.softwareFm.crowdsource.api.newGit.ISingleRowReader;
@@ -14,8 +13,6 @@ public class GitFacardAclTest extends TemporaryFileTest {
 	private IGitFacard gitFacard;
 	private IAccessControlList acl;
 	private ISingleRowReader reader;
-	private RawSingleSource source;
-	private UserData userData;
 	private String rl;
 	private String repoRl;
 
@@ -74,8 +71,6 @@ public class GitFacardAclTest extends TemporaryFileTest {
 		reader = EasyMock.createMock(ISingleRowReader.class);
 		repoRl = "repo";
 		rl = "repo/someRl";
-		source = new RawSingleSource(rl);
-		userData = new UserData("email", "softwareFmId", "crypto");
 	}
 
 	@Override

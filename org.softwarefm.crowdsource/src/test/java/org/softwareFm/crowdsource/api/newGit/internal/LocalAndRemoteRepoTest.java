@@ -12,12 +12,9 @@ import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
 public class LocalAndRemoteRepoTest extends RepoTest {
 
 	private final static String repo1 = "one";
-	private final static String repo2 = "two";
 	private final static String file1_1 = repo1 + "/file/data.txt";
-	private final static String file2_1 = repo2 + "/file/data.txt";
 
 	private final static ISingleSource source1_1 = new RawSingleSource(file1_1);
-	private final static ISingleSource source2_1 = new RawSingleSource(file2_1);
 
 	public void testReadRawPullsFromRemoteWhenNeedsToClone() {
 		initRepos(remoteFacard, repo1);

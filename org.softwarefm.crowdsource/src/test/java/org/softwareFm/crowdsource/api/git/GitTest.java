@@ -39,7 +39,9 @@ public abstract class GitTest extends TemporaryFileTest {
 	protected final String v11v12v21Json = v11Json + "\n" + v12Json + "\n" + v21Json;
 	protected final String v11v12v21v22Json = v11Json + "\n" + v12Json + "\n" + v21Json + "\n" + v22Json;
 
+	@SuppressWarnings("unchecked")
 	protected final List<Map<String, Object>> v11v12List = Arrays.asList(v11, v12);
+	@SuppressWarnings("unchecked")
 	protected final List<Map<String, Object>> v21v22List = Arrays.asList(v21, v22);
 
 	protected static final Map<String, Object> emptyMap = Maps.stringObjectMap();

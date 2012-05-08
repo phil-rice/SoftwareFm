@@ -4,7 +4,6 @@ import java.io.File;
 import java.nio.channels.FileLock;
 
 import org.eclipse.jgit.storage.file.FileRepository;
-import org.softwareFm.crowdsource.api.newGit.ISingleSource;
 import org.softwareFm.crowdsource.api.newGit.exceptions.TryingToLockUnderRepoException;
 import org.softwareFm.crowdsource.api.newGit.facard.IGitFacard;
 import org.softwareFm.crowdsource.api.newGit.facard.RepoRlAndText;
@@ -23,13 +22,7 @@ public class GitFacardTest extends RepoTest {
 	private File abDir;
 	private File acDir;
 
-	private final static String repo1 = "one";
-	private final static String repo2 = "two";
-	private final static String file1_1 = repo1 + "/file/data.txt";
-	private final static String file2_1 = repo2 + "/file/data.txt";
 
-	private final static ISingleSource source1_1 = new RawSingleSource(file1_1);
-	private final static ISingleSource source2_1 = new RawSingleSource(file2_1);
 
 	public void testInitCreatesDotGitDirectory() {
 		// should also create repo, but that is implicitly tested by later stuff
@@ -169,6 +162,7 @@ public class GitFacardTest extends RepoTest {
 		assertEquals(new RepoRlAndText("b", Json.toString(v21)), linkedFacard.getFile("b/data"));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testCanPullFromMultipleRepos() {
 		initRepos(remoteFacard, "b", "a");
 		putFile(remoteFacard, "b/data", null, v21);
