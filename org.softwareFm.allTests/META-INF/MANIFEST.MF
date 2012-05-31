@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: org.softwarefm.allTests
-Bundle-SymbolicName: org.softwarefm.allTests
-Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: SoftwareFM
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.softwarefm.eclipse;bundle-version="1.0.0"

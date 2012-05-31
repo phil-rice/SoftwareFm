@@ -1,6 +1,0 @@
-{"news": ["feedType.browser", "http://bbc.co.uk/news",
-           "feedType.browser", "http://google.co.uk/news", 
-          "feedType.rss", "http://feeds.bbci.co.uk/news/rss.xml",
-          "feedType.rss", "http://news.google.co.uk/news?hl=en&output=rss"          ]
-          
-  "test": [ "feedType.rss", "http://junit.org/news.rss"]}

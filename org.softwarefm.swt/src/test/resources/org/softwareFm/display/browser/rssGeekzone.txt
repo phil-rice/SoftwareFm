@@ -1,1 +1,0 @@
-{"feedType": "feedType.rss", "url": "http://feeds.geekzone.co.nz/geekzone"}

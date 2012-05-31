@@ -1,0 +1,5 @@
+package org.softwareFm.crowdsource.utilities.collections;
+
+public class UnchangingFile {
+
+}

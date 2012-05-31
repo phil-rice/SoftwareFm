@@ -1,1 +1,0 @@
-{"feedType": "feedType.rss", "url": "http://www.theregister.co.uk/headlines.atom"}

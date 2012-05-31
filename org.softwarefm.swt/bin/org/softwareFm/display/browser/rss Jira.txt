@@ -1,1 +1,0 @@
-{"feedType": "feedType.rss", "url": "https://issues.apache.org/jira/activity?maxResults=10&streams=key+IS+MATH"}

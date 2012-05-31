@@ -1,0 +1,6 @@
+Need a better naming convention for nested classes.
+	For example should be package/parentClass/nestedClass, and has to work with nested/nested etc classes
+Anonymous classes are handled very poorly: package//method is not a good url
+GroupId/ArtifactId/Version needs to be url friendly
+
+

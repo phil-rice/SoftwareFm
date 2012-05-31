@@ -1,3 +1,0 @@
-1.6.15: Adding capability to Kick people from group if admin, or Leave a group. Uses SoftwareFmServer_38
-1.6.16: Major refactor to the threading model: added the idea of the container / transaction manager. Not yet using the commit/rollback capability
-1.6.17: Fixing rss browser and mygroups layout defects introduced by 1.6.16

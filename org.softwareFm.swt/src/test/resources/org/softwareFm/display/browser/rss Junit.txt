@@ -1,1 +1,0 @@
-{"feedType": "feedType.rss", "url": "http://junit.org/news.rss"}
