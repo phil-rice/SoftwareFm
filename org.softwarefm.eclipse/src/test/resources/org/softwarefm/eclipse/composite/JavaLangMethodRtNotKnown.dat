@@ -1,0 +1,5 @@
+package=java.lang
+class=String
+method=toString
+digest=012345
+filename=some/jdk1.6/rt.jar

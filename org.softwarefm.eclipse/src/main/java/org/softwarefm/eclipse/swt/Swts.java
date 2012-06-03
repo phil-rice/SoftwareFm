@@ -288,7 +288,7 @@ public class Swts {
 			}
 		}
 
-		public static <T extends IHasControl> void xUnit(String title, final File root, final String extension, final ISituationListAndBuilder<T> builder) {
+		public static <T extends IHasControl> void xUnit(String title, final File root, final String extension, final ISituationListAndBuilder<T, String> builder) {
 			Swts.Show.display(title, new IFunction1<Composite, Composite>() {
 				public Composite apply(Composite from) throws Exception {
 					Callable<? extends Iterable<String>> situations = new Callable<Iterable<String>>() {
@@ -296,7 +296,7 @@ public class Swts {
 							return Iterables.map(Files.walkChildrenOf(root, Files.extensionFilter(extension)), Files.toFileName());
 						}
 					};
-					final SituationListAnd<T> result = new SituationListAnd<T>(from, situations, builder);
+					final SituationListAnd<T, String> result = new SituationListAnd<T, String>(from, situations, builder);
 					result.addListener(new ISituationListListener<T>() {
 						public void selected(T hasControl, String selectedItem) throws Exception {
 							File file = new File(root, selectedItem);
@@ -311,7 +311,7 @@ public class Swts {
 			});
 		}
 
-		public static <T extends IHasControl> void xUnit(String title, final ISituationListAndBuilder<T> builder, final Map<String, Object> situationMap) {
+		public static <T extends IHasControl, V> void xUnit(String title, final ISituationListAndBuilder<T,V> builder, final Map<String, V> situationMap) {
 			Swts.Show.display(title, new IFunction1<Composite, Composite>() {
 				public Composite apply(Composite from) throws Exception {
 					final Callable<? extends Iterable<String>> situationsCallable = new Callable<Iterable<String>>() {
@@ -319,12 +319,12 @@ public class Swts {
 							return situationMap.keySet();
 						}
 					};
-					final SituationListAnd<T> result = new SituationListAnd<T>(from, situationsCallable, builder);
+					final SituationListAnd<T, V> result = new SituationListAnd<T,V>(from, situationsCallable, builder);
 					result.addListener(new ISituationListListener<T>() {
 						public void selected(T hasControl, String selectedItem) throws Exception {
-							Object value = situationMap.get(selectedItem);
+							V value = situationMap.get(selectedItem);
 							builder.selected(hasControl, selectedItem, value);
-							result.setText(value.toString());
+							result.setText(Strings.nullSafeToString(value));
 						}
 					});
 

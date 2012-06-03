@@ -9,7 +9,7 @@ import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.http.IHttpClient;
 import org.softwarefm.utilities.http.IResponse;
 
-public class SoftwareFmProjectStrategy implements IProjectStrategy {
+public class SoftwareFmProjectStrategy<S> implements IProjectStrategy<S> {
 	private final IHttpClient client;
 	private final IProjectHtmlRipper htmlRipper;
 
@@ -19,7 +19,7 @@ public class SoftwareFmProjectStrategy implements IProjectStrategy {
 
 	}
 
-	public ProjectData findProject(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+	public ProjectData findProject(S selection, FileNameAndDigest fileNameAndDigest, int selectionCount) {
 		try {
 			IResponse response = client.get(CommonConstants.softwareFmUrlPrefix + "digest/" + fileNameAndDigest.digest).execute();
 			if (CommonConstants.okStatusCodes.contains(response.statusCode())) {

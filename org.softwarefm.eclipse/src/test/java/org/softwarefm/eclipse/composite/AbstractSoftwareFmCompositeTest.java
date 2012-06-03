@@ -2,10 +2,8 @@ package org.softwarefm.eclipse.composite;
 
 import org.easymock.EasyMock;
 import org.eclipse.swt.widgets.Composite;
-import org.softwarefm.eclipse.BundleMarker;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.SwtTest;
-import org.softwarefm.eclipse.composite.SoftwareFmComposite;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
@@ -13,7 +11,6 @@ import org.softwarefm.eclipse.selection.internal.SelectedArtifactSelectionManage
 import org.softwarefm.eclipse.selection.internal.SwtThreadSelectedBindingAggregator;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.callbacks.MemoryCallback;
-import org.softwarefm.utilities.resources.IResourceGetter;
 
 public abstract class AbstractSoftwareFmCompositeTest< P extends SoftwareFmComposite> extends SwtTest {
 
@@ -50,7 +47,7 @@ public abstract class AbstractSoftwareFmCompositeTest< P extends SoftwareFmCompo
 		EasyMock.makeThreadSafe(strategy, true);
 		rememberedExceptions = ICallback.Utils.<Throwable> memory();
 		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), rememberedExceptions);
-		panel = makePanel(shell, new SoftwareFmContainer<String>(IResourceGetter.Utils.resourceGetter(BundleMarker.class, "text"), selectedArtifactSelectionManager));
+		panel = makePanel(shell, SoftwareFmContainer.make(selectedArtifactSelectionManager));
 	}
 
 	@Override

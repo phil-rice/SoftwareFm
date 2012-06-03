@@ -7,6 +7,7 @@ import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.MessageKeys;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.IHasSelectionBindingManager;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.swt.HasComposite;
@@ -15,7 +16,7 @@ import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.resources.IResourceGetter;
 import org.softwarefm.utilities.strings.Strings;
 
-abstract public class SoftwareFmComposite extends HasComposite {
+abstract public class SoftwareFmComposite extends HasComposite implements IHasSelectionBindingManager {
 	private final List<ISelectedBindingListener> listeners = Lists.newList();
 	private final ISelectedBindingManager<?> selectionBindingManager;
 	private final IResourceGetter resourceGetter;
@@ -72,8 +73,10 @@ abstract public class SoftwareFmComposite extends HasComposite {
 		super.dispose();
 	}
 
-	public ISelectedBindingManager<?> getSelectionBindingManager() {
-		return selectionBindingManager;
+	@SuppressWarnings("unchecked")
+	public <S>ISelectedBindingManager<S> getBindingManager() {
+		return (ISelectedBindingManager<S>) selectionBindingManager;
+
 	}
 
 	protected String digestUrl(FileNameAndDigest fileNameAndDigest) {

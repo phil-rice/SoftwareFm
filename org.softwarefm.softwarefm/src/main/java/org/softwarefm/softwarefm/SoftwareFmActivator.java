@@ -92,7 +92,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		synchronized (lock) {
 			if (selectionBindingManager == null) {
 				ISelectedBindingListenerAndAdderRemover<ITextSelection> listenerManager = new SwtThreadSelectedBindingAggregator<ITextSelection>(getDisplay());
-				IProjectStrategy projectStrategy = new SoftwareFmProjectStrategy(IHttpClient.Utils.builder(), CommonConstants.softwareFmHost, new SoftwareFmProjectHtmlRipper());
+				IProjectStrategy<ITextSelection> projectStrategy = new SoftwareFmProjectStrategy<ITextSelection>(IHttpClient.Utils.builder(), CommonConstants.softwareFmHost, new SoftwareFmProjectHtmlRipper());
 				ISelectedBindingStrategy<ITextSelection, Expression> strategy = new EclipseSelectedBindingStrategy(projectStrategy);
 				ExecutorService executor = getExecutorService();
 				selectionBindingManager = new SelectedArtifactSelectionManager<ITextSelection, Expression>(listenerManager, strategy, executor, ICallback.Utils.sysErrCallback());

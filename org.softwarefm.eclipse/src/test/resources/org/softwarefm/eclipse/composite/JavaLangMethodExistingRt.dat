@@ -1,0 +1,8 @@
+package=java.lang
+class=String
+method=toString
+digest=012345
+filename=some/jdk1.6/rt.jar
+groupid=sun.jdk
+artifactid=runtime
+version = 1.6.0_25

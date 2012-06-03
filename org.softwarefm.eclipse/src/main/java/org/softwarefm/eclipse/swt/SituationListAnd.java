@@ -20,7 +20,7 @@ import org.eclipse.swt.widgets.List;
 import org.softwarefm.eclipse.swt.Swts.Grid;
 import org.softwarefm.utilities.exceptions.WrappedException;
 
-public class SituationListAnd<T extends IHasControl> extends HasComposite {
+public class SituationListAnd<T extends IHasControl, V> extends HasComposite {
 	private List situationList;
 	private T situationDisplayer;
 
@@ -33,7 +33,7 @@ public class SituationListAnd<T extends IHasControl> extends HasComposite {
 		return sashForm = Swts.newSashForm(parent, SWT.HORIZONTAL, getClass().getSimpleName());
 	}
 
-	public SituationListAnd(Composite parent, Callable<? extends Iterable<String>> situations, ISituationListAndBuilder<T> builder) {
+	public SituationListAnd(Composite parent, Callable<? extends Iterable<String>> situations, ISituationListAndBuilder<T, V> builder) {
 		super(parent);
 		sashForm.setLayout(new FillLayout());
 		try {

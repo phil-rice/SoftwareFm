@@ -29,8 +29,8 @@ public class SoftwareFmProjectStrategyTest extends TestCase {
 		EasyMock.expect(htmlRipper.rip(fileNameAndDigest, "projectText")).andReturn(projectData);
 		EasyMock.replay(htmlRipper, rawClient, withHost, withGet1, withGet2, withGet3);
 
-		SoftwareFmProjectStrategy strategy = new SoftwareFmProjectStrategy(rawClient, "host", htmlRipper);
-		strategy.findProject(fileNameAndDigest, 1);
+		SoftwareFmProjectStrategy<String> strategy = new SoftwareFmProjectStrategy<String>(rawClient, "host", htmlRipper);
+		strategy.findProject("selection", fileNameAndDigest, 1);
 	}
 
 	public void testFindProjectReusesWithGet() {
@@ -51,10 +51,10 @@ public class SoftwareFmProjectStrategyTest extends TestCase {
 
 		EasyMock.replay(htmlRipper, rawClient, withHost, withGet1, withGet2, withGet3);
 
-		SoftwareFmProjectStrategy strategy = new SoftwareFmProjectStrategy(rawClient, "host", htmlRipper);
-		strategy.findProject(fileNameAndDigest, 1);
-		strategy.findProject(fileNameAndDigest, 1);
-		strategy.findProject(fileNameAndDigest, 1);
+		SoftwareFmProjectStrategy<String> strategy = new SoftwareFmProjectStrategy<String>(rawClient, "host", htmlRipper);
+		strategy.findProject("selection", fileNameAndDigest, 1);
+		strategy.findProject("selection", fileNameAndDigest, 1);
+		strategy.findProject("selection", fileNameAndDigest, 1);
 	}
 
 	@Override

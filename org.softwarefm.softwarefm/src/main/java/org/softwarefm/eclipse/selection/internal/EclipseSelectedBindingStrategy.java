@@ -46,10 +46,10 @@ import org.softwarefm.utilities.maps.Maps;
 @SuppressWarnings("restriction")
 public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<ITextSelection, Expression>, IHasCache {
 
-	private final IProjectStrategy projectStrategy;
+	private final IProjectStrategy<ITextSelection> projectStrategy;
 	private final Map<IPath, String> cache = Maps.newMap();
 
-	public EclipseSelectedBindingStrategy(IProjectStrategy projectStrategy) {
+	public EclipseSelectedBindingStrategy(IProjectStrategy<ITextSelection>  projectStrategy) {
 		this.projectStrategy = projectStrategy;
 	}
 
@@ -158,8 +158,8 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 	}
 
 	@Override
-	public ProjectData findProject(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-		return projectStrategy.findProject(fileNameAndDigest, selectionCount);
+	public ProjectData findProject(ITextSelection selection, FileNameAndDigest fileNameAndDigest, int selectionCount) {
+		return projectStrategy.findProject(selection, fileNameAndDigest, selectionCount);
 	}
 
 	static ITypeRoot getJavaInput(IEditorPart part) {

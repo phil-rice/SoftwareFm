@@ -1,3 +1,14 @@
+
+Known Issues:
+* Better project take on workflow. 
+** import via published maven pom
+** Current crappy manual method specifying groupid/artifactid/version using wiki page is probably ok for now
+** special handling of rt.jar / classes.jar
+* Need a better naming convention for nested classes.
+	For example should be package/parentClass/nestedClass, and has to work with nested/nested etc classes
+* Anonymous classes are handled very poorly: package//method is not a good url
+
+
 The build process sucks. Big time conflict between Maven and Eclipse
 * You need to run "build.bat" which will:
 ** build / run tests / install the jars org.sofwarefm.utilities and org.softwarefm.eclipse into the maven repository
@@ -6,13 +17,3 @@ The build process sucks. Big time conflict between Maven and Eclipse
 ** If you are a *nix user, then the batch file needs to be turned into a script file. For example \s need changing to / and the "copy" to "cp", and the files persmissions need to be made executable
 ** I will try and improve this in the near future 
   
-Known Issues:
-* Need better handling of rt.jar / classes.jar
-* Need a better naming convention for nested classes.
-	For example should be package/parentClass/nestedClass, and has to work with nested/nested etc classes
-* Anonymous classes are handled very poorly: package//method is not a good url
-
-Sorted
-* GroupId/ArtifactId/Version needs to be url friendly
-
-

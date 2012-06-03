@@ -30,10 +30,10 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 		this.listenerManager = listenerManager;
 		this.exceptionHandler = exceptionHandler;
 		this.strategy = new ISelectedBindingStrategy<S, N>() {
-			public ProjectData findProject(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+			public ProjectData findProject(S selection, FileNameAndDigest fileNameAndDigest, int selectionCount) {
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
-				ProjectData projectData = strategy.findProject(fileNameAndDigest, selectionCount);
+				ProjectData projectData = strategy.findProject(selection, fileNameAndDigest, selectionCount);
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
 				if (fileNameAndDigest.digest != null)
@@ -98,7 +98,7 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 				try {
 					FileNameAndDigest fileNameAndDigest = strategy.findFileAndDigest(selection, node, thisSelectionCount);
 					if (fileNameAndDigest != null && fileNameAndDigest.digest != null)
-						strategy.findProject(fileNameAndDigest, thisSelectionCount);
+						strategy.findProject(selection, fileNameAndDigest, thisSelectionCount);
 				} catch (RuntimeException e) {
 					ICallback.Utils.call(exceptionHandler, e);
 				}

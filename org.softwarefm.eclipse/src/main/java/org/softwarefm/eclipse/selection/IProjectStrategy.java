@@ -2,6 +2,6 @@ package org.softwarefm.eclipse.selection;
 
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 
-public interface IProjectStrategy {
-	ProjectData findProject(FileNameAndDigest fileNameAndDigest, int selectionCount);
+public interface IProjectStrategy<S> {
+	ProjectData findProject(S selection, FileNameAndDigest fileNameAndDigest, int selectionCount);
 }

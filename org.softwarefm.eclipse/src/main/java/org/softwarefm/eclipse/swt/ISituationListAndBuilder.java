@@ -7,8 +7,8 @@ package org.softwarefm.eclipse.swt;
 
 import org.eclipse.swt.widgets.Composite;
 
-public interface ISituationListAndBuilder<T extends IHasControl> {
-	void selected(T hasControl, String context, Object value) throws Exception;
+public interface ISituationListAndBuilder<T extends IHasControl, V> {
+	void selected(T hasControl, String context, V value) throws Exception;
 
 	T makeChild(Composite parent) throws Exception;
 
