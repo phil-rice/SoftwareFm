@@ -55,7 +55,7 @@ public class SimpleMapsTest extends TestCase {
 
 	public void testPartitionByValue() {
 		Map<Object, Map<Object, Object>> result = SimpleMaps.partitionByValue(smA1B2C3, new IFunction1<Object, Object>() {
-			@Override
+			
 			public Object apply(Object from) throws Exception {
 				if (from.equals(1))
 					return "p";

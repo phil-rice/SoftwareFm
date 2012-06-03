@@ -112,7 +112,7 @@ public interface IResourceGetter {
 			return new IFunction1<String, IResourceGetter>() {
 				private final Map<String, IResourceGetter> map = Maps.makeMap(namesAndResourceGetters);
 
-				@Override
+				
 				public IResourceGetter apply(String from) throws Exception {
 					IResourceGetter result = map.get(from);
 					return result == null ? defaultValue : result.with(defaultValue);

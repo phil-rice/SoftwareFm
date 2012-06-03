@@ -17,14 +17,15 @@ public class ResourceGetterMock implements IResourceGetter {
 		this.map = Maps.<String, String> makeLinkedMap((Object[]) namesAndValues);
 	}
 
-	@Override
+	
 	public String getStringOrNull(String fullKey) {
 		return map.get(fullKey);
 	}
 
-	@Override
+	
 	public IResourceGetter with(final IResourceGetter getter) {
 		return new ResourceGetterMock() {
+			
 			@Override
 			public String getStringOrNull(String fullKey) {
 				String first = ResourceGetterMock.this.getStringOrNull(fullKey);
@@ -36,12 +37,12 @@ public class ResourceGetterMock implements IResourceGetter {
 
 	}
 
-	@Override
+	
 	public IResourceGetter with(Class<?> anchorClass, String propertyName) {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
+	
 	public IResourceGetter with(ResourceBundle bundle) {
 		throw new UnsupportedOperationException();
 	}

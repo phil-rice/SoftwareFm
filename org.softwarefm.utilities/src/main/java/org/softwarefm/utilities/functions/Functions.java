@@ -29,7 +29,7 @@ public class Functions {
 			this.object = object;
 		}
 
-		@Override
+		
 		public To apply(From from) throws Exception {
 			threads.add(Thread.currentThread());
 			froms.add(from);
@@ -64,7 +64,7 @@ public class Functions {
 
 	public static <From, To> IFunction1<From, To> expectValueAndReturnConstant(final From expectedFrom, final To to) {
 		return new IFunction1<From, To>() {
-			@Override
+			
 			public To apply(From from) throws Exception {
 				if (expectedFrom.equals(from))
 					return to;
@@ -75,7 +75,7 @@ public class Functions {
 
 	public static <From, Middle, To> IFunction1<From, To> compose(final IFunction1<From, Middle> one, final IFunction1<Middle, To> two) {
 		return new IFunction1<From, To>() {
-			@Override
+			
 			public To apply(From from) throws Exception {
 				Middle middle = one.apply(from);
 				return two.apply(middle);
@@ -86,7 +86,7 @@ public class Functions {
 	@SuppressWarnings("rawtypes")
 	public static IFunction1 arraysBecomeLists() {
 		return new IFunction1() {
-			@Override
+			
 			public Object apply(Object from) throws Exception {
 				if (from.getClass().isArray()) {
 					List<Object> result = Lists.newList();
@@ -101,7 +101,7 @@ public class Functions {
 
 	public static ISymmetricFunction<Double> plus() {
 		return new ISymmetricFunction<Double>() {
-			@Override
+			
 			public Double apply(Double value, Double initial) {
 				return value + initial;
 			}
@@ -110,7 +110,7 @@ public class Functions {
 
 	public static ISymmetricFunction<Integer> plusInt() {
 		return new ISymmetricFunction<Integer>() {
-			@Override
+			
 			public Integer apply(Integer value, Integer initial) {
 				return value + initial;
 			}
@@ -119,7 +119,7 @@ public class Functions {
 
 	public static IFunction1<Double, Double> times(final double by) {
 		return new IFunction1<Double, Double>() {
-			@Override
+			
 			public Double apply(Double from) throws Exception {
 				return from * by;
 			}
@@ -128,7 +128,7 @@ public class Functions {
 
 	public static IFunction1<Double, Double> divide(final double by) {
 		return new IFunction1<Double, Double>() {
-			@Override
+			
 			public Double apply(Double from) throws Exception {
 				return from / by;
 			}
@@ -137,7 +137,7 @@ public class Functions {
 
 	public static IFunction1<Integer, Integer> timesInt(final int by) {
 		return new IFunction1<Integer, Integer>() {
-			@Override
+			
 			public Integer apply(Integer from) throws Exception {
 				return from * by;
 			}
@@ -146,7 +146,7 @@ public class Functions {
 
 	@SuppressWarnings("rawtypes")
 	public static IFunction1 identity = new IFunction1() {
-		@Override
+		
 		public Object apply(Object from) throws Exception {
 			return from;
 		}
@@ -164,7 +164,7 @@ public class Functions {
 
 	@SuppressWarnings("rawtypes")
 	public static IFunction1 toStringFn = new IFunction1() {
-		@Override
+		
 		public Object apply(Object from) throws Exception {
 			return from.toString();
 		}
@@ -177,7 +177,7 @@ public class Functions {
 
 	public static IFunction1<Integer, Double> intToDouble() {
 		return new IFunction1<Integer, Double>() {
-			@Override
+			
 			public Double apply(Integer from) throws Exception {
 				return from.doubleValue();
 			}
@@ -186,7 +186,7 @@ public class Functions {
 
 	public static IFunction1<Integer, Boolean> even() {
 		return new IFunction1<Integer, Boolean>() {
-			@Override
+			
 			public Boolean apply(Integer from) throws Exception {
 				return from % 2 == 0;
 			}
@@ -195,7 +195,7 @@ public class Functions {
 
 	public static IFunction1<Integer, Boolean> odd() {
 		return new IFunction1<Integer, Boolean>() {
-			@Override
+			
 			public Boolean apply(Integer from) throws Exception {
 				return from % 2 != 0;
 			}
@@ -204,7 +204,7 @@ public class Functions {
 
 	public static <T> IFunction1<T, String> addToEnd(final String string) {
 		return new IFunction1<T, String>() {
-			@Override
+			
 			public String apply(T from) throws Exception {
 				return from + string;
 			}
@@ -213,7 +213,7 @@ public class Functions {
 
 	public static IFunction1<String, String> addToStart(final String string) {
 		return new IFunction1<String, String>() {
-			@Override
+			
 			public String apply(String from) throws Exception {
 				return string + from;
 			}
@@ -222,7 +222,7 @@ public class Functions {
 
 	public static <T> IFunction1<T, Boolean> isNull() {
 		return new IFunction1<T, Boolean>() {
-			@Override
+			
 			public Boolean apply(T from) throws Exception {
 				return from == null;
 			}
@@ -231,7 +231,7 @@ public class Functions {
 
 	public static <T> IFunction1<T, Boolean> trueFn() {
 		return new IFunction1<T, Boolean>() {
-			@Override
+			
 			public Boolean apply(T from) throws Exception {
 				return true;
 			}
@@ -240,7 +240,7 @@ public class Functions {
 
 	public static <T> IFunction1<T, Boolean> falseFn() {
 		return new IFunction1<T, Boolean>() {
-			@Override
+			
 			public Boolean apply(T from) throws Exception {
 				return false;
 			}
@@ -249,7 +249,7 @@ public class Functions {
 
 	public static <T> IFunction1<T, Boolean> and(final IFunction1<T, Boolean>... fns) {
 		return new IFunction1<T, Boolean>() {
-			@Override
+			
 			public Boolean apply(T from) throws Exception {
 				for (IFunction1<T, Boolean> fn : fns)
 					if (!fn.apply(from))
@@ -262,7 +262,7 @@ public class Functions {
 	public static <K1, K2> IFunction1<K1, List<K2>> toSingletonList() {
 		return new IFunction1<K1, List<K2>>() {
 			@SuppressWarnings("unchecked")
-			@Override
+			
 			public List<K2> apply(K1 from) throws Exception {
 				return (List<K2>) Arrays.asList(from);
 			}
@@ -271,7 +271,7 @@ public class Functions {
 
 	public static <T> IFunction1<T, Class<?>> toClass() {
 		return new IFunction1<T, Class<?>>() {
-			@Override
+			
 			public Class<?> apply(T from) throws Exception {
 				return from.getClass();
 			}
@@ -280,11 +280,12 @@ public class Functions {
 
 	public static <From, To> IFunction1<From, To> constant(final To object) {
 		return new IFunction1<From, To>() {
-			@Override
+			
 			public To apply(From from) throws Exception {
 				return object;
 			}
 
+			
 			@Override
 			public String toString() {
 				return "Constant: " + object;
@@ -298,7 +299,7 @@ public class Functions {
 
 	public static <From, To> IFunction1<From, To> expectionIfCalled() {
 		return new IFunction1<From, To>() {
-			@Override
+			
 			public To apply(From from) throws Exception {
 				throw new RuntimeException();
 			}
@@ -307,7 +308,7 @@ public class Functions {
 
 	public static <From, To> IFunction1<From, To> expectionIfCalled(final Exception e) {
 		return new IFunction1<From, To>() {
-			@Override
+			
 			public To apply(From from) throws Exception {
 				throw e;
 			}
@@ -316,7 +317,7 @@ public class Functions {
 
 	public static IFunction1<String, Integer> stringToIntegerFn() {
 		return new IFunction1<String, Integer>() {
-			@Override
+			
 			public Integer apply(String from) throws Exception {
 				return Integer.parseInt(from);
 			}
@@ -326,7 +327,7 @@ public class Functions {
 	public static IFunction1<Integer, Integer> doubleInts() {
 		return new IFunction1<Integer, Integer>() {
 
-			@Override
+			
 			public Integer apply(Integer from) throws Exception {
 				return from * 2;
 			}
@@ -337,7 +338,7 @@ public class Functions {
 		return new IFunction1<From, To>() {
 			private final Map<From, To> map = Maps.makeMap(nameAndAttributes);
 
-			@Override
+			
 			public To apply(From from) throws Exception {
 				return map.get(from);
 			}
@@ -348,7 +349,7 @@ public class Functions {
 		return new IFunction1<Map<String, Object>, String>() {
 			private final Map<String, Object> map = Maps.stringObjectMap(namesAndValues);
 
-			@Override
+			
 			public String apply(Map<String, Object> from) throws Exception {
 				Object actualKey = from.get(key);
 				return (String) map.get(actualKey);
@@ -358,7 +359,7 @@ public class Functions {
 
 	public static <K, V> IFunction1<Map<K, V>, V> get(final K key) {
 		return new IFunction1<Map<K, V>, V>() {
-			@Override
+			
 			public V apply(Map<K, V> from) throws Exception {
 				return from.get(key);
 			}
@@ -367,7 +368,6 @@ public class Functions {
 
 	public static IFoldFunction<Boolean, Boolean> or() {
 		return new IFoldFunction<Boolean, Boolean>() {
-			@Override
 			public Boolean apply(Boolean value, Boolean initial) {
 				return value || initial;
 			}
@@ -376,7 +376,6 @@ public class Functions {
 
 	public static IFoldFunction<Boolean, Boolean> and() {
 		return new IFoldFunction<Boolean, Boolean>() {
-			@Override
 			public Boolean apply(Boolean value, Boolean initial) {
 				return value && initial;
 			}
@@ -394,7 +393,6 @@ public class Functions {
 			private From1 value1;
 			private From2 value2;
 
-			@Override
 			public To apply(From1 from1, From2 from2) throws Exception {
 				Assert.assertNotNull(from1);
 				Assert.assertNotNull(from2);
@@ -415,7 +413,6 @@ public class Functions {
 		private From value;
 		public final AtomicInteger count = new AtomicInteger();
 
-		@Override
 		public Integer apply(From from) throws Exception {
 			Assert.assertNotNull(from);
 			if (value == null)
@@ -428,7 +425,6 @@ public class Functions {
 
 	public static <T> IFunction1<T, T> identityWithCallback(final ICallback<T> callback) {
 		return new IFunction1<T, T>() {
-			@Override
 			public T apply(T from) throws Exception {
 				callback.process(from);
 				return from;

@@ -159,7 +159,7 @@ public class Lists {
 
 	public static <T extends Comparable<T>> Comparator<T> byListOrder(final List<T> masterList) {
 		return new Comparator<T>() {
-			@Override
+			
 			public int compare(T arg0, T arg1) {
 				int i0 = masterList.indexOf(arg0);
 				int i1 = masterList.indexOf(arg1);
@@ -195,6 +195,7 @@ public class Lists {
 	public static <T> Iterable<T> tail(final Iterable<T> raw) {
 		return new AbstractFindNextIterable<T, Iterator<T>>() {
 
+			
 			@Override
 			protected T findNext(Iterator<T> context) throws Exception {
 				if (context.hasNext())
@@ -203,6 +204,7 @@ public class Lists {
 					return null;
 			}
 
+			
 			@Override
 			protected Iterator<T> reset() throws Exception {
 				Iterator<T> iterator = raw.iterator();
@@ -255,6 +257,10 @@ public class Lists {
 		return newList;
 	}
 
+	public static <T> List<T> immutableCopy(T... ts) {
+		return ts == null ? null : new ArrayList<T>(Arrays.asList(ts));
+	}
+
 	public static <T> List<T> immutableCopy(List<T> ts) {
 		return ts == null ? null : Collections.unmodifiableList(new ArrayList<T>(ts));
 	}
@@ -271,7 +277,7 @@ public class Lists {
 
 	public static <T extends Comparable<T>> Comparator<T> orderedComparator(final List<T> list) {
 		return new Comparator<T>() {
-			@Override
+			
 			public int compare(T left, T right) {
 				int leftIndex = list.indexOf(left);
 				int rightIndex = list.indexOf(right);
@@ -290,7 +296,7 @@ public class Lists {
 
 	public static <From, To> Comparator<From> comparator(final IFunction1<From, To> transformer, final Comparator<To> comparator) {
 		return new Comparator<From>() {
-			@Override
+			
 			public int compare(From o1, From o2) {
 				To left = Functions.call(transformer, o1);
 				To right = Functions.call(transformer, o2);
@@ -302,7 +308,7 @@ public class Lists {
 
 	public static <From, To extends Comparable<To>> Comparator<From> comparator(final IFunction1<From, To> transformer) {
 		return new Comparator<From>() {
-			@Override
+			
 			public int compare(From o1, From o2) {
 				To left = Functions.call(transformer, o1);
 				To right = Functions.call(transformer, o2);
@@ -334,7 +340,7 @@ public class Lists {
 	// final List<String> list = Arrays.asList(order);
 	// return new Comparator<KeyValue>() {
 	//
-	// @Override
+	// 
 	// public int compare(KeyValue o1, KeyValue o2) {
 	// String left = o1.key;
 	// String right = o2.key;

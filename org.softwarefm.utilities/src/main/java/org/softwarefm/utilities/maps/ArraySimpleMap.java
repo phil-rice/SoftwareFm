@@ -22,7 +22,6 @@ public class ArraySimpleMap<K, V> implements ISimpleMap<K, V> {
 		values = (V[]) Array.newInstance(valueClass, keys.size());
 	}
 
-	@Override
 	@TightLoop
 	public V get(K key) {
 		for (int i = 0; i < keys.size(); i++)
@@ -34,7 +33,6 @@ public class ArraySimpleMap<K, V> implements ISimpleMap<K, V> {
 		return null;
 	}
 
-	@Override
 	public List<K> keys() {
 		return keys;
 	}

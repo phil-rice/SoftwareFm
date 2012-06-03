@@ -18,27 +18,27 @@ public class Futures {
 	public static <T> Future<T> doneFuture(final T value) {
 		return new Future<T>() {
 
-			@Override
+			
 			public boolean cancel(boolean mayInterruptIfRunning) {
 				return false;
 			}
 
-			@Override
+			
 			public boolean isCancelled() {
 				return false;
 			}
 
-			@Override
+			
 			public boolean isDone() {
 				return true;
 			}
 
-			@Override
+			
 			public T get() throws InterruptedException, ExecutionException {
 				return value;
 			}
 
-			@Override
+			
 			public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 				return value;
 			}
@@ -48,12 +48,12 @@ public class Futures {
 	public static <From, To> Future<To> transformed(final Future<From> future, final IFunction1<From, To> transformer) {
 		return new Future<To>() {
 
-			@Override
+			
 			public boolean cancel(boolean mayInterruptIfRunning) {
 				return future.cancel(mayInterruptIfRunning);
 			}
 
-			@Override
+			
 			public To get() throws InterruptedException, ExecutionException {
 				try {
 					return transformer.apply(future.get());
@@ -62,7 +62,7 @@ public class Futures {
 				}
 			}
 
-			@Override
+			
 			public To get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 				try {
 					return transformer.apply(future.get(timeout, unit));
@@ -71,12 +71,12 @@ public class Futures {
 				}
 			}
 
-			@Override
+			
 			public boolean isCancelled() {
 				return future.isCancelled();
 			}
 
-			@Override
+			
 			public boolean isDone() {
 				return future.isDone();
 			}

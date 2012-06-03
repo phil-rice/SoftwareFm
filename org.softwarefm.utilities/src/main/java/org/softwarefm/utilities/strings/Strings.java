@@ -219,7 +219,7 @@ public class Strings {
 
 	public static IFunction1<String, Integer> length() {
 		return new IFunction1<String, Integer>() {
-			@Override
+			
 			public Integer apply(String from) throws Exception {
 				return from.length();
 			}
@@ -228,7 +228,7 @@ public class Strings {
 
 	public static IFunction1<Object, String> toStringFn() {
 		return new IFunction1<Object, String>() {
-			@Override
+			
 			public String apply(Object from) throws Exception {
 				return from.toString();
 			}
@@ -256,7 +256,7 @@ public class Strings {
 
 	public static IFunction1<String, Boolean> startsWith(final String prefix) {
 		return new IFunction1<String, Boolean>() {
-			@Override
+			
 			public Boolean apply(String from) throws Exception {
 				return from.startsWith(prefix);
 			}
@@ -300,7 +300,7 @@ public class Strings {
 	public static IFunction1<String, String> forUrlFn() {
 		return new IFunction1<String, String>() {
 
-			@Override
+			
 			public String apply(String from) throws Exception {
 				return forUrl(from);
 			}
@@ -315,7 +315,7 @@ public class Strings {
 	public static IFunction1<String, String> lastSegmentFn(final String separator) {
 		return new IFunction1<String, String>() {
 
-			@Override
+			
 			public String apply(String from) throws Exception {
 				return lastSegment(from, separator);
 			}
@@ -346,7 +346,7 @@ public class Strings {
 
 	public static IFunction1<String, String> upperCaseFirstCharacterFn() {
 		return new IFunction1<String, String>() {
-			@Override
+			
 			public String apply(String from) throws Exception {
 				return upperCaseFirstCharacter(from);
 			}
@@ -367,7 +367,7 @@ public class Strings {
 
 	public static IFunction1<String, String> camelCaseToPrettyFn() {
 		return new IFunction1<String, String>() {
-			@Override
+			
 			public String apply(String from) throws Exception {
 				return camelCaseToPretty(from);
 			}
@@ -411,7 +411,7 @@ public class Strings {
 
 	public static Comparator<String> compareVersionNumbers() {
 		return new Comparator<String>() {
-			@Override
+			
 			public int compare(String o1, String o2) {
 				return compareVersionNumbers(o1, o2);
 			}
@@ -470,7 +470,7 @@ public class Strings {
 
 	public static IFunction1<String, String> segmentFn(final String separator, final int i) {
 		return new IFunction1<String, String>() {
-			@Override
+			
 			public String apply(String from) throws Exception {
 				return segment(from, separator, i);
 			}
@@ -495,7 +495,7 @@ public class Strings {
 
 	public static IFunction1<String, Boolean> isEmailFn() {
 		return new IFunction1<String, Boolean>() {
-			@Override
+			
 			public Boolean apply(String from) throws Exception {
 				return isEmail(from);
 			}

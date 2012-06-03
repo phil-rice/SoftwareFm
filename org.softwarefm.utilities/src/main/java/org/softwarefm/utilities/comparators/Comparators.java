@@ -11,7 +11,6 @@ public class Comparators {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private static Comparator naturalComparator = new Comparator() {
-		@Override
 		public int compare(Object o1, Object o2) {
 			Comparable one = (Comparable) o1;
 			Comparable two = (Comparable) o2;
@@ -34,8 +33,6 @@ public class Comparators {
 
 	public static <T> Comparator<T> invert(final Comparator<T> raw) {
 		return new Comparator<T>() {
-
-			@Override
 			public int compare(T o1, T o2) {
 				return raw.compare(o2, o1);
 			}
@@ -45,7 +42,6 @@ public class Comparators {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Comparator<String> compareBasedOnTagInValue(final Map<String, Object> map, final String tag) {
 		return new Comparator<String>() {
-			@Override
 			public int compare(String o1, String o2) {
 				Object left = get(o1);
 				Object right = get(o2);
@@ -72,7 +68,6 @@ public class Comparators {
 	public static <K, V> Comparator<Map<K, V>> mapKey(final K key) {
 		return new Comparator<Map<K, V>>() {
 			@SuppressWarnings("unchecked")
-			@Override
 			public int compare(Map<K, V> o1, Map<K, V> o2) {
 				V value1 = o1.get(key);
 				V value2 = o2.get(key);
@@ -84,7 +79,6 @@ public class Comparators {
 	public static Comparator<Class<?>> classComporator() {
 		return new Comparator<Class<?>>() {
 
-			@Override
 			public int compare(Class<?> o1, Class<?> o2) {
 				return o1.getName().compareTo(o2.getName());
 			}

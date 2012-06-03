@@ -23,15 +23,15 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 	private final FileNameAndDigest fileNameAndNoDigest = new FileNameAndDigest("fileName", null);
 	private final ProjectData projectData = new ProjectData(fileNameAndDigest, "g", "a", "v");
 
-	public void testWhenSelectionIsNull() throws Exception{
+	public void testWhenSelectionIsNull() throws Exception {
 		int count = 1;
 		listenerManager.notJavaElement(count);
 		EasyMock.replay(listenerManager, strategy);
 
 		selectionManager.selectionOccured(null).get();
-		
+
 	}
-	
+
 	public void testRosyView() throws InterruptedException, ExecutionException {
 		int count = 1;
 		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
@@ -46,7 +46,7 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		selectionManager.selectionOccured("selection").get();
 	}
 
-	public void testIfFileNotFound() throws InterruptedException, ExecutionException{
+	public void testIfFileNotFound() throws InterruptedException, ExecutionException {
 		int count = 1;
 		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
 		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(expressionData);
@@ -56,16 +56,16 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		EasyMock.replay(listenerManager, strategy);
 
 		selectionManager.selectionOccured("selection").get();
-		
+
 	}
-	
+
 	public void testIfDigestNotFoundNotAJarIsCalled() throws InterruptedException, ExecutionException {
 		int count = 1;
 		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
 		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(expressionData);
 		EasyMock.expect(strategy.findFileAndDigest("selection", "node", count)).andReturn(fileNameAndNoDigest);
 		listenerManager.classAndMethodSelectionOccured(expressionData, count);
-		listenerManager.notInAJar(fileNameAndNoDigest,  count);
+		listenerManager.notInAJar(fileNameAndNoDigest, count);
 		EasyMock.replay(listenerManager, strategy);
 
 		selectionManager.selectionOccured("selection").get();

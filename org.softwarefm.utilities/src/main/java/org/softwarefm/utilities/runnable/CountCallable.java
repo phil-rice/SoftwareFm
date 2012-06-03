@@ -17,7 +17,6 @@ public class CountCallable<T> implements Callable<T> {
 		this.value = value;
 	}
 
-	@Override
 	public T call() throws Exception {
 		count.incrementAndGet();
 		return value;

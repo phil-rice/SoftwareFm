@@ -1,6 +1,5 @@
 package org.softwarefm.eclipse.selection.internal;
 
-
 import org.easymock.EasyMock;
 import org.softwarefm.eclipse.SwtTest;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
@@ -21,26 +20,26 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 	// Note that the listeners are not thread safe mocks, so their calls will be in the same thread or an exception will occur
 	public void testClassAndMethodSelectionCalledInSwtThread() throws Exception {
 		checkCalledInSameThread(new ICallback<ISelectedBindingListener>() {
-			@Override
+			
 			public void process(ISelectedBindingListener listener) throws Exception {
 				listener.classAndMethodSelectionOccured(expressionData, 1);
 			}
 		});
 	}
 
-	
-	public void testNotJavaElementCalledInSwtThread() throws Exception{
+	public void testNotJavaElementCalledInSwtThread() throws Exception {
 		checkCalledInSameThread(new ICallback<ISelectedBindingListener>() {
-			@Override
+			
 			public void process(ISelectedBindingListener listener) throws Exception {
-				listener.notJavaElement( 1);
+				listener.notJavaElement(1);
 			}
 		});
-		
+
 	}
+
 	public void testDigestDeterminedCalledInSwtThread() throws Exception {
 		checkCalledInSameThread(new ICallback<ISelectedBindingListener>() {
-			@Override
+			
 			public void process(ISelectedBindingListener listener) throws Exception {
 				listener.digestDetermined(fileNameAndDigest, 1);
 			}
@@ -49,7 +48,7 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 
 	public void testNotInAJarCalledInSwtThread() throws Exception {
 		checkCalledInSameThread(new ICallback<ISelectedBindingListener>() {
-			@Override
+			
 			public void process(ISelectedBindingListener listener) throws Exception {
 				listener.notInAJar(fileNameAndDigest, 1);
 			}
@@ -58,7 +57,7 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 
 	public void testProjectDeterminedCalledInSwtThread() throws Exception {
 		checkCalledInSameThread(new ICallback<ISelectedBindingListener>() {
-			@Override
+			
 			public void process(ISelectedBindingListener listener) throws Exception {
 				listener.projectDetermined(projectData, 1);
 			}
@@ -67,7 +66,7 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 
 	public void testUnknownDigestCalledInSwtThread() throws Exception {
 		checkCalledInSameThread(new ICallback<ISelectedBindingListener>() {
-			@Override
+			
 			public void process(ISelectedBindingListener listener) throws Exception {
 				listener.unknownDigest(fileNameAndDigest, 1);
 			}
@@ -78,7 +77,7 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 		EasyMock.replay(listener1, listener2);
 		swtThreadSelectedBindingAggregator.dispose();
 		execute(new Runnable() {
-			@Override
+			
 			public void run() {
 				swtThreadSelectedBindingAggregator.unknownDigest(fileNameAndDigest, 1);
 			}
@@ -90,7 +89,7 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 		EasyMock.replay(listener1, listener2);
 		swtThreadSelectedBindingAggregator.removeSelectedArtifactSelectionListener(listener1);
 		execute(new Runnable() {
-			@Override
+			
 			public void run() {
 				swtThreadSelectedBindingAggregator.unknownDigest(fileNameAndDigest, 1);
 			}
@@ -102,13 +101,14 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 		callback.process(listener2);
 		EasyMock.replay(listener1, listener2);
 		execute(new Runnable() {
-			@Override
+			
 			public void run() {
 				ICallback.Utils.call(callback, swtThreadSelectedBindingAggregator);
 			}
 		});
 	}
 
+	
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
@@ -119,6 +119,7 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 		swtThreadSelectedBindingAggregator.addSelectedArtifactSelectionListener(listener2);
 	}
 
+	
 	@Override
 	protected void tearDown() throws Exception {
 		dispatchUntilJobsFinished();

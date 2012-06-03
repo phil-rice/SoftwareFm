@@ -4,6 +4,7 @@
 
 package org.softwarefm.eclipse.swt;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.Arrays;
@@ -18,12 +19,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
 
-import org.eclipse.jface.action.Action;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
@@ -67,6 +64,8 @@ import org.eclipse.swt.widgets.Text;
 import org.softwarefm.eclipse.constants.SwtConstants;
 import org.softwarefm.utilities.arrays.ArrayHelper;
 import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.collections.Files;
+import org.softwarefm.utilities.collections.Iterables;
 import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.constants.UtilityConstants;
 import org.softwarefm.utilities.constants.UtilityMessages;
@@ -103,7 +102,6 @@ public class Swts {
 			dispatchUntilQueueEmpty(display);
 		}
 
-
 		public static void dispatchUntilQueueEmpty(Display display) {
 			Swts.dispatchUntilQueueEmpty(display);
 		}
@@ -111,7 +109,7 @@ public class Swts {
 		public static <T> T callInDispatch(Display display, final Callable<T> callable) {
 			final AtomicReference<T> result = new AtomicReference<T>();
 			display.syncExec(new Runnable() {
-				@Override
+
 				public void run() {
 					try {
 						result.set(callable.call());
@@ -146,50 +144,12 @@ public class Swts {
 
 	}
 
-	public static class Actions {
-		public static Action pushAction(IResourceGetter resourceGetter, String key, Class<?> imageAnchor, String imageKey, final Runnable run) {
-			String text = IResourceGetter.Utils.getOrException(resourceGetter, key);
-			Action action = new Action(text, IAction.AS_PUSH_BUTTON) {
-				@Override
-				public void run() {
-					run.run();
-				}
-			};
-			ImageDescriptor imageDescriptor = getImageDescriptor(imageAnchor, imageKey);
-			action.setImageDescriptor(imageDescriptor);
-			return action;
-		}
-
-		public static Action radioAction(IResourceGetter resourceGetter, String key, Class<?> imageAnchor, String imageKey, final Runnable run) {
-			String text = IResourceGetter.Utils.getOrException(resourceGetter, key);
-			Action action = new Action(text, IAction.AS_RADIO_BUTTON) {
-				@Override
-				public void run() {
-					if (isChecked())
-						run.run();
-				}
-			};
-			ImageDescriptor imageDescriptor = getImageDescriptor(imageAnchor, imageKey);
-			action.setImageDescriptor(imageDescriptor);
-			return action;
-		}
-
-		private static ImageDescriptor getImageDescriptor(Class<?> imageAnchor, String imageKey) {
-			try {
-				return ImageDescriptor.createFromFile(imageAnchor, imageKey);
-			} catch (Exception e) {
-				return ImageDescriptor.getMissingImageDescriptor();
-			}
-		}
-	}
-
 	public static class Size {
 
 		public static Listener resizeMeToParentsSize(final Control control) {
 			Size.setSizeFromClientArea(control);
 
 			Listener listener = new Listener() {
-				@Override
 				public void handleEvent(Event event) {
 					Size.setSizeFromClientArea(control);
 				}
@@ -208,7 +168,6 @@ public class Swts {
 			Listener listener = new Listener() {
 				// int id = globalId++;
 
-				@Override
 				public void handleEvent(Event event) {
 					// System.out.println("SWT/resizeMeToParentsSizeWithLayout " + id + boundsUpToShell(composite));
 					Size.setSizeFromClientArea(composite);
@@ -225,7 +184,7 @@ public class Swts {
 			Size.setSizeAndLocationFromParentsSizeWithTopMargin(control, topMargin);
 
 			Listener listener = new Listener() {
-				@Override
+
 				public void handleEvent(Event event) {
 					Size.setSizeAndLocationFromParentsSizeWithTopMargin(control, topMargin);
 				}
@@ -329,6 +288,52 @@ public class Swts {
 			}
 		}
 
+		public static <T extends IHasControl> void xUnit(String title, final File root, final String extension, final ISituationListAndBuilder<T> builder) {
+			Swts.Show.display(title, new IFunction1<Composite, Composite>() {
+				public Composite apply(Composite from) throws Exception {
+					Callable<? extends Iterable<String>> situations = new Callable<Iterable<String>>() {
+						public Iterable<String> call() throws Exception {
+							return Iterables.map(Files.walkChildrenOf(root, Files.extensionFilter(extension)), Files.toFileName());
+						}
+					};
+					final SituationListAnd<T> result = new SituationListAnd<T>(from, situations, builder);
+					result.addListener(new ISituationListListener<T>() {
+						public void selected(T hasControl, String selectedItem) throws Exception {
+							File file = new File(root, selectedItem);
+							String value = Files.getText(file);
+							builder.selected(hasControl, selectedItem, value);
+							result.setText(value);
+						}
+					});
+					result.selectFirst();
+					return result.getComposite();
+				}
+			});
+		}
+
+		public static <T extends IHasControl> void xUnit(String title, final ISituationListAndBuilder<T> builder, final Map<String, Object> situationMap) {
+			Swts.Show.display(title, new IFunction1<Composite, Composite>() {
+				public Composite apply(Composite from) throws Exception {
+					final Callable<? extends Iterable<String>> situationsCallable = new Callable<Iterable<String>>() {
+						public Iterable<String> call() throws Exception {
+							return situationMap.keySet();
+						}
+					};
+					final SituationListAnd<T> result = new SituationListAnd<T>(from, situationsCallable, builder);
+					result.addListener(new ISituationListListener<T>() {
+						public void selected(T hasControl, String selectedItem) throws Exception {
+							Object value = situationMap.get(selectedItem);
+							builder.selected(hasControl, selectedItem, value);
+							result.setText(value.toString());
+						}
+					});
+
+					result.selectFirst();
+					return result.getComposite();
+				}
+			});
+		}
+
 	}
 
 	public static class Buttons {
@@ -337,9 +342,11 @@ public class Swts {
 			org.eclipse.swt.widgets.Button button = new org.eclipse.swt.widgets.Button(composite, SWT.PUSH);
 			button.setText(classWithMain.getSimpleName());
 			button.addSelectionListener(new SelectionAdapter() {
+
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					new Thread() {
+
 						@Override
 						public void run() {
 							try {
@@ -389,6 +396,7 @@ public class Swts {
 			String title = titleIsKey ? IResourceGetter.Utils.getOrException(resourceGetter, titleOrKey) : titleOrKey;
 			button.setText(title);
 			button.addSelectionListener(new SelectionAdapter() {
+
 				@Override
 				public void widgetSelected(SelectionEvent e) {
 					runnable.run();
@@ -401,6 +409,7 @@ public class Swts {
 			Label label = new Label(parent, SWT.NULL);
 			label.setImage(image);
 			label.addMouseListener(new MouseAdapter() {
+
 				@Override
 				public void mouseUp(MouseEvent e) {
 					runnable.run();
@@ -416,6 +425,7 @@ public class Swts {
 				throw new IllegalArgumentException(name);
 			label.setImage(image);
 			label.addMouseListener(new MouseAdapter() {
+
 				@Override
 				public void mouseUp(MouseEvent e) {
 					runnable.run();
@@ -436,7 +446,7 @@ public class Swts {
 			Button button = new Button(parent, SWT.RADIO);
 			button.setText(text);
 			button.addListener(SWT.Selection, new Listener() {
-				@Override
+
 				public void handleEvent(Event event) {
 					runnable.run();
 				}
@@ -593,6 +603,7 @@ public class Swts {
 
 	public static ScrolledComposite newScrolledComposite(Composite parent, int style, final String description) {
 		return new ScrolledComposite(parent, style) {
+
 			@Override
 			public String toString() {
 				return description + "." + super.toString();
@@ -602,19 +613,23 @@ public class Swts {
 
 	public static Composite newComposite(Composite parent, int style, final String description) {
 		return new Composite(parent, style) {
+
 			@Override
 			public String toString() {
 				return description + "." + super.toString();
 			}
 		};
 	}
+
 	public static Composite newCompositeWithDispose(Composite parent, int style, final String description, final IDispose dispose) {
 		return new Composite(parent, style) {
+
 			@Override
 			public void dispose() {
 				dispose.dispose();
 				super.dispose();
 			}
+
 			@Override
 			public String toString() {
 				return description + "." + super.toString();
@@ -624,6 +639,7 @@ public class Swts {
 
 	public static SashForm newSashForm(Composite parent, int style, final String description) {
 		return new SashForm(parent, style) {
+
 			@Override
 			public String toString() {
 				return description + "." + super.toString();
@@ -633,7 +649,7 @@ public class Swts {
 
 	public static void redrawAllChildren(Control control) {
 		walkChildren(control, new ICallback<Control>() {
-			@Override
+
 			public void process(Control t) throws Exception {
 				t.redraw();
 			}
@@ -652,7 +668,6 @@ public class Swts {
 		final List<T> result = Lists.newList();
 		walkChildren(control, new ICallback<Control>() {
 			@SuppressWarnings("unchecked")
-			@Override
 			public void process(Control t) throws Exception {
 				if (clazz.isAssignableFrom(t.getClass()))
 					result.add((T) t);
@@ -663,6 +678,7 @@ public class Swts {
 
 	public static Group newGroup(Composite parent, int style, final String description) {
 		return new Group(parent, style) {
+
 			@Override
 			public String toString() {
 				return description + "." + super.toString();
@@ -851,7 +867,7 @@ public class Swts {
 
 	public static IFunction1<String, Image> imageFn(final ImageRegistry imageRegistry) {
 		return new IFunction1<String, Image>() {
-			@Override
+
 			public Image apply(String from) throws Exception {
 				return imageRegistry.get(from);
 			}
@@ -862,7 +878,7 @@ public class Swts {
 		final Control control = hasControl.getControl();
 		if (!control.isDisposed())
 			control.getDisplay().asyncExec(new Runnable() {
-				@Override
+
 				public void run() {
 					if (!control.isDisposed())
 						runnable.run();
@@ -873,7 +889,7 @@ public class Swts {
 	public static void asyncExec(final Control control, final Runnable runnable) {
 		if (!control.isDisposed())
 			control.getDisplay().asyncExec(new Runnable() {
-				@Override
+
 				public void run() {
 					if (!control.isDisposed())
 						runnable.run();
@@ -886,7 +902,7 @@ public class Swts {
 		final Control control = hasControl.getControl();
 		if (!control.isDisposed())
 			control.getDisplay().syncExec(new Runnable() {
-				@Override
+
 				public void run() {
 					if (!control.isDisposed())
 						runnable.run();
@@ -897,7 +913,7 @@ public class Swts {
 	public static void syncExec(final Composite control, final Runnable runnable) {
 		if (!control.isDisposed())
 			control.getDisplay().syncExec(new Runnable() {
-				@Override
+
 				public void run() {
 					if (!control.isDisposed())
 						runnable.run();
@@ -935,7 +951,6 @@ public class Swts {
 	public static IFunction1<Composite, IHasControl> labelFn(final String text) {
 		return new IFunction1<Composite, IHasControl>() {
 
-			@Override
 			public IHasControl apply(Composite from) throws Exception {
 				Label label = new Label(from, SWT.NULL);
 				label.setText(text);
@@ -946,7 +961,7 @@ public class Swts {
 
 	public static IFunction1<Composite, IHasControl> styledTextFn(final String text, final int style) {
 		return new IFunction1<Composite, IHasControl>() {
-			@Override
+
 			public IHasControl apply(Composite from) throws Exception {
 				StyledText styledText = new StyledText(from, style);
 				styledText.setText(text);
@@ -1100,11 +1115,21 @@ public class Swts {
 		MenuItem item = new MenuItem(menu, SWT.NULL);
 		item.setText(text);
 		item.addListener(SWT.Selection, new Listener() {
-			@Override
+
 			public void handleEvent(Event event) {
 				runnable.run();
 			}
 		});
+	}
+
+	public static Point computeSizeForVerticallyStackedControlWithIndent(int wHint, int hHint, Control... controls) {
+		Point raw = Swts.computeSizeForVerticallyStackedControl(wHint, hHint, controls);
+		return new Point(raw.x + 2 * SwtConstants.xIndent, raw.y + (controls.length + 1) * SwtConstants.yIndent);
+	}
+
+	public static Point computeSizeForHorizontallyStackedCompositesWithIndent(int wHint, int hHint, Control... controls) {
+		Point raw = Swts.computeSizeForHorizontallyStackedComposites(wHint, hHint, controls);
+		return new Point(raw.x + (controls.length + 1) * SwtConstants.xIndent, raw.y + 2 * SwtConstants.yIndent);
 	}
 
 	public static Point computeSizeForVerticallyStackedControl(int wHint, int hHint, Control... controls) {
@@ -1118,13 +1143,13 @@ public class Swts {
 		return new Point(maxX, sumY);
 	}
 
-	public static Point computeSizeForHorizontallyStackedComposites(int wHint, int hHint, Browser browser, Control... controls) {
+	public static Point computeSizeForHorizontallyStackedComposites(int wHint, int hHint, Control... controls) {
 		int sumX = 0;
 		int maxY = 0;
 		for (Control control : controls) {
 			Point size = control.computeSize(wHint, hHint);
 			sumX += size.x;
-			maxY = Math.max(maxY, size.x);
+			maxY = Math.max(maxY, size.y);
 		}
 		return new Point(sumX, maxY);
 	}

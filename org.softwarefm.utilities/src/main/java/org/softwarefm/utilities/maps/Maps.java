@@ -68,7 +68,7 @@ public class Maps {
 			throw new IllegalArgumentException(MessageFormat.format(UtilityConstants.cannotSort, sortOrder, titles));
 		Collections.sort(values, new Comparator<List<Object>>() {
 
-			@Override
+			
 			public int compare(List<Object> o1, List<Object> o2) {
 				Object l = o1.get(index);
 				Object r = o2.get(index);
@@ -310,7 +310,7 @@ public class Maps {
 
 	public static <K, V> IFunction1<K, V> get(final Map<K, V> map) {
 		return new IFunction1<K, V>() {
-			@Override
+			
 			public V apply(K from) throws Exception {
 				return map.get(from);
 			}
@@ -319,7 +319,7 @@ public class Maps {
 
 	public static <K, V> IFunction1<Entry<String, String>, String> entryToStr(final String pattern) {
 		return new IFunction1<Map.Entry<String, String>, String>() {
-			@Override
+			
 			public String apply(Entry<String, String> from) throws Exception {
 				return MessageFormat.format(pattern, from.getKey(), from.getValue());
 			}
@@ -329,7 +329,7 @@ public class Maps {
 	/** The map is from K to a pattern. The parameters passed to MessageFormat are key + extraParameters */
 	public static <K, V> IFunction1<K, String> keyToValuePatternToStr(final Map<K, V> map, final Object... extraParameters) {
 		return new IFunction1<K, String>() {
-			@Override
+			
 			public String apply(K from) throws Exception {
 				List<Object> arguments = new ArrayList<Object>();
 				arguments.add(from);
@@ -543,7 +543,7 @@ public class Maps {
 
 	public static <K, V> IFunction1<Map<K, V>, Map<K, V>> withFn(final K newKey, final V newValue) {
 		return new IFunction1<Map<K, V>, Map<K, V>>() {
-			@Override
+			
 			public Map<K, V> apply(Map<K, V> from) throws Exception {
 				return with(from, newKey, newValue);
 			}

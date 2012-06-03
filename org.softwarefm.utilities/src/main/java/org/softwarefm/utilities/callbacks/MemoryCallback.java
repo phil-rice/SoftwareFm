@@ -15,7 +15,7 @@ import org.softwarefm.utilities.exceptions.WrappedException;
 public class MemoryCallback<T> implements ICallback<T> {
 	private final List<T> result = Collections.synchronizedList(new ArrayList<T>());
 
-	@Override
+	
 	public void process(T t) throws Exception {
 		result.add(t);
 	}

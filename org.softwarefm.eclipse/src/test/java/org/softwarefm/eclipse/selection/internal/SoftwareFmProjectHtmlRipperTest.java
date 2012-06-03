@@ -29,7 +29,7 @@ public class SoftwareFmProjectHtmlRipperTest extends TestCase {
 		ProjectData projectDataNoVersion = new ProjectData(fileNameAndDigest, groupId, artifactId, null);
 		String gavDiv = MessageFormat.format(gavPattern, rawGroupId, rawArtifactId, rawVersion);
 		String gaDiv = MessageFormat.format(gaPattern, rawGroupId, rawArtifactId);
-		
+
 		assertEquals(projectData, ripper.rip(fileNameAndDigest, "<root>" + gavDiv + "</root>"));
 		assertEquals(projectData, ripper.rip(fileNameAndDigest, "<root><div>" + gavDiv + "</div></root>"));
 		assertEquals(projectData, ripper.rip(fileNameAndDigest, "<root><div id='someid'>" + gavDiv + "</div></root>"));

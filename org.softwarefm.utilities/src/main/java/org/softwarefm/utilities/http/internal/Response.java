@@ -21,27 +21,28 @@ public class Response implements IResponse {
 		this.mimeType = mimeType;
 	}
 
-	@Override
+	
 	public String url() {
 		return url;
 	}
 
-	@Override
+	
 	public int statusCode() {
 		return statusCode;
 	}
 
-	@Override
+	
 	public String asString() {
 		return string;
 	}
 
+	
 	@Override
 	public String toString() {
 		return "Response [statusCode=" + statusCode + ", string=" + string + ", url=" + url + ", mimeType=" + mimeType + "]";
 	}
 
-	@Override
+	
 	public String mimeType() {
 		return mimeType;
 	}

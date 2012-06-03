@@ -10,7 +10,7 @@ public interface ICallback4<T1, T2, T3, T4> {
 	abstract static class Utils {
 		public static final <T1, T2, T3, T4> ICallback4<T1, T2, T3, T4> noCallback() {
 			return new ICallback4<T1, T2, T3, T4>() {
-				@Override
+				
 				public void process(T1 first, T2 second, T3 third, T4 fourth) throws Exception {
 				}
 			};

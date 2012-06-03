@@ -10,16 +10,15 @@ import org.softwarefm.utilities.functions.IFunction1;
 public interface ISwtFunction1<From, To> extends IFunction1<From, To> {
 
 	public static class Utils {
-		public static ISwtFunction1<String,String> putInText(final StyledText text){
+		public static ISwtFunction1<String, String> putInText(final StyledText text) {
 			return new ISwtFunction1<String, String>() {
-				@Override
 				public String apply(String from) throws Exception {
 					text.setText(from);
 					return from;
 				}
 			};
-			
+
 		}
 	}
-	
+
 }

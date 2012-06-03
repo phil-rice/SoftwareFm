@@ -14,7 +14,6 @@ public abstract class AbstractFindNextIterable<T, Context> implements Iterable<T
 
 	abstract protected Context reset() throws Exception;
 
-	@Override
 	public Iterator<T> iterator() {
 		try {
 			return new IteratorAdaptor<T>() {
@@ -22,7 +21,6 @@ public abstract class AbstractFindNextIterable<T, Context> implements Iterable<T
 				private boolean usedNext = true;
 				private T next;
 
-				@Override
 				public boolean hasNext() {
 					findNextItem();
 					return next != null;
@@ -39,7 +37,6 @@ public abstract class AbstractFindNextIterable<T, Context> implements Iterable<T
 					}
 				}
 
-				@Override
 				public T next() {
 					findNextItem();
 					if (next == null)

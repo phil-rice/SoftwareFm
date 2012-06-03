@@ -15,7 +15,7 @@ class ResourceGetter implements IResourceGetter {
 		this.parent = parent;
 	}
 
-	@Override
+	
 	public String getStringOrNull(String fullKey) {
 		String result = localGet(fullKey);
 		if (result == null)
@@ -30,9 +30,10 @@ class ResourceGetter implements IResourceGetter {
 		return null;
 	}
 
-	@Override
+	
 	public IResourceGetter with(final IResourceGetter getter) {
 		return new ResourceGetter(this) {
+			
 			@Override
 			protected String localGet(String fullKey) {
 				return getter.getStringOrNull(fullKey);
@@ -40,9 +41,10 @@ class ResourceGetter implements IResourceGetter {
 		};
 	}
 
-	@Override
+	
 	public IResourceGetter with(final ResourceBundle bundle) {
 		return new ResourceGetter(this) {
+			
 			@Override
 			protected String localGet(String fullKey) {
 				try {
@@ -57,7 +59,7 @@ class ResourceGetter implements IResourceGetter {
 		};
 	}
 
-	@Override
+	
 	public IResourceGetter with(Class<?> anchorClass, String propertyName) {
 		ResourceBundle bundle = ResourceBundle.getBundle(anchorClass.getPackage().getName() + "." + propertyName, Locale.getDefault(), anchorClass.getClassLoader());
 		return with(bundle);

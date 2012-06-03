@@ -20,29 +20,28 @@ public class GatedFuture<T> implements Future<T> {
 		this.latch.countDown();
 	}
 
-	@Override
+	
 	public boolean cancel(boolean mayInterruptIfRunning) {
 		return false;
 	}
 
-	@Override
+	
 	public T get() throws InterruptedException, ExecutionException {
 		latch.await();
 		return value;
 	}
 
-	@Override
 	public T get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException {
 		latch.await(timeout, unit);
 		return value;
 	}
 
-	@Override
+	
 	public boolean isCancelled() {
 		return false;
 	}
 
-	@Override
+	
 	public boolean isDone() {
 		return latch.getCount() == 0;
 	}

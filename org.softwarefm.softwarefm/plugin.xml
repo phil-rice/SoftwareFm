@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="Software FM"
+            id="org.softwarefm">
+      </category>
+      <view
+            name="Class"
+            icon="icons/class.png"
+            category="org.softwarefm"
+            class="org.softwarefm.softwarefm.views.ClassAndMethodView"
+            id="org.softwarefm.softwarefm.views.ClassAndMethodView">
+      </view>
+      <view
+            name="Digest"
+            icon="icons/digest.png"
+            category="org.softwarefm"
+            class="org.softwarefm.softwarefm.views.DigestView"
+            id="org.softwarefm.softwarefm.views.DigestView">
+      </view>
+      <view
+            name="SwtDigest"
+            icon="icons/digest.png"
+            category="org.softwarefm"
+            class="org.softwarefm.softwarefm.views.SwtDigestView"
+            id="org.softwarefm.softwarefm.views.SwtDigestView">
+      </view>
+      <view
+            name="Project"
+            icon="icons/project.png"
+            category="org.softwarefm"
+            class="org.softwarefm.softwarefm.views.ProjectView"
+            id="org.softwarefm.softwarefm.views.ProjectView">
+      </view>
+      <view
+            name="Version"
+            icon="icons/version.png"
+            category="org.softwarefm"
+            class="org.softwarefm.softwarefm.views.VersionView"
+            id="org.softwarefm.softwarefm.views.VersionView">
+      </view>
+      <view
+            name="All"
+            icon="icons/all.png"
+            category="org.softwarefm"
+            class="org.softwarefm.softwarefm.views.AllView"
+            id="org.softwarefm.softwarefm.views.AllView">
+      </view>
+      <view
+            name="Debug"
+            icon="icons/debug.png"
+            category="org.softwarefm"
+            class="org.softwarefm.softwarefm.views.SoftwareFmDebugView"
+            id="org.softwarefm.softwarefm.views.SoftwareFmDebugView">
+      </view>
+   </extension>
+
+</plugin>

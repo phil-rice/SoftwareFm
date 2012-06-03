@@ -19,7 +19,6 @@ public class SoftwareFmProjectStrategy implements IProjectStrategy {
 
 	}
 
-	@Override
 	public ProjectData findProject(FileNameAndDigest fileNameAndDigest, int selectionCount) {
 		try {
 			IResponse response = client.get(CommonConstants.softwareFmUrlPrefix + "digest/" + fileNameAndDigest.digest).execute();

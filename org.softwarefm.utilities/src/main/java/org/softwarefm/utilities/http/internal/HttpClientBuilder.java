@@ -47,7 +47,7 @@ public class HttpClientBuilder implements IHttpClient {
 		this.parameters = parameters;
 	}
 
-	@Override
+	
 	public IResponse execute() {
 		try {
 			validate();
@@ -100,7 +100,7 @@ public class HttpClientBuilder implements IHttpClient {
 		return "unknown";
 	}
 
-	@Override
+	
 	public void validate() {
 		List<String> errors = Lists.newList();
 		checkNotNull(errors, client, "Client");
@@ -117,42 +117,42 @@ public class HttpClientBuilder implements IHttpClient {
 			errors.add(MessageFormat.format(UtilityMessages.httpValidationNull, name));
 	}
 
-	@Override
+	
 	public IHttpClient host(String host) {
 		return host(host, 80);
 	}
 
-	@Override
+	
 	public IHttpClient host(String host, int port) {
 		return new HttpClientBuilder(client, new HttpHost(host, port), url, method, parameters);
 	}
 
-	@Override
+	
 	public IHttpClient post(String url) {
 		return new HttpClientBuilder(client, host, url, HttpMethod.Post, parameters);
 	}
 
-	@Override
+	
 	public IHttpClient get(String url) {
 		return new HttpClientBuilder(client, host, url, HttpMethod.Get, parameters);
 	}
 
-	@Override
+	
 	public IHttpClient head(String url) {
 		return new HttpClientBuilder(client, host, url, HttpMethod.Head, parameters);
 	}
 
-	@Override
+	
 	public IHttpClient delete(String url) {
 		return new HttpClientBuilder(client, host, url, HttpMethod.Delete, parameters);
 	}
 
-	@Override
+	
 	public IHttpClient withParameters(List<NameValuePair> nameAndValues) {
 		return new HttpClientBuilder(client, host, url, method, nameAndValues);
 	}
 
-	@Override
+	
 	public IHttpClient withParams(String... nameAndValue) {
 		assert nameAndValue.length % 2 == 0 : nameAndValue.length + "/" + Arrays.asList(nameAndValue);
 		List<NameValuePair> nameAndValues = Lists.newList();
@@ -161,7 +161,7 @@ public class HttpClientBuilder implements IHttpClient {
 		return new HttpClientBuilder(client, host, url, method, nameAndValues);
 	}
 
-	@Override
+	
 	public IHttpClient addParam(String name, String value) {
 		return new HttpClientBuilder(client, host, url, method, Lists.append(parameters, new BasicNameValuePair(name, value)));
 	}

@@ -20,7 +20,7 @@ public interface ICallback3<T1, T2, T3> {
 
 		public static final <T1, T2, T3> ICallback3<T1, T2, T3> noCallback() {
 			return new ICallback3<T1, T2, T3>() {
-				@Override
+				
 				public void process(T1 first, T2 second, T3 third) throws Exception {
 				}
 			};

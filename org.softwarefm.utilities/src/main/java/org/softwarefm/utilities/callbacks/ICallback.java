@@ -25,7 +25,7 @@ public interface ICallback<T> {
 
 		public static <T> ICallback<T> safeSysErrCallback(final ICallback<T> callback) {
 			return safeCallback(new ICallback<Throwable>() {
-				@Override
+				
 				public void process(Throwable t) throws Exception {
 					t.printStackTrace();
 				}
@@ -34,7 +34,7 @@ public interface ICallback<T> {
 
 		public static ICallback<Throwable> sysErrCallback() {
 			return new ICallback<Throwable>() {
-				@Override
+				
 				public void process(Throwable t) throws Exception {
 					t.printStackTrace();
 				}
@@ -43,7 +43,7 @@ public interface ICallback<T> {
 
 		public static <T> ICallback<T> safeCallback(final ICallback<Throwable> exceptionCallback, final ICallback<T> callback) {
 			return new ICallback<T>() {
-				@Override
+				
 				public void process(T t) throws Exception {
 					try {
 						callback.process(t);
@@ -73,7 +73,7 @@ public interface ICallback<T> {
 		}
 
 		public static ICallback<Integer> count = new ICallback<Integer>() {
-			@Override
+			
 			public void process(Integer count) throws Exception {
 				if (count != 0 && count % 50 == 0)
 					System.out.println(count);
@@ -84,7 +84,7 @@ public interface ICallback<T> {
 
 		public static <T> ICallback<T> sysoutCallback() {
 			return new ICallback<T>() {
-				@Override
+				
 				public void process(T t) throws Exception {
 					System.out.println(t);
 				}
@@ -93,7 +93,7 @@ public interface ICallback<T> {
 
 		public static ICallback<Throwable> rethrow() {
 			return new ICallback<Throwable>() {
-				@Override
+				
 				public void process(Throwable t) throws Exception {
 					throw WrappedException.wrap(t);
 				}
@@ -102,7 +102,7 @@ public interface ICallback<T> {
 
 		public static <T> ICallback<T> exception(final String message) {
 			return new ICallback<T>() {
-				@Override
+				
 				public void process(T t) throws Exception {
 					throw new RuntimeException(message);
 				}
@@ -124,7 +124,7 @@ public interface ICallback<T> {
 
 		public static <T> ICallback<T> exception(final Exception e) {
 			return new ICallback<T>() {
-				@Override
+				
 				public void process(T t) throws Exception {
 					throw e;
 				}
@@ -136,7 +136,7 @@ public interface ICallback<T> {
 		private T value;
 		public AtomicInteger count = new AtomicInteger();
 
-		@Override
+		
 		public void process(T t) throws Exception {
 			if (value == null)
 				value = t;

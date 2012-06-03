@@ -20,10 +20,10 @@ public class NestedResourceGetterFn implements IFunction1<String, IResourceGette
 		this.anchorClass = anchorClass;
 	}
 
-	@Override
+	
 	public IResourceGetter apply(final String from) throws Exception {
 		return Maps.findOrCreate(cache, from, new Callable<IResourceGetter>() {
-			@Override
+			
 			public IResourceGetter call() throws Exception {
 				try {
 					return from == null ? baseResourceGetter : baseResourceGetter.with(anchorClass, from);

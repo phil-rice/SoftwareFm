@@ -6,15 +6,17 @@ package org.softwarefm.utilities.callbacks;
 
 public class NoCallback<T> implements ICallback<T> {
 
-	@Override
+	
 	public void process(T t) throws Exception {
 	}
 
+	
 	@Override
 	public int hashCode() {
 		return 0;
 	}
 
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)

@@ -1,8 +1,5 @@
 *.class
 */target/*
-*/features/*.jar
-*/plugins/*.jar
-*/artifacts.jar
-*/content.jar
+*.jar
 *.zip
 

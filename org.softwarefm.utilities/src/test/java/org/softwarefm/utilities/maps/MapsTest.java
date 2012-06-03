@@ -64,7 +64,7 @@ public class MapsTest extends TestCase {
 		assertEquals(expectedkab21, Maps.toMapAsList("key", input, "b", Arrays.<String> asList("key")));
 
 		Tests.checkEqualityAndHashcode(new IFunction1<String, MapAsList>() {
-			@Override
+			
 			public MapAsList apply(String from) throws Exception {
 				if (from.equals("one"))
 					return expectedabk12;
@@ -209,7 +209,7 @@ public class MapsTest extends TestCase {
 				"q", Maps.makeMap("c", 3));
 		assertEquals(expected,//
 				Maps.partitionByKey(a1b2c3, new IFunction1<String, String>() {
-					@Override
+					
 					public String apply(String from) throws Exception {
 						if (from.equals("a") || from.equals("b"))
 							return "p";
@@ -225,7 +225,7 @@ public class MapsTest extends TestCase {
 				"q", Maps.makeMap("c", 3));
 		assertEquals(expected,//
 				Maps.partitionByValue(a1b2c3, new IFunction1<Object, String>() {
-					@Override
+					
 					public String apply(Object from) throws Exception {
 						if (from.equals(1) || from.equals(2))
 							return "p";

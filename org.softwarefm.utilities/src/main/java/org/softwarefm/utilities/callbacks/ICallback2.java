@@ -30,7 +30,7 @@ public interface ICallback2<T1, T2> {
 				private T1 value1;
 				private T2 value2;
 
-				@Override
+				
 				public void process(T1 t1, T2 t2) throws Exception {
 					if (value1 == null)
 						value1 = t1;

@@ -28,7 +28,7 @@ public class StringsTest extends TestCase {
 		assertEquals("ab", Strings.firstNCharacters("ab", 3));
 		assertEquals("", Strings.firstNCharacters("", 3));
 		Tests.assertThrowsWithMessage("Cannot get first (-1) characters", IllegalArgumentException.class, new Runnable() {
-			@Override
+			
 			public void run() {
 				Strings.firstNCharacters("asdjk", -1);
 			}

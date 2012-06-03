@@ -23,7 +23,6 @@ public class Fields {
 
 	public static Iterable<Field> constants(Class<?> clazz) {
 		return Iterables.filter(publicFields(clazz), new IFunction1<Field, Boolean>() {
-			@Override
 			public Boolean apply(Field from) throws Exception {
 				int mod = from.getModifiers();
 				return Modifier.isFinal(mod) && Modifier.isStatic(mod);
@@ -33,7 +32,6 @@ public class Fields {
 
 	public static Iterable<Field> constantFieldsOfClass(Class<?> dataClass, final Class<?> typeClass) {
 		return Iterables.filter(publicFields(dataClass), new IFunction1<Field, Boolean>() {
-			@Override
 			public Boolean apply(Field from) throws Exception {
 				int mod = from.getModifiers();
 				boolean assignable = typeClass.isAssignableFrom(from.getType());
@@ -44,7 +42,6 @@ public class Fields {
 	}
 
 	public final static IFunction1<Field, Boolean> isConstant = new IFunction1<Field, Boolean>() {
-		@Override
 		public Boolean apply(Field from) throws Exception {
 			int mod = from.getModifiers();
 			return Modifier.isFinal(mod) && Modifier.isStatic(mod);
@@ -53,7 +50,6 @@ public class Fields {
 
 	public final static IFunction1<Field, Boolean> isConstantOfType(final Class<?> typeClass) {
 		return new IFunction1<Field, Boolean>() {
-			@Override
 			public Boolean apply(Field from) throws Exception {
 				int mod = from.getModifiers();
 				boolean assignable = typeClass.isAssignableFrom(from.getType());
@@ -65,7 +61,6 @@ public class Fields {
 
 	public final static IFunction1<Field, Boolean> nameStartWith(final String prefix) {
 		return new IFunction1<Field, Boolean>() {
-			@Override
 			public Boolean apply(Field from) throws Exception {
 				return from.getName().startsWith(prefix);
 			}
@@ -85,7 +80,6 @@ public class Fields {
 	public static <T> Iterable<T> fieldsOfClass(Class<?> dataClass, final Class<T> typeClass, IFunction1<Field, Boolean> acceptor) {
 		IFunction1<Field, T> mapper = new IFunction1<Field, T>() {
 			@SuppressWarnings("unchecked")
-			@Override
 			public T apply(Field from) throws Exception {
 				return (T) from.get(null);
 			}
@@ -104,7 +98,6 @@ public class Fields {
 	}
 
 	public final static IFunction1<Field, String> fieldToName = new IFunction1<Field, String>() {
-		@Override
 		public String apply(Field from) throws Exception {
 			return from.getName();
 		}

@@ -2,7 +2,6 @@ package org.softwarefm.eclipse.jdtBinding;
 
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
 
-
 public class ProjectData {
 	public final FileNameAndDigest fileNameAndDigest;
 	public final String groupId;

@@ -124,7 +124,7 @@ public class Tests {
 		// System.out.println(Iterables.list(classes));
 		Iterable<Class<?>> notNullClasses = Iterables.remove(classes, Functions.<Class<?>> isNull());
 		Iterable<Class<?>> result = Iterables.remove(notNullClasses, new IFunction1<Class<?>, Boolean>() {
-			@Override
+			
 			public Boolean apply(Class<?> from) throws Exception {
 				return IDontRunAutomaticallyTest.class.isAssignableFrom(from);
 			}

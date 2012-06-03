@@ -30,7 +30,6 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 		this.listenerManager = listenerManager;
 		this.exceptionHandler = exceptionHandler;
 		this.strategy = new ISelectedBindingStrategy<S, N>() {
-			@Override
 			public ProjectData findProject(FileNameAndDigest fileNameAndDigest, int selectionCount) {
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
@@ -45,14 +44,12 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 				return projectData;
 			}
 
-			@Override
 			public N findNode(S selection, int selectionCount) {
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
 				return strategy.findNode(selection, selectionCount);
 			}
 
-			@Override
 			public ExpressionData findExpressionData(S selection, N node, int selectionCount) {
 				if (node == null || currentSelectionCount.get() > selectionCount)
 					return null;
@@ -61,7 +58,6 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 				return expressionData;
 			}
 
-			@Override
 			public FileNameAndDigest findFileAndDigest(S selection, N node, int selectionCount) {
 				if (node == null || currentSelectionCount.get() > selectionCount)
 					return null;
@@ -83,7 +79,6 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 		this.executor = executor;
 	}
 
-	@Override
 	public Future<?> selectionOccured(S selection) {
 		final int thisSelectionCount = currentSelectionCount.incrementAndGet();
 		if (selection == null) {
@@ -99,7 +94,6 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 	Runnable task(final S selection, final N node, final int thisSelectionCount) {
 		ExpressionData expressionData = strategy.findExpressionData(selection, node, thisSelectionCount);
 		return new Runnable() {
-			@Override
 			public void run() {
 				try {
 					FileNameAndDigest fileNameAndDigest = strategy.findFileAndDigest(selection, node, thisSelectionCount);
@@ -112,17 +106,14 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 		};
 	}
 
-	@Override
 	public void addSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
 		listenerManager.addSelectedArtifactSelectionListener(listener);
 	}
 
-	@Override
 	public void removeSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
 		listenerManager.removeSelectedArtifactSelectionListener(listener);
 	}
 
-	@Override
 	public void dispose() {
 		listenerManager.dispose();
 	}

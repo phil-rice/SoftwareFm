@@ -16,7 +16,6 @@ public class Callables {
 
 	public static Callable<String> uuidGenerator() {
 		return new Callable<String>() {
-			@Override
 			public String call() throws Exception {
 				return UUID.randomUUID().toString();
 			}
@@ -37,7 +36,6 @@ public class Callables {
 
 	public static Callable<Long> time() {
 		return new Callable<Long>() {
-			@Override
 			public Long call() throws Exception {
 				return System.currentTimeMillis();
 			}
@@ -46,7 +44,6 @@ public class Callables {
 
 	public static <T> Callable<T> value(final T value) {
 		return new Callable<T>() {
-			@Override
 			public T call() throws Exception {
 				return value;
 			}
@@ -62,7 +59,6 @@ public class Callables {
 		return new Callable<T>() {
 			private final AtomicInteger index = new AtomicInteger();
 
-			@Override
 			public T call() throws Exception {
 				return value[index.getAndIncrement()];
 			}
@@ -73,7 +69,6 @@ public class Callables {
 		return new Callable<String>() {
 			private final AtomicInteger integer = new AtomicInteger();
 
-			@Override
 			public String call() throws Exception {
 				return MessageFormat.format(pattern, integer.getAndIncrement());
 			}
@@ -82,7 +77,6 @@ public class Callables {
 
 	public static <T> Callable<T> exceptionIfCalled() {
 		return new Callable<T>() {
-			@Override
 			public T call() throws Exception {
 				throw new RuntimeException();
 			}
@@ -91,7 +85,6 @@ public class Callables {
 
 	public static <T> Callable<T> exceptionIfCalled(final Throwable throwable) {
 		return new Callable<T>() {
-			@Override
 			public T call() throws Exception {
 				throw WrappedException.wrap(throwable);
 			}
@@ -100,7 +93,6 @@ public class Callables {
 
 	public static Callable<Calendar> calander() {
 		return new Callable<Calendar>() {
-			@Override
 			public Calendar call() throws Exception {
 				return Calendar.getInstance();
 			}
@@ -109,7 +101,6 @@ public class Callables {
 
 	public static Callable<Calendar> calander(final int year, final int month, final int day, final int hour, final int minute) {
 		return new Callable<Calendar>() {
-			@Override
 			public Calendar call() throws Exception {
 				Calendar calendar = Calendar.getInstance();
 				calendar.set(year, month, day, hour, minute);

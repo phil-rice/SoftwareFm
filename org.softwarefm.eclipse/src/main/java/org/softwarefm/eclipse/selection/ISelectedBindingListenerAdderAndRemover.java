@@ -15,15 +15,12 @@ public interface ISelectedBindingListenerAdderAndRemover extends IDispose {
 	public static class Utils {
 		public static ISelectedBindingListenerAdderAndRemover noSelectedBindingManager() {
 			return new ISelectedBindingListenerAdderAndRemover() {
-				@Override
 				public void addSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
 				}
 
-				@Override
 				public void removeSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
 				}
 
-				@Override
 				public void dispose() {
 				}
 			};

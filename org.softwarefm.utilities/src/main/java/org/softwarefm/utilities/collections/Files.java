@@ -275,8 +275,6 @@ public class Files {
 	public static FilenameFilter extensionFilter(final String string) {
 		return new FilenameFilter() {
 			private final String extension = "." + string;
-
-			@Override
 			public boolean accept(File dir, String name) {
 				return name.endsWith(extension);
 			}
@@ -316,7 +314,6 @@ public class Files {
 
 	public static IFunction1<String, String> noExtension() {
 		return new IFunction1<String, String>() {
-			@Override
 			public String apply(String from) throws Exception {
 				return noExtension(from);
 			}
@@ -325,7 +322,6 @@ public class Files {
 
 	public static IFunction1<File, String> toFileName() {
 		return new IFunction1<File, String>() {
-			@Override
 			public String apply(File from) throws Exception {
 				String result = from.getName();
 				return result;
@@ -379,7 +375,6 @@ public class Files {
 
 	public static FileFilter directoryFilter() {
 		return new FileFilter() {
-			@Override
 			public boolean accept(File arg0) {
 				return arg0.isDirectory();
 			}
@@ -388,7 +383,6 @@ public class Files {
 
 	public static FileFilter directoryIgnoringDotFilter() {
 		return new FileFilter() {
-			@Override
 			public boolean accept(File arg0) {
 				return arg0.isDirectory() && !arg0.getName().startsWith(".");
 			}
@@ -423,7 +417,6 @@ public class Files {
 
 	public static FilenameFilter exactNameFilter(final String name) {
 		return new FilenameFilter() {
-			@Override
 			public boolean accept(File file, String actualName) {
 				boolean result = actualName.equals(name);
 				return result;
@@ -433,7 +426,6 @@ public class Files {
 
 	public static IFunction1<File, Boolean> fileNameEquals(final String name) {
 		return new IFunction1<File, Boolean>() {
-			@Override
 			public Boolean apply(File from) throws Exception {
 				return from.getName().equals(name);
 			}
@@ -508,7 +500,6 @@ public class Files {
 	}
 
 	public static IFunction1<File, String> fileNameFn = new IFunction1<File, String>() {
-		@Override
 		public String apply(File from) throws Exception {
 			return from.getName();
 		}

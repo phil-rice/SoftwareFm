@@ -34,31 +34,31 @@ public class GatedMockFuture<From, To> implements Future<To> {
 		}
 	}
 
-	@Override
+	
 	public boolean cancel(boolean arg0) {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
+	
 	public To get() throws InterruptedException, ExecutionException {
 		if (!done)
 			throw new IllegalStateException();
 		return result;
 	}
 
-	@Override
+	
 	public To get(long arg0, TimeUnit arg1) throws InterruptedException, ExecutionException, TimeoutException {
 		if (!done)
 			throw new IllegalStateException();
 		return result;
 	}
 
-	@Override
+	
 	public boolean isCancelled() {
 		return false;
 	}
 
-	@Override
+	
 	public boolean isDone() {
 		return done;
 	}

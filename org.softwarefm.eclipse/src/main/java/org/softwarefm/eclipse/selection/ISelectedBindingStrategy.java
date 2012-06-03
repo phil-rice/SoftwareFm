@@ -1,9 +1,6 @@
 package org.softwarefm.eclipse.selection;
 
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jface.text.ITextSelection;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
-import org.softwarefm.eclipse.selection.internal.EclipseSelectedBindingStrategy;
 import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectHtmlRipper;
 import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectStrategy;
 import org.softwarefm.utilities.constants.CommonConstants;
@@ -30,10 +27,6 @@ public interface ISelectedBindingStrategy<S, N> extends IProjectStrategy {
 	FileNameAndDigest findFileAndDigest(S selection, N node, int selectionCount);
 
 	public static class Utils {
-		public static ISelectedBindingStrategy<ITextSelection, Expression> eclipseSelectedBindingStrategy() {
-			return new EclipseSelectedBindingStrategy(softwareFmProjectStrategy());
-		}
-
 		public static IProjectStrategy softwareFmProjectStrategy() {
 			return new SoftwareFmProjectStrategy(IHttpClient.Utils.builder(), CommonConstants.softwareFmHost, new SoftwareFmProjectHtmlRipper());
 		}

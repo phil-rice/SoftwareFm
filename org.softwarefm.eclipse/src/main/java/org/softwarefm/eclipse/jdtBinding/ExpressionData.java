@@ -4,7 +4,6 @@
 
 package org.softwarefm.eclipse.jdtBinding;
 
-
 public class ExpressionData {
 
 	public final String packageName;

@@ -20,10 +20,8 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 		this.display = display;
 	}
 
-	@Override
 	public void classAndMethodSelectionOccured(final ExpressionData expressionData, final int selectionCount) {
 		display.asyncExec(new Runnable() {
-			@Override
 			public void run() {
 				for (ISelectedBindingListener listener : listeners)
 					listener.classAndMethodSelectionOccured(expressionData, selectionCount);
@@ -32,21 +30,18 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 		});
 	}
 
-	@Override
 	public void notJavaElement(final int selectionCount) {
 		display.asyncExec(new Runnable() {
-			@Override
 			public void run() {
 				for (ISelectedBindingListener listener : listeners)
-					listener.notJavaElement( selectionCount);
-						
+					listener.notJavaElement(selectionCount);
+
 			}
 		});
 	}
-	@Override
+
 	public void digestDetermined(final FileNameAndDigest fileNameAndDigest, final int selectionCount) {
 		display.asyncExec(new Runnable() {
-			@Override
 			public void run() {
 				for (ISelectedBindingListener listener : listeners)
 					listener.digestDetermined(fileNameAndDigest, selectionCount);
@@ -54,10 +49,8 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 		});
 	}
 
-	@Override
 	public void notInAJar(final FileNameAndDigest fileNameAndDigest, final int selectionCount) {
 		display.asyncExec(new Runnable() {
-			@Override
 			public void run() {
 				for (ISelectedBindingListener listener : listeners)
 					listener.notInAJar(fileNameAndDigest, selectionCount);
@@ -65,10 +58,8 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 		});
 	}
 
-	@Override
 	public void projectDetermined(final ProjectData projectData, final int selectionCount) {
 		display.asyncExec(new Runnable() {
-			@Override
 			public void run() {
 				for (ISelectedBindingListener listener : listeners)
 					listener.projectDetermined(projectData, selectionCount);
@@ -76,10 +67,8 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 		});
 	}
 
-	@Override
 	public void unknownDigest(final FileNameAndDigest fileNameAndDigest, final int selectionCount) {
 		display.asyncExec(new Runnable() {
-			@Override
 			public void run() {
 				for (ISelectedBindingListener listener : listeners)
 					listener.unknownDigest(fileNameAndDigest, selectionCount);
@@ -87,17 +76,14 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 		});
 	}
 
-	@Override
 	public void addSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
 		listeners.add(listener);
 	}
 
-	@Override
 	public void removeSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
 		listeners.remove(listener);
 	}
 
-	@Override
 	public void dispose() {
 		listeners.clear();
 	}

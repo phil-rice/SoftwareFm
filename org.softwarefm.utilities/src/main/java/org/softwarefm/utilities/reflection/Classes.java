@@ -13,7 +13,6 @@ public class Classes {
 
 	public static IFunction1<File, Class<?>> asClass(final IClassAcceptor classAcceptor) {
 		return new IFunction1<File, Class<?>>() {
-			@Override
 			public Class<?> apply(File from) throws Exception {
 				String[] segments = from.getCanonicalPath().split("\\" + File.separator);
 				int start = findStart(segments);

@@ -17,7 +17,6 @@ import org.softwarefm.utilities.strings.Strings;
 
 public class SoftwareFmProjectHtmlRipper implements IProjectHtmlRipper {
 
-	@Override
 	public ProjectData rip(FileNameAndDigest fileNameAndDigest, String html) {
 		Element element = findMwContentText(html);
 		if (element != null) {

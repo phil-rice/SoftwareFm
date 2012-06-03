@@ -11,7 +11,7 @@ public class Runnables {
 	public static class CountRunnable implements Runnable {
 		private final AtomicInteger count = new AtomicInteger();
 
-		@Override
+		
 		public void run() {
 			count.incrementAndGet();
 			detail();
@@ -26,7 +26,7 @@ public class Runnables {
 	}
 
 	public static Runnable noRunnable = new Runnable() {
-		@Override
+		
 		public void run() {
 		}
 	};
@@ -37,7 +37,7 @@ public class Runnables {
 
 	public static Runnable sysout(final String string) {
 		return new Runnable() {
-			@Override
+			
 			public void run() {
 				System.out.println(string);
 			}
@@ -46,7 +46,7 @@ public class Runnables {
 
 	public static Runnable exception() {
 		return new Runnable() {
-			@Override
+			
 			public void run() {
 				throw new RuntimeException();
 			}
