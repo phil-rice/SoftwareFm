@@ -22,7 +22,8 @@ import org.softwarefm.utilities.functions.IFunction1;
 
 public class Strings {
 
-	private final static Pattern urlFriendlyPattern = Pattern.compile("^[\\w\\.-]+$");
+	private final static Pattern urlFriendlyPattern = Pattern.compile(
+			"(([\\w]+:)?//)?(([\\d\\w]|%[a-fA-f\\d]{2,2})+(:([\\d\\w]|%[a-fA-f\\d]{2,2})+)?@)?([\\d\\w][-\\d\\w]{0,253}[\\d\\w]\\.)+[\\w]{2,4}(:[\\d]+)?(/([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)*(\\?(&?([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})=?)*)?(#([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)?");
 	private static String digits = "0123456789abcdef";
 
 	public static boolean isEmail(String email) {

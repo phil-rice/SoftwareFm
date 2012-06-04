@@ -44,14 +44,31 @@ public class ButtonComposite extends HasComposite {
 	}
 
 	public void setEnabledForButton(String key, boolean enabled) {
+		getButton(key).setEnabled(enabled);
+	}
+
+	public Control getButton(String key) {
 		List<Object> keys = Lists.newList();
-		for (Control child : getComposite().getChildren())
-			if (key.equals(child.getData())) {
-				child.setEnabled(enabled);
-				return;
+		for (Control child : getComposite().getChildren()) {
+			IButtonConfig data = (IButtonConfig) child.getData();
+			if (data == null)
+				throw new IllegalStateException();
+			if (key.equals(data.key())) {
+				return child;
 			} else
-				keys.add(child.getData());
+				keys.add(data);
+		}
 		throw new IllegalArgumentException(MessageFormat.format(SwtErrorMessages.unrecognisedKey, key, keys));
+	}
+
+	public void updateButtonStatus(IGetTextWithKey getTextWithKey) {
+		for (Control child : getComposite().getChildren()) {
+			IButtonConfig buttonConfig = (IButtonConfig) child.getData();
+			if (buttonConfig == null)
+				throw new IllegalStateException();
+			boolean canExecute = buttonConfig.canExecute(getTextWithKey);
+			child.setEnabled(canExecute);
+		}
 	}
 
 }

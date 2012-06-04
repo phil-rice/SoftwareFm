@@ -73,10 +73,17 @@ public class StringsTest extends TestCase {
 	}
 
 	public void testIsUrlFriendly() {
-		assertTrue(Strings.isUrlFriendly("asdljkalsdj"));
-		assertTrue(Strings.isUrlFriendly("asdljkal---s_____dj"));
-		assertTrue(Strings.isUrlFriendly("asdl.......jkal---s_____dj"));
+		assertTrue(Strings.isUrlFriendly("www.abc"));
+		assertTrue(Strings.isUrlFriendly("www.a_c"));
+		assertTrue(Strings.isUrlFriendly("www.a_c.d_f"));
+		assertTrue(Strings.isUrlFriendly("www.abc.def"));
+		assertTrue(Strings.isUrlFriendly("www.abc.def/gh?a=1"));
+		assertTrue(Strings.isUrlFriendly("http://www.abc.def/gh?a=1"));
+		assertTrue(Strings.isUrlFriendly("tp://www.abc.def/gh?a=1"));
+		assertFalse(Strings.isUrlFriendly("tp://ww$w.abc%.def/gh?a=1"));
+		assertTrue(Strings.isUrlFriendly("one.two"));
 		assertFalse(Strings.isUrlFriendly(""));
+		assertFalse(Strings.isUrlFriendly("oneitem"));
 		assertFalse(Strings.isUrlFriendly("asd$l.......jkal---s_____dj"));
 	}
 

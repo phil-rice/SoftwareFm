@@ -62,6 +62,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwarefm.eclipse.constants.SwtConstants;
+import org.softwarefm.labelAndText.IButtonConfig;
 import org.softwarefm.utilities.arrays.ArrayHelper;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.collections.Files;
@@ -361,8 +362,8 @@ public class Swts {
 			});
 		}
 
-		public static org.eclipse.swt.widgets.Button makePushButtonAtStart(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
-			Button button = makePushButton(parent, resourceGetter, titleKey, runnable);
+		public static org.eclipse.swt.widgets.Button makePushButtonAtStart(Composite parent, IResourceGetter resourceGetter, String titleKey, IButtonConfig buttonConfig) {
+			Button button = makePushButton(parent, resourceGetter, titleKey, buttonConfig);
 			Control[] children = parent.getChildren();
 			if (children.length > 0)
 				button.moveAbove(children[0]);
@@ -370,16 +371,16 @@ public class Swts {
 
 		}
 
-		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final Runnable runnable) {
-			return Buttons.makePushButton(parent, resourceGetter, titleKey, true, runnable);
+		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleKey, final IButtonConfig buttonConfig) {
+			return Buttons.makePushButton(parent, resourceGetter, titleKey, true, buttonConfig);
 		}
 
-		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, String text, final Runnable runnable) {
-			return Buttons.makePushButton(parent, null, text, false, runnable);
+		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, String text, final IButtonConfig buttonConfig) {
+			return Buttons.makePushButton(parent, null, text, false, buttonConfig);
 		}
 
-		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
-			return Buttons.makePushButton(parent, SWT.PUSH, resourceGetter, titleOrKey, titleIsKey, runnable);
+		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final IButtonConfig buttonConfig) {
+			return Buttons.makePushButton(parent, SWT.PUSH, resourceGetter, titleOrKey, titleIsKey, buttonConfig);
 		}
 
 		public static void press(Control control) {
@@ -391,7 +392,7 @@ public class Swts {
 				throw new IllegalArgumentException(control.getClass().getSimpleName());
 		}
 
-		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, int style, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final Runnable runnable) {
+		public static org.eclipse.swt.widgets.Button makePushButton(Composite parent, int style, IResourceGetter resourceGetter, String titleOrKey, boolean titleIsKey, final IButtonConfig buttonConfig) {
 			org.eclipse.swt.widgets.Button button = new org.eclipse.swt.widgets.Button(parent, style);
 			String title = titleIsKey ? IResourceGetter.Utils.getOrException(resourceGetter, titleOrKey) : titleOrKey;
 			button.setText(title);
@@ -399,7 +400,11 @@ public class Swts {
 
 				@Override
 				public void widgetSelected(SelectionEvent e) {
-					runnable.run();
+					try {
+						buttonConfig.execute();
+					} catch (Exception e1) {
+						throw WrappedException.wrap(e1);
+					}
 				}
 			});
 			return button;

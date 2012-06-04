@@ -1,19 +1,16 @@
 package org.softwarefm.eclipse.composite;
 
 import org.eclipse.swt.widgets.Composite;
-import org.softwarefm.eclipse.BundleMarker;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.SwtConstants;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
-import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.selection.SelectedBindingAdapter;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.labelAndText.IButtonConfigurator;
 import org.softwarefm.labelAndText.TextAndFormComposite;
 import org.softwarefm.utilities.functions.IFunction1;
-import org.softwarefm.utilities.resources.IResourceGetter;
 import org.softwarefm.utilities.runnable.Runnables;
 
 public class SwtDigestComposite extends TextAndFormComposite {
@@ -87,10 +84,8 @@ public class SwtDigestComposite extends TextAndFormComposite {
 
 	public static void main(String[] args) {
 		Swts.Show.display(SwtDigestComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
-
 			public Composite apply(Composite from) throws Exception {
-				IResourceGetter resourceGetter = IResourceGetter.Utils.resourceGetter(BundleMarker.class, "text");
-				SoftwareFmContainer<Object> container = new SoftwareFmContainer<Object>(resourceGetter, ISelectedBindingManager.Utils.noManager());
+				SoftwareFmContainer<Object> container = SoftwareFmContainer.makeForTests();
 				return new SwtDigestComposite(from, container).getComposite();
 			}
 		});

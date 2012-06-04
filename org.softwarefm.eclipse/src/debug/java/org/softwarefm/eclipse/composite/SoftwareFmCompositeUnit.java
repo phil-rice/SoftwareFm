@@ -43,6 +43,7 @@ public class SoftwareFmCompositeUnit {
 			return tabFolder = new TabFolder(parent, SWT.NULL);
 		}
 
+		@SuppressWarnings("unchecked")
 		public <S> ISelectedBindingManager<S> getBindingManager() {
 			return (ISelectedBindingManager<S>) bindingManager;
 		}
@@ -62,7 +63,7 @@ public class SoftwareFmCompositeUnit {
 						ISelectedBindingStrategy.Utils.fromMap(), //
 						Executors.newCachedThreadPool(), //
 						ICallback.Utils.rethrow());
-				SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(manager);
+				SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(manager, ICallback.Utils.<String>exception("Import POM"));
 				Holder holder = new Holder(parent, manager);
 				for (IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> creator : creators) {
 					SoftwareFmComposite softwareFmComposite = Functions.call(creator, holder.getComposite(), container);
@@ -109,7 +110,7 @@ public class SoftwareFmCompositeUnit {
 		}
 	};
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "unchecked" })
 	public static void main(String[] args) {
 		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), allCreator, classAndMethodCreator, digestCreator, swtDigestCreator);
 	}

@@ -1,6 +1,7 @@
 package org.softwarefm.labelAndText;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -18,13 +19,14 @@ import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.swt.HasComposite;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.labelAndText.Form.LabelAndText.LabelAndTextComposite;
+import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.resources.IResourceGetter;
 import org.softwarefm.utilities.resources.ResourceGetterMock;
 import org.softwarefm.utilities.runnable.Runnables;
 
-public class Form extends Composite {
+public class Form extends Composite implements IGetTextWithKey {
 	private final List<String> keys;
 	private final ButtonComposite buttonComposite;
 
@@ -117,7 +119,7 @@ public class Form extends Composite {
 	}
 
 	@SuppressWarnings("unused")
-	public Form(Composite parent, int style, SoftwareFmContainer<?> container, IButtonConfigurator buttonConfigurator, String... keys) {
+	public Form(Composite parent, int style, final SoftwareFmContainer<?> container, IButtonConfigurator buttonConfigurator, String... keys) {
 		super(parent, style);
 		this.keys = Lists.immutableCopy(keys);
 		setLayout(new LabelAndTextHolderLayout());
@@ -125,7 +127,8 @@ public class Form extends Composite {
 		for (String key : keys)
 			new LabelAndText(this, IResourceGetter.Utils.getOrException(resourceGetter, key));
 		buttonComposite = new ButtonComposite(this);
-		buttonConfigurator.configure(buttonComposite.getComposite(), container);
+		buttonConfigurator.configure(container, IButtonCreator.Utils.creator(buttonComposite.getComposite(), resourceGetter));
+		updateButtonStatus();
 	}
 
 	public void setEnabledForButton(String key, boolean enabled) {
@@ -133,11 +136,29 @@ public class Form extends Composite {
 	}
 
 	public void setText(String key, String text) {
+		LabelAndTextComposite labelAndTextComposite = getLabelAndTextFor(key);
+		labelAndTextComposite.text.setText(text);
+		updateButtonStatus();
+	}
+
+	public Control getButton(String key) {
+		return buttonComposite.getButton(key);
+	}
+
+	private LabelAndTextComposite getLabelAndTextFor(String key) {
 		int index = keys.indexOf(key);
 		if (index == -1)
 			throw new IllegalArgumentException(MessageFormat.format(SwtErrorMessages.unrecognisedKey, key, keys));
 		LabelAndTextComposite labelAndTextComposite = (LabelAndTextComposite) getChildren()[index];
-		labelAndTextComposite.text.setText(text);
+		return labelAndTextComposite;
+	}
+
+	private void updateButtonStatus() {
+		buttonComposite.updateButtonStatus(this);
+	}
+
+	public List<String> getKeys() {
+		return Collections.unmodifiableList(keys);
 	}
 
 	public static void main(String[] args) {
@@ -147,10 +168,14 @@ public class Form extends Composite {
 				IResourceGetter resourceGetter = new ResourceGetterMock(//
 						SwtConstants.okButton, "OK", SwtConstants.cancelButton, "Cancel",//
 						"one", "One", "two", "Two", "three", "Three", "four", "Four", "five", "Five", "six", "Six", "seven", "Seven");
-				SoftwareFmContainer<?> container = new SoftwareFmContainer<Object>(resourceGetter, ISelectedBindingManager.Utils.noManager());
+				SoftwareFmContainer<?> container = new SoftwareFmContainer<Object>(resourceGetter, ISelectedBindingManager.Utils.noManager(), ICallback.Utils.<String> exception(""));
 				Form form = new Form(from, SWT.BORDER, container, IButtonConfigurator.Utils.okCancel(Runnables.sysout("ok"), Runnables.sysout("cancel")), "one", "two", "three", "four", "five", "six", "seven");
 				return form;
 			}
 		});
+	}
+
+	public String getText(String key) {
+		return getLabelAndTextFor(key).text.getText();
 	}
 }

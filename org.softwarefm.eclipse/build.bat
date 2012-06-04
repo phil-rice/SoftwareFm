@@ -10,4 +10,4 @@ copy %m2%\org\apache\httpcomponents\httpcore\4.1\httpcore-4.1.jar lib
 copy %m2%\jdom\jdom\1.0\jdom-1.0.jar lib
 copy %m2%\org\softwarefm\utilities\0.0.1-SNAPSHOT\utilities-0.0.1-SNAPSHOT.jar lib
 copy %m2%\org\softwarefm\eclipse\0.0.1-SNAPSHOT\eclipse-0.0.1-SNAPSHOT.jar lib
-
+copy %m2%\org\apache\maven\maven-model\2.2.1\maven-model-2.2.1.jar lib

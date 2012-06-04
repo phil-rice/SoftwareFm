@@ -43,7 +43,7 @@ public interface IResourceGetter {
 
 		}
 
-		public static String getMessageOrException(IResourceGetter resourceGetter, String key, Object[] args) {
+		public static String getMessageOrException(IResourceGetter resourceGetter, String key, Object... args) {
 			String pattern = getOrException(resourceGetter, key);
 			String message = MessageFormat.format(pattern, args);
 			return message;

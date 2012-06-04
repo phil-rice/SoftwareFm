@@ -10,6 +10,7 @@ import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.swt.Swts;
+import org.softwarefm.utilities.resources.IResourceGetter;
 
 abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 
@@ -60,6 +61,10 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 
 	public void setText(String text) {
 		this.text.setText(text);
+	}
+	
+	public void setMessage(String key, Object...args){
+		this.text.setText(IResourceGetter.Utils.getMessageOrException(resourceGetter, key, args));
 	}
 
 	public void appendText(String text) {

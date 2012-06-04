@@ -19,7 +19,7 @@ import org.softwarefm.utilities.strings.Strings;
 abstract public class SoftwareFmComposite extends HasComposite implements IHasSelectionBindingManager {
 	private final List<ISelectedBindingListener> listeners = Lists.newList();
 	private final ISelectedBindingManager<?> selectionBindingManager;
-	private final IResourceGetter resourceGetter;
+	protected final IResourceGetter resourceGetter;
 
 	public SoftwareFmComposite(Composite parent, SoftwareFmContainer<?> container) {
 		super(parent);
@@ -74,7 +74,7 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 	}
 
 	@SuppressWarnings("unchecked")
-	public <S>ISelectedBindingManager<S> getBindingManager() {
+	public <S> ISelectedBindingManager<S> getBindingManager() {
 		return (ISelectedBindingManager<S>) selectionBindingManager;
 
 	}

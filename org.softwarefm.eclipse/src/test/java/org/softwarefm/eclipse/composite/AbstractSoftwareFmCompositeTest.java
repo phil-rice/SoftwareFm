@@ -47,7 +47,7 @@ public abstract class AbstractSoftwareFmCompositeTest< P extends SoftwareFmCompo
 		EasyMock.makeThreadSafe(strategy, true);
 		rememberedExceptions = ICallback.Utils.<Throwable> memory();
 		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), rememberedExceptions);
-		panel = makePanel(shell, SoftwareFmContainer.make(selectedArtifactSelectionManager));
+		panel = makePanel(shell, SoftwareFmContainer.make(selectedArtifactSelectionManager, ICallback.Utils.<String>exception("ImportPom shouldnt be used")));
 	}
 
 	@Override

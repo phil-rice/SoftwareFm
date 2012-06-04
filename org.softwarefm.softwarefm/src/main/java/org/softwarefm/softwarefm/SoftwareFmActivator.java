@@ -128,7 +128,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 
 	private SoftwareFmContainer<ITextSelection> makeContainer() {
 		synchronized (lock) {
-			return container == null ? new SoftwareFmContainer<ITextSelection>(getResourceGetter(), getSelectionBindingManager()) : container;
+			return container == null ? new SoftwareFmContainer<ITextSelection>(getResourceGetter(), getSelectionBindingManager(), ICallback.Utils.<String>sysoutCallback()) : container;
 		}
 	}
 
