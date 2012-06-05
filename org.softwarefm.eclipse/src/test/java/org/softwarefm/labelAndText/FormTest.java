@@ -1,6 +1,12 @@
 package org.softwarefm.labelAndText;
 
+import java.util.List;
+
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.Text;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.SwtTest;
 import org.softwarefm.eclipse.constants.SwtConstants;
@@ -28,6 +34,30 @@ public class FormTest extends SwtTest {
 	}
 
 	public void testSetTextCausesButtonStatusToChange() {
+		List<Text> texts = Lists.newList();
+		for (Control child : form.getChildren())
+			if (child instanceof Composite)
+				for (Control gChild : ((Composite) child).getChildren()) {
+					if (gChild instanceof Text)
+						texts.add((Text) gChild);
+				}
+		assertEquals(3, texts.size());
+
+		for (Text text : texts) {
+			assertFalse(form.getButton(SwtConstants.okButton).isEnabled());
+
+			ok.canExecute = true;
+			text.notifyListeners(SWT.Modify, new Event());
+			assertTrue(form.getButton(SwtConstants.okButton).isEnabled());
+
+			ok.canExecute = false;
+			text.notifyListeners(SWT.Modify, new Event());
+
+			assertFalse(form.getButton(SwtConstants.okButton).isEnabled());
+		}
+	}
+
+	public void testTypicingCausesButtonStatusToChange() {
 		assertFalse(form.getButton(SwtConstants.okButton).isEnabled());
 		assertFalse(form.getButton(SwtConstants.cancelButton).isEnabled());
 		ok.canExecute = true;

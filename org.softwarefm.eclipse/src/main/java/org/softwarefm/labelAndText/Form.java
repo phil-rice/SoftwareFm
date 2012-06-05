@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -83,6 +85,7 @@ public class Form extends Composite implements IGetTextWithKey {
 			public LabelAndTextComposite(Composite parent, int style) {
 				super(parent, style);
 				label = new Label(this, SWT.NULL);
+				
 				text = new Text(this, SWT.NULL);
 			}
 
@@ -102,8 +105,13 @@ public class Form extends Composite implements IGetTextWithKey {
 			super(parent);
 			composite = (LabelAndTextComposite) getComposite();
 			composite.label.setText(title);
+
 		}
 
+		public void addModifyListener(ModifyListener listener){
+			composite.text.addModifyListener(listener);
+		}
+		
 		public String getTitle() {
 			return composite.label.getText();
 		}
@@ -118,14 +126,17 @@ public class Form extends Composite implements IGetTextWithKey {
 
 	}
 
-	@SuppressWarnings("unused")
 	public Form(Composite parent, int style, final SoftwareFmContainer<?> container, IButtonConfigurator buttonConfigurator, String... keys) {
 		super(parent, style);
 		this.keys = Lists.immutableCopy(keys);
 		setLayout(new LabelAndTextHolderLayout());
 		IResourceGetter resourceGetter = container.resourceGetter;
 		for (String key : keys)
-			new LabelAndText(this, IResourceGetter.Utils.getOrException(resourceGetter, key));
+			new LabelAndText(this, IResourceGetter.Utils.getOrException(resourceGetter, key)).addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent event) {
+					updateButtonStatus();
+				}
+			});
 		buttonComposite = new ButtonComposite(this);
 		buttonConfigurator.configure(container, IButtonCreator.Utils.creator(buttonComposite.getComposite(), resourceGetter));
 		updateButtonStatus();
@@ -138,7 +149,6 @@ public class Form extends Composite implements IGetTextWithKey {
 	public void setText(String key, String text) {
 		LabelAndTextComposite labelAndTextComposite = getLabelAndTextFor(key);
 		labelAndTextComposite.text.setText(text);
-		updateButtonStatus();
 	}
 
 	public Control getButton(String key) {
