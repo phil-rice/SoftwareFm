@@ -61,14 +61,18 @@ public class ButtonComposite extends HasComposite {
 		throw new IllegalArgumentException(MessageFormat.format(SwtErrorMessages.unrecognisedKey, key, keys));
 	}
 
-	public void updateButtonStatus(IGetTextWithKey getTextWithKey) {
+	public List<KeyAndProblem> updateButtonStatus(IGetTextWithKey getTextWithKey) {
+		List<KeyAndProblem> result = Lists.newList();
 		for (Control child : getComposite().getChildren()) {
 			IButtonConfig buttonConfig = (IButtonConfig) child.getData();
 			if (buttonConfig == null)
 				throw new IllegalStateException();
-			boolean canExecute = buttonConfig.canExecute(getTextWithKey);
+			List<KeyAndProblem> problems = buttonConfig.canExecute(getTextWithKey);
+			result.addAll(problems);
+			boolean canExecute = problems.size() == 0;
 			child.setEnabled(canExecute);
 		}
+		return result;
 	}
 
 }

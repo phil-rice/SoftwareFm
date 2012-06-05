@@ -3,6 +3,7 @@ package org.softwarefm.labelAndText;
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -24,9 +25,11 @@ import org.softwarefm.labelAndText.Form.LabelAndText.LabelAndTextComposite;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.functions.IFunction1;
+import org.softwarefm.utilities.maps.Maps;
 import org.softwarefm.utilities.resources.IResourceGetter;
 import org.softwarefm.utilities.resources.ResourceGetterMock;
 import org.softwarefm.utilities.runnable.Runnables;
+import org.softwarefm.utilities.strings.Strings;
 
 public class Form extends Composite implements IGetTextWithKey {
 	private final List<String> keys;
@@ -85,13 +88,21 @@ public class Form extends Composite implements IGetTextWithKey {
 			public LabelAndTextComposite(Composite parent, int style) {
 				super(parent, style);
 				label = new Label(this, SWT.NULL);
-				
+
 				text = new Text(this, SWT.NULL);
 			}
 
 			@Override
 			public Point computeSize(int wHint, int hHint, boolean changed) {
 				return Swts.computeSizeForHorizontallyStackedComposites(wHint, hHint, label, text);
+			}
+
+			public void setProblems(List<String> problems) {
+				boolean ok = problems.size() == 0;
+				text.setForeground(ok ? getDisplay().getSystemColor(SWT.COLOR_BLACK) : getDisplay().getSystemColor(SWT.COLOR_RED));
+				String tooltip = Strings.join(problems, "\n");
+				text.setToolTipText(tooltip);
+				label.setToolTipText(tooltip);
 			}
 
 		}
@@ -108,10 +119,10 @@ public class Form extends Composite implements IGetTextWithKey {
 
 		}
 
-		public void addModifyListener(ModifyListener listener){
+		public void addModifyListener(ModifyListener listener) {
 			composite.text.addModifyListener(listener);
 		}
-		
+
 		public String getTitle() {
 			return composite.label.getText();
 		}
@@ -163,8 +174,17 @@ public class Form extends Composite implements IGetTextWithKey {
 		return labelAndTextComposite;
 	}
 
-	private void updateButtonStatus() {
-		buttonComposite.updateButtonStatus(this);
+	void updateButtonStatus() {
+		List<KeyAndProblem> problems = buttonComposite.updateButtonStatus(this);
+		Map<String, List<String>> map = Maps.newMap();
+		for (KeyAndProblem problem : problems)
+			Maps.addToList(map, problem.key, problem.problem);
+		for (String key : keys) {
+			List<String> problemsForKey = map.get(key);
+			LabelAndTextComposite labelAndText = getLabelAndTextFor(key);
+			labelAndText.setProblems(Lists.nullSafe(problemsForKey));
+		}
+
 	}
 
 	public List<String> getKeys() {

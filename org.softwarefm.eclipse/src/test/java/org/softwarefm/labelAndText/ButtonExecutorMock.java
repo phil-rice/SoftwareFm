@@ -10,15 +10,16 @@ public class ButtonExecutorMock implements IButtonConfig {
 
 	public final AtomicInteger canExecuteCount = new AtomicInteger();
 	public final List<IGetTextWithKey> getTextWithKeys = Collections.synchronizedList(Lists.<IGetTextWithKey> newList());
-	public boolean canExecute;
+	public List<KeyAndProblem> canExecute;
 	public final AtomicInteger executeCount = new AtomicInteger();
 	private final String key;
 
-	public ButtonExecutorMock(String key) {
+	public ButtonExecutorMock(String key, List<KeyAndProblem> canExecute) {
+		this.canExecute = canExecute;
 		this.key = key;
 	}
 
-	public boolean canExecute(IGetTextWithKey textWithKey) {
+	public List<KeyAndProblem> canExecute(IGetTextWithKey textWithKey) {
 		canExecuteCount.incrementAndGet();
 		getTextWithKeys.add(textWithKey);
 		return canExecute;

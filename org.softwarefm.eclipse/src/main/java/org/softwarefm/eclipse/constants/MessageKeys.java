@@ -9,5 +9,7 @@ public class MessageKeys {
 	public static final String foundProjectData = "message.foundProjectData.text";
 	public static final String unrecognisedDigest = "message.unrecognisedDigest.text";
 	public static final String notJavaElement = "message.notJavaElement.text";
+	
+	public static String illegalPomUrl = "message.illegal.pom.url";
 
 }
