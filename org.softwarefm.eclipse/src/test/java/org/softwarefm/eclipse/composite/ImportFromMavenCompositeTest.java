@@ -9,12 +9,12 @@ import org.softwarefm.labelAndText.Form;
 
 public class ImportFromMavenCompositeTest extends SwtTest {
 
-	private ImportFromMavenComposite importFromMavenComposite;
+	private MavenImportComposite mavenImportComposite;
 	private Form form;
 
 	public void testUrlIsBlankAndImportButtonIsDisabledAtStart() {
 		assertEquals(Arrays.asList(SwtConstants.pomUrlKey), form.getKeys());
-		assertEquals("", importFromMavenComposite.form.getText(SwtConstants.pomUrlKey));
+		assertEquals("", mavenImportComposite.form.getText(SwtConstants.pomUrlKey));
 		assertFalse(form.getButton(SwtConstants.linkFromMavenButtonText).isEnabled());
 	}
 	
@@ -34,8 +34,8 @@ public class ImportFromMavenCompositeTest extends SwtTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		importFromMavenComposite = new ImportFromMavenComposite(shell, SoftwareFmContainer.makeForTests());
-		form = importFromMavenComposite.form;
+		mavenImportComposite = new MavenImportComposite(shell, SoftwareFmContainer.makeForTests());
+		form = mavenImportComposite.form;
 	}
 
 }

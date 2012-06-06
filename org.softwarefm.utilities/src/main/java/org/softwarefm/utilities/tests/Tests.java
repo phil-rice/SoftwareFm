@@ -86,6 +86,8 @@ public class Tests {
 			runnable.run();
 			Assert.fail(class1.getSimpleName() + " not thrown");
 		} catch (Throwable e) {
+			if (e instanceof WrappedException && !WrappedException.class.isAssignableFrom(class1))
+				e = e.getCause();
 			if (class1.isAssignableFrom(e.getClass()))
 				return (E) e;
 			Assert.fail(e.toString());

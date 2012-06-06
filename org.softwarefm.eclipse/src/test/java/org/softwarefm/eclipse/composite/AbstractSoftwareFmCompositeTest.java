@@ -12,7 +12,7 @@ import org.softwarefm.eclipse.selection.internal.SwtThreadSelectedBindingAggrega
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.callbacks.MemoryCallback;
 
-public abstract class AbstractSoftwareFmCompositeTest< P extends SoftwareFmComposite> extends SwtTest {
+public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmComposite> extends SwtTest {
 
 	protected P panel;
 
@@ -47,7 +47,9 @@ public abstract class AbstractSoftwareFmCompositeTest< P extends SoftwareFmCompo
 		EasyMock.makeThreadSafe(strategy, true);
 		rememberedExceptions = ICallback.Utils.<Throwable> memory();
 		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), rememberedExceptions);
-		panel = makePanel(shell, SoftwareFmContainer.make(selectedArtifactSelectionManager, ICallback.Utils.<String>exception("ImportPom shouldnt be used")));
+		panel = makePanel(shell, SoftwareFmContainer.make(selectedArtifactSelectionManager, //
+				ICallback.Utils.<String> exception("ImportPom shouldnt be used"),//
+				ICallback.Utils.<ProjectData> exception("ImportPom shouldnt be used")));
 	}
 
 	@Override

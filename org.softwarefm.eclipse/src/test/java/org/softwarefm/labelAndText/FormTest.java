@@ -25,11 +25,8 @@ public class FormTest extends SwtTest {
 	private final static KeyAndProblem groupIdProblem = new KeyAndProblem(SwtConstants.groupIdKey, "groupIdProblem");
 	private final static KeyAndProblem groupIdProblem2 = new KeyAndProblem(SwtConstants.groupIdKey, "groupIdProblem2");
 	private final static KeyAndProblem artifactIdProblem = new KeyAndProblem(SwtConstants.artifactIdKey, "artifactIdProblem");
-	private final static KeyAndProblem versionProblem = new KeyAndProblem(SwtConstants.versionKey, "versionProblem");
 
 	private final static List<KeyAndProblem> groupIdProblemList = Arrays.asList(groupIdProblem);
-	private final static List<KeyAndProblem> artifactIdProblemList = Arrays.asList(artifactIdProblem);
-	private final static List<KeyAndProblem> versionProblemList = Arrays.asList(versionProblem);
 	private final static List<KeyAndProblem> groupId12AndArtifactIdProblemList = Arrays.asList(groupIdProblem, groupIdProblem2, artifactIdProblem);
 
 	private Form form;

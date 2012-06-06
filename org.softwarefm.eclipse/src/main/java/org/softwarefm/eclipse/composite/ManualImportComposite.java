@@ -13,12 +13,11 @@ import org.softwarefm.labelAndText.TextAndFormComposite;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.runnable.Runnables;
 
-public class SwtDigestComposite extends TextAndFormComposite {
+public class ManualImportComposite extends TextAndFormComposite {
 
-	public SwtDigestComposite(Composite parent, SoftwareFmContainer<?> container) {
+	public ManualImportComposite(Composite parent, SoftwareFmContainer<?> container) {
 		super(parent, container);
 		addListener(new SelectedBindingAdapter() {
-
 			@Override
 			public void projectDetermined(ProjectData projectData, int selectionCount) {
 				setText(SwtConstants.groupIdKey, projectData.groupId);
@@ -83,10 +82,10 @@ public class SwtDigestComposite extends TextAndFormComposite {
 	}
 
 	public static void main(String[] args) {
-		Swts.Show.display(SwtDigestComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Swts.Show.display(ManualImportComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			public Composite apply(Composite from) throws Exception {
 				SoftwareFmContainer<Object> container = SoftwareFmContainer.makeForTests();
-				return new SwtDigestComposite(from, container).getComposite();
+				return new ManualImportComposite(from, container).getComposite();
 			}
 		});
 	}

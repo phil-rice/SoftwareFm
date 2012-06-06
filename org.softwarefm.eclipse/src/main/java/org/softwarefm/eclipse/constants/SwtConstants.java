@@ -12,6 +12,7 @@ public class SwtConstants {
 	public static final String linkFromMavenDescriptionWithSelectionText = "link.maven.instructions.selection.text";
 	public static final String linkFromMavenButtonText = "link.maven.button.text";
 	public static final String pomUrlKey = "link.maven.pom.url.text";
+	public static final String mavenImportKey = "job.maven.import";
 	public static int xIndent = 2;
 	public static int yIndent = 2;
 

@@ -18,11 +18,9 @@ import org.eclipse.swt.widgets.Text;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.SwtConstants;
 import org.softwarefm.eclipse.constants.SwtErrorMessages;
-import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.swt.HasComposite;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.labelAndText.Form.LabelAndText.LabelAndTextComposite;
-import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.maps.Maps;
@@ -88,7 +86,6 @@ public class Form extends Composite implements IGetTextWithKey {
 			public LabelAndTextComposite(Composite parent, int style) {
 				super(parent, style);
 				label = new Label(this, SWT.NULL);
-
 				text = new Text(this, SWT.NULL);
 			}
 
@@ -104,7 +101,6 @@ public class Form extends Composite implements IGetTextWithKey {
 				text.setToolTipText(tooltip);
 				label.setToolTipText(tooltip);
 			}
-
 		}
 
 		@Override
@@ -198,7 +194,7 @@ public class Form extends Composite implements IGetTextWithKey {
 				IResourceGetter resourceGetter = new ResourceGetterMock(//
 						SwtConstants.okButton, "OK", SwtConstants.cancelButton, "Cancel",//
 						"one", "One", "two", "Two", "three", "Three", "four", "Four", "five", "Five", "six", "Six", "seven", "Seven");
-				SoftwareFmContainer<?> container = new SoftwareFmContainer<Object>(resourceGetter, ISelectedBindingManager.Utils.noManager(), ICallback.Utils.<String> exception(""));
+				SoftwareFmContainer<?> container =SoftwareFmContainer.makeForTests(resourceGetter);
 				Form form = new Form(from, SWT.BORDER, container, IButtonConfigurator.Utils.okCancel(Runnables.sysout("ok"), Runnables.sysout("cancel")), "one", "two", "three", "four", "five", "six", "seven");
 				return form;
 			}

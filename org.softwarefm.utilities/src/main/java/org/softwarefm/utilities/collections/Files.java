@@ -110,6 +110,7 @@ public class Files {
 	public static int downLoadFile(URL url, File target) {
 		try {
 			File tempFile = new File(target.getCanonicalFile().toString() + "_temp");
+			tempFile.getParentFile().mkdirs();
 			target.delete();
 			tempFile.delete();
 			// URLConnection urlC = url.openConnection();

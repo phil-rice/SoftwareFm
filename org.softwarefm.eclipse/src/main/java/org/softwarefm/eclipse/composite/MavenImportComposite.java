@@ -7,7 +7,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.MessageKeys;
 import org.softwarefm.eclipse.constants.SwtConstants;
-import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.labelAndText.Form;
 import org.softwarefm.labelAndText.IButtonConfig;
@@ -22,11 +21,11 @@ import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.resources.IResourceGetter;
 import org.softwarefm.utilities.strings.Strings;
 
-public class ImportFromMavenComposite extends TextAndControlComposite<Form> {
+public class MavenImportComposite extends TextAndControlComposite<Form> {
 
 	Form form;
 
-	public ImportFromMavenComposite(Composite parent, SoftwareFmContainer<?> container) {
+	public MavenImportComposite(Composite parent, SoftwareFmContainer<?> container) {
 		super(parent, container);
 		setMessage(SwtConstants.linkFromMavenDescriptionWithNoSelectionText);
 	}
@@ -60,9 +59,9 @@ public class ImportFromMavenComposite extends TextAndControlComposite<Form> {
 	}
 
 	public static void main(String[] args) {
-		Swts.Show.display(ImportFromMavenComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Swts.Show.display(MavenImportComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			public Composite apply(Composite from) throws Exception {
-				return new ImportFromMavenComposite(from, SoftwareFmContainer.make(ISelectedBindingManager.Utils.noManager(), ICallback.Utils.<String> sysoutCallback())).getComposite();
+				return new MavenImportComposite(from, SoftwareFmContainer.makeForTests()).getComposite();
 			}
 		});
 	}

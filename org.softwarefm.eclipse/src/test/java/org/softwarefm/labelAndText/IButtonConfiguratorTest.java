@@ -5,9 +5,7 @@ import org.eclipse.swt.widgets.Control;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.SwtTest;
 import org.softwarefm.eclipse.constants.SwtConstants;
-import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.swt.Swts;
-import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.resources.ResourceGetterMock;
 import org.softwarefm.utilities.runnable.Runnables;
 import org.softwarefm.utilities.runnable.Runnables.CountRunnable;
@@ -45,6 +43,6 @@ public class IButtonConfiguratorTest extends SwtTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		container = new SoftwareFmContainer<Object>(new ResourceGetterMock(SwtConstants.okButton, "OkName", SwtConstants.cancelButton, "CancelName"), ISelectedBindingManager.Utils.noManager(), ICallback.Utils.<String> exception(""));
+		container = SoftwareFmContainer.makeForTests(new ResourceGetterMock(SwtConstants.okButton, "OkName", SwtConstants.cancelButton, "CancelName"));
 	}
 }
