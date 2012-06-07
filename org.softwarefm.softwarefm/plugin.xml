@@ -23,11 +23,11 @@
             id="org.softwarefm.softwarefm.views.DigestView">
       </view>
       <view
-            name="SwtDigest"
+            name="MavenImport"
             icon="icons/digest.png"
             category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.SwtDigestView"
-            id="org.softwarefm.softwarefm.views.SwtDigestView">
+            class="org.softwarefm.softwarefm.views.MavenImportView"
+            id="org.softwarefm.softwarefm.views.MavenImportView">
       </view>
       <view
             name="Project"

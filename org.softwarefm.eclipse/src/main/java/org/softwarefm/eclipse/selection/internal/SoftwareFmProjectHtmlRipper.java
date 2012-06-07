@@ -1,18 +1,11 @@
 package org.softwarefm.eclipse.selection.internal;
 
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.Iterator;
-
 import org.jdom.Attribute;
-import org.jdom.Document;
 import org.jdom.Element;
-import org.jdom.filter.ElementFilter;
-import org.jdom.input.SAXBuilder;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
 import org.softwarefm.eclipse.selection.IProjectHtmlRipper;
-import org.softwarefm.utilities.exceptions.WrappedException;
+import org.softwarefm.utilities.jdom.Jdoms;
 import org.softwarefm.utilities.strings.Strings;
 
 public class SoftwareFmProjectHtmlRipper implements IProjectHtmlRipper {
@@ -36,21 +29,13 @@ public class SoftwareFmProjectHtmlRipper implements IProjectHtmlRipper {
 	}
 
 	private Element findMwContentText(String from) {
-		try {
-			Reader reader = new StringReader(from);
-			Document document = new SAXBuilder().build(reader);
-			for (@SuppressWarnings("unchecked")
-			Iterator<Element> divs = document.getRootElement().getDescendants(new ElementFilter("div")); divs.hasNext();) {
-				Element div = divs.next();
-				Attribute id = div.getAttribute("id");
-				if (id != null)
-					if ("mw-content-text".equals(id.getValue()))
-						return div;
-			}
-			return null;
-		} catch (Exception e) {
-			throw WrappedException.wrap(e);
+		for (Element div : Jdoms.findElementsWith(from, "div")) {
+			Attribute id = div.getAttribute("id");
+			if (id != null)
+				if ("mw-content-text".equals(id.getValue()))
+					return div;
 		}
+		return null;
 	}
 
 }

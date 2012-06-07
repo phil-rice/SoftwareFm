@@ -16,7 +16,7 @@ import org.softwarefm.utilities.http.internal.HttpClientBuilder;
 /** This is the prototype pattern with immutables: the methods return new objects, and the old object is unaffected by the methods */
 public interface IHttpClient {
 
-	/** Throws an exception if not ready to execute*/
+	/** Throws an exception if not ready to execute */
 	void validate() throws HttpClientValidationException;
 
 	IHttpClient host(String host);
@@ -31,17 +31,21 @@ public interface IHttpClient {
 
 	IHttpClient delete(String url);
 
+	IHttpClient addHeader(String name, String value);
+
 	IHttpClient addParam(String name, String value);
 
 	IHttpClient withParameters(List<NameValuePair> nameAndValues);
 
 	IHttpClient withParams(String... nameAndValue);
 
+	IHttpClient withEntity(String entity);
+
 	IResponse execute();
 
 	public static class Utils {
 		public static IHttpClient builder() {
-			return new HttpClientBuilder(new DefaultHttpClient(new ThreadSafeClientConnManager()), null, null, null, Collections.<NameValuePair> emptyList());
+			return new HttpClientBuilder(new DefaultHttpClient(new ThreadSafeClientConnManager()), null, null, null, null, null, Collections.<NameValuePair> emptyList());
 		}
 
 	}

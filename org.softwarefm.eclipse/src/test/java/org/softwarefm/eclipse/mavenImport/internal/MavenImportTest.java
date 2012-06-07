@@ -1,16 +1,14 @@
 package org.softwarefm.eclipse.mavenImport.internal;
 
 import java.io.File;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import junit.framework.TestCase;
 
 import org.apache.maven.model.Model;
-import org.softwarefm.eclipse.mavenImport.IMavenImport;
+import org.softwarefm.eclipse.maven.IMaven;
+import org.softwarefm.eclipse.maven.internal.Maven;
 import org.softwarefm.utilities.collections.Files;
-import org.softwarefm.utilities.exceptions.WrappedException;
-import org.softwarefm.utilities.tests.Tests;
 
 public class MavenImportTest extends TestCase {
 
@@ -20,22 +18,11 @@ public class MavenImportTest extends TestCase {
 	public void testModelToJarUrl() throws Exception {
 		checkModelToJarUrl("pomNoDistributionRepo.xml", "http://repo1.maven.org/maven2/org/softwarefm/eclipse/0.0.1-SNAPSHOT/eclipse-0.0.1-SNAPSHOT.jar");
 		checkModelToJarUrl("pomWithDistributionRepo.xml", "https://repository.mycompany.com/repository/maven2/com/mycompany/app/my-app/1.0-SNAPSHOT/my-app-1.0-SNAPSHOT.jar");
+		checkModelToJarUrl("pomWithOnlyArtifactSpecified.xml", "http://repo1.maven.org/maven2/org/softwarefm/eclipse/0.0.1-SNAPSHOT/eclipse-0.0.1-SNAPSHOT.jar");
 	}
 
-	public void testModelToUrlWhenProtocolNotKnown() throws Exception {
-		final IMavenImport mavenImport = new MavenImport();
-		String pomMod = getClass().getPackage().getName().replace(".", "/") + "/" + "pomWithUnknownProtocolInDistributionRepo.xml";
-		String pomUrl = getClass().getClassLoader().getResource(pomMod).toExternalForm();
-		final Model model = mavenImport.pomToModel(pomUrl);
-		Tests.assertThrowsWithMessage("unknown protocol: scp", MalformedURLException.class, new Runnable() {
-			public void run() {
-				try {
-					mavenImport.jarUrl(model);
-				} catch (MalformedURLException e) {
-					throw WrappedException.wrap(e);
-				}
-			}
-		});
+	public void testModelToUrlWhenMalformedRepositorySpoec() throws Exception {
+		checkModelToJarUrl("pomWithUnknownProtocolInDistributionRepo.xml", "http://repo1.maven.org/maven2/com/mycompany/app/my-app/1.0-SNAPSHOT/my-app-1.0-SNAPSHOT.jar");
 	}
 
 	public void testJarFileName() throws Exception {
@@ -48,9 +35,9 @@ public class MavenImportTest extends TestCase {
 		File destinationFile = new File(userHomeM2Dir, "org/softwarefm/test-artifact/1.0/test-artifact-1.0.jar");
 		destinationFile.delete();
 		Model model = getModel("pomTestArtifact.xml");
-		MavenImport mavenImport = new MavenImport();
-		assertEquals(new URL("file:" + sourceFile), mavenImport.jarUrl(model)); // just checking setup
-		File actual = mavenImport.downloadJar(model);
+		Maven maven = new Maven();
+		assertEquals(new URL("file:" + sourceFile), maven.jarUrl(model)); // just checking setup
+		File actual = maven.downloadJar(model);
 		assertEquals(destinationFile,actual);
 		assertTrue(destinationFile.exists());
 		assertEquals(Files.digestAsHexString(sourceFile), Files.digestAsHexString(destinationFile));
@@ -58,24 +45,24 @@ public class MavenImportTest extends TestCase {
 	}
 
 	private void checkModelToJarUrl(String pom, String expected) throws Exception {
-		final IMavenImport mavenImport = new MavenImport();
+		final IMaven maven = new Maven();
 		Model model = getModel(pom);
-		URL actual = mavenImport.jarUrl(model);
+		URL actual = maven.jarUrl(model);
 		assertEquals(new URL(expected), actual);
 	}
 
 	private Model getModel(String pom) throws Exception {
-		final IMavenImport mavenImport = new MavenImport();
+		final IMaven maven = new Maven();
 		String pomMod = getClass().getPackage().getName().replace(".", "/") + "/" + pom;
 		String pomUrl = getClass().getClassLoader().getResource(pomMod).toExternalForm();
-		Model model = mavenImport.pomToModel(pomUrl);
+		Model model = maven.pomToModel(pomUrl);
 		return model;
 	}
 
 	private void checkJarFileName(File m2Home, String pom, File expected) throws Exception {
-		final IMavenImport mavenImport = new MavenImport(m2Home);
+		final IMaven maven = new Maven(m2Home);
 		Model model = getModel(pom);
-		File actual = mavenImport.jarFile(model);
+		File actual = maven.jarFile(model);
 		assertEquals(expected, actual);
 
 	}

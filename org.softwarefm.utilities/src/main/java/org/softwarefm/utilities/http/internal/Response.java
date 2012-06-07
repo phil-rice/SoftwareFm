@@ -5,6 +5,10 @@
 
 package org.softwarefm.utilities.http.internal;
 
+import java.util.List;
+
+import org.apache.http.Header;
+import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.http.IResponse;
 
 public class Response implements IResponse {
@@ -13,15 +17,19 @@ public class Response implements IResponse {
 	private final String string;
 	private final String url;
 	private final String mimeType;
+	private final List<Header> headers;
 
-	public Response(int statusCode, String url, String string, String mimeType) {
+	public Response(int statusCode, String url, String string, String mimeType, List<Header> headers) {
 		this.statusCode = statusCode;
 		this.string = string;
 		this.url = url;
 		this.mimeType = mimeType;
+		this.headers = Lists.immutableCopy(headers);
 	}
 
-	
+	public List<Header> headers() {
+		return headers;
+	}
 	public String url() {
 		return url;
 	}
@@ -39,7 +47,7 @@ public class Response implements IResponse {
 	
 	@Override
 	public String toString() {
-		return "Response [statusCode=" + statusCode + ", string=" + string + ", url=" + url + ", mimeType=" + mimeType + "]";
+		return "Response [statusCode=" + statusCode + ", string=" + string + ", url=" + url + ", mimeType=" + mimeType + ", headers=" + headers + "]";
 	}
 
 	

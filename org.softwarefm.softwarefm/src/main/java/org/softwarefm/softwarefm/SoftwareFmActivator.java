@@ -15,8 +15,9 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
-import org.softwarefm.eclipse.BundleMarker;
+import org.softwarefm.eclipse.Marker;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.plugins.Plugins;
 import org.softwarefm.eclipse.selection.IProjectStrategy;
 import org.softwarefm.eclipse.selection.ISelectedBindingListenerAndAdderRemover;
@@ -128,12 +129,12 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 
 	private SoftwareFmContainer<ITextSelection> makeContainer() {
 		synchronized (lock) {
-			return container == null ? new SoftwareFmContainer<ITextSelection>(getResourceGetter(), getSelectionBindingManager(), ICallback.Utils.<String>sysoutCallback()) : container;
+			return container == null ? new SoftwareFmContainer<ITextSelection>(getResourceGetter(), getSelectionBindingManager(), ICallback.Utils.<String> sysoutCallback(), ICallback.Utils.<ProjectData> sysoutCallback()) : container;
 		}
 	}
 
 	private IResourceGetter getResourceGetter() {
-		return resourceGetter = resourceGetter == null ? IResourceGetter.Utils.resourceGetter(BundleMarker.class, "text") : resourceGetter;
+		return resourceGetter = resourceGetter == null ? IResourceGetter.Utils.resourceGetter(Marker.class, "text") : resourceGetter;
 	}
 
 	public void dispose() {

@@ -1,4 +1,4 @@
-package org.softwarefm.eclipse.mavenImport.internal;
+package org.softwarefm.eclipse.maven.internal;
 
 import java.io.File;
 import java.io.InputStream;
@@ -9,22 +9,21 @@ import java.text.MessageFormat;
 import org.apache.maven.model.DeploymentRepository;
 import org.apache.maven.model.DistributionManagement;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.Parent;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.softwarefm.eclipse.mavenImport.IMavenImport;
+import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.utilities.annotations.IntegrationTest;
 import org.softwarefm.utilities.collections.Files;
 
 @IntegrationTest
-public class MavenImport implements IMavenImport {
+public class Maven implements IMaven {
 
 	private final File m2Home;
 
-	public MavenImport() {
+	public Maven() {
 		this(getM2Home());
 	}
 
-	public MavenImport(File m2Home) {
+	public Maven(File m2Home) {
 		this.m2Home = m2Home;
 	}
 
@@ -48,26 +47,39 @@ public class MavenImport implements IMavenImport {
 	}
 
 	public URL jarUrl(Model model) throws MalformedURLException {
-		String repoUrl = getRepoUrl(model);
-		String urlString = MessageFormat.format(repoUrl + "/{0}/{1}/{2}/{1}-{2}.jar", getGroupId(model).replace(".", "/"), model.getArtifactId(), model.getVersion());
-		return new URL(urlString);
-
+		try {
+			return getJarUrl(model, true);
+		} catch (Exception e) {
+			return getJarUrl(model, false);
+		}
 	}
 
-	private String getRepoUrl(Model model) {
-		DistributionManagement distributionManagement = model.getDistributionManagement();
-		if (distributionManagement != null) {
-			DeploymentRepository repository = distributionManagement.getRepository();
-			if (repository != null) {
-				String repoUrl = repository.getUrl();
-				return repoUrl;
+	private URL getJarUrl(Model model, boolean useStatedRepo) throws MalformedURLException {
+		String repoUrl = getRepoUrl(model, useStatedRepo);
+		String urlString = MessageFormat.format(repoUrl + "/{0}/{1}/{2}/{1}-{2}.jar", IMaven.Utils.getGroupId(model).replace(".", "/"), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model));
+		return new URL(urlString);
+	}
+
+	private String getRepoUrl(Model model, boolean useStatedRepo) {
+		if (useStatedRepo) {
+			DistributionManagement distributionManagement = model.getDistributionManagement();
+			if (distributionManagement != null) {
+				DeploymentRepository repository = distributionManagement.getRepository();
+				repository.getLocation("");
+				if (repository != null) {
+					String repoUrl = repository.getUrl();
+					return repoUrl;
+				}
 			}
 		}
 		return "http://repo1.maven.org/maven2";
 	}
 
 	public File jarFile(Model model) {
-		File result = new File(m2Home, getGroupId(model).replace(".", "/") + "/" + model.getArtifactId() + "/" + model.getVersion() + "/" + model.getArtifactId() + "-" + model.getVersion() + ".jar");
+		String groupId = IMaven.Utils.getGroupId(model);
+		String artifactId = IMaven.Utils.getArtifactId(model);
+		String version = IMaven.Utils.getVersion(model);
+		File result = new File(m2Home, groupId.replace(".", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + ".jar");
 		return result;
 	}
 
@@ -78,24 +90,16 @@ public class MavenImport implements IMavenImport {
 		return file;
 	}
 
-	private String getGroupId(Model model) {
-		String groupId = model.getGroupId();
-		if (groupId != null)
-			return groupId;
-		Parent parent = model.getParent();
-		return parent.getGroupId();
-	}
-
 	public static void main(String[] args) throws Exception {
 		String pomUrl = "http://repo1.maven.org/maven2/org/apache/maven/maven-model-v3/2.0/maven-model-v3-2.0.pom";
-		MavenImport mavenImport = new MavenImport();
+		Maven maven = new Maven();
 		System.out.println(pomUrl);
-		Model model = mavenImport.pomToModel(pomUrl);
+		Model model = maven.pomToModel(pomUrl);
 		System.out.println(model);
-		System.out.println(mavenImport.jarUrl(model));
-		File jarFile = mavenImport.jarFile(model);
+		System.out.println(maven.jarUrl(model));
+		File jarFile = maven.jarFile(model);
 		System.out.println(jarFile);
-		mavenImport.downloadJar(model);
+		maven.downloadJar(model);
 		System.out.println(Files.digestAsHexString(jarFile));
 		System.out.println("Done");
 	}

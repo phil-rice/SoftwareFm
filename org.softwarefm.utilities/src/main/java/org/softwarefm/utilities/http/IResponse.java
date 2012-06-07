@@ -5,8 +5,11 @@
 
 package org.softwarefm.utilities.http;
 
-import org.softwarefm.utilities.http.internal.Response;
+import java.util.Collections;
+import java.util.List;
 
+import org.apache.http.Header;
+import org.softwarefm.utilities.http.internal.Response;
 
 public interface IResponse {
 
@@ -18,14 +21,16 @@ public interface IResponse {
 
 	String mimeType();
 
+	List<Header> headers();
+
 	public static class Utils {
 
-		public static IResponse create(final String url, final int statusCode, final String string, final String mimeType) {
-			return new Response(statusCode, url, string, mimeType);
+		public static IResponse create(final String url, final int statusCode, final String string, final String mimeType, List<Header> headers) {
+			return new Response(statusCode, url, string, mimeType, headers);
 		}
 
 		public static IResponse okText(final String url, final String string) {
-			return new Response(200, url, string, "text/plain");
+			return new Response(200, url, string, "text/plain", Collections.<Header> emptyList());
 		}
 
 	}

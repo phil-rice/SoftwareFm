@@ -20,7 +20,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.constants.UtilityMessages;
@@ -35,40 +38,59 @@ public class HttpClientBuilder implements IHttpClient {
 	public final HttpHost host;
 	public final String url;
 	public final HttpMethod method;
+	public final List<NameValuePair> headers;
 	public final List<NameValuePair> parameters;
 	private final HttpClient client;
+	private final String entity;
 
-	public HttpClientBuilder(HttpClient client, HttpHost host, String url, HttpMethod method, List<NameValuePair> parameters) {
+	public HttpClientBuilder(HttpClient client, HttpHost host, String url, HttpMethod method, String entity, List<NameValuePair> headers, List<NameValuePair> parameters) {
 		super();
 		this.client = client;
 		this.host = host;
 		this.url = url;
 		this.method = method;
+		this.entity = entity;
+		this.headers = headers;
 		this.parameters = parameters;
 	}
 
-	
 	public IResponse execute() {
 		try {
 			validate();
 			String protocolHostAndUrl = protocolHostAndUrl();
 			HttpRequestBase base = getRequestBase(protocolHostAndUrl);
-			for (NameValuePair pair : parameters)
-				base.addHeader(pair.getName(), pair.getValue());
+
+			base.setParams(getParams());
+			if (headers != null)
+				for (NameValuePair pair : headers)
+					base.addHeader(pair.getName(), pair.getValue());
+			if (entity != null)
+				if (base instanceof HttpPost) {
+					HttpPost post = (HttpPost) base;
+					post.setEntity(new StringEntity(entity));
+				}
 
 			HttpResponse httpResponse = client.execute(base);
 			HttpEntity entity = httpResponse.getEntity();
 			String mimeType = findMimeType(entity);
-
+			
+			List<Header> headers = Arrays.asList(httpResponse.getAllHeaders());
 			Response response = new Response(//
 					httpResponse.getStatusLine().getStatusCode(), //
 					url,//
 					entity == null ? "" : EntityUtils.toString(entity),//
-					mimeType);
+					mimeType, headers);
 			return response;
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	private HttpParams getParams() {
+		BasicHttpParams result = new BasicHttpParams();
+		for (NameValuePair pair : parameters)
+			result.setParameter(pair.getName(), pair.getValue());
+		return result;
 	}
 
 	private HttpRequestBase getRequestBase(String protocolHostAndUrl) {
@@ -87,7 +109,7 @@ public class HttpClientBuilder implements IHttpClient {
 	}
 
 	protected String protocolHostAndUrl() {
-		String urlWithSlash = url.startsWith("/") ?url: "/" + url;
+		String urlWithSlash = url.startsWith("/") ? url : "/" + url;
 		return "http://" + host.getHostName() + ":" + host.getPort() + urlWithSlash;
 	}
 
@@ -100,7 +122,6 @@ public class HttpClientBuilder implements IHttpClient {
 		return "unknown";
 	}
 
-	
 	public void validate() {
 		List<String> errors = Lists.newList();
 		checkNotNull(errors, client, "Client");
@@ -117,52 +138,52 @@ public class HttpClientBuilder implements IHttpClient {
 			errors.add(MessageFormat.format(UtilityMessages.httpValidationNull, name));
 	}
 
-	
 	public IHttpClient host(String host) {
 		return host(host, 80);
 	}
 
-	
 	public IHttpClient host(String host, int port) {
-		return new HttpClientBuilder(client, new HttpHost(host, port), url, method, parameters);
+		return new HttpClientBuilder(client, new HttpHost(host, port), url, method, entity, headers, parameters);
 	}
 
-	
 	public IHttpClient post(String url) {
-		return new HttpClientBuilder(client, host, url, HttpMethod.Post, parameters);
+		return new HttpClientBuilder(client, host, url, HttpMethod.Post, entity, headers, parameters);
 	}
 
-	
 	public IHttpClient get(String url) {
-		return new HttpClientBuilder(client, host, url, HttpMethod.Get, parameters);
+		return new HttpClientBuilder(client, host, url, HttpMethod.Get, entity, headers, parameters);
 	}
 
-	
 	public IHttpClient head(String url) {
-		return new HttpClientBuilder(client, host, url, HttpMethod.Head, parameters);
+		return new HttpClientBuilder(client, host, url, HttpMethod.Head, entity, headers, parameters);
 	}
 
-	
 	public IHttpClient delete(String url) {
-		return new HttpClientBuilder(client, host, url, HttpMethod.Delete, parameters);
+		return new HttpClientBuilder(client, host, url, HttpMethod.Delete, entity, headers, parameters);
 	}
 
-	
 	public IHttpClient withParameters(List<NameValuePair> nameAndValues) {
-		return new HttpClientBuilder(client, host, url, method, nameAndValues);
+		return new HttpClientBuilder(client, host, url, method, entity, headers, nameAndValues);
 	}
 
-	
+	public IHttpClient withEntity(String entity) {
+		return new HttpClientBuilder(client, host, url, method, entity, headers, parameters);
+	}
+
 	public IHttpClient withParams(String... nameAndValue) {
 		assert nameAndValue.length % 2 == 0 : nameAndValue.length + "/" + Arrays.asList(nameAndValue);
 		List<NameValuePair> nameAndValues = Lists.newList();
 		for (int i = 0; i < nameAndValue.length; i += 2)
 			nameAndValues.add(new BasicNameValuePair(nameAndValue[i + 0], nameAndValue[i + 1]));
-		return new HttpClientBuilder(client, host, url, method, nameAndValues);
+		return new HttpClientBuilder(client, host, url, method, entity, headers, nameAndValues);
 	}
 
-	
-	public IHttpClient addParam(String name, String value) {
-		return new HttpClientBuilder(client, host, url, method, Lists.append(parameters, new BasicNameValuePair(name, value)));
+	public IHttpClient addHeader(String name, String value) {
+		return new HttpClientBuilder(client, host, url, method, entity, Lists.append(headers, new BasicNameValuePair(name, value)), parameters);
 	}
+
+	public IHttpClient addParam(String name, String value) {
+		return new HttpClientBuilder(client, host, url, method, entity, headers, Lists.append(parameters, new BasicNameValuePair(name, value)));
+	}
+
 }

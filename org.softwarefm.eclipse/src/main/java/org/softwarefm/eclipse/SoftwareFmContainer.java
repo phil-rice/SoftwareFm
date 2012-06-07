@@ -8,14 +8,14 @@ import org.softwarefm.utilities.resources.IResourceGetter;
 public class SoftwareFmContainer<S> {
 
 	public static <S> SoftwareFmContainer<S> make(ISelectedBindingManager<S> manager, ICallback<String> importPom, ICallback<ProjectData> importManually) {
-		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(BundleMarker.class, "text"), manager, importPom, importManually);
+		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), manager, importPom, importManually);
 	}
 
 	public static <S>SoftwareFmContainer<S> makeForTests(IResourceGetter resourceGetter) {
 		return new SoftwareFmContainer<S>(resourceGetter, ISelectedBindingManager.Utils.<S> noManager(), ICallback.Utils.<String> memory(), ICallback.Utils.<ProjectData> memory());
 	}
 	public static <S> SoftwareFmContainer<S> makeForTests() {
-		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(BundleMarker.class, "text"), ISelectedBindingManager.Utils.<S> noManager(), ICallback.Utils.<String> memory(), ICallback.Utils.<ProjectData> memory());
+		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), ISelectedBindingManager.Utils.<S> noManager(), ICallback.Utils.<String> memory(), ICallback.Utils.<ProjectData> memory());
 	}
 
 	public final IResourceGetter resourceGetter;

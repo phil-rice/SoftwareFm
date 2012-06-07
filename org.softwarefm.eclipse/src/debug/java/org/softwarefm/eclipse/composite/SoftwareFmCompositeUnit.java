@@ -16,7 +16,8 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.mavenImport.IMavenImport;
+import org.softwarefm.eclipse.link.IMakeLink;
+import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.IHasSelectionBindingManager;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
@@ -69,7 +70,7 @@ public class SoftwareFmCompositeUnit {
 							threadingPool, //
 							ICallback.Utils.rethrow());
 					SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(manager, //
-							IMavenImport.Utils.importPomWithSysouts(), //
+							IMaven.Utils.importPomWithSysouts(IMakeLink.Utils.makeLink()), //
 							ICallback.Utils.<ProjectData> exception(""));
 					Holder holder = new Holder(parent, manager);
 					for (IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> creator : creators) {
