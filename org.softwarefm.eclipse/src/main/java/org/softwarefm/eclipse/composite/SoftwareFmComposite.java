@@ -56,7 +56,7 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 		return msg(MessageKeys.foundProjectData, //
 				fileNameAndDigest.fileName, Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest,//
 				projectData,//
-				projectData.groupId, projectData.artefactId, projectData.version);
+				projectData.groupId, projectData.artifactId, projectData.version);
 
 	}
 

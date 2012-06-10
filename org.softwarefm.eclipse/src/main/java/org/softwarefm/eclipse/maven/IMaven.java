@@ -27,6 +27,10 @@ public interface IMaven {
 		public static IMaven makeImport() {
 			return new Maven();
 		}
+		
+		public static String makePomUrlForMvnRepository(String groupId, String artifactId, String version){
+			return "http://repo1.maven.org/maven2/" + groupId.replace(".", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + ".pom";
+		}
 
 		public static IMaven makeImport(File m2Home) {
 			return new Maven(m2Home);

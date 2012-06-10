@@ -40,6 +40,7 @@ public class MavenImportComposite extends TextAndControlComposite<Form> {
 					}
 
 					public void execute() throws Exception {
+						form.setEnabledForButton(SwtConstants.linkFromMavenButtonText, false);
 						ICallback.Utils.call(container.importPom, form.getText(SwtConstants.pomUrlKey));
 					}
 

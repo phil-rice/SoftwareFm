@@ -21,6 +21,14 @@ public class StringsTest extends TestCase {
 		byte[] actual = Strings.fromHex("000102030405060708090a0b0c0d0e0f101112");
 		assertTrue(Arrays.equals(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 }, actual));
 	}
+	
+	public void testIsIdentifier(){
+		assertTrue(Strings.isIdentifier("abc.123-a"));
+		assertFalse(Strings.isIdentifier("a/"));
+		assertFalse(Strings.isIdentifier("a\\"));
+		assertFalse(Strings.isIdentifier("abc.123-$"));
+		assertFalse(Strings.isIdentifier("a%bc.123-$"));
+	}
 
 	public void testFirstNCharacters() {
 		assertEquals(null, Strings.firstNCharacters(null, 5));

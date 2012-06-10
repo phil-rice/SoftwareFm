@@ -17,7 +17,7 @@ public class ProjectComposite extends TextAndBrowserComposite {
 	@Override
 	public void projectDetermined(ProjectData projectData, int selectionCount) {
 		killLastLineAndappendText(projectDeterminedMsg(projectData));
-		String url = CommonConstants.softwareFmHostAndPrefix + "project/" + projectData.groupId + "/" + projectData.artefactId;
+		String url = CommonConstants.softwareFmHostAndPrefix + "project/" + projectData.groupId + "/" + projectData.artifactId;
 		setUrl(url);
 	}
 

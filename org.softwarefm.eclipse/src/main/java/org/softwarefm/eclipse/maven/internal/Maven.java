@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
+import java.util.List;
 
 import org.apache.maven.model.DeploymentRepository;
 import org.apache.maven.model.DistributionManagement;
@@ -13,6 +14,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.utilities.annotations.IntegrationTest;
 import org.softwarefm.utilities.collections.Files;
+import org.softwarefm.utilities.strings.Strings;
 
 @IntegrationTest
 public class Maven implements IMaven {
@@ -36,7 +38,8 @@ public class Maven implements IMaven {
 	}
 
 	public Model pomToModel(String pomUrl) throws Exception {
-		URL url = new URL(pomUrl);
+		String realPomUrl = getRealPomUrl(pomUrl);
+		URL url = new URL(realPomUrl);
 		InputStream stream = url.openStream();
 		try {
 			Model model = new MavenXpp3Reader().read(stream);
@@ -44,6 +47,25 @@ public class Maven implements IMaven {
 		} finally {
 			stream.close();
 		}
+	}
+
+	private String getRealPomUrl(String pomUrl) {
+		if (pomUrl.endsWith("pom"))
+			return pomUrl;
+		List<String> segments = Strings.splitIgnoreBlanks(pomUrl, "/");
+		if (segments.size() != 6)
+			return pomUrl;
+//		String protocol = segments.get(0);
+		String base = segments.get(1);
+		if (!base.equals("mvnrepository.com"))
+			return pomUrl;
+		String marker = segments.get(2);
+		if (!marker.equals("artifact"))
+			return pomUrl;
+		String groupId = segments.get(3);
+		String artifactId = segments.get(4);
+		String version = segments.get(5);
+		return IMaven.Utils.makePomUrlForMvnRepository(groupId, artifactId, version);
 	}
 
 	public URL jarUrl(Model model) throws MalformedURLException {

@@ -5,26 +5,26 @@ import org.softwarefm.eclipse.selection.FileNameAndDigest;
 public class ProjectData {
 	public final FileNameAndDigest fileNameAndDigest;
 	public final String groupId;
-	public final String artefactId;
+	public final String artifactId;
 	public final String version;
 
-	public ProjectData(FileNameAndDigest fileNameAndDigest, String groupId, String artefactId, String version) {
+	public ProjectData(FileNameAndDigest fileNameAndDigest, String groupId, String artifactId, String version) {
 		this.fileNameAndDigest = fileNameAndDigest;
 		this.groupId = groupId;
-		this.artefactId = artefactId;
+		this.artifactId = artifactId;
 		this.version = version;
 	}
 
 	@Override
 	public String toString() {
-		return "ProjectData [fileNameAndDigest=" + fileNameAndDigest + ", groupId=" + groupId + ", artefactId=" + artefactId + ", version=" + version + "]";
+		return "ProjectData [fileNameAndDigest=" + fileNameAndDigest + ", groupId=" + groupId + ", artifactId=" + artifactId + ", version=" + version + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((artefactId == null) ? 0 : artefactId.hashCode());
+		result = prime * result + ((artifactId == null) ? 0 : artifactId.hashCode());
 		result = prime * result + ((fileNameAndDigest == null) ? 0 : fileNameAndDigest.hashCode());
 		result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
 		result = prime * result + ((version == null) ? 0 : version.hashCode());
@@ -40,10 +40,10 @@ public class ProjectData {
 		if (getClass() != obj.getClass())
 			return false;
 		ProjectData other = (ProjectData) obj;
-		if (artefactId == null) {
-			if (other.artefactId != null)
+		if (artifactId == null) {
+			if (other.artifactId != null)
 				return false;
-		} else if (!artefactId.equals(other.artefactId))
+		} else if (!artifactId.equals(other.artifactId))
 			return false;
 		if (fileNameAndDigest == null) {
 			if (other.fileNameAndDigest != null)

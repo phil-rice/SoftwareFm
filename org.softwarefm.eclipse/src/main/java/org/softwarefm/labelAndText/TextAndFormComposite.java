@@ -24,6 +24,12 @@ public abstract class TextAndFormComposite extends TextAndControlComposite<Form>
 	public void setEnabledForButton(String key, boolean enabled) {
 		form.setEnabledForButton(key, enabled);
 	}
+	
+	public String getText(String key){
+		if (form == null)
+			return "";
+		return form.getText(key);
+	}
 
 	abstract protected IButtonConfigurator makeButtonConfigurator();
 

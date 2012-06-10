@@ -16,7 +16,7 @@ public class MakeLink implements IMakeLink {
 			Wiki wiki = new Wiki("localhost", "/mediawiki");
 			wiki.setUsingCompressedRequests(false);
 			wiki.login("Bot", "botme".toCharArray());
-			String entity = projectData.groupId + "\n" + projectData.artefactId + "\n" + projectData.version;
+			String entity = projectData.groupId + "\n" + projectData.artifactId + "\n" + projectData.version;
 			wiki.edit("Digest/012345", entity, "");
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);

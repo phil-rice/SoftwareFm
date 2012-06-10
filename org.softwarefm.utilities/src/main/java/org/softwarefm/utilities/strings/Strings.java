@@ -509,4 +509,8 @@ public class Strings {
 		return raw == null ? null : raw.substring(0, Math.min(i, raw.length()));
 	}
 
+	public static boolean isIdentifier(String text) {
+		return text.equals(forUrl(text));
+	}
+
 }

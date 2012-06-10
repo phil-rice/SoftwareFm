@@ -17,7 +17,7 @@ public class VersionComposite extends TextAndBrowserComposite {
 	@Override
 	public void projectDetermined(ProjectData projectData, int selectionCount) {
 		setText("");
-		String url = CommonConstants.softwareFmHostAndPrefix + "project/" + projectData.groupId + "/" + projectData.artefactId + "/" + projectData.version;
+		String url = CommonConstants.softwareFmHostAndPrefix + "project/" + projectData.groupId + "/" + projectData.artifactId + "/" + projectData.version;
 		setUrl(url);
 	}
 
