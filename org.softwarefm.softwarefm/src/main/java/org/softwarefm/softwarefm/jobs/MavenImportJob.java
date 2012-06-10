@@ -1,4 +1,4 @@
-package org.softwarefm.eclipse.jobs;
+package org.softwarefm.softwarefm.jobs;
 
 import java.io.File;
 
@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.SwtConstants;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.link.IMakeLink;
@@ -21,36 +20,44 @@ import org.softwarefm.utilities.strings.Strings;
 
 public class MavenImportJob implements ICallback<String> {
 
-	private final SoftwareFmContainer<?> container;
 	private final IMakeLink makeLink;
 	private final IMaven maven;
+	private final IResourceGetter resourceGetter;
 
-	public MavenImportJob(SoftwareFmContainer<?> container, IMaven maven, IMakeLink makeLink) {
-		this.container = container;
+	public MavenImportJob(IMaven maven, IMakeLink makeLink, IResourceGetter resourceGetter) {
 		this.maven = maven;
 		this.makeLink = makeLink;
+		this.resourceGetter = resourceGetter;
 	}
 
 	public void process(final String pomUrl) throws Exception {
-		Job job = new Job(IResourceGetter.Utils.getMessageOrException(container.resourceGetter, SwtConstants.mavenImportKey, pomUrl)) {
+		Job job = new Job(IResourceGetter.Utils.getMessageOrException(resourceGetter, SwtConstants.mavenImportKey, pomUrl)) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					monitor.beginTask("MavenImport: " + Strings.lastSegment(pomUrl, "/"), 4);
-					
+
 					monitor.subTask("Download POM");
 					Model model = maven.pomToModel(pomUrl);
 					File jarFile = maven.jarFile(model);
 					monitor.internalWorked(1);
-					
+
+					if (monitor.isCanceled())
+						return Status.CANCEL_STATUS;
 					monitor.subTask("Download Jar to " + jarFile);
 					File jar = maven.downloadJar(model);
 					monitor.internalWorked(1);
 
+					if (monitor.isCanceled())
+						return Status.CANCEL_STATUS;
+
 					monitor.subTask("Digesting");
 					String digest = Files.digestAsHexString(jar);
 					monitor.internalWorked(1);
-					
+
+					if (monitor.isCanceled())
+						return Status.CANCEL_STATUS;
+
 					monitor.subTask("Storing results in SoftwareFM");
 					FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(jar.getCanonicalPath(), digest);
 					ProjectData projectData = new ProjectData(fileNameAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model));
@@ -62,6 +69,7 @@ public class MavenImportJob implements ICallback<String> {
 				}
 			}
 		};
+		job.setUser(true);
 		job.schedule();
 	}
 }

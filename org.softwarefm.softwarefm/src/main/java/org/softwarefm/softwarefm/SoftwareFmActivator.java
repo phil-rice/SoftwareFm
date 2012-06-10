@@ -17,17 +17,20 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.softwarefm.eclipse.Marker;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.plugins.Plugins;
+import org.softwarefm.eclipse.link.IMakeLink;
+import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.IProjectStrategy;
 import org.softwarefm.eclipse.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
-import org.softwarefm.eclipse.selection.internal.EclipseSelectedBindingStrategy;
 import org.softwarefm.eclipse.selection.internal.SelectedArtifactSelectionManager;
 import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectHtmlRipper;
 import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectStrategy;
 import org.softwarefm.eclipse.selection.internal.SwtThreadSelectedBindingAggregator;
+import org.softwarefm.softwarefm.jobs.ManualImportJob;
+import org.softwarefm.softwarefm.jobs.MavenImportJob;
+import org.softwarefm.softwarefm.plugins.Plugins;
+import org.softwarefm.softwarefm.selection.internal.EclipseSelectedBindingStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.http.IHttpClient;
@@ -129,7 +132,12 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 
 	private SoftwareFmContainer<ITextSelection> makeContainer() {
 		synchronized (lock) {
-			return container == null ? new SoftwareFmContainer<ITextSelection>(getResourceGetter(), getSelectionBindingManager(), ICallback.Utils.<String> sysoutCallback(), ICallback.Utils.<ProjectData> sysoutCallback()) : container;
+			IResourceGetter resourceGetter = getResourceGetter();
+			IMaven maven = IMaven.Utils.makeImport();
+			IMakeLink makeLink = IMakeLink.Utils.makeLink();
+			MavenImportJob mavenImport = new MavenImportJob(maven, makeLink, resourceGetter);
+			ManualImportJob manualImport = new ManualImportJob(maven, makeLink, resourceGetter);
+			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, getSelectionBindingManager(), mavenImport, manualImport) : container;
 		}
 	}
 

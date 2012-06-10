@@ -26,6 +26,7 @@ import org.softwarefm.utilities.strings.Strings;
 public class ManualImportComposite extends TextAndFormComposite {
 
 	private FileNameAndDigest fileNameAndDigest;
+	private ProjectData projectData;
 
 	public ManualImportComposite(Composite parent, SoftwareFmContainer<?> container) {
 		super(parent, container);
@@ -53,15 +54,23 @@ public class ManualImportComposite extends TextAndFormComposite {
 						checkOk(result, SwtConstants.groupIdKey);
 						checkOk(result, SwtConstants.artifactIdKey);
 						checkOk(result, SwtConstants.versionKey);
+						if (projectData != null) {
+							boolean groupIdEqual = projectData.groupId.equals(getText(SwtConstants.groupIdKey));
+							boolean artifactIdEqual = projectData.artifactId.equals(getText(SwtConstants.artifactIdKey));
+							boolean versionEqul = projectData.version.equals(getText(SwtConstants.versionKey));
+							boolean unchanged = groupIdEqual && artifactIdEqual && versionEqul;
+							if (unchanged)
+								result.add(new KeyAndProblem(null, IResourceGetter.Utils.getMessageOrException(container.resourceGetter, MessageKeys.notChangedProjectData)));
+						}
 						return result;
 					}
 
 					private void checkOk(List<KeyAndProblem> result, String key) {
 						String text = getText(key);
 						String keyAsName = IResourceGetter.Utils.getOrException(container.resourceGetter, key);
-						if (text==null||text.length() == 0) {
+						if (text == null || text.length() == 0) {
 							result.add(new KeyAndProblem(key, IResourceGetter.Utils.getMessageOrException(container.resourceGetter, MessageKeys.needsValue, keyAsName)));
-						}else{
+						} else {
 							if (!Strings.isIdentifier(text))
 								result.add(new KeyAndProblem(key, IResourceGetter.Utils.getMessageOrException(container.resourceGetter, MessageKeys.illegalIdentifier, keyAsName)));
 						}
@@ -76,7 +85,6 @@ public class ManualImportComposite extends TextAndFormComposite {
 								ProjectData projectData = new ProjectData(fileNameAndDigest, groupId, artifactId, version);
 								setEnabledForButton(SwtConstants.okButton, false);
 								ICallback.Utils.call(container.importManually, projectData);
-								setText("Imported");
 							}
 						}.run();
 					}
@@ -96,6 +104,7 @@ public class ManualImportComposite extends TextAndFormComposite {
 
 	@Override
 	public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+		projectData = null;
 		this.fileNameAndDigest = fileNameAndDigest;
 		killLastLineAndappendText(unknownDigestMsg(fileNameAndDigest));
 		setText(SwtConstants.groupIdKey, "Enter Group Id");
@@ -105,12 +114,14 @@ public class ManualImportComposite extends TextAndFormComposite {
 
 	@Override
 	public void digestDetermined(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+		projectData = null;
 		this.fileNameAndDigest = fileNameAndDigest;
 		killLastLineAndappendText(digestDeterminedMsg(fileNameAndDigest) + "\n" + searchingMsg());
 	}
 
 	@Override
 	public void projectDetermined(ProjectData projectData, int selectionCount) {
+		this.projectData = projectData;
 		killLastLineAndappendText(projectDeterminedMsg(projectData) + "\nIf you think this is linked to the wrong data, follow <these instructions>");
 		setText(SwtConstants.groupIdKey, projectData.groupId);
 		setText(SwtConstants.artifactIdKey, projectData.artifactId);
@@ -118,6 +129,7 @@ public class ManualImportComposite extends TextAndFormComposite {
 	}
 
 	private void clearForm() {
+		projectData = null;
 		setText(SwtConstants.groupIdKey, "<Not Relevant>");
 		setText(SwtConstants.artifactIdKey, "<Not Relevant>");
 		setText(SwtConstants.versionKey, "<Not Relevant>");
@@ -125,17 +137,23 @@ public class ManualImportComposite extends TextAndFormComposite {
 
 	@Override
 	protected void notJavaElement(int selectionCount) {
+		projectData = null;
 		killLastLineAndappendText(notJavaElementMsg());
 		clearForm();
 	}
 
 	@Override
 	public void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+		projectData = null;
 		killLastLineAndappendText(notInAJarMsg(fileNameAndDigest));
 	}
 
 	@Override
 	public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
+		projectData = null;
+		setText(SwtConstants.groupIdKey, "<Searching>");
+		setText(SwtConstants.artifactIdKey, "<Searching>");
+		setText(SwtConstants.versionKey, "<Searching>");
 		setText(searchingMsg());
 	}
 

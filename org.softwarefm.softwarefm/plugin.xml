@@ -30,6 +30,14 @@
             id="org.softwarefm.softwarefm.views.MavenImportView">
       </view>
       <view
+            name="ManualImport"
+            icon="icons/digest.png"
+            category="org.softwarefm"
+            class="org.softwarefm.softwarefm.views.ManualImportView"
+            id="org.softwarefm.softwarefm.views.ManualImportView">
+      </view>
+
+      <view
             name="Project"
             icon="icons/project.png"
             category="org.softwarefm"

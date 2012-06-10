@@ -1,4 +1,4 @@
-package org.softwarefm.eclipse.selection.internal;
+package org.softwarefm.softwarefm.selection.internal;
 
 import java.io.File;
 import java.util.Map;

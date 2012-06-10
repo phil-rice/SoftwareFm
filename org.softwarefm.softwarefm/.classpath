@@ -2,11 +2,17 @@
 <classpath>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.softwarefm.eclipse"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.softwarefm.utilities"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java"/>
+	<classpathentry kind="lib" path="lib/utilities-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/commands-3.3.0-I20070605-0010.jar"/>
 	<classpathentry kind="lib" path="lib/common-3.3.0-v20070426.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/easymock-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/eclipse-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="lib/hamcrest-core-1.1.jar"/>
 	<classpathentry kind="lib" path="lib/httpclient-4.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.1.jar"/>
@@ -24,11 +30,5 @@
 	<classpathentry kind="lib" path="lib/sisu-inject-bean-1.4.2.jar"/>
 	<classpathentry kind="lib" path="lib/sisu-inject-plexus-1.4.2.jar"/>
 	<classpathentry kind="lib" path="lib/swt-3.3.0-v3346.jar"/>
-	<classpathentry kind="lib" path="lib/eclipse-0.0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="lib/utilities-0.0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

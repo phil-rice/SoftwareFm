@@ -1,13 +1,19 @@
 package org.softwarefm.labelAndText;
 
+
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
@@ -75,7 +81,7 @@ public class Form extends Composite implements IGetTextWithKey {
 		}
 	}
 
-	public class LabelAndText extends HasComposite {
+	public static class LabelAndText extends HasComposite {
 
 		private final LabelAndTextComposite composite;
 
@@ -87,6 +93,22 @@ public class Form extends Composite implements IGetTextWithKey {
 				super(parent, style);
 				label = new Label(this, SWT.NULL);
 				text = new Text(this, SWT.NULL);
+				text.addFocusListener(new FocusListener() {
+
+					public void focusLost(FocusEvent e) {
+					}
+
+					public void focusGained(FocusEvent e) {
+						text.selectAll();
+						System.out.println("Selecting all: " + text.getText());
+					}
+				});
+				text.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseDown(MouseEvent e) {
+						text.selectAll();
+					};
+				});
 			}
 
 			@Override
@@ -96,7 +118,9 @@ public class Form extends Composite implements IGetTextWithKey {
 
 			public void setProblems(List<String> problems) {
 				boolean ok = problems.size() == 0;
-				text.setForeground(ok ? getDisplay().getSystemColor(SWT.COLOR_BLACK) : getDisplay().getSystemColor(SWT.COLOR_RED));
+				Color color = ok ? getDisplay().getSystemColor(SWT.COLOR_BLACK) : getDisplay().getSystemColor(SWT.COLOR_RED);
+				text.setForeground(color);
+				label.setForeground(color);
 				String tooltip = Strings.join(problems, "\n");
 				text.setToolTipText(tooltip);
 				label.setToolTipText(tooltip);
@@ -112,7 +136,6 @@ public class Form extends Composite implements IGetTextWithKey {
 			super(parent);
 			composite = (LabelAndTextComposite) getComposite();
 			composite.label.setText(title);
-
 		}
 
 		public void addModifyListener(ModifyListener listener) {
@@ -147,6 +170,7 @@ public class Form extends Composite implements IGetTextWithKey {
 		buttonComposite = new ButtonComposite(this);
 		buttonConfigurator.configure(container, IButtonCreator.Utils.creator(buttonComposite.getComposite(), resourceGetter));
 		updateButtonStatus();
+		setBackground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 	}
 
 	public void setEnabledForButton(String key, boolean enabled) {
@@ -194,7 +218,7 @@ public class Form extends Composite implements IGetTextWithKey {
 				IResourceGetter resourceGetter = new ResourceGetterMock(//
 						SwtConstants.okButton, "OK", SwtConstants.cancelButton, "Cancel",//
 						"one", "One", "two", "Two", "three", "Three", "four", "Four", "five", "Five", "six", "Six", "seven", "Seven");
-				SoftwareFmContainer<?> container =SoftwareFmContainer.makeForTests(resourceGetter);
+				SoftwareFmContainer<?> container = SoftwareFmContainer.makeForTests(resourceGetter);
 				Form form = new Form(from, SWT.BORDER, container, IButtonConfigurator.Utils.okCancel(Runnables.sysout("ok"), Runnables.sysout("cancel")), "one", "two", "three", "four", "five", "six", "seven");
 				return form;
 			}
@@ -204,4 +228,5 @@ public class Form extends Composite implements IGetTextWithKey {
 	public String getText(String key) {
 		return getLabelAndTextFor(key).text.getText();
 	}
+
 }

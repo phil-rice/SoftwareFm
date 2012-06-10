@@ -21,7 +21,7 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 		text = new StyledText(getComposite(), SWT.READ_ONLY | SWT.WRAP | SWT.BORDER);
 		makeComponent(container, getComposite());
 		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithLastGrabingVertical(getComposite());
-
+		getComposite().setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
 		addListener(new ISelectedBindingListener() {
 
 			public void notJavaElement(int selectionCount) {
@@ -101,4 +101,5 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 	public String getText() {
 		return text.getText();
 	}
+	
 }
