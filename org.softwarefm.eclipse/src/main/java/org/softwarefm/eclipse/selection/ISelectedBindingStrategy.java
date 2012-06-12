@@ -6,7 +6,7 @@ import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectHtmlRipper;
 import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectStrategy;
-import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.utilities.http.IHttpClient;
 
 /**
@@ -30,8 +30,8 @@ public interface ISelectedBindingStrategy<S, N> extends IProjectStrategy<S> {
 	FileNameAndDigest findFileAndDigest(S selection, N node, int selectionCount);
 
 	public static class Utils {
-		public static <S> IProjectStrategy<S> softwareFmProjectStrategy() {
-			return new SoftwareFmProjectStrategy<S>(IHttpClient.Utils.builder(), CommonConstants.softwareFmHost, new SoftwareFmProjectHtmlRipper());
+		public static <S> IProjectStrategy<S> softwareFmProjectStrategy(IUrlStrategy urlStrategy) {
+			return new SoftwareFmProjectStrategy<S>(IHttpClient.Utils.builder(),  new SoftwareFmProjectHtmlRipper(), urlStrategy);
 		}
 
 		public static ISelectedBindingStrategy<Map<String, Object>, Map<String, Object>> fromMap() {

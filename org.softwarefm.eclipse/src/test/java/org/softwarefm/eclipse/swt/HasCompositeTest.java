@@ -2,7 +2,7 @@ package org.softwarefm.eclipse.swt;
 
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Layout;
-import org.softwarefm.eclipse.SwtTest;
+import org.softwarefm.eclipse.tests.SwtTest;
 
 public class HasCompositeTest extends SwtTest {
 

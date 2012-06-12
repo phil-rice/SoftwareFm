@@ -3,14 +3,17 @@ package org.softwarefm.eclipse.composite;
 import org.easymock.EasyMock;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.SwtTest;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
 import org.softwarefm.eclipse.selection.internal.SelectedArtifactSelectionManager;
 import org.softwarefm.eclipse.selection.internal.SwtThreadSelectedBindingAggregator;
+import org.softwarefm.eclipse.tests.SwtTest;
+import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.callbacks.MemoryCallback;
+import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.utilities.strings.Strings;
 
 public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmComposite> extends SwtTest {
 
@@ -22,13 +25,14 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 
 	private MemoryCallback<Throwable> rememberedExceptions;
 
-	protected final String digestUrl = "localhost/wiki/digest/0123456789";
+	protected final static String classAndMethodNameUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "java/packageName/className");
+	protected final static String digestUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "digest/0123456789");
+	protected final static String projectUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "project/g/a");
 
-	protected final FileNameAndDigest fileNameAndDigest = new FileNameAndDigest("fileName", "0123456789");
-	protected final FileNameAndDigest fileNameAndNoDigest = new FileNameAndDigest("fileName", null);
-	protected final FileNameAndDigest noFileNameAndNoDigest = new FileNameAndDigest(null, null);
-	protected final ProjectData projectData = new ProjectData(fileNameAndDigest, "g", "a", "v");
-	protected final String projectUrl = "localhost/wiki/project/g/a";
+	protected final static FileNameAndDigest fileNameAndDigest = new FileNameAndDigest("fileName", "0123456789");
+	protected final static FileNameAndDigest fileNameAndNoDigest = new FileNameAndDigest("fileName", null);
+	protected final static FileNameAndDigest noFileNameAndNoDigest = new FileNameAndDigest(null, null);
+	protected final static ProjectData projectData = new ProjectData(fileNameAndDigest, "g", "a", "v");
 
 	abstract protected P makePanel(Composite parent, SoftwareFmContainer<?> container);
 
@@ -47,7 +51,8 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		EasyMock.makeThreadSafe(strategy, true);
 		rememberedExceptions = ICallback.Utils.<Throwable> memory();
 		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), rememberedExceptions);
-		panel = makePanel(shell, SoftwareFmContainer.make(selectedArtifactSelectionManager, //
+		panel = makePanel(shell, SoftwareFmContainer.make(IUrlStrategy.Utils.urlStrategy(), //
+				selectedArtifactSelectionManager,//
 				ICallback.Utils.<String> exception("ImportPom shouldnt be used"),//
 				ICallback.Utils.<ProjectData> exception("ImportPom shouldnt be used")));
 	}

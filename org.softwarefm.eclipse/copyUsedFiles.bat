@@ -5,6 +5,10 @@
 ::You only need to do this when you have changed the maven dependencies
 ::Drop in here and use search and replace to make them look like the examples below
 ::Example: copy %m2%\junit\junit\4.10\junit-4.10.jar lib
+::
+::IMPORTANT ensure you remove
+::::copy %m2%\org\eclipse\equinox\common\3.3.0-v20070426\common-3.3.0-v20070426.jar lib
+::::this is effectively the core runtime, and clashes with maven
 
 
 copy %m2%\org\hamcrest\hamcrest-core\1.1\hamcrest-core-1.1.jar lib

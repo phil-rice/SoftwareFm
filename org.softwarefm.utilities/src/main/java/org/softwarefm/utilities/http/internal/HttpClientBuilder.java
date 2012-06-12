@@ -32,6 +32,7 @@ import org.softwarefm.utilities.http.HttpClientValidationException;
 import org.softwarefm.utilities.http.HttpMethod;
 import org.softwarefm.utilities.http.IHttpClient;
 import org.softwarefm.utilities.http.IResponse;
+import org.softwarefm.utilities.strings.Strings;
 
 public class HttpClientBuilder implements IHttpClient {
 
@@ -73,7 +74,7 @@ public class HttpClientBuilder implements IHttpClient {
 			HttpResponse httpResponse = client.execute(base);
 			HttpEntity entity = httpResponse.getEntity();
 			String mimeType = findMimeType(entity);
-			
+
 			List<Header> headers = Arrays.asList(httpResponse.getAllHeaders());
 			Response response = new Response(//
 					httpResponse.getStatusLine().getStatusCode(), //
@@ -109,8 +110,8 @@ public class HttpClientBuilder implements IHttpClient {
 	}
 
 	protected String protocolHostAndUrl() {
-		String urlWithSlash = url.startsWith("/") ? url : "/" + url;
-		return "http://" + host.getHostName() + ":" + host.getPort() + urlWithSlash;
+		String result = "http://" + Strings.url(host.getHostName() + ":" + host.getPort(), url);
+		return result;
 	}
 
 	private String findMimeType(HttpEntity entity) {

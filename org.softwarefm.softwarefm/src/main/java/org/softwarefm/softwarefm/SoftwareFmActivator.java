@@ -27,6 +27,7 @@ import org.softwarefm.eclipse.selection.internal.SelectedArtifactSelectionManage
 import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectHtmlRipper;
 import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectStrategy;
 import org.softwarefm.eclipse.selection.internal.SwtThreadSelectedBindingAggregator;
+import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.softwarefm.jobs.ManualImportJob;
 import org.softwarefm.softwarefm.jobs.MavenImportJob;
 import org.softwarefm.softwarefm.plugins.Plugins;
@@ -57,6 +58,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private IResourceGetter resourceGetter;
 
 	private SoftwareFmContainer<ITextSelection> container;
+
+	private IUrlStrategy urlStrategy;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -95,8 +98,9 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private ISelectedBindingManager<ITextSelection> makeSelectionBindingManager() {
 		synchronized (lock) {
 			if (selectionBindingManager == null) {
+				IUrlStrategy urlStrategy = getUrlStrategy();
 				ISelectedBindingListenerAndAdderRemover<ITextSelection> listenerManager = new SwtThreadSelectedBindingAggregator<ITextSelection>(getDisplay());
-				IProjectStrategy<ITextSelection> projectStrategy = new SoftwareFmProjectStrategy<ITextSelection>(IHttpClient.Utils.builder(), CommonConstants.softwareFmHost, new SoftwareFmProjectHtmlRipper());
+				IProjectStrategy<ITextSelection> projectStrategy = new SoftwareFmProjectStrategy<ITextSelection>(IHttpClient.Utils.builder(), new SoftwareFmProjectHtmlRipper(), urlStrategy);
 				ISelectedBindingStrategy<ITextSelection, Expression> strategy = new EclipseSelectedBindingStrategy(projectStrategy);
 				ExecutorService executor = getExecutorService();
 				selectionBindingManager = new SelectedArtifactSelectionManager<ITextSelection, Expression>(listenerManager, strategy, executor, ICallback.Utils.sysErrCallback());
@@ -134,11 +138,16 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		synchronized (lock) {
 			IResourceGetter resourceGetter = getResourceGetter();
 			IMaven maven = IMaven.Utils.makeImport();
-			IMakeLink makeLink = IMakeLink.Utils.makeLink();
+			IUrlStrategy urlStrategy = getUrlStrategy();
+			IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy);
 			MavenImportJob mavenImport = new MavenImportJob(maven, makeLink, resourceGetter);
 			ManualImportJob manualImport = new ManualImportJob(maven, makeLink, resourceGetter);
-			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, getSelectionBindingManager(), mavenImport, manualImport) : container;
+			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, getSelectionBindingManager(), mavenImport, manualImport, urlStrategy) : container;
 		}
+	}
+
+	private IUrlStrategy getUrlStrategy() {
+		return urlStrategy == null ? urlStrategy = IUrlStrategy.Utils.urlStrategy(CommonConstants.softwareFmHost) : urlStrategy;
 	}
 
 	private IResourceGetter getResourceGetter() {

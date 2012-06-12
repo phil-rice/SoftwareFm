@@ -4,6 +4,7 @@ import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
 import org.softwarefm.eclipse.selection.IProjectHtmlRipper;
 import org.softwarefm.eclipse.selection.IProjectStrategy;
+import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.http.IHttpClient;
@@ -12,16 +13,19 @@ import org.softwarefm.utilities.http.IResponse;
 public class SoftwareFmProjectStrategy<S> implements IProjectStrategy<S> {
 	private final IHttpClient client;
 	private final IProjectHtmlRipper htmlRipper;
+	private final IUrlStrategy urlStrategy;
 
-	public SoftwareFmProjectStrategy(IHttpClient client, String host, IProjectHtmlRipper htmlRipper) {
+	public SoftwareFmProjectStrategy(IHttpClient client, IProjectHtmlRipper htmlRipper, IUrlStrategy urlStrategy) {
 		this.htmlRipper = htmlRipper;
-		this.client = client.host(host);
+		this.urlStrategy = urlStrategy;
+		this.client = client.host(urlStrategy.host());
 
 	}
 
 	public ProjectData findProject(S selection, FileNameAndDigest fileNameAndDigest, int selectionCount) {
 		try {
-			IResponse response = client.get(CommonConstants.softwareFmUrlPrefix + "digest/" + fileNameAndDigest.digest).execute();
+			String url = urlStrategy.digestUrl(fileNameAndDigest.digest).url;
+			IResponse response = client.get(url).execute();
 			if (CommonConstants.okStatusCodes.contains(response.statusCode())) {
 				String html = response.asString();
 				ProjectData projectData = htmlRipper.rip(fileNameAndDigest, html);

@@ -11,9 +11,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.SwtTest;
 import org.softwarefm.eclipse.constants.SwtConstants;
 import org.softwarefm.eclipse.swt.Swts;
+import org.softwarefm.eclipse.tests.SwtTest;
 import org.softwarefm.utilities.collections.Lists;
 
 public class FormTest extends SwtTest {

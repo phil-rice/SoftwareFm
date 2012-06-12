@@ -1,8 +1,8 @@
 package org.softwarefm.softwarefm.views;
 
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.SwtTest;
 import org.softwarefm.eclipse.composite.SoftwareFmComposite;
+import org.softwarefm.eclipse.tests.SwtTest;
 
 public class ViewsTest extends SwtTest {
 

@@ -3,8 +3,8 @@ package org.softwarefm.eclipse.composite;
 import java.util.Arrays;
 
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.SwtTest;
 import org.softwarefm.eclipse.constants.SwtConstants;
+import org.softwarefm.eclipse.tests.SwtTest;
 import org.softwarefm.labelAndText.Form;
 
 public class ImportFromMavenCompositeTest extends SwtTest {

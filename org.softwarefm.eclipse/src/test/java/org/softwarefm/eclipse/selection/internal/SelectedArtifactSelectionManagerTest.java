@@ -3,13 +3,13 @@ package org.softwarefm.eclipse.selection.internal;
 import java.util.concurrent.ExecutionException;
 
 import org.easymock.EasyMock;
-import org.softwarefm.eclipse.ExecutorTestCase;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
+import org.softwarefm.eclipse.tests.ExecutorTestCase;
 import org.softwarefm.utilities.callbacks.ICallback;
 
 public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {

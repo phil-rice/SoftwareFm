@@ -12,7 +12,7 @@ import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 
 public class SoftwareFmDebugComposite extends SoftwareFmComposite {
 
-	public SoftwareFmDebugComposite(Composite parent, SoftwareFmContainer<?> container) {
+	public SoftwareFmDebugComposite(Composite parent, final SoftwareFmContainer<?> container) {
 		super(parent, container);
 		getComposite().setLayout(new FillLayout());
 		final StyledText text = new StyledText(getComposite(), SWT.WRAP | SWT.READ_ONLY);
@@ -23,7 +23,7 @@ public class SoftwareFmDebugComposite extends SoftwareFmComposite {
 			}
 
 			public void projectDetermined(ProjectData projectData, int selectionCount) {
-				text.append("projectDetermined: (" + selectionCount + ")\n" + projectData + "\n");
+				text.append("projectDetermined: (" + selectionCount + ")\n" + projectData + "\nUrl: " + container.urlStrategy.projectUrl(projectData) +"\n");
 			}
 
 			public void notInAJar(FileNameAndDigest filename, int selectionCount) {
@@ -31,11 +31,11 @@ public class SoftwareFmDebugComposite extends SoftwareFmComposite {
 			}
 
 			public void digestDetermined(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-				text.append("Digest: (" + selectionCount + ") " + fileNameAndDigest + "\n");
+				text.append("Digest: (" + selectionCount + ") " + fileNameAndDigest + "\nUrl: " + container.urlStrategy.digestUrl(fileNameAndDigest.digest)+"\n");
 			}
 
 			public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
-				text.setText("Class and method: (" + selectionCount + ")\n" + expressionData + "\n");
+				text.setText("Class and method: (" + selectionCount + ")\n" + expressionData + "\nUrl: " + container.urlStrategy.classAndMethodUrl(expressionData)+"\n");
 			}
 
 			public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {

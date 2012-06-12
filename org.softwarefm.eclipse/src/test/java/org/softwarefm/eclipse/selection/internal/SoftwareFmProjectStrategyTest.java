@@ -6,8 +6,11 @@ import org.easymock.EasyMock;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
 import org.softwarefm.eclipse.selection.IProjectHtmlRipper;
+import org.softwarefm.eclipse.url.IUrlStrategy;
+import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.http.IHttpClient;
 import org.softwarefm.utilities.http.IResponse;
+import org.softwarefm.utilities.strings.Strings;
 
 public class SoftwareFmProjectStrategyTest extends TestCase {
 
@@ -20,21 +23,20 @@ public class SoftwareFmProjectStrategyTest extends TestCase {
 
 	private final FileNameAndDigest fileNameAndDigest = new FileNameAndDigest("file", "digest");
 	private final ProjectData projectData = new ProjectData(fileNameAndDigest, "g", "a", "v");
+	private final static String digestUrl = Strings.url(CommonConstants.softwareFmPageOffset, "digest/digest");
 
 	public void testFindProject() {
-		String digestUrl = "/wiki/digest/digest";
 		EasyMock.expect(rawClient.host("host")).andReturn(withHost);
 		EasyMock.expect(withHost.get(digestUrl)).andReturn(withGet1);
 		EasyMock.expect(withGet1.execute()).andReturn(IResponse.Utils.okText(digestUrl, "projectText"));
 		EasyMock.expect(htmlRipper.rip(fileNameAndDigest, "projectText")).andReturn(projectData);
 		EasyMock.replay(htmlRipper, rawClient, withHost, withGet1, withGet2, withGet3);
 
-		SoftwareFmProjectStrategy<String> strategy = new SoftwareFmProjectStrategy<String>(rawClient, "host", htmlRipper);
+		SoftwareFmProjectStrategy<String> strategy = new SoftwareFmProjectStrategy<String>(rawClient,  htmlRipper, IUrlStrategy.Utils.urlStrategy("host"));
 		strategy.findProject("selection", fileNameAndDigest, 1);
 	}
 
 	public void testFindProjectReusesWithGet() {
-		String digestUrl = "/wiki/digest/digest";
 		EasyMock.expect(rawClient.host("host")).andReturn(withHost);
 
 		EasyMock.expect(withHost.get(digestUrl)).andReturn(withGet1);
@@ -51,7 +53,7 @@ public class SoftwareFmProjectStrategyTest extends TestCase {
 
 		EasyMock.replay(htmlRipper, rawClient, withHost, withGet1, withGet2, withGet3);
 
-		SoftwareFmProjectStrategy<String> strategy = new SoftwareFmProjectStrategy<String>(rawClient, "host", htmlRipper);
+		SoftwareFmProjectStrategy<String> strategy = new SoftwareFmProjectStrategy<String>(rawClient, htmlRipper,IUrlStrategy.Utils.urlStrategy("host"));
 		strategy.findProject("selection", fileNameAndDigest, 1);
 		strategy.findProject("selection", fileNameAndDigest, 1);
 		strategy.findProject("selection", fileNameAndDigest, 1);

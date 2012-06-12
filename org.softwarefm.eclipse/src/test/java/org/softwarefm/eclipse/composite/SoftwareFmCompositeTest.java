@@ -19,7 +19,7 @@ public class SoftwareFmCompositeTest extends AbstractSoftwareFmCompositeTest<Cla
 	}
 
 	public void testDigestUrl() {
-		assertEquals("localhost/wiki/digest/0123456789", panel.digestUrl(fileNameAndDigest));
+		assertEquals(digestUrl, panel.digestUrl(fileNameAndDigest));
 	}
 
 	public void testMsgs() {

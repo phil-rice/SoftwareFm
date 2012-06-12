@@ -2,7 +2,7 @@
 /* SoftwareFm is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details. */
 /* You should have received a copy of the GNU General Public License along with SoftwareFm. If not, see <http://www.gnu.org/licenses/> */
 
-package org.softwarefm.eclipse;
+package org.softwarefm.eclipse.tests;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;

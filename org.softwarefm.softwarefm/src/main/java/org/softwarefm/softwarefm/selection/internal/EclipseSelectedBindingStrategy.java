@@ -188,6 +188,8 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 			return result;
 		}
 		ITypeBinding binding = from.resolveTypeBinding();
+		if (binding == null)
+			return null;
 		IJavaElement javaElement = binding.getJavaElement();
 		return javaElement;
 	}

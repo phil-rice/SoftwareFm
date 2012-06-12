@@ -11,8 +11,8 @@ import org.softwarefm.eclipse.selection.IHasSelectionBindingManager;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.swt.HasComposite;
+import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.utilities.collections.Lists;
-import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.resources.IResourceGetter;
 import org.softwarefm.utilities.strings.Strings;
 
@@ -20,11 +20,13 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 	private final List<ISelectedBindingListener> listeners = Lists.newList();
 	private final ISelectedBindingManager<?> selectionBindingManager;
 	protected final IResourceGetter resourceGetter;
+	protected final IUrlStrategy urlStrategy;
 
 	public SoftwareFmComposite(Composite parent, SoftwareFmContainer<?> container) {
 		super(parent);
 		this.selectionBindingManager = container.selectedBindingManager;
 		this.resourceGetter = container.resourceGetter;
+		urlStrategy = container.urlStrategy;
 	}
 
 	protected void addListener(ISelectedBindingListener listener) {
@@ -80,7 +82,8 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 	}
 
 	protected String digestUrl(FileNameAndDigest fileNameAndDigest) {
-		return CommonConstants.softwareFmHostAndPrefix + "digest/" + fileNameAndDigest.digest;
+		assert fileNameAndDigest.digest != null : fileNameAndDigest;
+		return urlStrategy.digestUrl(fileNameAndDigest.digest).getHostAndUrl();
 	}
 
 	public String notJavaElementMsg() {

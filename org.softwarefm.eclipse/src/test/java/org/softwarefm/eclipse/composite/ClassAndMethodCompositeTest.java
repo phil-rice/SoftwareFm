@@ -3,7 +3,6 @@ package org.softwarefm.eclipse.composite;
 import org.easymock.EasyMock;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.composite.ClassAndMethodComposite;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 
 public class ClassAndMethodCompositeTest extends AbstractSoftwareFmCompositeTest<ClassAndMethodComposite> {
@@ -21,7 +20,7 @@ public class ClassAndMethodCompositeTest extends AbstractSoftwareFmCompositeTest
 			}
 		});
 		EasyMock.verify(strategy);
-		assertEquals("localhost/wiki/java/packageName/className", panel.getUrl());
+		assertEquals(classAndMethodNameUrl, panel.getUrl());
 	}
 
 	@Override

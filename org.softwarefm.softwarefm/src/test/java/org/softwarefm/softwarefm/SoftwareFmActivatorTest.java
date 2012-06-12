@@ -4,9 +4,9 @@ import java.util.concurrent.ExecutorService;
 
 import org.eclipse.jface.text.ITextSelection;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.SwtTest;
 import org.softwarefm.eclipse.constants.MessageKeys;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
+import org.softwarefm.eclipse.tests.SwtTest;
 import org.softwarefm.utilities.resources.IResourceGetter;
 
 public class SoftwareFmActivatorTest extends SwtTest {
@@ -37,6 +37,13 @@ public class SoftwareFmActivatorTest extends SwtTest {
 		assertNotSame(manager, activator.getContainer().selectedBindingManager);
 	}
 
+	public void testGetUrlStrategy(){
+		SoftwareFmContainer<ITextSelection> container1 = activator.getContainer();
+		SoftwareFmContainer<ITextSelection> container2 = activator.getContainer();
+		assertSame(container1.urlStrategy, container2.urlStrategy);
+		assertNotNull(container1.urlStrategy);
+	}
+	
 	public void testExecutorService() {
 		ExecutorService service1 = activator.getExecutorService();
 		ExecutorService service2 = activator.getExecutorService();

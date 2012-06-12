@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.softwarefm.utilities.collections.Files;
+import org.softwarefm.utilities.collections.Iterables;
 import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.collections.Sets;
 import org.softwarefm.utilities.constants.UtilityMessages;
@@ -22,14 +23,45 @@ import org.softwarefm.utilities.functions.IFunction1;
 
 public class Strings {
 
-	private final static Pattern urlFriendlyPattern = Pattern.compile(
-			"(([\\w]+:)?//)?(([\\d\\w]|%[a-fA-f\\d]{2,2})+(:([\\d\\w]|%[a-fA-f\\d]{2,2})+)?@)?([\\d\\w][-\\d\\w]{0,253}[\\d\\w]\\.)+[\\w]{2,4}(:[\\d]+)?(/([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)*(\\?(&?([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})=?)*)?(#([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)?");
+	private final static Pattern urlFriendlyPattern = Pattern.compile("(([\\w]+:)?//)?(([\\d\\w]|%[a-fA-f\\d]{2,2})+(:([\\d\\w]|%[a-fA-f\\d]{2,2})+)?@)?([\\d\\w][-\\d\\w]{0,253}[\\d\\w]\\.)+[\\w]{2,4}(:[\\d]+)?(/([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)*(\\?(&?([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})=?)*)?(#([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)?");
 	private static String digits = "0123456789abcdef";
 
 	public static boolean isEmail(String email) {
 		Matcher matcher = Pattern.compile("[\\w-]+@([\\w-]+\\.)+[\\w-]+").matcher(email);
 		boolean emailOk = email.length() > 0 && matcher.find();
 		return emailOk;
+	}
+
+	public static String url(String... fragments) {
+		Iterable<String> withoutSlashes = Iterables.mapValues(new IFunction1<String, String>() {
+			public String apply(String from) throws Exception {
+				return trim(from, '/');
+			}
+		}, fragments);
+		Iterable<String> withoutBlanks = Iterables.remove(withoutSlashes, new IFunction1<String, Boolean>() {
+			public Boolean apply(String from) throws Exception {
+				return from.length() == 0;
+			}
+		});
+		return join(withoutBlanks, "/");
+	}
+
+	public static String urlWithSlash(String... fragments) {
+		return "/" + url(fragments);
+	}
+
+	public static String trim(String string, char toRemove) {
+		int startIndex = 0;
+		while (startIndex < string.length() && string.charAt(startIndex) == toRemove)
+			startIndex++;
+		int endIndex = string.length() - 1;
+		while (endIndex >= 0 && string.charAt(endIndex) == toRemove)
+			endIndex--;
+		if (startIndex <= endIndex)
+			return string.substring(startIndex, endIndex + 1);
+		else
+			return "";
+
 	}
 
 	public static String toHex(byte[] data, int length) {
@@ -220,7 +252,7 @@ public class Strings {
 
 	public static IFunction1<String, Integer> length() {
 		return new IFunction1<String, Integer>() {
-			
+
 			public Integer apply(String from) throws Exception {
 				return from.length();
 			}
@@ -229,7 +261,7 @@ public class Strings {
 
 	public static IFunction1<Object, String> toStringFn() {
 		return new IFunction1<Object, String>() {
-			
+
 			public String apply(Object from) throws Exception {
 				return from.toString();
 			}
@@ -257,7 +289,7 @@ public class Strings {
 
 	public static IFunction1<String, Boolean> startsWith(final String prefix) {
 		return new IFunction1<String, Boolean>() {
-			
+
 			public Boolean apply(String from) throws Exception {
 				return from.startsWith(prefix);
 			}
@@ -293,7 +325,6 @@ public class Strings {
 		return toString.length() > 0;
 	}
 
-
 	public static String sqlEscape(String raw) {
 		return raw.replaceAll("'", "''").replaceAll("\\\\", "\\\\");
 	}
@@ -301,7 +332,6 @@ public class Strings {
 	public static IFunction1<String, String> forUrlFn() {
 		return new IFunction1<String, String>() {
 
-			
 			public String apply(String from) throws Exception {
 				return forUrl(from);
 			}
@@ -316,7 +346,6 @@ public class Strings {
 	public static IFunction1<String, String> lastSegmentFn(final String separator) {
 		return new IFunction1<String, String>() {
 
-			
 			public String apply(String from) throws Exception {
 				return lastSegment(from, separator);
 			}
@@ -347,7 +376,7 @@ public class Strings {
 
 	public static IFunction1<String, String> upperCaseFirstCharacterFn() {
 		return new IFunction1<String, String>() {
-			
+
 			public String apply(String from) throws Exception {
 				return upperCaseFirstCharacter(from);
 			}
@@ -368,7 +397,7 @@ public class Strings {
 
 	public static IFunction1<String, String> camelCaseToPrettyFn() {
 		return new IFunction1<String, String>() {
-			
+
 			public String apply(String from) throws Exception {
 				return camelCaseToPretty(from);
 			}
@@ -412,7 +441,7 @@ public class Strings {
 
 	public static Comparator<String> compareVersionNumbers() {
 		return new Comparator<String>() {
-			
+
 			public int compare(String o1, String o2) {
 				return compareVersionNumbers(o1, o2);
 			}
@@ -471,7 +500,7 @@ public class Strings {
 
 	public static IFunction1<String, String> segmentFn(final String separator, final int i) {
 		return new IFunction1<String, String>() {
-			
+
 			public String apply(String from) throws Exception {
 				return segment(from, separator, i);
 			}
@@ -496,7 +525,7 @@ public class Strings {
 
 	public static IFunction1<String, Boolean> isEmailFn() {
 		return new IFunction1<String, Boolean>() {
-			
+
 			public Boolean apply(String from) throws Exception {
 				return isEmail(from);
 			}

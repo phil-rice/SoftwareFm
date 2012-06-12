@@ -137,15 +137,14 @@ public class ManualImportComposite extends TextAndFormComposite {
 
 	@Override
 	protected void notJavaElement(int selectionCount) {
-		projectData = null;
 		killLastLineAndappendText(notJavaElementMsg());
 		clearForm();
 	}
 
 	@Override
 	public void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-		projectData = null;
 		killLastLineAndappendText(notInAJarMsg(fileNameAndDigest));
+		clearForm();
 	}
 
 	@Override

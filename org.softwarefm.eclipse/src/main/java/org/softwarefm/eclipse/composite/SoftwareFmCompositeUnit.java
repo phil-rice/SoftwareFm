@@ -25,11 +25,14 @@ import org.softwarefm.eclipse.selection.internal.SwtThreadSelectedBindingAggrega
 import org.softwarefm.eclipse.swt.HasComposite;
 import org.softwarefm.eclipse.swt.ISituationListAndBuilder;
 import org.softwarefm.eclipse.swt.Swts;
+import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.functions.Functions;
 import org.softwarefm.utilities.functions.IFunction2;
 
 public class SoftwareFmCompositeUnit {
+	
+	
 
 	static class Holder extends HasComposite implements IHasSelectionBindingManager {
 
@@ -60,7 +63,6 @@ public class SoftwareFmCompositeUnit {
 	public SoftwareFmCompositeUnit(String title, final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>... creators) {
 		final ExecutorService threadingPool = Executors.newCachedThreadPool();
 		try {
-			final IMakeLink makeLink = IMakeLink.Utils.makeLink();
 			Swts.Show.xUnit(title, new File("src/test/resources/org/softwarefm/eclipse/composite"), "dat", new ISituationListAndBuilder<Holder, String>() {
 				public Holder makeChild(Composite parent) throws Exception {
 					final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay());
@@ -69,8 +71,11 @@ public class SoftwareFmCompositeUnit {
 							ISelectedBindingStrategy.Utils.fromMap(), //
 							threadingPool, //
 							ICallback.Utils.rethrow());
-					SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(manager, //
-							IMaven.Utils.importPomWithSysouts(makeLink), //
+					IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
+					final IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy);
+					SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
+							manager, //
+							IMaven.Utils.importPomWithSysouts(makeLink),//
 							IMakeLink.Utils.manuallyImport(makeLink));
 					Holder holder = new Holder(parent, manager);
 					for (IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> creator : creators) {
@@ -125,9 +130,14 @@ public class SoftwareFmCompositeUnit {
 			return new MavenImportComposite(parent, container);
 		}
 	};
+	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> debugCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
+		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
+			return new SoftwareFmDebugComposite(parent, container);
+		}
+	};
 
 	@SuppressWarnings({ "unused", "unchecked" })
 	public static void main(String[] args) {
-		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), allCreator, classAndMethodCreator, digestCreator, manualImportCreator, mavenImportCreator);
+		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), allCreator, classAndMethodCreator, digestCreator, manualImportCreator, mavenImportCreator, debugCreator);
 	}
 }

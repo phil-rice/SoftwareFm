@@ -6,7 +6,6 @@ import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
 import org.softwarefm.labelAndText.TextAndBrowserComposite;
-import org.softwarefm.utilities.constants.CommonConstants;
 
 public class ProjectComposite extends TextAndBrowserComposite {
 
@@ -17,7 +16,7 @@ public class ProjectComposite extends TextAndBrowserComposite {
 	@Override
 	public void projectDetermined(ProjectData projectData, int selectionCount) {
 		killLastLineAndappendText(projectDeterminedMsg(projectData));
-		String url = CommonConstants.softwareFmHostAndPrefix + "project/" + projectData.groupId + "/" + projectData.artifactId;
+		String url = urlStrategy.projectUrl(projectData).getHostAndUrl();
 		setUrl(url);
 	}
 

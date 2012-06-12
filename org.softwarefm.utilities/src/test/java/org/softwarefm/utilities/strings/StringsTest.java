@@ -21,8 +21,35 @@ public class StringsTest extends TestCase {
 		byte[] actual = Strings.fromHex("000102030405060708090a0b0c0d0e0f101112");
 		assertTrue(Arrays.equals(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 }, actual));
 	}
+
+	public void testTrim(){
+		assertEquals("bcd", Strings.trim("abcd", 'a'));
+		assertEquals("abc", Strings.trim("abcd", 'd'));
+		assertEquals("x", Strings.trim("axa", 'a'));
+		
+		assertEquals("axa", Strings.trim("axa", 'b'));
+		assertEquals("", Strings.trim("", 'b'));
+		assertEquals("", Strings.trim("bbbbbb", 'b'));
+		assertEquals("", Strings.trim("b", 'b'));
+	}
 	
-	public void testIsIdentifier(){
+	public void testUrl() {
+		assertEquals("", Strings.url());
+		assertEquals("", Strings.url(""));
+		assertEquals("", Strings.url("", ""));
+
+		assertEquals("a", Strings.url("a"));
+		assertEquals("a/b", Strings.url("a", "b"));
+		assertEquals("a/b", Strings.url("a", "", "b"));
+		
+		assertEquals("a", Strings.url("/a/"));
+		assertEquals("a/b", Strings.url("/a/", "", "/b/"));
+
+		assertEquals("a", Strings.url("//a//"));
+		assertEquals("a/b", Strings.url("//a//", "//", "//b//"));
+	}
+
+	public void testIsIdentifier() {
 		assertTrue(Strings.isIdentifier("abc.123-a"));
 		assertFalse(Strings.isIdentifier("a/"));
 		assertFalse(Strings.isIdentifier("a\\"));
@@ -36,7 +63,7 @@ public class StringsTest extends TestCase {
 		assertEquals("ab", Strings.firstNCharacters("ab", 3));
 		assertEquals("", Strings.firstNCharacters("", 3));
 		Tests.assertThrowsWithMessage("Cannot get first (-1) characters", IllegalArgumentException.class, new Runnable() {
-			
+
 			public void run() {
 				Strings.firstNCharacters("asdjk", -1);
 			}

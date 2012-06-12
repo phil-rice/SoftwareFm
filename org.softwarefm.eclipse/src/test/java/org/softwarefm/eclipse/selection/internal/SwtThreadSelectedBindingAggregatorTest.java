@@ -1,11 +1,11 @@
 package org.softwarefm.eclipse.selection.internal;
 
 import org.easymock.EasyMock;
-import org.softwarefm.eclipse.SwtTest;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
+import org.softwarefm.eclipse.tests.SwtTest;
 import org.softwarefm.utilities.callbacks.ICallback;
 
 public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
