@@ -25,9 +25,9 @@ public class MavenImportComposite extends TextAndControlComposite<Form> {
 
 	Form form;
 
-	public MavenImportComposite(Composite parent, SoftwareFmContainer<?> container) {
+	public MavenImportComposite(Composite parent, SoftwareFmContainer<?> container, String key) {
 		super(parent, container);
-		setMessage(SwtConstants.linkFromMavenDescriptionWithNoSelectionText);
+		setMessage(key);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class MavenImportComposite extends TextAndControlComposite<Form> {
 	public static void main(String[] args) {
 		Swts.Show.display(MavenImportComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			public Composite apply(Composite from) throws Exception {
-				return new MavenImportComposite(from, SoftwareFmContainer.makeForTests()).getComposite();
+				return new MavenImportComposite(from, SoftwareFmContainer.makeForTests(), SwtConstants.linkFromMavenDescriptionWithNoSelectionText).getComposite();
 			}
 		});
 	}

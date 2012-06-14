@@ -49,8 +49,11 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 	}
 
 	public String unknownDigestMsg(FileNameAndDigest fileNameAndDigest) {
+		return unknownDigestMsg(MessageKeys.unrecognisedDigestForProject, fileNameAndDigest);
+	}
+	public String unknownDigestMsg(String key, FileNameAndDigest fileNameAndDigest) {
 		assert fileNameAndDigest.digest != null : fileNameAndDigest;
-		String result = msg(MessageKeys.unrecognisedDigest, fileNameAndDigest.file.getPath(), Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest);
+		String result = msg(key, fileNameAndDigest.file.getPath(), Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest);
 		return result;
 	}
 

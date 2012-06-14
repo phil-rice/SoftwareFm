@@ -61,9 +61,10 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 
 	public void setText(String text) {
 		this.text.setText(text);
+		layout();
 	}
-	
-	public void setMessage(String key, Object...args){
+
+	public void setMessage(String key, Object... args) {
 		this.text.setText(IResourceGetter.Utils.getMessageOrException(resourceGetter, key, args));
 	}
 
@@ -101,5 +102,5 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 	public String getText() {
 		return text.getText();
 	}
-	
+
 }

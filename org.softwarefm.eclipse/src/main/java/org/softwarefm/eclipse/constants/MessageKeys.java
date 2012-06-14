@@ -7,7 +7,9 @@ public class MessageKeys {
 	public static final String foundDigest = "message.foundDigest.text";
 	public static final String notAJar = "message.notAJar.text";
 	public static final String foundProjectData = "message.foundProjectData.text";
-	public static final String unrecognisedDigest = "message.unrecognisedDigest.text";
+	public static final String unrecognisedDigestForProject = "message.unrecognisedDigest.project.text";
+	public static final String unrecognisedDigestForMavenImport = "message.unrecognisedDigest.mavenImport.text";
+	public static final String unrecognisedDigestForManualImport = "message.unrecognisedDigest.manualImport.text";
 	public static final String notJavaElement = "message.notJavaElement.text";
 	public static final String needsValue = "message.needsValue.text";
 	public static final String fileUnknown = "message.file.notKnown";

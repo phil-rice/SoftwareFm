@@ -34,7 +34,7 @@ public class ImportFromMavenCompositeTest extends SwtTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		mavenImportComposite = new MavenImportComposite(shell, SoftwareFmContainer.makeForTests());
+		mavenImportComposite = new MavenImportComposite(shell, SoftwareFmContainer.makeForTests(), SwtConstants.linkFromMavenDescriptionWithNoSelectionText);
 		form = mavenImportComposite.form;
 	}
 

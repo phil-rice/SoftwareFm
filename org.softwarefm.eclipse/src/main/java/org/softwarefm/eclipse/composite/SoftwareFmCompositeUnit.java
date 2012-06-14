@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.constants.SwtConstants;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.IHasSelectionBindingManager;
@@ -133,7 +134,7 @@ public class SoftwareFmCompositeUnit {
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> mavenImportCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
-			return new MavenImportComposite(parent, container);
+			return new MavenImportComposite(parent, container, SwtConstants.linkFromMavenDescriptionWithNoSelectionText);
 		}
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> debugCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {

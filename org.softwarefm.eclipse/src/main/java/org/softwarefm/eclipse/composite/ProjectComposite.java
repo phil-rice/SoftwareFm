@@ -6,83 +6,52 @@ import org.softwarefm.eclipse.constants.UrlConstants;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.swt.Swts;
-import org.softwarefm.labelAndText.TextAndControlComposite;
 import org.softwarefm.utilities.functions.IFunction1;
 
-public class ProjectComposite extends TextAndControlComposite<StackedBrowserAndControl<LinkToProjectComposite>> {
+public class ProjectComposite extends StackedBrowserAndControl<LinkToProjectComposite> {
 
-	private StackedBrowserAndControl<LinkToProjectComposite> browserAndLinkToProject;
-	private String url;
 
-	public ProjectComposite(Composite parent, SoftwareFmContainer<?> container) {
-		super(parent, container);
-	}
-
-	@Override
-	protected StackedBrowserAndControl<LinkToProjectComposite> makeComponent(final SoftwareFmContainer<?> container, Composite parent) {
-		return browserAndLinkToProject = new StackedBrowserAndControl<LinkToProjectComposite>(parent, new IFunction1<Composite, LinkToProjectComposite>() {
+	public ProjectComposite(Composite parent, final SoftwareFmContainer<?> container) {
+		super(parent, container, new IFunction1<Composite, LinkToProjectComposite>() {
 			public LinkToProjectComposite apply(Composite from) throws Exception {
 				return new LinkToProjectComposite(from, container);
 			}
 		});
-	}
+		addListener(new ISelectedBindingListener() {
+			public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
+				setText(searchingMsg());
+			}
 
-	@Override
-	public void projectDetermined(ProjectData projectData, int selectionCount) {
-		killLastLineAndappendText(projectDeterminedMsg(projectData));
-		String url = urlStrategy.projectUrl(projectData).getHostAndUrl();
-		setUrl(url);
-	}
+			public void notJavaElement(int selectionCount) {
+				setUrlAndShow(UrlConstants.notJavaElementUrl);
+			}
 
-	@Override
-	public void dispose() {
-		super.dispose();
-		browserAndLinkToProject.dispose();
-	}
+			public void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+				setUrlAndShow(UrlConstants.notJarUrl);
+			}
 
-	void setUrl(String url) {
-		this.url = url;
-		browserAndLinkToProject.setUrlAndShow(url);
-	}
+			public void digestDetermined(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+				setText(digestDeterminedMsg(fileNameAndDigest) + "\n" + searchingMsg());
+			}
 
-	public String getUrl() {
-		return url;
-	}
+			public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+				showSecondaryControl();
+			}
 
-	@Override
-	public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
-		setText(searchingMsg());
-	}
-
-	@Override
-	public void notJavaElement(int selectionCount) {
-		killLastLineAndappendText(notJavaElementMsg());
-		setUrl(UrlConstants.notJavaElementUrl);
-	}
-
-	@Override
-	public void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-		setText(notInAJarMsg(fileNameAndDigest));
-		setUrl(UrlConstants.notJarUrl);
-	}
-
-	@Override
-	public void digestDetermined(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-		killLastLineAndappendText(digestDeterminedMsg(fileNameAndDigest) + "\n" + searchingMsg());
-	}
-
-	@Override
-	public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-		killLastLineAndappendText(unknownDigestMsg(fileNameAndDigest));
-		browserAndLinkToProject.showSecondaryControl();
+			public void projectDetermined(ProjectData projectData, int selectionCount) {
+				String url = urlStrategy.projectUrl(projectData).getHostAndUrl();
+				setUrlAndShow(url);
+			}
+		});
 	}
 
 	public static void main(String[] args) {
 		Swts.Show.display(ProjectComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			public Composite apply(Composite from) throws Exception {
 				ProjectComposite projectComposite = new ProjectComposite(from, SoftwareFmContainer.makeForTests());
-				projectComposite.setUrl(UrlConstants.notJarUrl);
+				projectComposite.setUrlAndShow(UrlConstants.notJarUrl);
 				return projectComposite.getComposite();
 			}
 		});
