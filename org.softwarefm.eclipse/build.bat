@@ -7,6 +7,7 @@ call mvn clean install
 
 cd ../org.softwarefm.softwarefm
 
+mkdir lib
 call "../org.softwarefm.eclipse/copyUsedFiles"
 
 copy %m2%\org\softwarefm\utilities\0.0.1-SNAPSHOT\utilities-0.0.1-SNAPSHOT.jar lib

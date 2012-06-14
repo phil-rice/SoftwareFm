@@ -24,7 +24,7 @@ public class SoftwareFmProjectStrategy<S> implements IProjectStrategy<S> {
 
 	public ProjectData findProject(S selection, FileNameAndDigest fileNameAndDigest, int selectionCount) {
 		try {
-			String url = urlStrategy.digestUrl(fileNameAndDigest.digest).url;
+			String url = urlStrategy.digestUrl(fileNameAndDigest.digest).getOffsetAndUrl();
 			IResponse response = client.get(url).execute();
 			if (CommonConstants.okStatusCodes.contains(response.statusCode())) {
 				String html = response.asString();
