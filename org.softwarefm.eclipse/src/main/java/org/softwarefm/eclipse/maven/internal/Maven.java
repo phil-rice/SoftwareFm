@@ -12,11 +12,9 @@ import org.apache.maven.model.DistributionManagement;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.softwarefm.eclipse.maven.IMaven;
-import org.softwarefm.utilities.annotations.IntegrationTest;
 import org.softwarefm.utilities.collections.Files;
 import org.softwarefm.utilities.strings.Strings;
 
-@IntegrationTest
 public class Maven implements IMaven {
 
 	private final File m2Home;

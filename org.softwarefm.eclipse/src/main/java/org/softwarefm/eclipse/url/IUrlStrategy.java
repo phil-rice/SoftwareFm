@@ -15,30 +15,36 @@ public interface IUrlStrategy {
 	/** The media wiki api offset. This will often be mediawiki */
 	String apiOffset();
 
-	HostAndUrl classAndMethodUrl(ExpressionData expressionData);
+	HostOffsetAndUrl classAndMethodUrl(ExpressionData expressionData);
 
-	HostAndUrl digestUrl(String digest);
+	HostOffsetAndUrl digestUrl(String digest);
 
-	HostAndUrl projectUrl(ProjectData projectData);
+	HostOffsetAndUrl projectUrl(ProjectData projectData);
 
-	HostAndUrl versionUrl(ProjectData projectData);
+	HostOffsetAndUrl versionUrl(ProjectData projectData);
+
+	HostOffsetAndUrl templateUrl(String name);
 
 	public static class Utils {
 		public static IUrlStrategy urlStrategy() {
-			return new UrlStrategy(CommonConstants.softwareFmHost, CommonConstants.softwareFmPageOffset, CommonConstants.softwareFmApiOffset);
+			return new UrlStrategy(CommonConstants.softwareFmHost, CommonConstants.softwareFmPageOffset, CommonConstants.softwareFmApiOffset, CommonConstants.softwareFmTemplateOffset);
 		}
 
 		public static IUrlStrategy urlStrategy(String hostname) {
-			return new UrlStrategy(hostname, CommonConstants.softwareFmPageOffset, CommonConstants.softwareFmApiOffset);
+			return new UrlStrategy(hostname, CommonConstants.softwareFmPageOffset, CommonConstants.softwareFmApiOffset, CommonConstants.softwareFmTemplateOffset);
 
 		}
 
 		public static IUrlStrategy urlStrategy(String hostname, String pageOffset) {
-			return new UrlStrategy(hostname, pageOffset, CommonConstants.softwareFmApiOffset);
+			return new UrlStrategy(hostname, pageOffset, CommonConstants.softwareFmApiOffset, CommonConstants.softwareFmTemplateOffset);
 		}
 
 		public static IUrlStrategy urlStrategy(String hostname, String pageOffset, String apiOffset) {
-			return new UrlStrategy(hostname, pageOffset, apiOffset);
+			return new UrlStrategy(hostname, pageOffset, apiOffset, CommonConstants.softwareFmTemplateOffset);
+		}
+
+		public static IUrlStrategy urlStrategy(String hostname, String pageOffset, String apiOffset, String templateOffset) {
+			return new UrlStrategy(hostname, pageOffset, apiOffset, templateOffset);
 		}
 	}
 

@@ -4,6 +4,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.apache.maven.model.IssueManagement;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
@@ -27,13 +28,20 @@ public interface IMaven {
 		public static IMaven makeImport() {
 			return new Maven();
 		}
-		
-		public static String makePomUrlForMvnRepository(String groupId, String artifactId, String version){
+
+		public static String makePomUrlForMvnRepository(String groupId, String artifactId, String version) {
 			return "http://repo1.maven.org/maven2/" + groupId.replace(".", "/") + "/" + artifactId + "/" + version + "/" + artifactId + "-" + version + ".pom";
 		}
 
 		public static IMaven makeImport(File m2Home) {
 			return new Maven(m2Home);
+		}
+
+		public static String getName(Model model) {
+			String name = model.getName();
+			if (name != null)
+				return name;
+			return getArtifactId(model);
 		}
 
 		public static String getGroupId(Model model) {
@@ -73,9 +81,17 @@ public interface IMaven {
 					maven.downloadJar(model);
 					System.out.println("Imported to local repository");
 					FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(jarFile.getCanonicalPath(), Files.digestAsHexString(jarFile));
-					makeLink.makeLink(new ProjectData(fileNameAndDigest,  IMaven.Utils.getGroupId(model),  IMaven.Utils.getArtifactId(model),  IMaven.Utils.getVersion(model)));
+					makeLink.makeDigestLink(new ProjectData(fileNameAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model)));
 				}
 			};
+		}
+
+		public static String getIssueManagementUrl(Model model) {
+			IssueManagement issueManagement = model.getIssueManagement();
+			if (issueManagement == null)
+				return null;
+			else
+				return issueManagement.getUrl();
 		}
 	}
 

@@ -23,7 +23,7 @@ public class SoftwareFmProjectStrategyTest extends TestCase {
 
 	private final FileNameAndDigest fileNameAndDigest = new FileNameAndDigest("file", "digest");
 	private final ProjectData projectData = new ProjectData(fileNameAndDigest, "g", "a", "v");
-	private final static String digestUrl = Strings.url(CommonConstants.softwareFmPageOffset, "digest/digest");
+	private final static String digestUrl = Strings.url(CommonConstants.softwareFmPageOffset, "Digest:digest");
 
 	public void testFindProject() {
 		EasyMock.expect(rawClient.host("host")).andReturn(withHost);

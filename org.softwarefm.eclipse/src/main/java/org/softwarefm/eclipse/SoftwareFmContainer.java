@@ -2,22 +2,30 @@ package org.softwarefm.eclipse;
 
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
+import org.softwarefm.eclipse.templates.ITemplateStore;
 import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.resources.IResourceGetter;
 
 public class SoftwareFmContainer<S> {
 
-	public static <S> SoftwareFmContainer<S> make(IUrlStrategy urlStrategy, ISelectedBindingManager<S> manager, ICallback<String> importPom, ICallback<ProjectData> importManually) {
-		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), manager, importPom, importManually, urlStrategy);
+	public static <S> SoftwareFmContainer<S> make(IUrlStrategy urlStrategy, ISelectedBindingManager<S> manager, ICallback<String> importPom, ICallback<ProjectData> importManually, ITemplateStore templateStore) {
+		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), manager, importPom, importManually, urlStrategy, templateStore);
 	}
 
 	public static <S> SoftwareFmContainer<S> makeForTests(IResourceGetter resourceGetter) {
-		return new SoftwareFmContainer<S>(resourceGetter, ISelectedBindingManager.Utils.<S> noManager(), ICallback.Utils.<String> memory(), ICallback.Utils.<ProjectData> memory(), IUrlStrategy.Utils.urlStrategy("localhost"));
+		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy(CommonConstants.softwareFmHost);
+		return new SoftwareFmContainer<S>(resourceGetter, //
+				ISelectedBindingManager.Utils.<S> noManager(), //
+				ICallback.Utils.<String> memory(), //
+				ICallback.Utils.<ProjectData> memory(), //
+				urlStrategy,//
+				ITemplateStore.Utils.templateStore(urlStrategy));
 	}
 
 	public static <S> SoftwareFmContainer<S> makeForTests() {
-		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), ISelectedBindingManager.Utils.<S> noManager(), ICallback.Utils.<String> memory(), ICallback.Utils.<ProjectData> memory(), IUrlStrategy.Utils.urlStrategy("localhost"));
+		return makeForTests(IResourceGetter.Utils.resourceGetter(Marker.class, "text"));
 	}
 
 	public final IResourceGetter resourceGetter;
@@ -26,7 +34,7 @@ public class SoftwareFmContainer<S> {
 	public final ICallback<ProjectData> importManually;
 	public final IUrlStrategy urlStrategy;
 
-	public SoftwareFmContainer(IResourceGetter resourceGetter, ISelectedBindingManager<S> selectedBindingManager, ICallback<String> importPom, ICallback<ProjectData> importManually, IUrlStrategy urlStrategy) {
+	public SoftwareFmContainer(IResourceGetter resourceGetter, ISelectedBindingManager<S> selectedBindingManager, ICallback<String> importPom, ICallback<ProjectData> importManually, IUrlStrategy urlStrategy, ITemplateStore templateStore) {
 		this.resourceGetter = resourceGetter;
 		this.selectedBindingManager = selectedBindingManager;
 		this.importPom = importPom;

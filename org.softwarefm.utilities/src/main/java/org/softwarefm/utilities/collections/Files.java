@@ -190,13 +190,27 @@ public class Files {
 		}
 	}
 
+	public static String getTextFromHttpUrl(String url) {
+		return getTextFromUrl("http://" + url);
+	}
+	public static String getTextFromUrl(String url) {
+		try {
+			return Files.getText(new URL(url).openStream());
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
 	public static String getText(InputStream inputStream) {
 		try {
-			InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 			try {
-				return getText(inputStreamReader);
+				InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+				try {
+					return getText(inputStreamReader);
+				} finally {
+					inputStreamReader.close();
+				}
 			} finally {
-				inputStreamReader.close();
 				inputStream.close();
 			}
 		} catch (IOException e) {
@@ -218,7 +232,6 @@ public class Files {
 			throw WrappedException.wrap(e);
 		}
 	}
-
 
 	public static String digestAsHexString(File file) {
 		try {
@@ -276,6 +289,7 @@ public class Files {
 	public static FilenameFilter extensionFilter(final String string) {
 		return new FilenameFilter() {
 			private final String extension = "." + string;
+
 			public boolean accept(File dir, String name) {
 				return name.endsWith(extension);
 			}

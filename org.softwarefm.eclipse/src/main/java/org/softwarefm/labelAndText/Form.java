@@ -107,7 +107,7 @@ public class Form extends Composite implements IGetTextWithKey {
 					@Override
 					public void mouseDown(MouseEvent e) {
 						text.selectAll();
-					};
+					}
 				});
 			}
 

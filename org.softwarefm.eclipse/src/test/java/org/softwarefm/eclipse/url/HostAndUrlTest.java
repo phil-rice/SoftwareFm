@@ -5,17 +5,19 @@ import junit.framework.TestCase;
 public class HostAndUrlTest extends TestCase {
 
 	public void testWithFragments() {
-		HostAndUrl hostAndUrl = new HostAndUrl("host", "f1", "f2");
-		assertEquals("host", hostAndUrl.host);
-		assertEquals("f1/f2", hostAndUrl.url);
-		assertEquals("host/f1/f2", hostAndUrl.getHostAndUrl());
+		HostOffsetAndUrl hostOffsetAndUrl = new HostOffsetAndUrl("host", "offset", "f1", "f2");
+		assertEquals("host", hostOffsetAndUrl.host);
+		assertEquals("offset", hostOffsetAndUrl.offset);
+		assertEquals("f1/f2", hostOffsetAndUrl.url);
+		assertEquals("host/offset/f1/f2", hostOffsetAndUrl.getHostAndUrl());
 	}
 
 	public void testWithOutFragments() {
-		HostAndUrl hostAndUrl = new HostAndUrl("host");
-		assertEquals("host", hostAndUrl.host);
-		assertEquals("", hostAndUrl.url);
-		assertEquals("host", hostAndUrl.getHostAndUrl());
+		HostOffsetAndUrl hostOffsetAndUrl = new HostOffsetAndUrl("host", "offset");
+		assertEquals("host", hostOffsetAndUrl.host);
+		assertEquals("offset", hostOffsetAndUrl.offset);
+		assertEquals("", hostOffsetAndUrl.url);
+		assertEquals("host/offset", hostOffsetAndUrl.getHostAndUrl());
 
 	}
 

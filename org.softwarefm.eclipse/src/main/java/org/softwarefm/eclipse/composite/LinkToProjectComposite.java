@@ -23,12 +23,12 @@ import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.resources.IResourceGetter;
 import org.softwarefm.utilities.strings.Strings;
 
-public class ManualImportComposite extends TextAndFormComposite {
+public class LinkToProjectComposite extends TextAndFormComposite {
 
 	private FileNameAndDigest fileNameAndDigest;
 	private ProjectData projectData;
 
-	public ManualImportComposite(Composite parent, SoftwareFmContainer<?> container) {
+	public LinkToProjectComposite(Composite parent, SoftwareFmContainer<?> container) {
 		super(parent, container);
 		addListener(new SelectedBindingAdapter() {
 			@Override
@@ -157,10 +157,10 @@ public class ManualImportComposite extends TextAndFormComposite {
 	}
 
 	public static void main(String[] args) {
-		Swts.Show.display(ManualImportComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Swts.Show.display(LinkToProjectComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			public Composite apply(Composite from) throws Exception {
 				SoftwareFmContainer<Object> container = SoftwareFmContainer.makeForTests();
-				return new ManualImportComposite(from, container).getComposite();
+				return new LinkToProjectComposite(from, container).getComposite();
 			}
 		});
 	}

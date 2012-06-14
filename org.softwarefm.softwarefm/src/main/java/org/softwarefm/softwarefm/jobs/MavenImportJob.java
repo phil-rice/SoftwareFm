@@ -35,7 +35,7 @@ public class MavenImportJob implements ICallback<String> {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					monitor.beginTask("MavenImport: " + Strings.lastSegment(pomUrl, "/"), 4);
+					monitor.beginTask("MavenImport: " + Strings.lastSegment(pomUrl, "/"), 5);
 
 					monitor.subTask("Download POM");
 					Model model = maven.pomToModel(pomUrl);
@@ -58,11 +58,13 @@ public class MavenImportJob implements ICallback<String> {
 					if (monitor.isCanceled())
 						return Status.CANCEL_STATUS;
 
-					monitor.subTask("Storing results in SoftwareFM");
+					monitor.subTask("Creating Link");
 					FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(jar.getCanonicalPath(), digest);
 					ProjectData projectData = new ProjectData(fileNameAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model));
 					makeLink.makeLink(projectData);
 					monitor.internalWorked(1);
+					
+					monitor.subTask("Populating project if needed");
 					return Status.OK_STATUS;
 				} catch (Exception e) {
 					throw WrappedException.wrap(e);

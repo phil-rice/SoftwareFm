@@ -25,6 +25,7 @@ import org.softwarefm.eclipse.selection.internal.SwtThreadSelectedBindingAggrega
 import org.softwarefm.eclipse.swt.HasComposite;
 import org.softwarefm.eclipse.swt.ISituationListAndBuilder;
 import org.softwarefm.eclipse.swt.Swts;
+import org.softwarefm.eclipse.templates.ITemplateStore;
 import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.functions.Functions;
@@ -72,11 +73,13 @@ public class SoftwareFmCompositeUnit {
 							threadingPool, //
 							ICallback.Utils.rethrow());
 					IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
-					final IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy);
+					ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
+					final IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, templateStore);
 					SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
 							manager, //
 							IMaven.Utils.importPomWithSysouts(makeLink),//
-							IMakeLink.Utils.manuallyImport(makeLink));
+							IMakeLink.Utils.manuallyImport(makeLink),//
+							templateStore);
 					Holder holder = new Holder(parent, manager);
 					for (IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> creator : creators) {
 						SoftwareFmComposite softwareFmComposite = Functions.call(creator, holder.getComposite(), container);
@@ -122,7 +125,7 @@ public class SoftwareFmCompositeUnit {
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> manualImportCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
-			return new ManualImportComposite(parent, container);
+			return new LinkToProjectComposite(parent, container);
 		}
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> mavenImportCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {

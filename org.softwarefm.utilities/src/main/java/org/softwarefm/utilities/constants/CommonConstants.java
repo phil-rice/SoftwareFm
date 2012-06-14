@@ -17,6 +17,7 @@ public class CommonConstants {
 	public static final String softwareFmHost = local ? "localhost" : "data.softwarefm.org";
 	public static final String softwareFmPageOffset = local ? "wiki" : "mediawiki/index.php";
 	public static final String softwareFmApiOffset = "mediawiki";
+	public static final String softwareFmTemplateOffset = "template";
 	public static final String softwareFmHostAndPrefix = Strings.url(softwareFmHost , softwareFmPageOffset);
 	public static final List<Integer> okStatusCodes = Arrays.asList(200, 201);
 

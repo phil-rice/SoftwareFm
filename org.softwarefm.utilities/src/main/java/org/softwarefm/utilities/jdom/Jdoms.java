@@ -3,11 +3,13 @@ package org.softwarefm.utilities.jdom;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Iterator;
+import java.util.List;
 
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
+import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.exceptions.WrappedException;
 
 public class Jdoms {
@@ -25,6 +27,15 @@ public class Jdoms {
 				}
 			}
 		};
+	}
+	
+	public static Element findOnlyDivWithId(String xml, String id){
+		List<Element> result = Lists.newList();
+		for (Element element: findElementsWith(xml, "div")){
+			if (id.equals(element.getAttributeValue("id")))
+					result.add(element);
+		}
+		return Lists.getOnly(result);
 	}
 	
 

@@ -8,6 +8,7 @@ import org.softwarefm.eclipse.selection.FileNameAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
 import org.softwarefm.eclipse.selection.internal.SelectedArtifactSelectionManager;
 import org.softwarefm.eclipse.selection.internal.SwtThreadSelectedBindingAggregator;
+import org.softwarefm.eclipse.templates.ITemplateStore;
 import org.softwarefm.eclipse.tests.SwtTest;
 import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
@@ -26,7 +27,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 	private MemoryCallback<Throwable> rememberedExceptions;
 
 	protected final static String classAndMethodNameUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "java/packageName/className");
-	protected final static String digestUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "digest/0123456789");
+	protected final static String digestUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "Digest:0123456789");
 	protected final static String projectUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "project/g/a");
 
 	protected final static FileNameAndDigest fileNameAndDigest = new FileNameAndDigest("fileName", "0123456789");
@@ -51,10 +52,12 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		EasyMock.makeThreadSafe(strategy, true);
 		rememberedExceptions = ICallback.Utils.<Throwable> memory();
 		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), rememberedExceptions);
-		panel = makePanel(shell, SoftwareFmContainer.make(IUrlStrategy.Utils.urlStrategy(), //
+		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
+		panel = makePanel(shell, SoftwareFmContainer.make(urlStrategy, //
 				selectedArtifactSelectionManager,//
 				ICallback.Utils.<String> exception("ImportPom shouldnt be used"),//
-				ICallback.Utils.<ProjectData> exception("ImportPom shouldnt be used")));
+				ICallback.Utils.<ProjectData> exception("ImportPom shouldnt be used"),//
+				ITemplateStore.Utils.templateStore(urlStrategy)));
 	}
 
 	@Override
@@ -64,7 +67,6 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 				e.printStackTrace();
 		assertEquals(0, rememberedExceptions.getResults().size());
 		super.tearDown();
-
 	}
 
 }

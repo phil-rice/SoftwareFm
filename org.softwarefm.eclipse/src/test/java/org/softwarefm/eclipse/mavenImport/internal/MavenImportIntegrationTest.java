@@ -6,11 +6,10 @@ import junit.framework.TestCase;
 
 import org.apache.maven.model.Model;
 import org.softwarefm.eclipse.maven.internal.Maven;
-import org.softwarefm.utilities.annotations.IntegrationTest;
 import org.softwarefm.utilities.collections.Files;
+import org.softwarefm.utilities.tests.IIntegrationTest;
 
-@IntegrationTest
-public class MavenImportIntegrationTest extends TestCase {
+public class MavenImportIntegrationTest extends TestCase  implements IIntegrationTest{
 
 	public void test_PomFileSpecified_NoRepositorySpecified() throws Exception {
 		checkRealImport("http://repo1.maven.org/maven2/org/jboss/resteasy/resteasy-jaxrs/2.3.3.Final/resteasy-jaxrs-2.3.3.Final.pom", "5413dfcccd263bbf44ad68f9d10e1fef47a4d39d");
