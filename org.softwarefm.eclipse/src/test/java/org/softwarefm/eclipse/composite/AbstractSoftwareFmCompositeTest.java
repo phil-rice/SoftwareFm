@@ -31,18 +31,19 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 	protected final static String classAndMethodNameUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "java/packageName/className");
 	protected final static String digestUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "Digest:0123456789");
 	protected final static String projectUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "project/g/a");
-	private final static File file = new File(new File("some"), "file");
+	protected final static File file = new File(new File("some"), "file");
 	protected final static FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(file, "0123456789");
 	protected final static FileNameAndDigest fileNameAndNoDigest = new FileNameAndDigest(file, null);
 	protected final static FileNameAndDigest noFileNameAndNoDigest = new FileNameAndDigest(null, null);
 	protected final static ProjectData projectData = new ProjectData(fileNameAndDigest, "g", "a", "v");
 
+	private int initialListeners;
+
 	abstract protected P makePanel(Composite parent, SoftwareFmContainer<?> container);
 
 	public void testDisposeRemovesSelfAsListener() {
-		assertEquals(2, listenerManager.getListeners().size());
 		panel.dispose();
-		assertEquals(0, listenerManager.getListeners().size());
+		assertEquals( initialListeners, listenerManager.getListeners().size());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -55,6 +56,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		rememberedExceptions = ICallback.Utils.<Throwable> memory();
 		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), rememberedExceptions);
 		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
+		initialListeners = listenerManager.getListeners().size();
 		panel = makePanel(shell, SoftwareFmContainer.make(urlStrategy, //
 				selectedArtifactSelectionManager,//
 				ICallback.Utils.<String> exception("ImportPom shouldnt be used"),//

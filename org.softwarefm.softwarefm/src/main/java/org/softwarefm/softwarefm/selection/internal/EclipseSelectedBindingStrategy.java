@@ -96,7 +96,7 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 		IResource resource = javaElement.getResource();
 		IPath javaElementPath = javaElement.getPath();
 		final IPath path = resource == null ? javaElementPath : resource.getLocation();
-		String fileName = path == null ? null : path.lastSegment();
+		File file = path.toFile();
 		if (path != null && "jar".equals(path.getFileExtension())) {
 			String digestAsHexString = Maps.findOrCreate(cache, path, new Callable<String>() {
 				@Override
@@ -106,9 +106,9 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 					return result;
 				}
 			});
-			return new FileNameAndDigest(fileName, digestAsHexString);
+			return new FileNameAndDigest(file, digestAsHexString);
 		}
-		return new FileNameAndDigest(fileName, null);
+		return new FileNameAndDigest(file, null);
 	}
 
 	// At this point we sigh in sadness about Java's weak class system, and regret the inability to modify Expression in anyway. Clojure multimethods where are you know

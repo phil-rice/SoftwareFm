@@ -63,7 +63,7 @@ public class MakeLink implements IMakeLink {
 
 	public Wiki getWiki() {
 		return wiki;
-	};
+	}
 
 	void login() {
 		try {
@@ -81,7 +81,7 @@ public class MakeLink implements IMakeLink {
 		String issues = Strings.nullSafeToString(model == null ? null : IMaven.Utils.getIssueManagementUrl(model));
 
 		String template = templateStore.getTemplate(TemplateConstants.projectTemplate);
-		String entity = MessageFormat.format(template, projectName, description, projectUrl, issues);
+		String entity = MessageFormat.format(template, projectData.groupId, projectData.artifactId, projectName, description, projectUrl, issues);
 
 		String url = urlStrategy.projectUrl(projectData).url;
 		try {

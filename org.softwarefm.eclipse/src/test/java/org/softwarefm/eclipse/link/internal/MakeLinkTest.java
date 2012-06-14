@@ -45,6 +45,8 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 		deleteProjectInWiki();
 		makeLink.populateProjectIfBlank(projectData, null);
 		checkPageForWikiText(makeLink, projectUrl.url, "{{Template:Project\n" + //
+				"|groupId=someGroupId\n" + //
+				"|artifactId=someArtifactId\n" + //
 				"|projectName=someArtifactId\n" + //
 				"|description=\n" + //
 				"|url=\n" + //
@@ -66,6 +68,8 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 		Model model = maven.pomToModel(resource.toURI().toString());
 		makeLink.populateProjectIfBlank(projectData, model);
 		checkPageForWikiText(makeLink, projectUrl.url, "{{Template:Project\n" + //
+				"|groupId=someGroupId\n" + //
+				"|artifactId=someArtifactId\n" + //
 				"|projectName=someArtifactId\n" + //
 				"|description=\n" + //
 				"|url=\n" + //
@@ -81,6 +85,8 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 		Model model = maven.pomToModel(resource.toURI().toString());
 		makeLink.populateProjectIfBlank(projectData, model);
 		checkPageForWikiText(makeLink, projectUrl.url, "{{Template:Project\n" + //
+				"|groupId=someGroupId\n" + //
+				"|artifactId=someArtifactId\n" + //
 				"|projectName=someName\n" + //
 				"|description=someDescription\n" + //
 				"|url=someUrl\n" + //

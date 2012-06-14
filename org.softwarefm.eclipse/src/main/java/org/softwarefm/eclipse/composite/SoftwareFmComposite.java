@@ -45,12 +45,13 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 
 	public String digestDeterminedMsg(FileNameAndDigest fileNameAndDigest) {
 		assert fileNameAndDigest.digest != null : fileNameAndDigest;
-		return msg(MessageKeys.foundDigest, fileNameAndDigest.file.getName(), Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest);
+		return msg(MessageKeys.foundDigest, fileNameAndDigest.file.getPath(), Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest);
 	}
 
 	public String unknownDigestMsg(FileNameAndDigest fileNameAndDigest) {
 		assert fileNameAndDigest.digest != null : fileNameAndDigest;
-		return msg(MessageKeys.unrecognisedDigest, fileNameAndDigest.file, Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest);
+		String result = msg(MessageKeys.unrecognisedDigest, fileNameAndDigest.file.getPath(), Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest);
+		return result;
 	}
 
 	public String projectDeterminedMsg(ProjectData projectData) {

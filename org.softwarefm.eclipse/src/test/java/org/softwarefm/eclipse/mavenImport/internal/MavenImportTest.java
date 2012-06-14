@@ -30,8 +30,7 @@ public class MavenImportTest extends TestCase {
 		checkJarFileName(new File("x"), "pomNoDistributionRepo.xml", new File("x/org/softwarefm/eclipse/0.0.1-SNAPSHOT/eclipse-0.0.1-SNAPSHOT.jar"));
 	}
 
-	@SuppressWarnings("need to add test-artifact-1.0.jar to the git repository")
-	public void _testDownloadJar() throws Exception {
+	public void testDownloadJar() throws Exception {
 		File sourceFile = new File("src/test/resources/repo/org/softwarefm/test-artifact/1.0/test-artifact-1.0.jar");
 		File destinationFile = new File(userHomeM2Dir, "org/softwarefm/test-artifact/1.0/test-artifact-1.0.jar");
 		destinationFile.delete();

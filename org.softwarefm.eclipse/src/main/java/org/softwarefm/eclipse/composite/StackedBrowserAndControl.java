@@ -23,6 +23,12 @@ public class StackedBrowserAndControl<C extends IHasControl> extends HasComposit
 		setLayout(layout);
 	}
 
+	@Override
+	public void dispose() {
+		super.dispose();
+		control.getControl().dispose();
+	}
+
 	public void setUrlAndShow(String url) {
 		browser.setUrl(url);
 		layout.topControl = browser;

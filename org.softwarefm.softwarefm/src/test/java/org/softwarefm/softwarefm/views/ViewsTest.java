@@ -12,7 +12,6 @@ public class ViewsTest extends SwtTest {
 		checkView(new DigestView());
 		checkView(new ProjectView());
 		checkView(new SoftwareFmDebugView());
-		checkView(new ManualImportView());
 		checkView(new VersionView());
 	}
 

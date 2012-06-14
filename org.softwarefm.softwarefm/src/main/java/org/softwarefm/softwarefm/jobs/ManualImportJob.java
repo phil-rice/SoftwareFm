@@ -7,7 +7,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.softwarefm.eclipse.constants.SwtConstants;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.link.IMakeLink;
-import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.resources.IResourceGetter;
@@ -15,11 +14,9 @@ import org.softwarefm.utilities.resources.IResourceGetter;
 public class ManualImportJob implements ICallback<ProjectData> {
 
 	private final IMakeLink makeLink;
-	private final IMaven maven;
 	private final IResourceGetter resourceGetter;
 
-	public ManualImportJob(IMaven maven, IMakeLink makeLink, IResourceGetter resourceGetter) {
-		this.maven = maven;
+	public ManualImportJob(IMakeLink makeLink, IResourceGetter resourceGetter) {
 		this.makeLink = makeLink;
 		this.resourceGetter = resourceGetter;
 	}
@@ -31,8 +28,13 @@ public class ManualImportJob implements ICallback<ProjectData> {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					monitor.beginTask(name, 1);
-					makeLink.makeLink(projectData);
+					monitor.beginTask(name, 2);
+					monitor.subTask("Creating Link");
+					makeLink.makeDigestLink(projectData);
+					monitor.internalWorked(1);
+					
+					monitor.subTask("Populating project if needed");
+					makeLink.populateProjectIfBlank(projectData, null);
 					monitor.internalWorked(1);
 					return Status.OK_STATUS;
 				} catch (Exception e) {

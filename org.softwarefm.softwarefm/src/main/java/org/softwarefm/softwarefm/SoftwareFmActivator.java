@@ -27,6 +27,7 @@ import org.softwarefm.eclipse.selection.internal.SelectedArtifactSelectionManage
 import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectHtmlRipper;
 import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectStrategy;
 import org.softwarefm.eclipse.selection.internal.SwtThreadSelectedBindingAggregator;
+import org.softwarefm.eclipse.templates.ITemplateStore;
 import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.softwarefm.jobs.ManualImportJob;
 import org.softwarefm.softwarefm.jobs.MavenImportJob;
@@ -141,8 +142,9 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			IUrlStrategy urlStrategy = getUrlStrategy();
 			IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy);
 			MavenImportJob mavenImport = new MavenImportJob(maven, makeLink, resourceGetter);
-			ManualImportJob manualImport = new ManualImportJob(maven, makeLink, resourceGetter);
-			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, getSelectionBindingManager(), mavenImport, manualImport, urlStrategy) : container;
+			ManualImportJob manualImport = new ManualImportJob(makeLink, resourceGetter);
+			ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
+			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, getSelectionBindingManager(), mavenImport, manualImport, urlStrategy, templateStore) : container;
 		}
 	}
 

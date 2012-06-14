@@ -59,12 +59,14 @@ public class MavenImportJob implements ICallback<String> {
 						return Status.CANCEL_STATUS;
 
 					monitor.subTask("Creating Link");
-					FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(jar.getCanonicalPath(), digest);
+					FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(jar, digest);
 					ProjectData projectData = new ProjectData(fileNameAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model));
-					makeLink.makeLink(projectData);
+					makeLink.makeDigestLink(projectData);
 					monitor.internalWorked(1);
 					
 					monitor.subTask("Populating project if needed");
+					makeLink.populateProjectIfBlank(projectData, model);
+					monitor.internalWorked(1);
 					return Status.OK_STATUS;
 				} catch (Exception e) {
 					throw WrappedException.wrap(e);
