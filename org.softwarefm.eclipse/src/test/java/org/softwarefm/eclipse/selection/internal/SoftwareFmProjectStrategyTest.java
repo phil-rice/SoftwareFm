@@ -1,5 +1,7 @@
 package org.softwarefm.eclipse.selection.internal;
 
+import java.io.File;
+
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
@@ -21,7 +23,7 @@ public class SoftwareFmProjectStrategyTest extends TestCase {
 	private IHttpClient withGet2;
 	private IHttpClient withGet3;
 
-	private final FileNameAndDigest fileNameAndDigest = new FileNameAndDigest("file", "digest");
+	private final FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(new File("file"), "digest");
 	private final ProjectData projectData = new ProjectData(fileNameAndDigest, "g", "a", "v");
 	private final static String digestUrl = Strings.url(CommonConstants.softwareFmPageOffset, "Digest:digest");
 
@@ -32,7 +34,7 @@ public class SoftwareFmProjectStrategyTest extends TestCase {
 		EasyMock.expect(htmlRipper.rip(fileNameAndDigest, "projectText")).andReturn(projectData);
 		EasyMock.replay(htmlRipper, rawClient, withHost, withGet1, withGet2, withGet3);
 
-		SoftwareFmProjectStrategy<String> strategy = new SoftwareFmProjectStrategy<String>(rawClient,  htmlRipper, IUrlStrategy.Utils.urlStrategy("host"));
+		SoftwareFmProjectStrategy<String> strategy = new SoftwareFmProjectStrategy<String>(rawClient, htmlRipper, IUrlStrategy.Utils.urlStrategy("host"));
 		strategy.findProject("selection", fileNameAndDigest, 1);
 	}
 
@@ -53,7 +55,7 @@ public class SoftwareFmProjectStrategyTest extends TestCase {
 
 		EasyMock.replay(htmlRipper, rawClient, withHost, withGet1, withGet2, withGet3);
 
-		SoftwareFmProjectStrategy<String> strategy = new SoftwareFmProjectStrategy<String>(rawClient, htmlRipper,IUrlStrategy.Utils.urlStrategy("host"));
+		SoftwareFmProjectStrategy<String> strategy = new SoftwareFmProjectStrategy<String>(rawClient, htmlRipper, IUrlStrategy.Utils.urlStrategy("host"));
 		strategy.findProject("selection", fileNameAndDigest, 1);
 		strategy.findProject("selection", fileNameAndDigest, 1);
 		strategy.findProject("selection", fileNameAndDigest, 1);

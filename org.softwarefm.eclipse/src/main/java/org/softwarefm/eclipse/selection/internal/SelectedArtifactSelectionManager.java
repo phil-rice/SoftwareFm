@@ -64,7 +64,7 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 				FileNameAndDigest fileNameAndDigest = strategy.findFileAndDigest(selection, node, selectionCount);
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
-				if (fileNameAndDigest.fileName == null)
+				if (fileNameAndDigest.file == null)
 					listenerManager.notJavaElement(selectionCount);
 				else {
 					String digest = fileNameAndDigest.digest;

@@ -1,5 +1,6 @@
 package org.softwarefm.eclipse.link.internal;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
@@ -23,7 +24,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 
 	private final static Random random = new Random();
 	private final static String version = random.nextInt(100) + "." + random.nextInt(100);
-	private final static ProjectData projectData = new ProjectData(new FileNameAndDigest("someFileName", "012345"), "someGroupId", "someArtifactId", version);
+	private final static ProjectData projectData = new ProjectData(new FileNameAndDigest(new File("someFileName"), "012345"), "someGroupId", "someArtifactId", version);
 	private IUrlStrategy urlStrategy;
 	private MakeLink makeLink;
 	private HostOffsetAndUrl projectUrl;
@@ -71,9 +72,10 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 				"|issues=\n" + //
 				"}}\n");
 	}
+
 	public void testPopulateWhenBlankWithModelWithData() throws Exception {
 		deleteProjectInWiki();
-		
+
 		IMaven maven = IMaven.Utils.makeImport();
 		URL resource = getClass().getResource("populatedPom.xml");
 		Model model = maven.pomToModel(resource.toURI().toString());

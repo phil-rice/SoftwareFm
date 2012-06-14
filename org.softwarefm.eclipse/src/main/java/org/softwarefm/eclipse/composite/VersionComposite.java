@@ -33,13 +33,13 @@ public class VersionComposite extends TextAndBrowserComposite {
 
 	@Override
 	public void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-		setText("File " + fileNameAndDigest.fileName + " was not defined in a jar");
+		setText(fileNameAndDigest.file + " was not defined in a jar");
 		clearBrowser();
 	}
 
 	@Override
 	public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-		killLastLineAndappendText("File " + fileNameAndDigest.fileName + " has not been added to softwareFm\n" + "To add it follow <these instructions>");
+		killLastLineAndappendText(fileNameAndDigest.file + " has not been added to softwareFm\n" + "To add it follow <these instructions>");
 		setUrl(digestUrl(fileNameAndDigest));
 	}
 }

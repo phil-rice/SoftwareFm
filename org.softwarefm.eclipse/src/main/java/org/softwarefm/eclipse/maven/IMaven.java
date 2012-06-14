@@ -80,7 +80,7 @@ public interface IMaven {
 					System.out.println("Target: " + jarFile);
 					maven.downloadJar(model);
 					System.out.println("Imported to local repository");
-					FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(jarFile.getCanonicalPath(), Files.digestAsHexString(jarFile));
+					FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(jarFile, Files.digestAsHexString(jarFile));
 					makeLink.makeDigestLink(new ProjectData(fileNameAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model)));
 				}
 			};

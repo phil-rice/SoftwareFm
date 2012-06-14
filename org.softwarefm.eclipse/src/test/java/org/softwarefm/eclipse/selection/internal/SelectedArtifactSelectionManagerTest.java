@@ -1,5 +1,6 @@
 package org.softwarefm.eclipse.selection.internal;
 
+import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 import org.easymock.EasyMock;
@@ -18,9 +19,10 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 	private ISelectedBindingStrategy<String, String> strategy;
 	private SelectedArtifactSelectionManager<String, String> selectionManager;
 	private final ExpressionData expressionData = new ExpressionData("package", "class");
-	private final FileNameAndDigest fileNameAndDigest = new FileNameAndDigest("fileName", "digest");
+	private final File file = new File(new File("some"), "file");
+	private final FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(file, "digest");
 	private final FileNameAndDigest noFileNameAndNoDigest = new FileNameAndDigest(null, null);
-	private final FileNameAndDigest fileNameAndNoDigest = new FileNameAndDigest("fileName", null);
+	private final FileNameAndDigest fileNameAndNoDigest = new FileNameAndDigest(file, null);
 	private final ProjectData projectData = new ProjectData(fileNameAndDigest, "g", "a", "v");
 
 	public void testWhenSelectionIsNull() throws Exception {

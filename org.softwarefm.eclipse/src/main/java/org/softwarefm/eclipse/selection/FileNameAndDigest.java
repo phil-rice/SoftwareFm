@@ -1,15 +1,17 @@
 package org.softwarefm.eclipse.selection;
 
+import java.io.File;
+
 import org.softwarefm.utilities.strings.Strings;
 
 public class FileNameAndDigest {
-	public String fileName;
 	public String digest;
+	public final File file;
 
-	public FileNameAndDigest(String fileName, String digest) {
+	public FileNameAndDigest(File file, String digest) {
 		super();
-		this.fileName = fileName;
 		this.digest = digest;
+		this.file = file;
 	}
 
 	@Override
@@ -17,7 +19,7 @@ public class FileNameAndDigest {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((digest == null) ? 0 : digest.hashCode());
-		result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
+		result = prime * result + ((file == null) ? 0 : file.hashCode());
 		return result;
 	}
 
@@ -35,17 +37,17 @@ public class FileNameAndDigest {
 				return false;
 		} else if (!digest.equals(other.digest))
 			return false;
-		if (fileName == null) {
-			if (other.fileName != null)
+		if (file == null) {
+			if (other.file != null)
 				return false;
-		} else if (!fileName.equals(other.fileName))
+		} else if (!file.equals(other.file))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "FileNameAndDigest [fileName=" + fileName + ", digest=" + Strings.firstNCharacters(digest, 6) + "]";
+		return "FileNameAndDigest [digest=" + digest + ", file=" + Strings.firstNCharacters(digest, 6) + "]";
 	}
 
 }

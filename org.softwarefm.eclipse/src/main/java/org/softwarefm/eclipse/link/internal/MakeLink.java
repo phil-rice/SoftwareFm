@@ -1,5 +1,6 @@
 package org.softwarefm.eclipse.link.internal;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -40,7 +41,7 @@ public class MakeLink implements IMakeLink {
 			if (digest == null)
 				throw new NullPointerException("Digest was null");
 			String template = templateStore.getTemplate(TemplateConstants.digestTemplate);
-			String entity = MessageFormat.format(template, projectData.groupId, projectData.artifactId, projectData.version, projectData.fileNameAndDigest.fileName, projectUrl.url, versionUrl.url);
+			String entity = MessageFormat.format(template, projectData.groupId, projectData.artifactId, projectData.version, projectData.fileNameAndDigest.file.getName(), projectUrl.url, versionUrl.url);
 			System.out.println("Entity:\n" + entity);
 
 			HostOffsetAndUrl digestUrl = urlStrategy.digestUrl(digest);
@@ -77,7 +78,7 @@ public class MakeLink implements IMakeLink {
 		String projectName = model == null ? projectData.artifactId : IMaven.Utils.getName(model);
 		String description = Strings.nullSafeToString(model == null ? null : model.getDescription());
 		String projectUrl = Strings.nullSafeToString(model == null ? null : model.getUrl());
-		String issues = Strings.nullSafeToString(model == null? null:IMaven.Utils.getIssueManagementUrl(model));
+		String issues = Strings.nullSafeToString(model == null ? null : IMaven.Utils.getIssueManagementUrl(model));
 
 		String template = templateStore.getTemplate(TemplateConstants.projectTemplate);
 		String entity = MessageFormat.format(template, projectName, description, projectUrl, issues);
@@ -93,7 +94,7 @@ public class MakeLink implements IMakeLink {
 	}
 
 	public static void main(String[] args) throws Exception {
-		FileNameAndDigest fileNameAndDigest = new FileNameAndDigest("someFile.jar", "012345");
+		FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(new File("somePath/File.jar"), "012345");
 		ProjectData data = new ProjectData(fileNameAndDigest, "GroupId", "someArtifact", "someVersion");
 		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
 		ITemplateStore TemplateStore = ITemplateStore.Utils.templateStore(urlStrategy);

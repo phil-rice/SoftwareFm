@@ -1,5 +1,7 @@
 package org.softwarefm.eclipse.composite;
 
+import java.io.File;
+
 import org.easymock.EasyMock;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
@@ -29,16 +31,16 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 	protected final static String classAndMethodNameUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "java/packageName/className");
 	protected final static String digestUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "Digest:0123456789");
 	protected final static String projectUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "project/g/a");
-
-	protected final static FileNameAndDigest fileNameAndDigest = new FileNameAndDigest("fileName", "0123456789");
-	protected final static FileNameAndDigest fileNameAndNoDigest = new FileNameAndDigest("fileName", null);
+	private final static File file = new File(new File("some"), "file");
+	protected final static FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(file, "0123456789");
+	protected final static FileNameAndDigest fileNameAndNoDigest = new FileNameAndDigest(file, null);
 	protected final static FileNameAndDigest noFileNameAndNoDigest = new FileNameAndDigest(null, null);
 	protected final static ProjectData projectData = new ProjectData(fileNameAndDigest, "g", "a", "v");
 
 	abstract protected P makePanel(Composite parent, SoftwareFmContainer<?> container);
 
 	public void testDisposeRemovesSelfAsListener() {
-		assertEquals(1, listenerManager.getListeners().size());
+		assertEquals(2, listenerManager.getListeners().size());
 		panel.dispose();
 		assertEquals(0, listenerManager.getListeners().size());
 	}

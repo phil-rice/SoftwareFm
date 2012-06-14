@@ -1,5 +1,6 @@
 package org.softwarefm.eclipse.selection.internal;
 
+import java.io.File;
 import java.text.MessageFormat;
 
 import junit.framework.TestCase;
@@ -13,7 +14,7 @@ public class SoftwareFmProjectHtmlRipperTest extends TestCase {
 	private final String gaPattern = "<div id=''mw-content-text''><p>{0}\n{1}</p></div>";
 	private final String gavPattern = "<div id=''mw-content-text''><p>{0}\n{1}\n{2}</p></div>";
 
-	private final FileNameAndDigest fileNameAndDigest = new FileNameAndDigest("file", "digest");
+	private final FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(new File("file"), "digest");
 
 	public void testLooksForMwContentTextDiv() {
 		checkReads("g", "a", "v", "g", "a", "v");

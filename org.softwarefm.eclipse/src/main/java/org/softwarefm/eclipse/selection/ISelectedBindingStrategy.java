@@ -1,5 +1,6 @@
 package org.softwarefm.eclipse.selection;
 
+import java.io.File;
 import java.util.Map;
 
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
@@ -31,7 +32,7 @@ public interface ISelectedBindingStrategy<S, N> extends IProjectStrategy<S> {
 
 	public static class Utils {
 		public static <S> IProjectStrategy<S> softwareFmProjectStrategy(IUrlStrategy urlStrategy) {
-			return new SoftwareFmProjectStrategy<S>(IHttpClient.Utils.builder(),  new SoftwareFmProjectHtmlRipper(), urlStrategy);
+			return new SoftwareFmProjectStrategy<S>(IHttpClient.Utils.builder(), new SoftwareFmProjectHtmlRipper(), urlStrategy);
 		}
 
 		public static ISelectedBindingStrategy<Map<String, Object>, Map<String, Object>> fromMap() {
@@ -55,7 +56,8 @@ public interface ISelectedBindingStrategy<S, N> extends IProjectStrategy<S> {
 				}
 
 				public FileNameAndDigest findFileAndDigest(Map<String, Object> selection, Map<String, Object> node, int selectionCount) {
-					return new FileNameAndDigest((String) selection.get("filename"), (String) selection.get("digest"));
+					File file = new File((String) selection.get("filename"));
+					return new FileNameAndDigest(file, (String) selection.get("digest"));
 				}
 			};
 		}

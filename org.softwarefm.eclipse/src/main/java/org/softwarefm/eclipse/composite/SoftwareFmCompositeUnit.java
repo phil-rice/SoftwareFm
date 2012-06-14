@@ -32,8 +32,6 @@ import org.softwarefm.utilities.functions.Functions;
 import org.softwarefm.utilities.functions.IFunction2;
 
 public class SoftwareFmCompositeUnit {
-	
-	
 
 	static class Holder extends HasComposite implements IHasSelectionBindingManager {
 
@@ -118,6 +116,11 @@ public class SoftwareFmCompositeUnit {
 			return new ClassAndMethodComposite(parent, container);
 		}
 	};
+	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> projectCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
+		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
+			return new ProjectComposite(parent, container);
+		}
+	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> digestCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
 			return new DigestComposite(parent, container);
@@ -141,6 +144,6 @@ public class SoftwareFmCompositeUnit {
 
 	@SuppressWarnings({ "unused", "unchecked" })
 	public static void main(String[] args) {
-		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), allCreator, classAndMethodCreator, digestCreator, manualImportCreator, mavenImportCreator, debugCreator);
+		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), allCreator, classAndMethodCreator, projectCreator, digestCreator, manualImportCreator, mavenImportCreator, debugCreator);
 	}
 }

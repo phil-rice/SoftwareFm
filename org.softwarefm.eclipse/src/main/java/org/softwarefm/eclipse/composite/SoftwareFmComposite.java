@@ -45,18 +45,18 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 
 	public String digestDeterminedMsg(FileNameAndDigest fileNameAndDigest) {
 		assert fileNameAndDigest.digest != null : fileNameAndDigest;
-		return msg(MessageKeys.foundDigest, fileNameAndDigest.fileName, Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest);
+		return msg(MessageKeys.foundDigest, fileNameAndDigest.file.getName(), Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest);
 	}
 
 	public String unknownDigestMsg(FileNameAndDigest fileNameAndDigest) {
 		assert fileNameAndDigest.digest != null : fileNameAndDigest;
-		return msg(MessageKeys.unrecognisedDigest, fileNameAndDigest.fileName, Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest);
+		return msg(MessageKeys.unrecognisedDigest, fileNameAndDigest.file, Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest);
 	}
 
 	public String projectDeterminedMsg(ProjectData projectData) {
 		FileNameAndDigest fileNameAndDigest = projectData.fileNameAndDigest;
 		return msg(MessageKeys.foundProjectData, //
-				fileNameAndDigest.fileName, Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest,//
+				fileNameAndDigest.file, Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest,//
 				projectData,//
 				projectData.groupId, projectData.artifactId, projectData.version);
 
@@ -64,7 +64,7 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 
 	public String notInAJarMsg(FileNameAndDigest fileNameAndDigest) {
 		assert fileNameAndDigest.digest == null : fileNameAndDigest;
-		return msg(MessageKeys.notAJar, fileNameAndDigest.fileName);
+		return msg(MessageKeys.notAJar, fileNameAndDigest.file);
 
 	}
 

@@ -3,10 +3,10 @@ package org.softwarefm.eclipse.composite;
 import org.eclipse.swt.widgets.Composite;
 import org.junit.Test;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.composite.ProjectComposite;
+import org.softwarefm.eclipse.constants.UrlConstants;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 
-public class ProjectCompositeTest extends TextAndBrowserCompositeTest<ProjectComposite> {
+public class ProjectCompositeTest extends AbstractSoftwareFmCompositeTest<ProjectComposite> {
 
 	private final String initialUrl = "initialUrl";
 
@@ -18,7 +18,7 @@ public class ProjectCompositeTest extends TextAndBrowserCompositeTest<ProjectCom
 
 		panel.notJavaElement(1);
 		assertEquals(panel.notJavaElementMsg(), panel.getText());
-		assertEquals("", panel.getUrl());
+		assertEquals(UrlConstants.notJavaElementUrl, panel.getUrl());
 
 	}
 
@@ -29,7 +29,7 @@ public class ProjectCompositeTest extends TextAndBrowserCompositeTest<ProjectCom
 
 		panel.notInAJar(fileNameAndNoDigest, 1);
 		assertEquals(panel.notInAJarMsg(fileNameAndNoDigest), panel.getText());
-		assertEquals("", panel.getUrl());
+		assertEquals(UrlConstants.notJarUrl, panel.getUrl());
 
 	}
 
@@ -59,7 +59,7 @@ public class ProjectCompositeTest extends TextAndBrowserCompositeTest<ProjectCom
 
 		panel.unknownDigest(fileNameAndDigest, 1);
 		assertEquals(panel.digestDeterminedMsg(fileNameAndDigest) + "\n" + panel.unknownDigestMsg(fileNameAndDigest), panel.getText());
-		assertEquals(digestUrl, panel.getUrl());
+		assertEquals(initialUrl, panel.getUrl());
 	}
 
 	@Override
