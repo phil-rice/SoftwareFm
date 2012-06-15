@@ -7,7 +7,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.softwarefm.eclipse.constants.SwtConstants;
+import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
@@ -31,7 +31,7 @@ public class MavenImportJob implements ICallback<String> {
 	}
 
 	public void process(final String pomUrl) throws Exception {
-		Job job = new Job(IResourceGetter.Utils.getMessageOrException(resourceGetter, SwtConstants.mavenImportKey, pomUrl)) {
+		Job job = new Job(IResourceGetter.Utils.getMessageOrException(resourceGetter, TextKeys.jobMavenImportTitle, pomUrl)) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {

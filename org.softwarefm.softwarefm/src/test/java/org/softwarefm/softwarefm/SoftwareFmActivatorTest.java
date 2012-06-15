@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 
 import org.eclipse.jface.text.ITextSelection;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.constants.MessageKeys;
+import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.tests.SwtTest;
 import org.softwarefm.utilities.resources.IResourceGetter;
@@ -24,7 +24,7 @@ public class SoftwareFmActivatorTest extends SwtTest {
 	public void testResourceGetter() {
 		SoftwareFmContainer<ITextSelection> container = activator.getContainer();
 		IResourceGetter resourceGetter = container.resourceGetter;
-		assertEquals("Searching...", IResourceGetter.Utils.getOrException(resourceGetter, MessageKeys.search));
+		assertEquals("zeroandone", IResourceGetter.Utils.getMessageOrException(resourceGetter, TextKeys.msgTestForTest, "zero", "one"));
 		activator.dispose();
 		assertNotSame(resourceGetter, activator.getContainer().resourceGetter);
 	}

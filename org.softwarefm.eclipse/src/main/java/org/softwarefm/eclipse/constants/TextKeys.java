@@ -38,7 +38,7 @@ public class TextKeys {
 
 	// eclipse jobs
 	public static final String jobMavenImportTitle = "job.mavenImport.title";
-	public static final String jobManaulImportTitle = "job.manualImport.title";
+	public static final String jobManualImportTitle = "job.manualImport.title";
 	
 	//tests
 	public static final String msgTestForTest = "message.test.forTest";

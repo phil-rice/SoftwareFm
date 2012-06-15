@@ -4,7 +4,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.softwarefm.eclipse.constants.SwtConstants;
+import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.utilities.callbacks.ICallback;
@@ -23,7 +23,7 @@ public class ManualImportJob implements ICallback<ProjectData> {
 
 	@Override
 	public void process(final ProjectData projectData) throws Exception {
-		final String name = IResourceGetter.Utils.getMessageOrException(resourceGetter, SwtConstants.manualImportKey, projectData.groupId, projectData.artifactId, projectData.version);
+		final String name = IResourceGetter.Utils.getMessageOrException(resourceGetter, TextKeys.jobManualImportTitle, projectData.groupId, projectData.artifactId, projectData.version);
 		Job job = new Job(name) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
