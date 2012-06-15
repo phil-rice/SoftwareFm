@@ -5,6 +5,7 @@ import java.io.File;
 import org.easymock.EasyMock;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
@@ -36,6 +37,8 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 	protected final static FileNameAndDigest fileNameAndNoDigest = new FileNameAndDigest(file, null);
 	protected final static FileNameAndDigest noFileNameAndNoDigest = new FileNameAndDigest(null, null);
 	protected final static ProjectData projectData = new ProjectData(fileNameAndDigest, "g", "a", "v");
+	protected final static ExpressionData classExpressionData = new ExpressionData("somePackage", "someClass");
+	protected final static ExpressionData classAndMethodExpressionData = new ExpressionData("somePackage", "someClass", "someMethod");
 
 	private int initialListeners;
 
@@ -43,7 +46,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 
 	public void testDisposeRemovesSelfAsListener() {
 		panel.dispose();
-		assertEquals( initialListeners, listenerManager.getListeners().size());
+		assertEquals(listenerManager.getListeners().toString(), initialListeners, listenerManager.getListeners().size());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -57,6 +60,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), rememberedExceptions);
 		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
 		initialListeners = listenerManager.getListeners().size();
+		assertEquals(0, initialListeners);
 		panel = makePanel(shell, SoftwareFmContainer.make(urlStrategy, //
 				selectedArtifactSelectionManager,//
 				ICallback.Utils.<String> exception("ImportPom shouldnt be used"),//

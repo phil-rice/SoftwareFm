@@ -15,7 +15,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.constants.SwtConstants;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.IHasSelectionBindingManager;
@@ -122,19 +121,14 @@ public class SoftwareFmCompositeUnit {
 			return new ProjectComposite(parent, container);
 		}
 	};
-	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> digestCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
-		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
-			return new DigestComposite(parent, container);
-		}
-	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> manualImportCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
-			return new LinkToProjectComposite(parent, container);
+			return new LinkComposite(parent, container);
 		}
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> mavenImportCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
-			return new MavenImportComposite(parent, container, SwtConstants.linkFromMavenDescriptionWithNoSelectionText);
+			return new MavenImportComposite(parent, container);
 		}
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> debugCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
@@ -145,6 +139,6 @@ public class SoftwareFmCompositeUnit {
 
 	@SuppressWarnings({ "unused", "unchecked" })
 	public static void main(String[] args) {
-		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), allCreator, classAndMethodCreator, projectCreator, digestCreator, manualImportCreator, mavenImportCreator, debugCreator);
+		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), allCreator, classAndMethodCreator, projectCreator,  manualImportCreator, mavenImportCreator, debugCreator);
 	}
 }

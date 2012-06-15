@@ -3,19 +3,19 @@ package org.softwarefm.eclipse.composite;
 import java.util.Arrays;
 
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.constants.SwtConstants;
+import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.tests.SwtTest;
 import org.softwarefm.labelAndText.Form;
 
-public class ImportFromMavenCompositeTest extends SwtTest {
+public class MavenImportCompositeTest extends SwtTest {
 
 	private MavenImportComposite mavenImportComposite;
 	private Form form;
 
 	public void testUrlIsBlankAndImportButtonIsDisabledAtStart() {
-		assertEquals(Arrays.asList(SwtConstants.pomUrlKey), form.getKeys());
-		assertEquals("", mavenImportComposite.form.getText(SwtConstants.pomUrlKey));
-		assertFalse(form.getButton(SwtConstants.linkFromMavenButtonText).isEnabled());
+		assertEquals(Arrays.asList(TextKeys.keyMavenImportPomUrl), form.getKeys());
+		assertEquals("", mavenImportComposite.form.getText(TextKeys.keyMavenImportPomUrl));
+		assertFalse(form.getButton(TextKeys.btnMavenImportUsePom).isEnabled());
 	}
 	
 	public void testButtonIsOnlyEnabledWhenUrlHasLegalValue(){
@@ -27,14 +27,14 @@ public class ImportFromMavenCompositeTest extends SwtTest {
 	}
 
 	private void checkButtonEnabled(String string, boolean expected) {
-		form.setText(SwtConstants.pomUrlKey, string);
-		assertEquals(expected, form.getButton(SwtConstants.linkFromMavenButtonText).isEnabled());
+		form.setText(TextKeys.keyMavenImportPomUrl, string);
+		assertEquals(expected, form.getButton(TextKeys.btnMavenImportUsePom).isEnabled());
 	}
 
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		mavenImportComposite = new MavenImportComposite(shell, SoftwareFmContainer.makeForTests(), SwtConstants.linkFromMavenDescriptionWithNoSelectionText);
+		mavenImportComposite = new MavenImportComposite(shell, SoftwareFmContainer.makeForTests());
 		form = mavenImportComposite.form;
 	}
 

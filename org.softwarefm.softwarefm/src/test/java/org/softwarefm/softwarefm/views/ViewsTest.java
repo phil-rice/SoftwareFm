@@ -9,10 +9,8 @@ public class ViewsTest extends SwtTest {
 	public void testViewsMakeAPanel() {
 		checkView(new AllView());
 		checkView(new ClassAndMethodView());
-		checkView(new DigestView());
 		checkView(new ProjectView());
 		checkView(new SoftwareFmDebugView());
-		checkView(new VersionView());
 	}
 
 	private <C extends SoftwareFmComposite> void checkView(SoftwareFmView<C> view) {

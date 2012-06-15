@@ -3,6 +3,7 @@ package org.softwarefm.eclipse.composite;
 import org.easymock.EasyMock;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 
 public class SoftwareFmCompositeTest extends AbstractSoftwareFmCompositeTest<ClassAndMethodComposite> {
@@ -23,15 +24,14 @@ public class SoftwareFmCompositeTest extends AbstractSoftwareFmCompositeTest<Cla
 	}
 
 	public void testMsgs() {
-		assertEquals("1and2", panel.msg("message.fortest.text", 1, 2));
+		assertEquals("1and2", panel.msg(TextKeys.msgTestForTest, 1, 2));
 		assertEquals("Searching...", panel.searchingMsg());
-		assertEquals("The selected item was defined in file " + file, panel.digestDeterminedMsg(fileNameAndDigest));
-		assertEquals("The selected item was defined in file " + file + " which isn't a jar", panel.notInAJarMsg(fileNameAndNoDigest));
-		assertEquals("Found Group Id [g] Artifact Id [a] Version [v]", panel.projectDeterminedMsg(projectData));
-		assertEquals("File: " + file + "\n" + //
-				"with digest 0123456789 has not been added to SoftwareFm\n" + //
-				"Please try and add information about it", panel.unknownDigestMsg(fileNameAndDigest));
 		assertEquals("SoftwareFM was unable to work out what sort of JavaElement the selected item was", panel.notJavaElementMsg());
+		assertEquals("The selected item was defined in file "+ file + " which isn't a jar", panel.notInAJarMsg(fileNameAndNoDigest));
+		assertEquals("File " + file + " Digest 0123456789 Digest6 012345", panel.digestDeterminedMsg(TextKeys.msgTestUnknownDigest, fileNameAndDigest));
+		assertEquals("The selected item was defined in file " + file + " which isn't a jar", panel.notInAJarMsg(fileNameAndNoDigest));
+		assertEquals("File " + file + " Digest 0123456789 Digest6 012345 ProjectData " + projectData + " GroupId g ArtifactId a Version v", panel.projectDeterminedMsg(TextKeys.msgTestProjectDetermined, projectData));
+		assertEquals("File " + file + " Digest 0123456789 Digest6 012345", panel.unknownDigestMsg(TextKeys.msgTestUnknownDigest, fileNameAndDigest));
 	}
 
 	@Override

@@ -15,20 +15,6 @@
             class="org.softwarefm.softwarefm.views.ClassAndMethodView"
             id="org.softwarefm.softwarefm.views.ClassAndMethodView">
       </view>
-      <view
-            name="Digest"
-            icon="icons/digest.png"
-            category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.DigestView"
-            id="org.softwarefm.softwarefm.views.DigestView">
-      </view>
-      <view
-            name="MavenImport"
-            icon="icons/digest.png"
-            category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.MavenImportView"
-            id="org.softwarefm.softwarefm.views.MavenImportView">
-      </view>
 
       <view
             name="Project"
@@ -38,14 +24,7 @@
             id="org.softwarefm.softwarefm.views.ProjectView">
       </view>
       <view
-            name="Version"
-            icon="icons/version.png"
-            category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.VersionView"
-            id="org.softwarefm.softwarefm.views.VersionView">
-      </view>
-      <view
-            name="All"
+            name="SoftwareFM"
             icon="icons/all.png"
             category="org.softwarefm"
             class="org.softwarefm.softwarefm.views.AllView"

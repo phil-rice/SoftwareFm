@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.constants.MessageKeys;
+import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
 import org.softwarefm.eclipse.selection.IHasSelectionBindingManager;
@@ -40,27 +40,28 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 	}
 
 	public String searchingMsg() {
-		return Strings.oneLine(msg(MessageKeys.search));
+		return Strings.oneLine(msg(TextKeys.msgSearching));
 	}
 
-	public String digestDeterminedMsg(FileNameAndDigest fileNameAndDigest) {
-		assert fileNameAndDigest.digest != null : fileNameAndDigest;
-		return msg(MessageKeys.foundDigest, fileNameAndDigest.file.getPath(), Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest);
-	}
-
-	public String unknownDigestMsg(FileNameAndDigest fileNameAndDigest) {
-		return unknownDigestMsg(MessageKeys.unrecognisedDigestForProject, fileNameAndDigest);
-	}
 	public String unknownDigestMsg(String key, FileNameAndDigest fileNameAndDigest) {
 		assert fileNameAndDigest.digest != null : fileNameAndDigest;
-		String result = msg(key, fileNameAndDigest.file.getPath(), Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest);
+		String result = msg(key, fileNameAndDigest.file.getPath(),fileNameAndDigest.digest, Strings.firstNCharacters(fileNameAndDigest.digest, 6) );
 		return result;
 	}
 
-	public String projectDeterminedMsg(ProjectData projectData) {
+	public String digestDeterminedMsg(String key, FileNameAndDigest fileNameAndDigest) {
+		return msg(key, //
+				fileNameAndDigest.file, //
+				fileNameAndDigest.digest,//
+				Strings.firstNCharacters(fileNameAndDigest.digest, 6));
+	}
+
+	public String projectDeterminedMsg(String key, ProjectData projectData) {
 		FileNameAndDigest fileNameAndDigest = projectData.fileNameAndDigest;
-		return msg(MessageKeys.foundProjectData, //
-				fileNameAndDigest.file, Strings.firstNCharacters(fileNameAndDigest.digest, 6), fileNameAndDigest.digest,//
+		return msg(key, //
+				fileNameAndDigest.file,//
+				fileNameAndDigest.digest,//
+				Strings.firstNCharacters(fileNameAndDigest.digest, 6), //
 				projectData,//
 				projectData.groupId, projectData.artifactId, projectData.version);
 
@@ -68,7 +69,7 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 
 	public String notInAJarMsg(FileNameAndDigest fileNameAndDigest) {
 		assert fileNameAndDigest.digest == null : fileNameAndDigest;
-		return msg(MessageKeys.notAJar, fileNameAndDigest.file);
+		return msg(TextKeys.msgSharedNotAJar, fileNameAndDigest.file);
 
 	}
 
@@ -91,7 +92,7 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 	}
 
 	public String notJavaElementMsg() {
-		return msg(MessageKeys.notJavaElement);
+		return msg(TextKeys.msgSharedNotJavaElement);
 	}
 
 }

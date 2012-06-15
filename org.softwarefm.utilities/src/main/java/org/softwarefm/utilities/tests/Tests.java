@@ -5,6 +5,9 @@
 package org.softwarefm.utilities.tests;
 
 import java.io.File;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
 import junit.framework.Assert;
@@ -14,11 +17,13 @@ import junit.textui.TestRunner;
 
 import org.softwarefm.utilities.collections.Files;
 import org.softwarefm.utilities.collections.Iterables;
+import org.softwarefm.utilities.collections.Sets;
 import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.functions.Functions;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.reflection.Classes;
+import org.softwarefm.utilities.reflection.Fields;
 import org.softwarefm.utilities.reflection.IClassAcceptor;
 
 public class Tests {
@@ -126,7 +131,7 @@ public class Tests {
 		// System.out.println(Iterables.list(classes));
 		Iterable<Class<?>> notNullClasses = Iterables.remove(classes, Functions.<Class<?>> isNull());
 		Iterable<Class<?>> result = Iterables.remove(notNullClasses, new IFunction1<Class<?>, Boolean>() {
-			
+
 			public Boolean apply(Class<?> from) throws Exception {
 				return IDontRunAutomaticallyTest.class.isAssignableFrom(from);
 			}
@@ -163,5 +168,14 @@ public class Tests {
 			throw WrappedException.wrap(e);
 		}
 
+	}
+
+	public static void checkResourceBundle(Class<?> anchorClass, String bundleName, Class<?> referenceClass) {
+		Set<String> javaConstants = Sets.set(Iterables.map(Fields.constantFieldsOfClass(referenceClass, String.class), Fields.<String> constantFieldToValue()));
+		ResourceBundle bundle = ResourceBundle.getBundle(anchorClass.getPackage().getName() + "." + bundleName, Locale.getDefault(), anchorClass.getClassLoader());
+		for (String constant : javaConstants)
+			bundle.getString(constant);
+		for (String key : bundle.keySet())
+			Assert.assertTrue(key, javaConstants.contains(key));
 	}
 }

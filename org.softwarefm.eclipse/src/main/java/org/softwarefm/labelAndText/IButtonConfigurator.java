@@ -1,7 +1,7 @@
 package org.softwarefm.labelAndText;
 
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.constants.SwtConstants;
+import org.softwarefm.eclipse.constants.TextKeys;
 
 public interface IButtonConfigurator {
 
@@ -21,8 +21,8 @@ public interface IButtonConfigurator {
 		public static IButtonConfigurator okCancel(final Runnable ok, final Runnable cancel) {
 			return new IButtonConfigurator() {
 				public void configure(SoftwareFmContainer<?> container, IButtonCreator creator) {
-					creator.createButton(IButtonConfig.Utils.alwaysEnable(SwtConstants.cancelButton, cancel));
-					creator.createButton(IButtonConfig.Utils.alwaysEnable(SwtConstants.okButton, ok));
+					creator.createButton(IButtonConfig.Utils.alwaysEnable(TextKeys.btnSharedCancel, cancel));
+					creator.createButton(IButtonConfig.Utils.alwaysEnable(TextKeys.btnSharedOk, ok));
 				}
 			};
 		}
@@ -30,7 +30,7 @@ public interface IButtonConfigurator {
 		public static IButtonConfigurator ok(final Runnable ok) {
 			return new IButtonConfigurator() {
 				public void configure(SoftwareFmContainer<?> container, IButtonCreator creator) {
-					creator.createButton(IButtonConfig.Utils.alwaysEnable(SwtConstants.okButton, ok));
+					creator.createButton(IButtonConfig.Utils.alwaysEnable(TextKeys.btnSharedOk, ok));
 				}
 			};
 		}

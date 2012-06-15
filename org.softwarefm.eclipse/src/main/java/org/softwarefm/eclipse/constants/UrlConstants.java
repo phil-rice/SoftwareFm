@@ -7,5 +7,6 @@ public class UrlConstants {
 
 	public static final String notJavaElementUrl = "http://" + Strings.url(CommonConstants.softwareFmHostAndPrefix, "notJavaElement");
 	public static final String notJarUrl = "http://" + Strings.url(CommonConstants.softwareFmHostAndPrefix, "notJar");
+	public static final String welcomeUrl = "http://" + Strings.url(CommonConstants.softwareFmHostAndPrefix, "welcome");
 
 }

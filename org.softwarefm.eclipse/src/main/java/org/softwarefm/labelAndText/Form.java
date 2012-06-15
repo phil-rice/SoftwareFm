@@ -24,6 +24,7 @@ import org.eclipse.swt.widgets.Text;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.SwtConstants;
 import org.softwarefm.eclipse.constants.SwtErrorMessages;
+import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.swt.HasComposite;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.labelAndText.Form.LabelAndText.LabelAndTextComposite;
@@ -216,7 +217,7 @@ public class Form extends Composite implements IGetTextWithKey {
 
 			public Composite apply(Composite from) throws Exception {
 				IResourceGetter resourceGetter = new ResourceGetterMock(//
-						SwtConstants.okButton, "OK", SwtConstants.cancelButton, "Cancel",//
+						TextKeys.btnSharedOk, "OK", TextKeys.btnSharedCancel, "Cancel",//
 						"one", "One", "two", "Two", "three", "Three", "four", "Four", "five", "Five", "six", "Six", "seven", "Seven");
 				SoftwareFmContainer<?> container = SoftwareFmContainer.makeForTests(resourceGetter);
 				Form form = new Form(from, SWT.BORDER, container, IButtonConfigurator.Utils.okCancel(Runnables.sysout("ok"), Runnables.sysout("cancel")), "one", "two", "three", "four", "five", "six", "seven");

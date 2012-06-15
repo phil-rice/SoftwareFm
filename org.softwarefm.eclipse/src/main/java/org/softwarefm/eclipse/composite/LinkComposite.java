@@ -9,51 +9,48 @@ import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.FileNameAndDigest;
-import org.softwarefm.eclipse.selection.SelectedBindingAdapter;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.labelAndText.TextAndControlComposite;
 import org.softwarefm.labelAndText.TextAndFormComposite;
 import org.softwarefm.utilities.functions.IFunction1;
 
-public class LinkToProjectComposite extends TextAndControlComposite<TabFolder> {
+public class LinkComposite extends TextAndControlComposite<TabFolder> {
 
 	private TextAndFormComposite manualImport;
 	private MavenImportComposite mavenImport;
-	private TabFolder tabFolder;
-	private TabItem mavenImportTabItem;
-	private TabItem manualImportTabItem;
+	TabFolder tabFolder;
+	TabItem mavenImportTabItem;
+	TabItem manualImportTabItem;
 
-	public LinkToProjectComposite(Composite parent, SoftwareFmContainer<?> container) {
+	public LinkComposite(Composite parent, SoftwareFmContainer<?> container) {
 		super(parent, container);
-		addListener(new SelectedBindingAdapter() {
+	}
 
-			@Override
-			public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
-				setText(searchingMsg());
-			}
+	@Override
+	public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
+		setText(searchingMsg());
+	}
 
-			@Override
-			public void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-				setText(notInAJarMsg(fileNameAndDigest));
-			}
+	@Override
+	public void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+		setText(notInAJarMsg(fileNameAndDigest));
+	}
 
-			@Override
-			public void notJavaElement(int selectionCount) {
-				setText(notJavaElementMsg());
-			}
+	@Override
+	protected void notJavaElement(int selectionCount) {
+		setText(notJavaElementMsg());
+	}
 
-			@Override
-			public void projectDetermined(ProjectData projectData, int selectionCount) {
-				setText(projectDeterminedMsg(TextKeys.msgLinkProjectDetermined, projectData));
-				tabFolder.setSelection(manualImportTabItem);
-			}
+	@Override
+	public void projectDetermined(ProjectData projectData, int selectionCount) {
+		setText(projectDeterminedMsg(TextKeys.msgLinkProjectDetermined, projectData));
+		tabFolder.setSelection(manualImportTabItem);
+	}
 
-			@Override
-			public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-				setText(unknownDigestMsg(TextKeys.msgLinkUnknownDigest, fileNameAndDigest));
-				tabFolder.setSelection(mavenImportTabItem);
-			}
-		});
+	@Override
+	public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+		setText(unknownDigestMsg(TextKeys.msgLinkUnknownDigest, fileNameAndDigest));
+		tabFolder.setSelection(mavenImportTabItem);
 	}
 
 	@Override
@@ -81,10 +78,10 @@ public class LinkToProjectComposite extends TextAndControlComposite<TabFolder> {
 	}
 
 	public static void main(String[] args) {
-		Swts.Show.display(LinkToProjectComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Swts.Show.display(LinkComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			public Composite apply(Composite from) throws Exception {
 				SoftwareFmContainer<Object> container = SoftwareFmContainer.makeForTests();
-				return new LinkToProjectComposite(from, container).getComposite();
+				return new LinkComposite(from, container).getComposite();
 			}
 		});
 	}

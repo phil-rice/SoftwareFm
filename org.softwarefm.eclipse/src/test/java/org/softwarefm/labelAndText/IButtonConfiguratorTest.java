@@ -3,7 +3,7 @@ package org.softwarefm.labelAndText;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.constants.SwtConstants;
+import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.eclipse.tests.SwtTest;
 import org.softwarefm.utilities.resources.ResourceGetterMock;
@@ -19,7 +19,7 @@ public class IButtonConfiguratorTest extends SwtTest {
 		IButtonConfigurator.Utils.ok(ok).configure( container, IButtonCreator.Utils.creator(shell, container.resourceGetter));
 		Control[] children = shell.getChildren();
 		assertEquals(1, children.length);
-		checkButton((Button) children[0], ok, SwtConstants.okButton);
+		checkButton((Button) children[0], ok,TextKeys.btnSharedOk);
 	}
 
 	public void testOkCancel() {
@@ -28,8 +28,8 @@ public class IButtonConfiguratorTest extends SwtTest {
 		IButtonConfigurator.Utils.okCancel(ok, cancel).configure( container, IButtonCreator.Utils.creator(shell, container.resourceGetter));
 		Control[] children = shell.getChildren();
 		assertEquals(2, children.length);
-		checkButton((Button) children[0], cancel, SwtConstants.cancelButton);
-		checkButton((Button) children[1], ok, SwtConstants.okButton);
+		checkButton((Button) children[0], cancel,TextKeys.btnSharedCancel);
+		checkButton((Button) children[1], ok, TextKeys.btnSharedOk);
 	}
 
 	private void checkButton(Button button, CountRunnable count, String key) {
@@ -43,6 +43,6 @@ public class IButtonConfiguratorTest extends SwtTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		container = SoftwareFmContainer.makeForTests(new ResourceGetterMock(SwtConstants.okButton, "OkName", SwtConstants.cancelButton, "CancelName"));
+		container = SoftwareFmContainer.makeForTests(new ResourceGetterMock(TextKeys.btnSharedOk, "OkName", TextKeys.btnSharedCancel, "CancelName"));
 	}
 }

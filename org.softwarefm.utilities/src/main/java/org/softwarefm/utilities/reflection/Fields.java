@@ -103,6 +103,15 @@ public class Fields {
 		}
 	};
 
+	public final static <T> IFunction1<Field, T> constantFieldToValue() {
+		return new IFunction1<Field, T>() {
+			@SuppressWarnings("unchecked")
+			public T apply(Field from) throws Exception {
+				return (T) from.get(null);
+			}
+		};
+	}
+
 	public static Iterable<String> names(Iterable<Field> fields) {
 		return Iterables.map(fields, fieldToName);
 	}

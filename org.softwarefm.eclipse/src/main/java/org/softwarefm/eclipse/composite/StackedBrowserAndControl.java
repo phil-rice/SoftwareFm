@@ -4,6 +4,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.swt.IHasControl;
 import org.softwarefm.utilities.functions.Functions;
@@ -14,7 +15,8 @@ public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmC
 	private final Browser browser;
 	private final C control;
 	private final StackLayout layout;
-	private String url;
+	int layoutCount;
+	String textOrUrl;
 
 	public StackedBrowserAndControl(Composite parent, SoftwareFmContainer<?> container, IFunction1<Composite, C> creator) {
 		super(parent, container);
@@ -31,6 +33,7 @@ public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmC
 	}
 
 	public void setText(String text) {
+		this.textOrUrl = text;
 		browser.setText(text);
 		browserOnTop();
 	}
@@ -43,13 +46,14 @@ public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmC
 	}
 
 	public void setUrlAndShow(String url) {
-		this.url = url;
+		textOrUrl = url;
 		browser.setUrl(url);
 		browserOnTop();
 	}
 
-	public String getUrl() {
-		return url;
+	/** This exists for tests */
+	public String getTextOrUrl() {
+		return textOrUrl;
 	}
 
 	public C showSecondaryControl() {
@@ -58,11 +62,21 @@ public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmC
 		return control;
 	}
 
+	public Control getTopControl() {
+		return layout.topControl;
+	}
+
 	public C getSecondaryControl() {
 		return control;
 	}
 
 	public Browser getBrowser() {
 		return browser;
+	}
+
+	@Override
+	public void layout() {
+		layoutCount++;
+		super.layout();
 	}
 }
