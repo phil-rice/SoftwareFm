@@ -11,7 +11,8 @@ public class ClassAndMethodCompositeTest extends AbstractSoftwareFmCompositeTest
 	public void testClassAndMethodSelectionCausesBrowserToViewUrl() throws Exception {
 		EasyMock.expect(strategy.findNode("selection", 1)).andReturn("node");
 		EasyMock.expect(strategy.findExpressionData("selection", "node", 1)).andReturn(expressionData);
-		EasyMock.expect(strategy.findFileAndDigest("selection", "node", 1)).andReturn(fileNameAndNoDigest);
+		EasyMock.expect(strategy.findFile("selection", "node", 1)).andReturn(file);
+		EasyMock.expect(strategy.findDigest("selection", "node", file, 1)).andReturn(fileNameAndNoDigest);
 		EasyMock.replay(strategy);
 
 		execute(new Runnable() {

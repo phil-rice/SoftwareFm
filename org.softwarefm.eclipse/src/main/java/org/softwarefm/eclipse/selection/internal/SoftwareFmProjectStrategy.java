@@ -1,7 +1,7 @@
 package org.softwarefm.eclipse.selection.internal;
 
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.IProjectHtmlRipper;
 import org.softwarefm.eclipse.selection.IProjectStrategy;
 import org.softwarefm.eclipse.url.IUrlStrategy;
@@ -22,13 +22,13 @@ public class SoftwareFmProjectStrategy<S> implements IProjectStrategy<S> {
 
 	}
 
-	public ProjectData findProject(S selection, FileNameAndDigest fileNameAndDigest, int selectionCount) {
+	public ProjectData findProject(S selection, FileAndDigest fileAndDigest, int selectionCount) {
 		try {
-			String url = urlStrategy.digestUrl(fileNameAndDigest.digest).getOffsetAndUrl();
+			String url = urlStrategy.digestUrl(fileAndDigest.digest).getOffsetAndUrl();
 			IResponse response = client.get(url).execute();
 			if (CommonConstants.okStatusCodes.contains(response.statusCode())) {
 				String html = response.asString();
-				ProjectData projectData = htmlRipper.rip(fileNameAndDigest, html);
+				ProjectData projectData = htmlRipper.rip(fileAndDigest, html);
 				return projectData;
 			}
 

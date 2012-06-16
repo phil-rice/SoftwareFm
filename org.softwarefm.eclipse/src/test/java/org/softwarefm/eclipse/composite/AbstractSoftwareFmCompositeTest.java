@@ -5,9 +5,10 @@ import java.io.File;
 import org.easymock.EasyMock;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.cache.IProjectDataCache;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
 import org.softwarefm.eclipse.selection.internal.SelectedArtifactSelectionManager;
 import org.softwarefm.eclipse.selection.internal.SwtThreadSelectedBindingAggregator;
@@ -33,10 +34,10 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 	protected final static String digestUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "Digest:0123456789");
 	protected final static String projectUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "project/g/a");
 	protected final static File file = new File(new File("some"), "file");
-	protected final static FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(file, "0123456789");
-	protected final static FileNameAndDigest fileNameAndNoDigest = new FileNameAndDigest(file, null);
-	protected final static FileNameAndDigest noFileNameAndNoDigest = new FileNameAndDigest(null, null);
-	protected final static ProjectData projectData = new ProjectData(fileNameAndDigest, "g", "a", "v");
+	protected final static FileAndDigest fileAndDigest = new FileAndDigest(file, "0123456789");
+	protected final static FileAndDigest fileNameAndNoDigest = new FileAndDigest(file, null);
+	protected final static FileAndDigest noFileNameAndNoDigest = new FileAndDigest(null, null);
+	protected final static ProjectData projectData = new ProjectData(fileAndDigest, "g", "a", "v");
 	protected final static ExpressionData classExpressionData = new ExpressionData("somePackage", "someClass");
 	protected final static ExpressionData classAndMethodExpressionData = new ExpressionData("somePackage", "someClass", "someMethod");
 
@@ -57,7 +58,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		strategy = EasyMock.createMock(ISelectedBindingStrategy.class);
 		EasyMock.makeThreadSafe(strategy, true);
 		rememberedExceptions = ICallback.Utils.<Throwable> memory();
-		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), rememberedExceptions);
+		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), IProjectDataCache.Utils.projectDataCache(), rememberedExceptions);
 		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
 		initialListeners = listenerManager.getListeners().size();
 		assertEquals(0, initialListeners);
@@ -65,7 +66,8 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 				selectedArtifactSelectionManager,//
 				ICallback.Utils.<String> exception("ImportPom shouldnt be used"),//
 				ICallback.Utils.<ProjectData> exception("ImportPom shouldnt be used"),//
-				ITemplateStore.Utils.templateStore(urlStrategy)));
+				ITemplateStore.Utils.templateStore(urlStrategy), //
+				IProjectDataCache.Utils.projectDataCache()));
 	}
 
 	@Override

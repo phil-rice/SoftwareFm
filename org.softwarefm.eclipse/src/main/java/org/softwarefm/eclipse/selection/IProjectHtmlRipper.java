@@ -5,7 +5,7 @@ import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectHtmlRipper;
 
 public interface IProjectHtmlRipper {
 
-	ProjectData rip(FileNameAndDigest fileNameAndDigest, String html);
+	ProjectData rip(FileAndDigest fileAndDigest, String html);
 
 	public static class Utils {
 		public static IProjectHtmlRipper ripper() {

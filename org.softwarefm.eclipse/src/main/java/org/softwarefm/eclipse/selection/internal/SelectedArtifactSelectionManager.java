@@ -4,19 +4,23 @@
 
 package org.softwarefm.eclipse.selection.internal;
 
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.softwarefm.eclipse.cache.CachedProjectData;
+import org.softwarefm.eclipse.cache.IProjectDataCache;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.future.Futures;
+import org.softwarefm.utilities.runnable.Runnables;
 
 /** I have tried to keep this eclipse agnostic. */
 public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingManager<S> {
@@ -25,20 +29,22 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 	private final ExecutorService executor;
 	private final ISelectedBindingListenerAndAdderRemover<S> listenerManager;
 	private final ICallback<Throwable> exceptionHandler;
+	private final IProjectDataCache cache;
 
-	public SelectedArtifactSelectionManager(final ISelectedBindingListenerAndAdderRemover<S> listenerManager, final ISelectedBindingStrategy<S, N> strategy, ExecutorService executor, ICallback<Throwable> exceptionHandler) {
+	public SelectedArtifactSelectionManager(final ISelectedBindingListenerAndAdderRemover<S> listenerManager, final ISelectedBindingStrategy<S, N> strategy, ExecutorService executor, IProjectDataCache cache, ICallback<Throwable> exceptionHandler) {
 		this.listenerManager = listenerManager;
+		this.cache = cache;
 		this.exceptionHandler = exceptionHandler;
 		this.strategy = new ISelectedBindingStrategy<S, N>() {
-			public ProjectData findProject(S selection, FileNameAndDigest fileNameAndDigest, int selectionCount) {
+			public ProjectData findProject(S selection, FileAndDigest fileAndDigest, int selectionCount) {
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
-				ProjectData projectData = strategy.findProject(selection, fileNameAndDigest, selectionCount);
+				ProjectData projectData = strategy.findProject(selection, fileAndDigest, selectionCount);
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
-				if (fileNameAndDigest.digest != null)
+				if (fileAndDigest.digest != null)
 					if (projectData == null)
-						listenerManager.unknownDigest(fileNameAndDigest, selectionCount);
+						listenerManager.unknownDigest(fileAndDigest, selectionCount);
 					else
 						listenerManager.projectDetermined(projectData, selectionCount);
 				return projectData;
@@ -58,22 +64,26 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 				return expressionData;
 			}
 
-			public FileNameAndDigest findFileAndDigest(S selection, N node, int selectionCount) {
+			public File findFile(S selection, N node, int selectionCount) {
 				if (node == null || currentSelectionCount.get() > selectionCount)
 					return null;
-				FileNameAndDigest fileNameAndDigest = strategy.findFileAndDigest(selection, node, selectionCount);
+				File file = strategy.findFile(selection, node, selectionCount);
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
-				if (fileNameAndDigest.file == null)
+				if (file == null)
 					listenerManager.notJavaElement(selectionCount);
-				else {
-					String digest = fileNameAndDigest.digest;
-					if (digest == null)
-						listenerManager.notInAJar(fileNameAndDigest, selectionCount);
-					else
-						listenerManager.digestDetermined(fileNameAndDigest, selectionCount);
-				}
-				return fileNameAndDigest;
+				return file;
+			}
+
+			public FileAndDigest findDigest(S selection, N node, File file, int selectionCount) {
+				if (node == null || currentSelectionCount.get() > selectionCount)
+					return null;
+				FileAndDigest fileAndDigest = strategy.findDigest(selection, node, file, selectionCount);
+				if (fileAndDigest == null)
+					listenerManager.notInAJar(file, selectionCount);
+				else
+					listenerManager.digestDetermined(fileAndDigest, selectionCount);
+				return fileAndDigest;
 			}
 		};
 		this.executor = executor;
@@ -93,17 +103,32 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 	@SuppressWarnings("unused")
 	Runnable task(final S selection, final N node, final int thisSelectionCount) {
 		ExpressionData expressionData = strategy.findExpressionData(selection, node, thisSelectionCount);
-		return new Runnable() {
-			public void run() {
-				try {
-					FileNameAndDigest fileNameAndDigest = strategy.findFileAndDigest(selection, node, thisSelectionCount);
-					if (fileNameAndDigest != null && fileNameAndDigest.digest != null)
-						strategy.findProject(selection, fileNameAndDigest, thisSelectionCount);
-				} catch (RuntimeException e) {
-					ICallback.Utils.call(exceptionHandler, e);
-				}
-			}
-		};
+		final File file = strategy.findFile(selection, node, thisSelectionCount);
+		if (file != null) {
+			CachedProjectData cachedProjectData = cache.projectData(file);
+			if (cachedProjectData == null && file != null)
+				return new Runnable() {
+					public void run() {
+						try {
+							FileAndDigest fileAndDigest = strategy.findDigest(selection, node, file, thisSelectionCount);
+							if (fileAndDigest != null && fileAndDigest.digest != null) {
+								ProjectData projectData = strategy.findProject(selection, fileAndDigest, thisSelectionCount);
+								if (projectData != null)
+									cache.addProjectData(projectData);
+								else
+									cache.addNotFound(fileAndDigest);
+							}
+						} catch (RuntimeException e) {
+							ICallback.Utils.call(exceptionHandler, e);
+						}
+					}
+				};
+			if (cachedProjectData.found())
+				listenerManager.projectDetermined(cachedProjectData.projectData, thisSelectionCount);
+			else
+				listenerManager.unknownDigest(cachedProjectData.fileAndDigest, thisSelectionCount);
+		}
+		return Runnables.noRunnable;
 	}
 
 	public void addSelectedArtifactSelectionListener(ISelectedBindingListener listener) {

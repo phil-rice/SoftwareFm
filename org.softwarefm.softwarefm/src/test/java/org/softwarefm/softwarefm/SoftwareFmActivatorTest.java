@@ -4,6 +4,7 @@ import java.util.concurrent.ExecutorService;
 
 import org.eclipse.jface.text.ITextSelection;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.cache.IProjectDataCache;
 import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.tests.SwtTest;
@@ -27,6 +28,23 @@ public class SoftwareFmActivatorTest extends SwtTest {
 		assertEquals("zeroandone", IResourceGetter.Utils.getMessageOrException(resourceGetter, TextKeys.msgTestForTest, "zero", "one"));
 		activator.dispose();
 		assertNotSame(resourceGetter, activator.getContainer().resourceGetter);
+	}
+	
+	public void testProjectDataCache(){
+		IProjectDataCache cache1 = activator.getProjectDataCache();
+		IProjectDataCache cache2 = activator.getProjectDataCache();
+		SoftwareFmContainer<ITextSelection> container = activator.getContainer();
+		assertSame(cache1, cache2);
+		assertSame(cache1, container.projectDataCache);
+		activator.dispose();
+		
+		IProjectDataCache cache1b = activator.getProjectDataCache();
+		IProjectDataCache cache2b = activator.getProjectDataCache();
+		SoftwareFmContainer<ITextSelection> containerb = activator.getContainer();
+		assertSame(cache1b, cache2b);
+		assertSame(cache1b, containerb.projectDataCache);
+		assertNotSame(cache1, cache1b);
+		
 	}
 
 	public void testSelectionBindingManager() {

@@ -6,6 +6,7 @@ import org.softwarefm.eclipse.link.internal.MakeLink;
 import org.softwarefm.eclipse.templates.ITemplateStore;
 import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.maps.IHasCache;
 
 public interface IMakeLink {
 
@@ -21,11 +22,11 @@ public interface IMakeLink {
 		 * 
 		 * @param templateStore
 		 */
-		public static IMakeLink makeLink(IUrlStrategy urlStrategy) {
-			return new MakeLink(urlStrategy, ITemplateStore.Utils.templateStore(urlStrategy));
+		public static IMakeLink makeLink(IUrlStrategy urlStrategy, IHasCache cache) {
+			return new MakeLink(urlStrategy, ITemplateStore.Utils.templateStore(urlStrategy), cache);
 		}
-		public static IMakeLink makeLink(IUrlStrategy urlStrategy, ITemplateStore templateStore) {
-			return new MakeLink(urlStrategy, templateStore);
+		public static IMakeLink makeLink(IUrlStrategy urlStrategy, ITemplateStore templateStore, IHasCache cache) {
+			return new MakeLink(urlStrategy, templateStore, cache);
 		}
 
 		public static ICallback<ProjectData> manuallyImport(final IMakeLink makeLink) {

@@ -4,11 +4,11 @@ import java.io.File;
 
 import org.softwarefm.utilities.strings.Strings;
 
-public class FileNameAndDigest {
+public class FileAndDigest {
 	public String digest;
 	public final File file;
 
-	public FileNameAndDigest(File file, String digest) {
+	public FileAndDigest(File file, String digest) {
 		super();
 		this.digest = digest;
 		this.file = file;
@@ -31,7 +31,7 @@ public class FileNameAndDigest {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		FileNameAndDigest other = (FileNameAndDigest) obj;
+		FileAndDigest other = (FileAndDigest) obj;
 		if (digest == null) {
 			if (other.digest != null)
 				return false;

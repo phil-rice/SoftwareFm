@@ -4,6 +4,8 @@
 
 package org.softwarefm.eclipse.selection;
 
+import java.io.File;
+
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 
@@ -32,12 +34,12 @@ public interface ISelectedBindingListener {
 
 	void notJavaElement(int selectionCount);
 
-	void digestDetermined(FileNameAndDigest fileNameAndDigest, int selectionCount);
+	void digestDetermined(FileAndDigest fileAndDigest, int selectionCount);
 
-	void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount);
+	void notInAJar(File file, int selectionCount);
 
 	void projectDetermined(ProjectData projectData, int selectionCount);
 
-	void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount);
+	void unknownDigest(FileAndDigest fileAndDigest, int selectionCount);
 
 }

@@ -1,15 +1,15 @@
 package org.softwarefm.eclipse.jdtBinding;
 
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 
 public class ProjectData {
-	public final FileNameAndDigest fileNameAndDigest;
+	public final FileAndDigest fileAndDigest;
 	public final String groupId;
 	public final String artifactId;
 	public final String version;
 
-	public ProjectData(FileNameAndDigest fileNameAndDigest, String groupId, String artifactId, String version) {
-		this.fileNameAndDigest = fileNameAndDigest;
+	public ProjectData(FileAndDigest fileAndDigest, String groupId, String artifactId, String version) {
+		this.fileAndDigest = fileAndDigest;
 		this.groupId = groupId;
 		this.artifactId = artifactId;
 		this.version = version;
@@ -17,7 +17,7 @@ public class ProjectData {
 
 	@Override
 	public String toString() {
-		return "ProjectData [fileNameAndDigest=" + fileNameAndDigest + ", groupId=" + groupId + ", artifactId=" + artifactId + ", version=" + version + "]";
+		return "ProjectData [fileNameAndDigest=" + fileAndDigest + ", groupId=" + groupId + ", artifactId=" + artifactId + ", version=" + version + "]";
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public class ProjectData {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((artifactId == null) ? 0 : artifactId.hashCode());
-		result = prime * result + ((fileNameAndDigest == null) ? 0 : fileNameAndDigest.hashCode());
+		result = prime * result + ((fileAndDigest == null) ? 0 : fileAndDigest.hashCode());
 		result = prime * result + ((groupId == null) ? 0 : groupId.hashCode());
 		result = prime * result + ((version == null) ? 0 : version.hashCode());
 		return result;
@@ -45,10 +45,10 @@ public class ProjectData {
 				return false;
 		} else if (!artifactId.equals(other.artifactId))
 			return false;
-		if (fileNameAndDigest == null) {
-			if (other.fileNameAndDigest != null)
+		if (fileAndDigest == null) {
+			if (other.fileAndDigest != null)
 				return false;
-		} else if (!fileNameAndDigest.equals(other.fileNameAndDigest))
+		} else if (!fileAndDigest.equals(other.fileAndDigest))
 			return false;
 		if (groupId == null) {
 			if (other.groupId != null)

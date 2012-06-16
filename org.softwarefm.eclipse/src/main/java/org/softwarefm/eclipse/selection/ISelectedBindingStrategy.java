@@ -28,7 +28,10 @@ public interface ISelectedBindingStrategy<S, N> extends IProjectStrategy<S> {
 	ExpressionData findExpressionData(S selection, N node, int selectionCount);
 
 	/** The filename/digest will be null if the strategy cannot work out file. The digest will be null if the filename isn't a jar */
-	FileNameAndDigest findFileAndDigest(S selection, N node, int selectionCount);
+	File findFile(S selection, N node, int selectionCount);
+
+	@SuppressWarnings("Change this to return null to be consistant with others")
+	FileAndDigest findDigest(S selection, N node, File file, int selectionCount);
 
 	public static class Utils {
 		public static <S> IProjectStrategy<S> softwareFmProjectStrategy(IUrlStrategy urlStrategy) {
@@ -45,19 +48,23 @@ public interface ISelectedBindingStrategy<S, N> extends IProjectStrategy<S> {
 					return new ExpressionData((String) selection.get("package"), (String) selection.get("class"), (String) selection.get("method"));
 				}
 
-				public ProjectData findProject(Map<String, Object> selection, FileNameAndDigest fileNameAndDigest, int selectionCount) {
+				public ProjectData findProject(Map<String, Object> selection, FileAndDigest fileAndDigest, int selectionCount) {
 					String groupid = (String) selection.get("groupid");
 					String artefactId = (String) selection.get("artifactid");
 					String version = (String) selection.get("version");
 					if (groupid == null)
 						return null;
 					else
-						return new ProjectData(fileNameAndDigest, groupid, artefactId, version);
+						return new ProjectData(fileAndDigest, groupid, artefactId, version);
 				}
 
-				public FileNameAndDigest findFileAndDigest(Map<String, Object> selection, Map<String, Object> node, int selectionCount) {
+				public File findFile(Map<String, Object> selection, Map<String, Object> node, int selectionCount) {
 					File file = new File((String) selection.get("filename"));
-					return new FileNameAndDigest(file, (String) selection.get("digest"));
+					return file;
+				}
+
+				public FileAndDigest findDigest(Map<String, Object> selection, Map<String, Object> node, File file, int selectionCount) {
+					return new FileAndDigest(file, (String) selection.get("digest"));
 				}
 			};
 		}

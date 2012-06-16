@@ -11,7 +11,7 @@ import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.collections.Files;
 import org.softwarefm.utilities.exceptions.WrappedException;
@@ -59,7 +59,7 @@ public class MavenImportJob implements ICallback<String> {
 						return Status.CANCEL_STATUS;
 
 					monitor.subTask("Creating Link");
-					FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(jar, digest);
+					FileAndDigest fileNameAndDigest = new FileAndDigest(jar, digest);
 					ProjectData projectData = new ProjectData(fileNameAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model));
 					makeLink.makeDigestLink(projectData);
 					monitor.internalWorked(1);

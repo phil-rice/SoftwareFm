@@ -12,17 +12,17 @@ public class LinkCompositeTest extends AbstractSoftwareFmCompositeTest<LinkCompo
 		dispatchUntilQueueEmpty();
 		assertEquals("Searching...", panel.getText());
 
-		listenerManager.digestDetermined(fileNameAndDigest, 0);
+		listenerManager.digestDetermined(fileAndDigest, 0);
 		dispatchUntilQueueEmpty();
 		assertEquals("Searching...", panel.getText());
 
 		listenerManager.projectDetermined(projectData, 0);
 		dispatchUntilQueueEmpty();
-		assertEquals("File: " + fileNameAndDigest.file + "\nDigest " + fileNameAndDigest.digest + "\nIf you think that the jar has been linked to the wrong project, you can edit it below", panel.getText());
+		assertEquals("File: " + fileAndDigest.file + "\nDigest " + fileAndDigest.digest + "\nIf you think that the jar has been linked to the wrong project, you can edit it below", panel.getText());
 
-		listenerManager.unknownDigest(fileNameAndDigest, 0);
+		listenerManager.unknownDigest(fileAndDigest, 0);
 		dispatchUntilQueueEmpty();
-		assertEquals("File: " + fileNameAndDigest.file + "\nDigest: " + fileNameAndDigest.digest + "\n" + //
+		assertEquals("File: " + fileAndDigest.file + "\nDigest: " + fileAndDigest.digest + "\n" + //
 				"This has not been added to SoftwareFm\n" + //
 				"In order to link this jar to SoftwareFM, we would like you to tell use some information about it. \n" + //
 				"Ideally you will give us the url of the Maven POM that created the jar, but can you can manually enter the relevant data if you want.", panel.getText());
@@ -36,7 +36,7 @@ public class LinkCompositeTest extends AbstractSoftwareFmCompositeTest<LinkCompo
 		});
 		checkDoesntChangeTab(new Runnable() {
 			public void run() {
-				listenerManager.notInAJar(fileNameAndNoDigest, 0);
+				listenerManager.notInAJar(file, 0);
 			}
 		});
 		checkDoesntChangeTab(new Runnable() {
@@ -46,7 +46,7 @@ public class LinkCompositeTest extends AbstractSoftwareFmCompositeTest<LinkCompo
 		});
 		checkDoesntChangeTab(new Runnable() {
 			public void run() {
-				listenerManager.digestDetermined(fileNameAndDigest,  0);
+				listenerManager.digestDetermined(fileAndDigest,  0);
 			}
 		});
 		checkChangesTabTo(panel.manualImportTabItem, new Runnable() {
@@ -56,7 +56,7 @@ public class LinkCompositeTest extends AbstractSoftwareFmCompositeTest<LinkCompo
 		});
 		checkChangesTabTo(panel.mavenImportTabItem, new Runnable() {
 			public void run() {
-				listenerManager.unknownDigest(fileNameAndDigest, 0);
+				listenerManager.unknownDigest(fileAndDigest, 0);
 			}
 		});
 	}

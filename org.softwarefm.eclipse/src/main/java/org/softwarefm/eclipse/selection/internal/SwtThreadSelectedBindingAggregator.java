@@ -1,12 +1,13 @@
 package org.softwarefm.eclipse.selection.internal;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Display;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.utilities.collections.Lists;
@@ -40,20 +41,20 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 		});
 	}
 
-	public void digestDetermined(final FileNameAndDigest fileNameAndDigest, final int selectionCount) {
+	public void digestDetermined(final FileAndDigest fileAndDigest, final int selectionCount) {
 		display.asyncExec(new Runnable() {
 			public void run() {
 				for (ISelectedBindingListener listener : listeners)
-					listener.digestDetermined(fileNameAndDigest, selectionCount);
+					listener.digestDetermined(fileAndDigest, selectionCount);
 			}
 		});
 	}
 
-	public void notInAJar(final FileNameAndDigest fileNameAndDigest, final int selectionCount) {
+	public void notInAJar(final File file, final int selectionCount) {
 		display.asyncExec(new Runnable() {
 			public void run() {
 				for (ISelectedBindingListener listener : listeners)
-					listener.notInAJar(fileNameAndDigest, selectionCount);
+					listener.notInAJar(file, selectionCount);
 			}
 		});
 	}
@@ -67,11 +68,11 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 		});
 	}
 
-	public void unknownDigest(final FileNameAndDigest fileNameAndDigest, final int selectionCount) {
+	public void unknownDigest(final FileAndDigest fileAndDigest, final int selectionCount) {
 		display.asyncExec(new Runnable() {
 			public void run() {
 				for (ISelectedBindingListener listener : listeners)
-					listener.unknownDigest(fileNameAndDigest, selectionCount);
+					listener.unknownDigest(fileAndDigest, selectionCount);
 			}
 		});
 	}

@@ -1,12 +1,14 @@
 package org.softwarefm.eclipse.composite;
 
+import java.io.File;
+
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.constants.UrlConstants;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.utilities.functions.IFunction1;
@@ -23,22 +25,21 @@ public class ProjectComposite extends StackedBrowserAndControl<LinkComposite> {
 		setUrlAndShow(UrlConstants.welcomeUrl);
 		addListener(new ISelectedBindingListener() {
 			public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
-				setText(searchingMsg());
 			}
 
 			public void notJavaElement(int selectionCount) {
 				setUrlAndShow(UrlConstants.notJavaElementUrl);
 			}
 
-			public void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+			public void notInAJar(File file, int selectionCount) {
 				setUrlAndShow(UrlConstants.notJarUrl);
 			}
 
-			public void digestDetermined(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-				setText(digestDeterminedMsg(TextKeys.msgProjectFoundDigest, fileNameAndDigest) + "\n" + searchingMsg());
+			public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
+				setText(digestDeterminedMsg(TextKeys.msgProjectFoundDigest, fileAndDigest) + "\n" + searchingMsg());
 			}
 
-			public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
 				showSecondaryControl();
 			}
 

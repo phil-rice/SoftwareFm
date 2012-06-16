@@ -20,18 +20,17 @@ public class SoftwareFmCompositeTest extends AbstractSoftwareFmCompositeTest<Cla
 	}
 
 	public void testDigestUrl() {
-		assertEquals(digestUrl, panel.digestUrl(fileNameAndDigest));
+		assertEquals(digestUrl, panel.digestUrl(fileAndDigest));
 	}
 
 	public void testMsgs() {
 		assertEquals("1and2", panel.msg(TextKeys.msgTestForTest, 1, 2));
 		assertEquals("Searching...", panel.searchingMsg());
 		assertEquals("SoftwareFM was unable to work out what sort of JavaElement the selected item was", panel.notJavaElementMsg());
-		assertEquals("The selected item was defined in file "+ file + " which isn't a jar", panel.notInAJarMsg(fileNameAndNoDigest));
-		assertEquals("File " + file + " Digest 0123456789 Digest6 012345", panel.digestDeterminedMsg(TextKeys.msgTestUnknownDigest, fileNameAndDigest));
-		assertEquals("The selected item was defined in file " + file + " which isn't a jar", panel.notInAJarMsg(fileNameAndNoDigest));
+		assertEquals("The selected item was defined in file "+ file + " which isn't a jar", panel.notInAJarMsg(file));
+		assertEquals("File " + file + " Digest 0123456789 Digest6 012345", panel.digestDeterminedMsg(TextKeys.msgTestUnknownDigest, fileAndDigest));
 		assertEquals("File " + file + " Digest 0123456789 Digest6 012345 ProjectData " + projectData + " GroupId g ArtifactId a Version v", panel.projectDeterminedMsg(TextKeys.msgTestProjectDetermined, projectData));
-		assertEquals("File " + file + " Digest 0123456789 Digest6 012345", panel.unknownDigestMsg(TextKeys.msgTestUnknownDigest, fileNameAndDigest));
+		assertEquals("File " + file + " Digest 0123456789 Digest6 012345", panel.unknownDigestMsg(TextKeys.msgTestUnknownDigest, fileAndDigest));
 	}
 
 	@Override

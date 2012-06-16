@@ -1,8 +1,6 @@
 package org.softwarefm.softwarefm.selection.internal;
 
 import java.io.File;
-import java.util.Map;
-import java.util.concurrent.Callable;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
@@ -34,22 +32,19 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.IProjectStrategy;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
 import org.softwarefm.utilities.collections.Files;
-import org.softwarefm.utilities.maps.IHasCache;
-import org.softwarefm.utilities.maps.Maps;
 
 /** This file hopefully contains all the eclipse specific stuff. */
 
 @SuppressWarnings("restriction")
-public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<ITextSelection, Expression>, IHasCache {
+public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<ITextSelection, Expression> {
 
 	private final IProjectStrategy<ITextSelection> projectStrategy;
-	private final Map<IPath, String> cache = Maps.newMap();
 
-	public EclipseSelectedBindingStrategy(IProjectStrategy<ITextSelection>  projectStrategy) {
+	public EclipseSelectedBindingStrategy(IProjectStrategy<ITextSelection> projectStrategy) {
 		this.projectStrategy = projectStrategy;
 	}
 
@@ -89,26 +84,25 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 	}
 
 	@Override
-	public FileNameAndDigest findFileAndDigest(ITextSelection selection, Expression expression, int selectionCount) {
+	public File findFile(ITextSelection selection, Expression expression, int selectionCount) {
 		final IJavaElement javaElement = findJavaElement(expression);
 		if (javaElement == null)
-			return new FileNameAndDigest(null, null);
+			return null;
 		IResource resource = javaElement.getResource();
 		IPath javaElementPath = javaElement.getPath();
 		final IPath path = resource == null ? javaElementPath : resource.getLocation();
 		File file = path.toFile();
-		if (path != null && "jar".equals(path.getFileExtension())) {
-			String digestAsHexString = Maps.findOrCreate(cache, path, new Callable<String>() {
-				@Override
-				public String call() throws Exception {
-					File file = path.toFile();
-					String result = Files.digestAsHexString(file);
-					return result;
-				}
-			});
-			return new FileNameAndDigest(file, digestAsHexString);
+		return file;
+	}
+
+	@Override
+	public FileAndDigest findDigest(ITextSelection selection, Expression node, File file, int selectionCount) {
+		String extension = Files.extension(file.getName());
+		if ("jar".equals(extension)) {
+			String digestAsHexString = Files.digestAsHexString(file);
+			return new FileAndDigest(file, digestAsHexString);
 		}
-		return new FileNameAndDigest(file, null);
+		return null;
 	}
 
 	// At this point we sigh in sadness about Java's weak class system, and regret the inability to modify Expression in anyway. Clojure multimethods where are you know
@@ -158,8 +152,8 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 	}
 
 	@Override
-	public ProjectData findProject(ITextSelection selection, FileNameAndDigest fileNameAndDigest, int selectionCount) {
-		return projectStrategy.findProject(selection, fileNameAndDigest, selectionCount);
+	public ProjectData findProject(ITextSelection selection, FileAndDigest fileAndDigest, int selectionCount) {
+		return projectStrategy.findProject(selection, fileAndDigest, selectionCount);
 	}
 
 	static ITypeRoot getJavaInput(IEditorPart part) {
@@ -194,9 +188,5 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 		return javaElement;
 	}
 
-	@Override
-	public void clearCaches() {
-		cache.clear();
-	}
 
 }

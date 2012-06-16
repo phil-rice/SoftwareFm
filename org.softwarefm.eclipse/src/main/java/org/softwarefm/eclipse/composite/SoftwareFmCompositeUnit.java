@@ -15,6 +15,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.cache.IProjectDataCache;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.IHasSelectionBindingManager;
@@ -65,19 +66,22 @@ public class SoftwareFmCompositeUnit {
 			Swts.Show.xUnit(title, new File("src/test/resources/org/softwarefm/eclipse/composite"), "dat", new ISituationListAndBuilder<Holder, String>() {
 				public Holder makeChild(Composite parent) throws Exception {
 					final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay());
+					IProjectDataCache projectDataCache = IProjectDataCache.Utils.projectDataCache();
 					SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>> manager = new SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>>(//
 							listenerManager, //
 							ISelectedBindingStrategy.Utils.fromMap(), //
 							threadingPool, //
+							projectDataCache,//
 							ICallback.Utils.rethrow());
 					IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
 					ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
-					final IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, templateStore);
+					final IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, templateStore ,projectDataCache);
 					SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
 							manager, //
 							IMaven.Utils.importPomWithSysouts(makeLink),//
 							IMakeLink.Utils.manuallyImport(makeLink),//
-							templateStore);
+							templateStore, //
+							projectDataCache);
 					Holder holder = new Holder(parent, manager);
 					for (IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> creator : creators) {
 						SoftwareFmComposite softwareFmComposite = Functions.call(creator, holder.getComposite(), container);
@@ -139,6 +143,6 @@ public class SoftwareFmCompositeUnit {
 
 	@SuppressWarnings({ "unused", "unchecked" })
 	public static void main(String[] args) {
-		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), allCreator, classAndMethodCreator, projectCreator,  manualImportCreator, mavenImportCreator, debugCreator);
+		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), allCreator, classAndMethodCreator, projectCreator, manualImportCreator, mavenImportCreator, debugCreator);
 	}
 }

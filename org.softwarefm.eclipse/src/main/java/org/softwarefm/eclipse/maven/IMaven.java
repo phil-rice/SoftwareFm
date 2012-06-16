@@ -10,7 +10,7 @@ import org.apache.maven.model.Parent;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.internal.Maven;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.collections.Files;
 
@@ -80,8 +80,8 @@ public interface IMaven {
 					System.out.println("Target: " + jarFile);
 					maven.downloadJar(model);
 					System.out.println("Imported to local repository");
-					FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(jarFile, Files.digestAsHexString(jarFile));
-					makeLink.makeDigestLink(new ProjectData(fileNameAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model)));
+					FileAndDigest fileAndDigest = new FileAndDigest(jarFile, Files.digestAsHexString(jarFile));
+					makeLink.makeDigestLink(new ProjectData(fileAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model)));
 				}
 			};
 		}

@@ -1,5 +1,6 @@
 package org.softwarefm.eclipse.composite;
 
+import java.io.File;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
@@ -7,7 +8,7 @@ import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.SelectedBindingAdapter;
 import org.softwarefm.labelAndText.IButtonConfig;
 import org.softwarefm.labelAndText.IButtonConfigurator;
@@ -22,22 +23,22 @@ import org.softwarefm.utilities.strings.Strings;
 
 final class ManualImportComposite extends TextAndFormComposite {
 
-	private FileNameAndDigest fileNameAndDigest;
+	private FileAndDigest fileAndDigest;
 	protected ProjectData projectData;
 
 	ManualImportComposite(Composite parent, SoftwareFmContainer<?> container) {
 		super(parent, container);
 		addListener(new SelectedBindingAdapter() {
 			@Override
-			public void digestDetermined(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+			public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
 				projectData = null;
-				ManualImportComposite.this.fileNameAndDigest = fileNameAndDigest;
+				ManualImportComposite.this.fileAndDigest = fileAndDigest;
 			}
 
 			@Override
 			public void projectDetermined(ProjectData projectData, int selectionCount) {
 				ManualImportComposite.this.projectData = projectData;
-				setText(unknownDigestMsg(TextKeys.msgManualImportProjectDetermined, projectData.fileNameAndDigest));
+				setText(unknownDigestMsg(TextKeys.msgManualImportProjectDetermined, projectData.fileAndDigest));
 				setText(TextKeys.keyManualImportGroupId, projectData.groupId);
 				setText(TextKeys.keyManualImportArtifactId, projectData.artifactId);
 				setText(TextKeys.keyManualImportVersion, projectData.version);
@@ -45,7 +46,7 @@ final class ManualImportComposite extends TextAndFormComposite {
 
 			private void clearForm() {
 				projectData = null;
-				fileNameAndDigest = null;
+				fileAndDigest = null;
 
 				setText(TextKeys.keyManualImportGroupId, "<Not Relevant>");
 				setText(TextKeys.keyManualImportArtifactId, "<Not Relevant>");
@@ -59,7 +60,7 @@ final class ManualImportComposite extends TextAndFormComposite {
 			}
 
 			@Override
-			public void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+			public void notInAJar(File file, int selectionCount) {
 				setText(msg(TextKeys.msgManualImportNotAJar));
 				clearForm();
 			}
@@ -73,11 +74,11 @@ final class ManualImportComposite extends TextAndFormComposite {
 			}
 
 			@Override
-			public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-				ManualImportComposite.this.fileNameAndDigest = fileNameAndDigest;
+			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
+				ManualImportComposite.this.fileAndDigest = fileAndDigest;
 				projectData = null;
 
-				setText(unknownDigestMsg(TextKeys.msgManualImportUnknownDigest, fileNameAndDigest));
+				setText(unknownDigestMsg(TextKeys.msgManualImportUnknownDigest, fileAndDigest));
 				setText(TextKeys.keyManualImportGroupId, "Enter Group Id");
 				setText(TextKeys.keyManualImportArtifactId, "Enter Artifact Id");
 				setText(TextKeys.keyManualImportVersion, "Enter Version Id");
@@ -97,10 +98,10 @@ final class ManualImportComposite extends TextAndFormComposite {
 				creator.createButton(new IButtonConfig() {
 					public List<KeyAndProblem> canExecute(IGetTextWithKey textWithKey) {
 						List<KeyAndProblem> result = Lists.newList();
-						if (fileNameAndDigest == null || fileNameAndDigest.file == null)
+						if (fileAndDigest == null || fileAndDigest.file == null)
 							result.add(new KeyAndProblem(null, IResourceGetter.Utils.getMessageOrException(container.resourceGetter, TextKeys.errorManualImportFileUnknown)));
-						else if (fileNameAndDigest.digest == null)
-							result.add(new KeyAndProblem(null, IResourceGetter.Utils.getMessageOrException(container.resourceGetter, TextKeys.errorManualImportDigestUnknown, fileNameAndDigest.file)));
+						else if (fileAndDigest.digest == null)
+							result.add(new KeyAndProblem(null, IResourceGetter.Utils.getMessageOrException(container.resourceGetter, TextKeys.errorManualImportDigestUnknown, fileAndDigest.file)));
 						checkOk(result, TextKeys.keyManualImportGroupId);
 						checkOk(result, TextKeys.keyManualImportArtifactId);
 						checkOk(result, TextKeys.keyManualImportVersion);
@@ -132,7 +133,7 @@ final class ManualImportComposite extends TextAndFormComposite {
 								String groupId = getText(TextKeys.keyManualImportGroupId);
 								String artifactId = getText(TextKeys.keyManualImportArtifactId);
 								String version = getText(TextKeys.keyManualImportVersion);
-								ProjectData projectData = new ProjectData(fileNameAndDigest, groupId, artifactId, version);
+								ProjectData projectData = new ProjectData(fileAndDigest, groupId, artifactId, version);
 								setEnabledForButton(TextKeys.btnSharedOk, false);
 								ICallback.Utils.call(container.importManually, projectData);
 							}

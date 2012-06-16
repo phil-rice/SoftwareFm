@@ -17,6 +17,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.softwarefm.eclipse.Marker;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.cache.IProjectDataCache;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.IProjectStrategy;
@@ -62,6 +63,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 
 	private IUrlStrategy urlStrategy;
 
+	private IProjectDataCache projectDataCache;
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
@@ -104,7 +107,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				IProjectStrategy<ITextSelection> projectStrategy = new SoftwareFmProjectStrategy<ITextSelection>(IHttpClient.Utils.builder(), new SoftwareFmProjectHtmlRipper(), urlStrategy);
 				ISelectedBindingStrategy<ITextSelection, Expression> strategy = new EclipseSelectedBindingStrategy(projectStrategy);
 				ExecutorService executor = getExecutorService();
-				selectionBindingManager = new SelectedArtifactSelectionManager<ITextSelection, Expression>(listenerManager, strategy, executor, ICallback.Utils.sysErrCallback());
+				selectionBindingManager = new SelectedArtifactSelectionManager<ITextSelection, Expression>(listenerManager, strategy, executor, getProjectDataCache(), ICallback.Utils.sysErrCallback());
 				selectionListener = new ISelectionListener() {
 					@Override
 					public void selectionChanged(IWorkbenchPart part, ISelection selection) {
@@ -140,12 +143,22 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			IResourceGetter resourceGetter = getResourceGetter();
 			IMaven maven = IMaven.Utils.makeImport();
 			IUrlStrategy urlStrategy = getUrlStrategy();
-			IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy);
+			IProjectDataCache projectDataCache = getProjectDataCache();
+			IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, projectDataCache);
 			MavenImportJob mavenImport = new MavenImportJob(maven, makeLink, resourceGetter);
 			ManualImportJob manualImport = new ManualImportJob(makeLink, resourceGetter);
 			ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
-			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, getSelectionBindingManager(), mavenImport, manualImport, urlStrategy, templateStore) : container;
+			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, getSelectionBindingManager(), mavenImport, manualImport, urlStrategy, templateStore, projectDataCache) : container;
 		}
+	}
+
+	IProjectDataCache getProjectDataCache() {
+		if (projectDataCache == null)
+			synchronized (lock) {
+				if (projectDataCache == null)
+					projectDataCache = IProjectDataCache.Utils.projectDataCache();
+			}
+		return projectDataCache;
 	}
 
 	private IUrlStrategy getUrlStrategy() {
@@ -172,6 +185,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				selectionBindingManager.dispose();
 			selectionBindingManager = null;
 			resourceGetter = null;
+			projectDataCache = null;
 			container = null;
 		}
 	}

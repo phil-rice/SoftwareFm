@@ -1,5 +1,7 @@
 package org.softwarefm.eclipse.composite;
 
+import java.io.File;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TabFolder;
@@ -8,7 +10,7 @@ import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.labelAndText.TextAndControlComposite;
 import org.softwarefm.labelAndText.TextAndFormComposite;
@@ -32,8 +34,8 @@ public class LinkComposite extends TextAndControlComposite<TabFolder> {
 	}
 
 	@Override
-	public void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-		setText(notInAJarMsg(fileNameAndDigest));
+	public void notInAJar(File file, int selectionCount) {
+		setText(notInAJarMsg(file));
 	}
 
 	@Override
@@ -48,8 +50,8 @@ public class LinkComposite extends TextAndControlComposite<TabFolder> {
 	}
 
 	@Override
-	public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-		setText(unknownDigestMsg(TextKeys.msgLinkUnknownDigest, fileNameAndDigest));
+	public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
+		setText(unknownDigestMsg(TextKeys.msgLinkUnknownDigest, fileAndDigest));
 		tabFolder.setSelection(mavenImportTabItem);
 	}
 

@@ -1,5 +1,7 @@
 package org.softwarefm.eclipse.composite;
 
+import java.io.File;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.FillLayout;
@@ -7,7 +9,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 
 public class SoftwareFmDebugComposite extends SoftwareFmComposite {
@@ -23,23 +25,23 @@ public class SoftwareFmDebugComposite extends SoftwareFmComposite {
 			}
 
 			public void projectDetermined(ProjectData projectData, int selectionCount) {
-				text.append("projectDetermined: (" + selectionCount + ")\n" + projectData + "\nUrl: " + container.urlStrategy.projectUrl(projectData) +"\n");
+				text.append("projectDetermined: (" + selectionCount + ")\n" + projectData + "\nUrl: " + container.urlStrategy.projectUrl(projectData) + "\n");
 			}
 
-			public void notInAJar(FileNameAndDigest filename, int selectionCount) {
-				text.append("Not In A Jar: (" + selectionCount + ") file is: " + filename + "\n");
+			public void notInAJar(File file, int selectionCount) {
+				text.append("Not In A Jar: (" + selectionCount + ") file is: " + file + "\n");
 			}
 
-			public void digestDetermined(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-				text.append("Digest: (" + selectionCount + ") " + fileNameAndDigest + "\nUrl: " + container.urlStrategy.digestUrl(fileNameAndDigest.digest)+"\n");
+			public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
+				text.append("Digest: (" + selectionCount + ") " + fileAndDigest + "\nUrl: " + container.urlStrategy.digestUrl(fileAndDigest.digest) + "\n");
 			}
 
 			public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
-				text.setText("Class and method: (" + selectionCount + ")\n" + expressionData + "\nUrl: " + container.urlStrategy.classAndMethodUrl(expressionData)+"\n");
+				text.setText("Class and method: (" + selectionCount + ")\n" + expressionData + "\nUrl: " + container.urlStrategy.classAndMethodUrl(expressionData) + "\n");
 			}
 
-			public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-				text.append("Unknown Digest: (" + selectionCount + ") " + fileNameAndDigest + "\n");
+			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
+				text.append("Unknown Digest: (" + selectionCount + ") " + fileAndDigest + "\n");
 			}
 		});
 	}

@@ -4,9 +4,11 @@ import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 import org.easymock.EasyMock;
+import org.softwarefm.eclipse.cache.CachedProjectData;
+import org.softwarefm.eclipse.cache.IProjectDataCache;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
@@ -20,10 +22,9 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 	private SelectedArtifactSelectionManager<String, String> selectionManager;
 	private final ExpressionData expressionData = new ExpressionData("package", "class");
 	private final File file = new File(new File("some"), "file");
-	private final FileNameAndDigest fileNameAndDigest = new FileNameAndDigest(file, "digest");
-	private final FileNameAndDigest noFileNameAndNoDigest = new FileNameAndDigest(null, null);
-	private final FileNameAndDigest fileNameAndNoDigest = new FileNameAndDigest(file, null);
-	private final ProjectData projectData = new ProjectData(fileNameAndDigest, "g", "a", "v");
+	private final FileAndDigest fileAndDigest = new FileAndDigest(file, "digest");
+	private final ProjectData projectData = new ProjectData(fileAndDigest, "g", "a", "v");
+	private IProjectDataCache projectDataCache;
 
 	public void testWhenSelectionIsNull() throws Exception {
 		int count = 1;
@@ -38,53 +39,91 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		int count = 1;
 		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
 		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(expressionData);
-		EasyMock.expect(strategy.findFileAndDigest("selection", "node", count)).andReturn(fileNameAndDigest);
+		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
+		EasyMock.expect(strategy.findDigest("selection", "node", file, count)).andReturn(fileAndDigest);
 		listenerManager.classAndMethodSelectionOccured(expressionData, count);
-		listenerManager.digestDetermined(fileNameAndDigest, count);
-		EasyMock.expect(strategy.findProject("selection", fileNameAndDigest, count)).andReturn(projectData);
+		listenerManager.digestDetermined(fileAndDigest, count);
+		EasyMock.expect(strategy.findProject("selection", fileAndDigest, count)).andReturn(projectData);
 		listenerManager.projectDetermined(projectData, count);
 		EasyMock.replay(listenerManager, strategy);
 
 		selectionManager.selectionOccured("selection").get();
+
+		assertEquals(CachedProjectData.found(projectData), projectDataCache.projectData(file));
 	}
 
 	public void testIfFileNotFound() throws InterruptedException, ExecutionException {
 		int count = 1;
 		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
 		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(expressionData);
-		EasyMock.expect(strategy.findFileAndDigest("selection", "node", count)).andReturn(noFileNameAndNoDigest);
+		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(null);
 		listenerManager.classAndMethodSelectionOccured(expressionData, count);
 		listenerManager.notJavaElement(count);
 		EasyMock.replay(listenerManager, strategy);
 
 		selectionManager.selectionOccured("selection").get();
 
+		assertNull(projectDataCache.projectData(file));
 	}
 
 	public void testIfDigestNotFoundNotAJarIsCalled() throws InterruptedException, ExecutionException {
 		int count = 1;
 		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
 		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(expressionData);
-		EasyMock.expect(strategy.findFileAndDigest("selection", "node", count)).andReturn(fileNameAndNoDigest);
+		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
+		EasyMock.expect(strategy.findDigest("selection", "node", file, count)).andReturn(null);
 		listenerManager.classAndMethodSelectionOccured(expressionData, count);
-		listenerManager.notInAJar(fileNameAndNoDigest, count);
+		listenerManager.notInAJar(file, count);
 		EasyMock.replay(listenerManager, strategy);
 
 		selectionManager.selectionOccured("selection").get();
+
+		assertNull(projectDataCache.projectData(file));
 	}
 
 	public void testIfCannotFindDigest() throws InterruptedException, ExecutionException {
 		int count = 1;
 		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
 		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(expressionData);
-		EasyMock.expect(strategy.findFileAndDigest("selection", "node", count)).andReturn(fileNameAndDigest);
-		EasyMock.expect(strategy.findProject("selection", fileNameAndDigest, count)).andReturn(null);
+		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
+		EasyMock.expect(strategy.findDigest("selection", "node", file, count)).andReturn(fileAndDigest);
+		EasyMock.expect(strategy.findProject("selection", fileAndDigest, count)).andReturn(null);
 		listenerManager.classAndMethodSelectionOccured(expressionData, count);
-		listenerManager.digestDetermined(fileNameAndDigest, count);
-		listenerManager.unknownDigest(fileNameAndDigest, count);
+		listenerManager.digestDetermined(fileAndDigest, count);
+		listenerManager.unknownDigest(fileAndDigest, count);
 		EasyMock.replay(listenerManager, strategy);
 
 		selectionManager.selectionOccured("selection").get();
+
+		assertEquals(CachedProjectData.notFound(fileAndDigest), projectDataCache.projectData(file));
+	}
+
+	public void testIfProjectDataInCache() throws Exception {
+		int count = 1;
+		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
+		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(expressionData);
+		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
+		listenerManager.classAndMethodSelectionOccured(expressionData, count);
+		listenerManager.projectDetermined(projectData, count);
+		EasyMock.replay(listenerManager, strategy);
+
+		projectDataCache.addProjectData(projectData);
+		selectionManager.selectionOccured("selection").get();
+
+	}
+	
+	public void testIfNotFoundInCache() throws Exception {
+		int count = 1;
+		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
+		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(expressionData);
+		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
+		listenerManager.classAndMethodSelectionOccured(expressionData, count);
+		listenerManager.unknownDigest(fileAndDigest, count);
+		EasyMock.replay(listenerManager, strategy);
+		
+		projectDataCache.addNotFound(fileAndDigest);
+		selectionManager.selectionOccured("selection").get();
+		
 	}
 
 	public void testDelegatesAddListener() {
@@ -109,7 +148,8 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		strategy = EasyMock.createMock(ISelectedBindingStrategy.class);
 		EasyMock.makeThreadSafe(listenerManager, true);
 		EasyMock.makeThreadSafe(strategy, true);
-		selectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), ICallback.Utils.rethrow());
+		projectDataCache = IProjectDataCache.Utils.projectDataCache();
+		selectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), projectDataCache, ICallback.Utils.rethrow());
 	}
 
 	@Override
@@ -118,3 +158,4 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		super.tearDown();
 	}
 }
+

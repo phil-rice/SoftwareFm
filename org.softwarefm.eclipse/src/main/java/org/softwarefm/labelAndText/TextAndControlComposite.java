@@ -1,5 +1,7 @@
 package org.softwarefm.labelAndText;
 
+import java.io.File;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
@@ -7,7 +9,7 @@ import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.composite.SoftwareFmComposite;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.selection.FileNameAndDigest;
+import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.utilities.resources.IResourceGetter;
@@ -29,8 +31,8 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 				layout();
 			}
 
-			public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-				TextAndControlComposite.this.unknownDigest(fileNameAndDigest, selectionCount);
+			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
+				TextAndControlComposite.this.unknownDigest(fileAndDigest, selectionCount);
 				layout();
 			}
 
@@ -39,13 +41,13 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 				layout();
 			}
 
-			public void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-				TextAndControlComposite.this.notInAJar(fileNameAndDigest, selectionCount);
+			public void notInAJar(File file, int selectionCount) {
+				TextAndControlComposite.this.notInAJar(file, selectionCount);
 				layout();
 			}
 
-			public void digestDetermined(FileNameAndDigest fileNameAndDigest, int selectionCount) {
-				TextAndControlComposite.this.digestDetermined(fileNameAndDigest, selectionCount);
+			public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
+				TextAndControlComposite.this.digestDetermined(fileAndDigest, selectionCount);
 				layout();
 			}
 
@@ -87,16 +89,16 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 	protected void notJavaElement(int selectionCount) {
 	}
 
-	public void digestDetermined(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+	public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
 	}
 
-	public void notInAJar(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+	public void notInAJar(File file, int selectionCount) {
 	}
 
 	public void projectDetermined(ProjectData projectData, int selectionCount) {
 	}
 
-	public void unknownDigest(FileNameAndDigest fileNameAndDigest, int selectionCount) {
+	public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
 	}
 
 	public String getText() {
