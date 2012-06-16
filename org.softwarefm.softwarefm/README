@@ -17,3 +17,9 @@ The build process sucks. Big time conflict between Maven and Eclipse
 ** If you are a *nix user, then the batch file needs to be turned into a script file. For example \s need changing to / and the "copy" to "cp", and the files persmissions need to be made executable
 ** I will try and improve this in the near future 
   
+  
+  
+RELEASE NOTES:
+1.7.1: First version using MediaWiki
+1.7.2: Polish added: nicer text, slightly nicer link, fewer windows
+1.7.3: Speed up: cached results for project look up
