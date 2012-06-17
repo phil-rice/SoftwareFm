@@ -17,6 +17,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.softwarefm.eclipse.Marker;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.actions.SfmActionState;
 import org.softwarefm.eclipse.cache.IProjectDataCache;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
@@ -64,6 +65,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	private IUrlStrategy urlStrategy;
 
 	private IProjectDataCache projectDataCache;
+
+	private SfmActionState sfmActionState;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -145,10 +148,11 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			IUrlStrategy urlStrategy = getUrlStrategy();
 			IProjectDataCache projectDataCache = getProjectDataCache();
 			IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, projectDataCache);
+			ISelectedBindingManager<ITextSelection> selectionBindingManager = getSelectionBindingManager();
 			MavenImportJob mavenImport = new MavenImportJob(maven, makeLink, resourceGetter);
 			ManualImportJob manualImport = new ManualImportJob(makeLink, resourceGetter);
 			ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
-			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, getSelectionBindingManager(), mavenImport, manualImport, urlStrategy, templateStore, projectDataCache) : container;
+			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache) : container;
 		}
 	}
 
@@ -162,7 +166,21 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	private IUrlStrategy getUrlStrategy() {
-		return urlStrategy == null ? urlStrategy = IUrlStrategy.Utils.urlStrategy(CommonConstants.softwareFmHost) : urlStrategy;
+		if (urlStrategy == null)
+			synchronized (lock) {
+				if (urlStrategy == null)
+					urlStrategy = IUrlStrategy.Utils.withActionBarState(IUrlStrategy.Utils.urlStrategy(), getActionState());
+			}
+		return urlStrategy;
+	}
+
+	public SfmActionState getActionState() {
+		if (sfmActionState == null)
+			synchronized (lock) {
+				if (sfmActionState == null)
+					sfmActionState = new SfmActionState();
+			}
+		return sfmActionState;
 	}
 
 	private IResourceGetter getResourceGetter() {
@@ -187,6 +205,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			resourceGetter = null;
 			projectDataCache = null;
 			container = null;
+			urlStrategy = null;
+			sfmActionState = null;
 		}
 	}
 }

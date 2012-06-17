@@ -30,7 +30,6 @@ public interface ISelectedBindingStrategy<S, N> extends IProjectStrategy<S> {
 	/** The filename/digest will be null if the strategy cannot work out file. The digest will be null if the filename isn't a jar */
 	File findFile(S selection, N node, int selectionCount);
 
-	@SuppressWarnings("Change this to return null to be consistant with others")
 	FileAndDigest findDigest(S selection, N node, File file, int selectionCount);
 
 	public static class Utils {

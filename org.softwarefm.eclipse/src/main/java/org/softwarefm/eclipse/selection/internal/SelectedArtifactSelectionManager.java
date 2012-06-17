@@ -30,6 +30,7 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 	private final ISelectedBindingListenerAndAdderRemover<S> listenerManager;
 	private final ICallback<Throwable> exceptionHandler;
 	private final IProjectDataCache cache;
+	private S lastSelection;
 
 	public SelectedArtifactSelectionManager(final ISelectedBindingListenerAndAdderRemover<S> listenerManager, final ISelectedBindingStrategy<S, N> strategy, ExecutorService executor, IProjectDataCache cache, ICallback<Throwable> exceptionHandler) {
 		this.listenerManager = listenerManager;
@@ -90,7 +91,12 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 	}
 
 	public Future<?> selectionOccured(S selection) {
+		this.lastSelection = selection;
 		final int thisSelectionCount = currentSelectionCount.incrementAndGet();
+		return selectionRaw(selection, thisSelectionCount);
+	}
+
+	private Future<?> selectionRaw(S selection, final int thisSelectionCount) {
 		if (selection == null) {
 			listenerManager.notJavaElement(thisSelectionCount);
 			return Futures.doneFuture(null);
@@ -106,17 +112,18 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 		final File file = strategy.findFile(selection, node, thisSelectionCount);
 		if (file != null) {
 			CachedProjectData cachedProjectData = cache.projectData(file);
-			if (cachedProjectData == null && file != null)
+			if (cachedProjectData == null)
 				return new Runnable() {
 					public void run() {
 						try {
 							FileAndDigest fileAndDigest = strategy.findDigest(selection, node, file, thisSelectionCount);
 							if (fileAndDigest != null && fileAndDigest.digest != null) {
 								ProjectData projectData = strategy.findProject(selection, fileAndDigest, thisSelectionCount);
-								if (projectData != null)
-									cache.addProjectData(projectData);
-								else
-									cache.addNotFound(fileAndDigest);
+								if (thisSelectionCount == currentSelectionId())
+									if (projectData != null)
+										cache.addProjectData(projectData);
+									else
+										cache.addNotFound(fileAndDigest);
 							}
 						} catch (RuntimeException e) {
 							ICallback.Utils.call(exceptionHandler, e);
@@ -137,6 +144,16 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 
 	public void removeSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
 		listenerManager.removeSelectedArtifactSelectionListener(listener);
+	}
+
+	public int currentSelectionId() {
+		return currentSelectionCount.get();
+	}
+
+	public void reselect(int selectionId) {
+		if (selectionId == currentSelectionId())
+			selectionRaw(lastSelection, selectionId);
+
 	}
 
 	public void dispose() {

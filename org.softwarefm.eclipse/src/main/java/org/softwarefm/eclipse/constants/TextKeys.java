@@ -40,6 +40,30 @@ public class TextKeys {
 	public static final String jobMavenImportTitle = "job.mavenImport.title";
 	public static final String jobManualImportTitle = "job.manualImport.title";
 	
+	//actions
+	public static final String actionStackoverflowTooltip = "action.actionBar.stackoverflow.tooltip";
+	public static final String actionStackoverflowSuffix = "action.actionBar.stackoverflow.suffix";
+	public static final String actionForumflowTooltip = "action.actionBar.forum.tooltip";
+	public static final String actionForumflowSuffix = "action.actionBar.forum.suffix";
+	public static final String actionTwitterTooltip = "action.actionBar.twitter.tooltip";
+	public static final String actionTwitterSuffix = "action.actionBar.twitter.suffix";
+	public static final String actionFacebookTooltip = "action.actionBar.facebook.tooltip";
+	public static final String actionFacebookSuffix = "action.actionBar.facebook.suffix";
+	public static final String actionTutorialTooltip = "action.actionBar.tutorial.tooltip";
+	public static final String actionTutorialSuffix = "action.actionBar.tutorial.suffix";
+	public static final String actionArticleTooltip = "action.actionBar.article.tooltip";
+	public static final String actionArticleSuffix = "action.actionBar.article.suffix";
+	public static final String actionBlogTooltip = "action.actionBar.blog.tooltip";
+	public static final String actionBlogSuffix = "action.actionBar.blog.suffix";
+	public static final String actionRssTooltip = "action.actionBar.rss.tooltip";
+	public static final String actionRssSuffix = "action.actionBar.rss.suffix";
+	public static final String actionCompanyTooltip = "action.actionBar.company.tooltip";
+	public static final String actionCompanySuffix = "action.actionBar.company.suffix";
+	public static final String actionMerchandiseTooltip = "action.actionBar.merchandise.tooltip";
+	public static final String actionMerchandiseSuffix = "action.actionBar.merchandise.suffix";
+	public static final String actionAdvertTooltip = "action.actionBar.advert.tooltip";
+	public static final String actionAdvertSuffix = "action.actionBar.advert.suffix";
+	
 	//tests
 	public static final String msgTestForTest = "message.test.forTest";
 	public static final String msgTestUnknownDigest = "message.test.unknownDigest";

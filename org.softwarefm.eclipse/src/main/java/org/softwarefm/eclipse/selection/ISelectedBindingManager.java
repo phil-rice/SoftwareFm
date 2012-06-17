@@ -7,6 +7,11 @@ import org.softwarefm.utilities.future.Futures;
 public interface ISelectedBindingManager<S> extends ISelectedBindingListenerAdderAndRemover {
 
 	Future<?> selectionOccured(S selection);
+	
+	int currentSelectionId();
+	
+	/** If selectionId == lastSelectionId this will reselect */
+	void reselect(int selectionId);
 
 	public static class Utils {
 		public static <S> ISelectedBindingManager<S> noManager() {
@@ -23,6 +28,14 @@ public interface ISelectedBindingManager<S> extends ISelectedBindingListenerAdde
 
 				public Future<?> selectionOccured(S selection) {
 					return Futures.doneFuture(null);
+				}
+
+
+				public int currentSelectionId() {
+					return 0;
+				}
+
+				public void reselect(int selectionId) {
 				}
 			};
 		}

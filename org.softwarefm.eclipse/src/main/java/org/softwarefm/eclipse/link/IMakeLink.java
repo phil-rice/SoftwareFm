@@ -19,7 +19,6 @@ public interface IMakeLink {
 	public static class Utils {
 		/**
 		 * The client should be set up with the host/port parameters
-		 * 
 		 * @param templateStore
 		 */
 		public static IMakeLink makeLink(IUrlStrategy urlStrategy, IHasCache cache) {

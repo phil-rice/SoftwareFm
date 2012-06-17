@@ -47,9 +47,55 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		listenerManager.projectDetermined(projectData, count);
 		EasyMock.replay(listenerManager, strategy);
 
+		assertEquals(0, selectionManager.currentSelectionId());
 		selectionManager.selectionOccured("selection").get();
+		assertEquals(1, selectionManager.currentSelectionId());
 
 		assertEquals(CachedProjectData.found(projectData), projectDataCache.projectData(file));
+	}
+
+	public void testReselectIgnoresIfIdNotEqualToCurrentSelection() throws Exception {
+		int count = 1;
+		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
+		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(expressionData);
+		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
+		EasyMock.expect(strategy.findDigest("selection", "node", file, count)).andReturn(fileAndDigest);
+		listenerManager.classAndMethodSelectionOccured(expressionData, count);
+		listenerManager.digestDetermined(fileAndDigest, count);
+		EasyMock.expect(strategy.findProject("selection", fileAndDigest, count)).andReturn(projectData);
+		listenerManager.projectDetermined(projectData, count);
+		EasyMock.replay(listenerManager, strategy);
+
+		assertEquals(0, selectionManager.currentSelectionId());
+		selectionManager.selectionOccured("selection").get();
+		assertEquals(1, selectionManager.currentSelectionId());
+
+		selectionManager.reselect(0);
+		selectionManager.reselect(2);
+
+	}
+
+	public void testReselectsIfIdEqualToCurrentSelection() throws Exception {
+		int count = 1;
+		for (int i = 0; i < 3; i++) {
+			EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
+			EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(expressionData);
+			EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
+			listenerManager.classAndMethodSelectionOccured(expressionData, count);
+			listenerManager.projectDetermined(projectData, count);
+		}
+		EasyMock.expect(strategy.findDigest("selection", "node", file, count)).andReturn(fileAndDigest);
+		listenerManager.digestDetermined(fileAndDigest, count);
+		EasyMock.expect(strategy.findProject("selection", fileAndDigest, count)).andReturn(projectData);
+		EasyMock.replay(listenerManager, strategy);
+
+		assertEquals(0, selectionManager.currentSelectionId());
+		selectionManager.selectionOccured("selection").get();
+		assertEquals(1, selectionManager.currentSelectionId());
+		selectionManager.reselect(1);
+		selectionManager.reselect(1);
+		assertEquals(1, selectionManager.currentSelectionId());
+
 	}
 
 	public void testIfFileNotFound() throws InterruptedException, ExecutionException {
@@ -111,7 +157,7 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		selectionManager.selectionOccured("selection").get();
 
 	}
-	
+
 	public void testIfNotFoundInCache() throws Exception {
 		int count = 1;
 		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
@@ -120,10 +166,10 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		listenerManager.classAndMethodSelectionOccured(expressionData, count);
 		listenerManager.unknownDigest(fileAndDigest, count);
 		EasyMock.replay(listenerManager, strategy);
-		
+
 		projectDataCache.addNotFound(fileAndDigest);
 		selectionManager.selectionOccured("selection").get();
-		
+
 	}
 
 	public void testDelegatesAddListener() {
@@ -158,4 +204,3 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		super.tearDown();
 	}
 }
-

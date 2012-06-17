@@ -4,10 +4,15 @@ import java.util.concurrent.ExecutorService;
 
 import org.eclipse.jface.text.ITextSelection;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.actions.SfmActionState;
 import org.softwarefm.eclipse.cache.IProjectDataCache;
 import org.softwarefm.eclipse.constants.TextKeys;
+import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.tests.SwtTest;
+import org.softwarefm.eclipse.url.HostOffsetAndUrl;
+import org.softwarefm.eclipse.url.IUrlStrategy;
+import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.resources.IResourceGetter;
 
 public class SoftwareFmActivatorTest extends SwtTest {
@@ -28,6 +33,23 @@ public class SoftwareFmActivatorTest extends SwtTest {
 		assertEquals("zeroandone", IResourceGetter.Utils.getMessageOrException(resourceGetter, TextKeys.msgTestForTest, "zero", "one"));
 		activator.dispose();
 		assertNotSame(resourceGetter, activator.getContainer().resourceGetter);
+	}
+	
+	public void testActionState(){
+		SfmActionState state1 = activator.getActionState();
+		SfmActionState state2 = activator.getActionState();
+		assertSame(state1, state2);
+		IUrlStrategy urlStrategy = activator.getContainer().urlStrategy;
+		state1.setUrlSuffix("someSuffix");
+		assertEquals(new HostOffsetAndUrl(CommonConstants.softwareFmHost, CommonConstants.softwareFmPageOffset, "project", "g", "a#someSuffix"), urlStrategy.projectUrl(new ProjectData(null, "g", "a", "v")));
+
+		activator.dispose();
+		
+		SfmActionState state1a = activator.getActionState();
+		SfmActionState state2a = activator.getActionState();
+		assertSame(state1a, state2a);
+		assertNotSame(state1, state1a);
+		
 	}
 	
 	public void testProjectDataCache(){
@@ -60,6 +82,8 @@ public class SoftwareFmActivatorTest extends SwtTest {
 		SoftwareFmContainer<ITextSelection> container2 = activator.getContainer();
 		assertSame(container1.urlStrategy, container2.urlStrategy);
 		assertNotNull(container1.urlStrategy);
+		activator.dispose();
+		assertNotSame(activator.getContainer().urlStrategy, container1.urlStrategy);
 	}
 	
 	public void testExecutorService() {

@@ -1,8 +1,10 @@
 package org.softwarefm.eclipse.url;
 
+import org.softwarefm.eclipse.actions.SfmActionState;
 import org.softwarefm.eclipse.jdtBinding.ExpressionData;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.url.internal.UrlStrategy;
+import org.softwarefm.eclipse.url.internal.UrlStrategyWithActionBarState;
 import org.softwarefm.utilities.constants.CommonConstants;
 
 public interface IUrlStrategy {
@@ -28,6 +30,10 @@ public interface IUrlStrategy {
 	public static class Utils {
 		public static IUrlStrategy urlStrategy() {
 			return new UrlStrategy(CommonConstants.softwareFmHost, CommonConstants.softwareFmPageOffset, CommonConstants.softwareFmApiOffset, CommonConstants.softwareFmTemplateOffset);
+		}
+		
+		public static IUrlStrategy withActionBarState(IUrlStrategy urlStrategy, SfmActionState state){
+			return new UrlStrategyWithActionBarState(urlStrategy, state);
 		}
 
 		public static IUrlStrategy urlStrategy(String hostname) {

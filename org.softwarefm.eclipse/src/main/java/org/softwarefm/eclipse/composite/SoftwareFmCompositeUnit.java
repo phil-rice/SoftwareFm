@@ -65,24 +65,8 @@ public class SoftwareFmCompositeUnit {
 		try {
 			Swts.Show.xUnit(title, new File("src/test/resources/org/softwarefm/eclipse/composite"), "dat", new ISituationListAndBuilder<Holder, String>() {
 				public Holder makeChild(Composite parent) throws Exception {
-					final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay());
-					IProjectDataCache projectDataCache = IProjectDataCache.Utils.projectDataCache();
-					SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>> manager = new SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>>(//
-							listenerManager, //
-							ISelectedBindingStrategy.Utils.fromMap(), //
-							threadingPool, //
-							projectDataCache,//
-							ICallback.Utils.rethrow());
-					IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
-					ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
-					final IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, templateStore ,projectDataCache);
-					SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
-							manager, //
-							IMaven.Utils.importPomWithSysouts(makeLink),//
-							IMakeLink.Utils.manuallyImport(makeLink),//
-							templateStore, //
-							projectDataCache);
-					Holder holder = new Holder(parent, manager);
+					SoftwareFmContainer<Map<String, Object>> container = makeContainer(threadingPool);
+					Holder holder = new Holder(parent, container.selectedBindingManager);
 					for (IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> creator : creators) {
 						SoftwareFmComposite softwareFmComposite = Functions.call(creator, holder.getComposite(), container);
 						TabItem tabItem = new TabItem(holder.getTabFolder(), SWT.NULL);
@@ -141,8 +125,32 @@ public class SoftwareFmCompositeUnit {
 		}
 	};
 
-	@SuppressWarnings({ "unused", "unchecked" })
+	@SuppressWarnings("unchecked")
+	public static IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>[] creators = new IFunction2[] { allCreator, classAndMethodCreator, projectCreator, manualImportCreator, mavenImportCreator, debugCreator };
+
+	@SuppressWarnings({ "unused" })
 	public static void main(String[] args) {
-		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), allCreator, classAndMethodCreator, projectCreator, manualImportCreator, mavenImportCreator, debugCreator);
+		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), creators);
+	}
+
+	public static SoftwareFmContainer<Map<String, Object>> makeContainer(final ExecutorService threadingPool) {
+		final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay());
+		IProjectDataCache projectDataCache = IProjectDataCache.Utils.projectDataCache();
+		SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>> manager = new SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>>(//
+				listenerManager, //
+				ISelectedBindingStrategy.Utils.fromMap(), //
+				threadingPool, //
+				projectDataCache,//
+				ICallback.Utils.rethrow());
+		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
+		ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
+		final IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, templateStore, projectDataCache);
+		SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
+				manager, //
+				IMaven.Utils.importPomWithSysouts(makeLink),//
+				IMakeLink.Utils.manuallyImport(makeLink),//
+				templateStore, //
+				projectDataCache);
+		return container;
 	}
 }

@@ -22,7 +22,7 @@ import org.softwarefm.utilities.strings.Strings;
 public class MakeLink implements IMakeLink {
 
 	private final IUrlStrategy urlStrategy;
-	 final ITemplateStore templateStore;
+	final ITemplateStore templateStore;
 	private final Wiki wiki;
 	private boolean loggedIn;
 	private final IHasCache cache;
@@ -87,7 +87,7 @@ public class MakeLink implements IMakeLink {
 
 		String projectTemplate = templateStore.getTemplate(TemplateConstants.projectTemplate);
 		String projectEndTemplate = templateStore.getTemplate(TemplateConstants.projectEndTemplate);
-		String entity = MessageFormat.format(projectTemplate, projectData.groupId, projectData.artifactId, projectName, description, projectWebsite, mailingList, issues)+"\n"+projectEndTemplate;
+		String entity = MessageFormat.format(projectTemplate, projectData.groupId, projectData.artifactId, projectName, description, projectWebsite, mailingList, issues) + "\n" + projectEndTemplate;
 
 		String url = urlStrategy.projectUrl(projectData).url;
 		try {
