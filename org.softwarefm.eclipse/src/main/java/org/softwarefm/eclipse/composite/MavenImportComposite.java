@@ -14,7 +14,7 @@ import org.softwarefm.labelAndText.IButtonCreator;
 import org.softwarefm.labelAndText.IGetTextWithKey;
 import org.softwarefm.labelAndText.KeyAndProblem;
 import org.softwarefm.labelAndText.TextAndControlComposite;
-import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.resources.IResourceGetter;
@@ -40,7 +40,7 @@ public class MavenImportComposite extends TextAndControlComposite<Form> {
 
 					public void execute() throws Exception {
 						form.setEnabledForButton(TextKeys.btnMavenImportUsePom, false);
-						ICallback.Utils.call(container.importPom, form.getText(TextKeys.btnMavenImportUsePom));
+						ICallback2.Utils.call(container.importPom, form.getText(TextKeys.keyMavenImportPomUrl), container.selectedBindingManager.currentSelectionId());
 					}
 
 					public List<KeyAndProblem> canExecute(IGetTextWithKey textWithKey) {

@@ -28,7 +28,7 @@ public class EclipseActionBar implements IActionBar {
 		private final ISfmAction sfmAction;
 
 		public SfmActionAdapter(ISfmAction sfmAction) {
-			super("", SWT.DROP_DOWN);
+			super("", SWT.NULL);
 			this.sfmAction = sfmAction;
 			setMenuCreator(this);
 			setToolTipText(sfmAction.toolTip());

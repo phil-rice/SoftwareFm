@@ -16,6 +16,7 @@ import org.softwarefm.eclipse.templates.ITemplateStore;
 import org.softwarefm.eclipse.tests.SwtTest;
 import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.callbacks.MemoryCallback;
 import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.strings.Strings;
@@ -64,8 +65,8 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		assertEquals(0, initialListeners);
 		panel = makePanel(shell, SoftwareFmContainer.make(urlStrategy, //
 				selectedArtifactSelectionManager,//
-				ICallback.Utils.<String> exception("ImportPom shouldnt be used"),//
-				ICallback.Utils.<ProjectData> exception("ImportPom shouldnt be used"),//
+				ICallback2.Utils.<String, Integer> exception("ImportPom shouldnt be used"),//
+				ICallback2.Utils.<ProjectData, Integer> exception("ImportPom shouldnt be used"),//
 				ITemplateStore.Utils.templateStore(urlStrategy), //
 				IProjectDataCache.Utils.projectDataCache()));
 	}

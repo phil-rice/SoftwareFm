@@ -45,5 +45,13 @@ public interface ICallback2<T1, T2> {
 			};
 		}
 
+		public static <T1, T2>ICallback2<T1, T2> exception(String string) {
+			return new ICallback2<T1, T2>() {
+				public void process(T1 first, T2 second) throws Exception {
+					throw new RuntimeException(first +", " + second);
+				}
+			};
+		}
+
 	}
 }

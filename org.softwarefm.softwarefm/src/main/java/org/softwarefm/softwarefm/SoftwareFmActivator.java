@@ -149,8 +149,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			IProjectDataCache projectDataCache = getProjectDataCache();
 			IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, projectDataCache);
 			ISelectedBindingManager<ITextSelection> selectionBindingManager = getSelectionBindingManager();
-			MavenImportJob mavenImport = new MavenImportJob(maven, makeLink, resourceGetter);
-			ManualImportJob manualImport = new ManualImportJob(makeLink, resourceGetter);
+			MavenImportJob mavenImport = new MavenImportJob(maven, makeLink, resourceGetter, selectionBindingManager);
+			ManualImportJob manualImport = new ManualImportJob(makeLink, resourceGetter, selectionBindingManager);
 			ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
 			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache) : container;
 		}

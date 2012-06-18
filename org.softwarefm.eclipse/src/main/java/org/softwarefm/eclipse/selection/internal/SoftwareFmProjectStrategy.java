@@ -28,8 +28,12 @@ public class SoftwareFmProjectStrategy<S> implements IProjectStrategy<S> {
 			IResponse response = client.get(url).execute();
 			if (CommonConstants.okStatusCodes.contains(response.statusCode())) {
 				String html = response.asString();
-				ProjectData projectData = htmlRipper.rip(fileAndDigest, html);
-				return projectData;
+				try {
+					ProjectData projectData = htmlRipper.rip(fileAndDigest, html);
+					return projectData;
+				} catch (Exception e) {
+					//TODO This swallows the exception. Probably a bad idea. Probably should send message to softwarefm and inform the user...quite complex story
+				}
 			}
 
 			return null;

@@ -147,8 +147,8 @@ public class SoftwareFmCompositeUnit {
 		final IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, templateStore, projectDataCache);
 		SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
 				manager, //
-				IMaven.Utils.importPomWithSysouts(makeLink),//
-				IMakeLink.Utils.manuallyImport(makeLink),//
+				IMaven.Utils.importPomWithSysouts(makeLink, manager),//
+				IMakeLink.Utils.manuallyImportWhenNotInEclipse(makeLink, manager),//
 				templateStore, //
 				projectDataCache);
 		return container;

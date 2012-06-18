@@ -11,7 +11,8 @@ import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.internal.Maven;
 import org.softwarefm.eclipse.selection.FileAndDigest;
-import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.eclipse.selection.ISelectedBindingManager;
+import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.collections.Files;
 
 public interface IMaven {
@@ -68,10 +69,10 @@ public interface IMaven {
 			return parent.getVersion();
 		}
 
-		public static ICallback<String> importPomWithSysouts(final IMakeLink makeLink) {
+		public static ICallback2<String, Integer> importPomWithSysouts(final IMakeLink makeLink, final ISelectedBindingManager<?> manager) {
 			final Maven maven = new Maven();
-			return new ICallback<String>() {
-				public void process(String pomUrl) throws Exception {
+			return new ICallback2<String, Integer>() {
+				public void process(String pomUrl, Integer thisSelectionId) throws Exception {
 					System.out.println("Downloading pom: " + pomUrl);
 					Model model = maven.pomToModel(pomUrl);
 					System.out.println("Loaded pom");
@@ -82,6 +83,8 @@ public interface IMaven {
 					System.out.println("Imported to local repository");
 					FileAndDigest fileAndDigest = new FileAndDigest(jarFile, Files.digestAsHexString(jarFile));
 					makeLink.makeDigestLink(new ProjectData(fileAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model)));
+					manager.reselect(thisSelectionId);
+					
 				}
 			};
 		}

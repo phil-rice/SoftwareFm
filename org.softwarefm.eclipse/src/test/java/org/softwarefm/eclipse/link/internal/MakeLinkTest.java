@@ -35,12 +35,10 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 	private Wiki wiki;
 	private ITemplateStore templateStore;
 	private IHasCache cache;
-	private Runnable postMakeDigest;
 
 	public void testMakesDigestLinkClearsCacheAndCallsPostMakeDigest() {
 		cache.clearCaches();
-		postMakeDigest.run();
-		EasyMock.replay(cache, postMakeDigest);
+		EasyMock.replay(cache);
 		makeLink.makeDigestLink(projectData);
 		checkPageForWikiText(makeLink, "digest:012345", "someGroupId\n" + //
 				"someArtifactId\n" + //
@@ -53,7 +51,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 
 	public void testPopulateProjectWhenBlankWithNoModel() throws Exception {
 		deleteProjectInWiki();
-		EasyMock.replay(cache, postMakeDigest);
+		EasyMock.replay(cache);
 		makeLink.populateProjectIfBlank(projectData, null);
 		checkPageForWikiTextAndProjectEnd(makeLink, projectUrl.url, "{{Template:Project\n" + //
 				"|groupId=someGroupId\n" + //
@@ -67,14 +65,14 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 	}
 
 	public void testPopulateProjectWhenNotBlankDoesntChangeAnything() {
-		EasyMock.replay(cache, postMakeDigest);
+		EasyMock.replay(cache);
 		makeLink.set(projectUrl.url, "test");
 		makeLink.populateProjectIfBlank(projectData, null);
 		checkPageForWikiText(makeLink, projectUrl.url, "test\n");
 	}
 
 	public void testPopulateWhenBlankWithModelWithLittleData() throws Exception {
-		EasyMock.replay(cache, postMakeDigest);
+		EasyMock.replay(cache);
 		deleteProjectInWiki();
 
 		IMaven maven = IMaven.Utils.makeImport();
@@ -93,7 +91,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 	}
 
 	public void testPopulateWhenBlankWithModelWithData() throws Exception {
-		EasyMock.replay(cache, postMakeDigest);
+		EasyMock.replay(cache);
 		deleteProjectInWiki();
 
 		IMaven maven = IMaven.Utils.makeImport();
@@ -136,7 +134,6 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 		super.setUp();
 		urlStrategy = IUrlStrategy.Utils.urlStrategy();
 		cache = EasyMock.createMock(IHasCache.class);
-		postMakeDigest = EasyMock.createMock(Runnable.class);
 		makeLink = (MakeLink) IMakeLink.Utils.makeLink(urlStrategy, cache);
 		projectUrl = urlStrategy.projectUrl(projectData);
 		wiki = makeLink.getWiki();
@@ -146,7 +143,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 
 	@Override
 	protected void tearDown() throws Exception {
-		EasyMock.verify(cache, postMakeDigest);
+		EasyMock.verify(cache);
 		super.tearDown();
 
 	}

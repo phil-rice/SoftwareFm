@@ -151,7 +151,8 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 	}
 
 	public void reselect(int selectionId) {
-		if (selectionId == currentSelectionId())
+		int currentSelectionId = currentSelectionId();
+		if (selectionId == currentSelectionId)
 			selectionRaw(lastSelection, selectionId);
 
 	}

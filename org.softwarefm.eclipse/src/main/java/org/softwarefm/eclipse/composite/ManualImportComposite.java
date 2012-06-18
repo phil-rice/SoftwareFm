@@ -16,7 +16,7 @@ import org.softwarefm.labelAndText.IButtonCreator;
 import org.softwarefm.labelAndText.IGetTextWithKey;
 import org.softwarefm.labelAndText.KeyAndProblem;
 import org.softwarefm.labelAndText.TextAndFormComposite;
-import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.resources.IResourceGetter;
 import org.softwarefm.utilities.strings.Strings;
@@ -135,7 +135,7 @@ final class ManualImportComposite extends TextAndFormComposite {
 								String version = getText(TextKeys.keyManualImportVersion);
 								ProjectData projectData = new ProjectData(fileAndDigest, groupId, artifactId, version);
 								setEnabledForButton(TextKeys.btnSharedOk, false);
-								ICallback.Utils.call(container.importManually, projectData);
+								ICallback2.Utils.call(container.importManually, projectData, container.selectedBindingManager.currentSelectionId());
 							}
 						}.run();
 					}

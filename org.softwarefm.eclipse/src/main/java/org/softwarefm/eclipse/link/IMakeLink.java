@@ -3,9 +3,10 @@ package org.softwarefm.eclipse.link;
 import org.apache.maven.model.Model;
 import org.softwarefm.eclipse.jdtBinding.ProjectData;
 import org.softwarefm.eclipse.link.internal.MakeLink;
+import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.templates.ITemplateStore;
 import org.softwarefm.eclipse.url.IUrlStrategy;
-import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.maps.IHasCache;
 
 public interface IMakeLink {
@@ -19,19 +20,25 @@ public interface IMakeLink {
 	public static class Utils {
 		/**
 		 * The client should be set up with the host/port parameters
+		 * 
 		 * @param templateStore
 		 */
 		public static IMakeLink makeLink(IUrlStrategy urlStrategy, IHasCache cache) {
 			return new MakeLink(urlStrategy, ITemplateStore.Utils.templateStore(urlStrategy), cache);
 		}
+
 		public static IMakeLink makeLink(IUrlStrategy urlStrategy, ITemplateStore templateStore, IHasCache cache) {
 			return new MakeLink(urlStrategy, templateStore, cache);
 		}
 
-		public static ICallback<ProjectData> manuallyImport(final IMakeLink makeLink) {
-			return new ICallback<ProjectData>() {
-				public void process(ProjectData projectData) throws Exception {
-					makeLink.makeDigestLink(projectData);
+		/** This is for helper tools like SoftwareFmCompositeUnit */
+		public static <S> ICallback2<ProjectData, Integer> manuallyImportWhenNotInEclipse(final IMakeLink makeLink, final ISelectedBindingManager<S> selectedBindingManager) {
+			return new ICallback2<ProjectData, Integer>() {
+				public void process(ProjectData projectData, Integer thisSelectionId) throws Exception {
+					if (thisSelectionId == selectedBindingManager.currentSelectionId()) {
+						makeLink.makeDigestLink(projectData);
+						selectedBindingManager.reselect(thisSelectionId);
+					}
 				}
 			};
 		}
