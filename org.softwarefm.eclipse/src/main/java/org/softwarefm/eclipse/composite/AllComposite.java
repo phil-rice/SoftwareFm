@@ -14,17 +14,17 @@ public class AllComposite extends SoftwareFmComposite {
 		super(parent, container);
 		getComposite().setLayout(new FillLayout());
 		TabFolder tabFolder = new TabFolder(getComposite(), SWT.NULL);
-		final ClassAndMethodComposite classAndMethodComposite = new ClassAndMethodComposite(tabFolder, container);
+		final CodeComposite codeComposite = new CodeComposite(tabFolder, container);
 //		final SoftwareFmComposite digestPanel = new DigestComposite(tabFolder, container);
 		final LinkComposite linkComposite = new LinkComposite(tabFolder, container);
-		final ProjectComposite projectComposite = new ProjectComposite(tabFolder, container);
+		final ArtifactComposite artifactComposite = new ArtifactComposite(tabFolder, container);
 		
 //		final SoftwareFmComposite versionPanel = new VersionComposite(tabFolder, container);
 
-		addTabItem(tabFolder, "Class And method", classAndMethodComposite.getControl());
+		addTabItem(tabFolder, "Code", codeComposite.getControl());
 //		addTabItem(tabFolder, "Digest", digestPanel.getControl());
-		addTabItem(tabFolder, "Link to Project", linkComposite.getControl());
-		addTabItem(tabFolder, "Project", projectComposite.getControl());
+		addTabItem(tabFolder, "Link", linkComposite.getControl());
+		addTabItem(tabFolder, "Artifact", artifactComposite.getControl());
 //		addTabItem(tabFolder, "Version", versionPanel.getControl());
 	}
 

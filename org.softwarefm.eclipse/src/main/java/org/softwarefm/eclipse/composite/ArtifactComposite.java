@@ -6,17 +6,16 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.constants.UrlConstants;
-import org.softwarefm.eclipse.jdtBinding.ExpressionData;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.utilities.functions.IFunction1;
 
-public class ProjectComposite extends StackedBrowserAndControl<LinkComposite> {
+public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
 
-
-	public ProjectComposite(Composite parent, final SoftwareFmContainer<?> container) {
+	public ArtifactComposite(Composite parent, final SoftwareFmContainer<?> container) {
 		super(parent, container, new IFunction1<Composite, LinkComposite>() {
 			public LinkComposite apply(Composite from) throws Exception {
 				return new LinkComposite(from, container);
@@ -24,7 +23,7 @@ public class ProjectComposite extends StackedBrowserAndControl<LinkComposite> {
 		});
 		setUrlAndShow(UrlConstants.welcomeUrl);
 		addListener(new ISelectedBindingListener() {
-			public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
+			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
 			}
 
 			public void notJavaElement(int selectionCount) {
@@ -36,26 +35,27 @@ public class ProjectComposite extends StackedBrowserAndControl<LinkComposite> {
 			}
 
 			public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
-				setText(digestDeterminedMsg(TextKeys.msgProjectFoundDigest, fileAndDigest) + "\n" + searchingMsg());
+				setText(digestDeterminedMsg(TextKeys.msgArtifactFoundDigest, fileAndDigest) + "\n" + searchingMsg());
 			}
 
 			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
 				showSecondaryControl();
 			}
 
-			public void projectDetermined(ProjectData projectData, int selectionCount) {
-				String url = urlStrategy.projectUrl(projectData).getHostAndUrl();
+			public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+				String url = urlStrategy.projectUrl(artifactData).getHostAndUrl();
 				setUrlAndShow(url);
+				container.state.setUrlSuffix(null);
 			}
 		});
 	}
 
 	public static void main(String[] args) {
-		Swts.Show.display(ProjectComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Swts.Show.display(ArtifactComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			public Composite apply(Composite from) throws Exception {
-				ProjectComposite projectComposite = new ProjectComposite(from, SoftwareFmContainer.makeForTests());
-				projectComposite.setUrlAndShow(UrlConstants.notJarUrl);
-				return projectComposite.getComposite();
+				ArtifactComposite artifactComposite = new ArtifactComposite(from, SoftwareFmContainer.makeForTests());
+				artifactComposite.setUrlAndShow(UrlConstants.notJarUrl);
+				return artifactComposite.getComposite();
 			}
 		});
 	}

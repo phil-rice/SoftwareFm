@@ -4,20 +4,20 @@
 
 package org.softwarefm.eclipse.jdtBinding;
 
-public class ExpressionData {
+public class CodeData {
 
 	public final String packageName;
 	public final String className;
 	public final String methodName;
 
-	public ExpressionData(String packageName, String className, String methodName) {
+	public CodeData(String packageName, String className, String methodName) {
 		super();
 		this.packageName = packageName;
 		this.className = className;
 		this.methodName = methodName;
 	}
 
-	public ExpressionData(String packageName, String className) {
+	public CodeData(String packageName, String className) {
 		super();
 		this.packageName = packageName;
 		this.className = className;
@@ -26,7 +26,7 @@ public class ExpressionData {
 
 	@Override
 	public String toString() {
-		return "ExpressionData [packageName=" + packageName + ", className=" + className + ", methodName=" + methodName + "]";
+		return "CodeData [packageName=" + packageName + ", className=" + className + ", methodName=" + methodName + "]";
 	}
 
 }

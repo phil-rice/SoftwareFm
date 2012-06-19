@@ -4,7 +4,7 @@ import java.io.File;
 
 import junit.framework.TestCase;
 
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.utilities.exceptions.CannotAddDuplicateKeyException;
 import org.softwarefm.utilities.tests.Tests;
@@ -16,30 +16,30 @@ public class IDigestCacheTest extends TestCase {
 	private final static FileAndDigest fdThree = new FileAndDigest(new File("three"), "01234");
 	private final static FileAndDigest fdFour = new FileAndDigest(new File("four"), "01234");
 
-	private final static ProjectData one = new ProjectData(fdOne, "g", "a", "v");
-	private final static ProjectData two = new ProjectData(fdTwo, "g", "a", "v");
+	private final static ArtifactData one = new ArtifactData(fdOne, "g", "a", "v");
+	private final static ArtifactData two = new ArtifactData(fdTwo, "g", "a", "v");
 
 	public void testGetUniqueCacheEachTime() {
-		IProjectDataCache cache1 = IProjectDataCache.Utils.projectDataCache();
-		IProjectDataCache cache2 = IProjectDataCache.Utils.projectDataCache();
+		IArtifactDataCache cache1 = IArtifactDataCache.Utils.artifactDataCache();
+		IArtifactDataCache cache2 = IArtifactDataCache.Utils.artifactDataCache();
 		assertNotSame(cache1, cache2);
 	}
 
 	public void testWhenAddedUsesFileAsIndex() {
-		IProjectDataCache cache = IProjectDataCache.Utils.projectDataCache();
+		IArtifactDataCache cache = IArtifactDataCache.Utils.artifactDataCache();
 		assertNull(cache.projectData(new File("one")));
 		cache.addProjectData(one);
 		cache.addProjectData(two);
 		cache.addNotFound(fdThree);
 		cache.addNotFound(fdFour);
-		assertEquals(CachedProjectData.found(one), cache.projectData(new File("one")));
-		assertEquals(CachedProjectData.found(two), cache.projectData(new File("two")));
-		assertEquals(CachedProjectData.notFound(fdThree), cache.projectData(new File("three")));
-		assertEquals(CachedProjectData.notFound(fdFour), cache.projectData(new File("four")));
+		assertEquals(CachedArtifactData.found(one), cache.projectData(new File("one")));
+		assertEquals(CachedArtifactData.found(two), cache.projectData(new File("two")));
+		assertEquals(CachedArtifactData.notFound(fdThree), cache.projectData(new File("three")));
+		assertEquals(CachedArtifactData.notFound(fdFour), cache.projectData(new File("four")));
 	}
 
 	public void testCannotAddTwice() {
-		final IProjectDataCache cache = IProjectDataCache.Utils.projectDataCache();
+		final IArtifactDataCache cache = IArtifactDataCache.Utils.artifactDataCache();
 		cache.addProjectData(one);
 		cache.addNotFound(fdTwo);
 		Tests.assertThrowsWithMessage("one", CannotAddDuplicateKeyException.class, new Runnable() {
@@ -62,12 +62,12 @@ public class IDigestCacheTest extends TestCase {
 				cache.addNotFound(fdTwo);
 			}
 		});
-		assertEquals(CachedProjectData.found(one), cache.projectData(new File("one")));
-		assertEquals(CachedProjectData.notFound(fdTwo), cache.projectData(new File("two")));
+		assertEquals(CachedArtifactData.found(one), cache.projectData(new File("one")));
+		assertEquals(CachedArtifactData.notFound(fdTwo), cache.projectData(new File("two")));
 	}
 
 	public void testClearEmptiesCacheButAllowsItToBeStillUsed() {
-		IProjectDataCache cache = IProjectDataCache.Utils.projectDataCache();
+		IArtifactDataCache cache = IArtifactDataCache.Utils.artifactDataCache();
 		assertNull(cache.projectData(new File("one")));
 		cache.addProjectData(one);
 		cache.addProjectData(two);
@@ -76,8 +76,8 @@ public class IDigestCacheTest extends TestCase {
 		assertNull(cache.projectData(new File("two")));
 		cache.addProjectData(one);
 		cache.addProjectData(two);
-		assertEquals(CachedProjectData.found(one), cache.projectData(new File("one")));
-		assertEquals(CachedProjectData.found(two), cache.projectData(new File("two")));
+		assertEquals(CachedArtifactData.found(one), cache.projectData(new File("one")));
+		assertEquals(CachedArtifactData.found(two), cache.projectData(new File("two")));
 	}
 
 }

@@ -9,7 +9,7 @@
             id="org.softwarefm">
       </category>
       <view
-            name="Class"
+            name="Code"
             icon="icons/class.png"
             category="org.softwarefm"
             class="org.softwarefm.softwarefm.views.ClassAndMethodView"
@@ -17,7 +17,7 @@
       </view>
 
       <view
-            name="Project"
+            name="Artifact"
             icon="icons/project.png"
             category="org.softwarefm"
             class="org.softwarefm.softwarefm.views.ProjectView"
@@ -31,11 +31,18 @@
             id="org.softwarefm.softwarefm.views.AllView">
       </view>
       <view
-            name="Debug"
+            name="Debug - Text"
             icon="icons/debug.png"
             category="org.softwarefm"
             class="org.softwarefm.softwarefm.views.SoftwareFmDebugView"
             id="org.softwarefm.softwarefm.views.SoftwareFmDebugView">
+      </view>
+      <view
+            name="Debug - Link"
+            icon="icons/debug.png"
+            category="org.softwarefm"
+            class="org.softwarefm.softwarefm.views.DebugLinkView"
+            id="org.softwarefm.softwarefm.views.DebugLinkView">
       </view>
    </extension>
 

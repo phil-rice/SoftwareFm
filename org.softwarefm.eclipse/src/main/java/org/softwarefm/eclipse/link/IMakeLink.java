@@ -1,7 +1,7 @@
 package org.softwarefm.eclipse.link;
 
 import org.apache.maven.model.Model;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.link.internal.MakeLink;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.templates.ITemplateStore;
@@ -12,10 +12,10 @@ import org.softwarefm.utilities.maps.IHasCache;
 public interface IMakeLink {
 
 	/** Adds the link to software fm: the digest will now point to groupid/artifactid/version */
-	void makeDigestLink(ProjectData projectData);
+	void makeDigestLink(ArtifactData artifactData);
 
 	/** The model can be null if not known */
-	void populateProjectIfBlank(ProjectData projectData, Model model);
+	void populateProjectIfBlank(ArtifactData artifactData, Model model);
 
 	public static class Utils {
 		/**
@@ -32,11 +32,11 @@ public interface IMakeLink {
 		}
 
 		/** This is for helper tools like SoftwareFmCompositeUnit */
-		public static <S> ICallback2<ProjectData, Integer> manuallyImportWhenNotInEclipse(final IMakeLink makeLink, final ISelectedBindingManager<S> selectedBindingManager) {
-			return new ICallback2<ProjectData, Integer>() {
-				public void process(ProjectData projectData, Integer thisSelectionId) throws Exception {
+		public static <S> ICallback2<ArtifactData, Integer> manuallyImportWhenNotInEclipse(final IMakeLink makeLink, final ISelectedBindingManager<S> selectedBindingManager) {
+			return new ICallback2<ArtifactData, Integer>() {
+				public void process(ArtifactData artifactData, Integer thisSelectionId) throws Exception {
 					if (thisSelectionId == selectedBindingManager.currentSelectionId()) {
-						makeLink.makeDigestLink(projectData);
+						makeLink.makeDigestLink(artifactData);
 						selectedBindingManager.reselect(thisSelectionId);
 					}
 				}

@@ -5,22 +5,22 @@ import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.UrlConstants;
 import org.softwarefm.utilities.constants.CommonConstants;
 
-public class ProjectCompositeTest extends AbstractSoftwareFmCompositeTest<ProjectComposite> {
+public class ArtifactCompositeTest extends AbstractSoftwareFmCompositeTest<ArtifactComposite> {
 
 	public void testMessages() {
 		assertEquals(UrlConstants.welcomeUrl, panel.getTextOrUrl());// initial
-		listenerManager.classAndMethodSelectionOccured(classExpressionData, 0);
+		listenerManager.codeSelectionOccured(classExpressionData, 0);
 		assertEquals(UrlConstants.welcomeUrl, panel.getTextOrUrl());// initial
 		assertEquals(panel.getBrowser(), panel.getTopControl());
-		
+
 		checkDisplaysInBrowser("The selected item was defined in file " + file + "\nSearching...", new Runnable() {
 			public void run() {
 				listenerManager.digestDetermined(fileAndDigest, 0);
 			}
 		});
-		checkDisplaysInBrowser(CommonConstants.softwareFmHostAndPrefix + "/project/g/a", new Runnable() {
+		checkDisplaysInBrowser(CommonConstants.softwareFmHostAndPrefix + "/artifact:g/a", new Runnable() {
 			public void run() {
-				listenerManager.projectDetermined(projectData, 0);
+				listenerManager.artifactDetermined(artifactData, 0);
 			}
 		});
 
@@ -38,8 +38,8 @@ public class ProjectCompositeTest extends AbstractSoftwareFmCompositeTest<Projec
 	}
 
 	@Override
-	protected ProjectComposite makePanel(Composite parent, SoftwareFmContainer<?> container) {
-		return new ProjectComposite(parent, container);
+	protected ArtifactComposite makePanel(Composite parent, SoftwareFmContainer<?> container) {
+		return new ArtifactComposite(parent, container);
 	}
 
 }

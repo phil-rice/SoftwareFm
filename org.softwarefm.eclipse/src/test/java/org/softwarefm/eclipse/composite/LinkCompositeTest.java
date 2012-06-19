@@ -8,7 +8,7 @@ public class LinkCompositeTest extends AbstractSoftwareFmCompositeTest<LinkCompo
 
 	public void testMessages() {
 		assertEquals("", panel.getText());// initial
-		listenerManager.classAndMethodSelectionOccured(classExpressionData, 0);
+		listenerManager.codeSelectionOccured(classExpressionData, 0);
 		dispatchUntilQueueEmpty();
 		assertEquals("Searching...", panel.getText());
 
@@ -16,7 +16,7 @@ public class LinkCompositeTest extends AbstractSoftwareFmCompositeTest<LinkCompo
 		dispatchUntilQueueEmpty();
 		assertEquals("Searching...", panel.getText());
 
-		listenerManager.projectDetermined(projectData, 0);
+		listenerManager.artifactDetermined(artifactData, 0);
 		dispatchUntilQueueEmpty();
 		assertEquals("File: " + fileAndDigest.file + "\nDigest " + fileAndDigest.digest + "\nIf you think that the jar has been linked to the wrong project, you can edit it below", panel.getText());
 
@@ -31,7 +31,7 @@ public class LinkCompositeTest extends AbstractSoftwareFmCompositeTest<LinkCompo
 	public void testEventsChangeSelectedTab() {
 		checkDoesntChangeTab(new Runnable() {
 			public void run() {
-				listenerManager.classAndMethodSelectionOccured(classExpressionData, 0);
+				listenerManager.codeSelectionOccured(classExpressionData, 0);
 			}
 		});
 		checkDoesntChangeTab(new Runnable() {
@@ -51,7 +51,7 @@ public class LinkCompositeTest extends AbstractSoftwareFmCompositeTest<LinkCompo
 		});
 		checkChangesTabTo(panel.manualImportTabItem, new Runnable() {
 			public void run() {
-				listenerManager.projectDetermined(projectData,  0);
+				listenerManager.artifactDetermined(artifactData,  0);
 			}
 		});
 		checkChangesTabTo(panel.mavenImportTabItem, new Runnable() {

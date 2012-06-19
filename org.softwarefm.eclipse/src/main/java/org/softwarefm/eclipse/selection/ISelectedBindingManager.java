@@ -10,7 +10,7 @@ public interface ISelectedBindingManager<S> extends ISelectedBindingListenerAdde
 	
 	int currentSelectionId();
 	
-	/** If selectionId == lastSelectionId this will reselect */
+	/** If selectionId == currentSelectionId() this will reselect */
 	void reselect(int selectionId);
 
 	public static class Utils {

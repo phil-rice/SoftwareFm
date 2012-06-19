@@ -10,7 +10,7 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.softwarefm.eclipse.constants.TextKeys;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.FileAndDigest;
@@ -65,7 +65,7 @@ public class MavenImportJob implements ICallback2<String, Integer> {
 
 					monitor.subTask("Creating Link");
 					FileAndDigest fileNameAndDigest = new FileAndDigest(jar, digest);
-					ProjectData projectData = new ProjectData(fileNameAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model));
+					ArtifactData projectData = new ArtifactData(fileNameAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model));
 					makeLink.makeDigestLink(projectData);
 					monitor.internalWorked(1);
 

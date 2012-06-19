@@ -23,3 +23,5 @@ RELEASE NOTES:
 1.7.1: First version using MediaWiki
 1.7.2: Polish added: nicer text, slightly nicer link, fewer windows
 1.7.3: Speed up: cached results for project look up
+1.7.5: Now use name spaces Code: and Artifact:
+1.7.6: Project renamed to Artifact throughout code base

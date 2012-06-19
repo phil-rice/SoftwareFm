@@ -5,11 +5,11 @@ import java.text.MessageFormat;
 
 import junit.framework.TestCase;
 
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 
 public class SoftwareFmProjectHtmlRipperTest extends TestCase {
-	private final SoftwareFmProjectHtmlRipper ripper = new SoftwareFmProjectHtmlRipper();
+	private final SoftwareFmArtifactHtmlRipper ripper = new SoftwareFmArtifactHtmlRipper();
 
 	private final String gaPattern = "<div id=''mw-content-text''><p>{0}\n{1}</p></div>";
 	private final String gavPattern = "<div id=''mw-content-text''><p>{0}\n{1}\n{2}</p></div>";
@@ -26,15 +26,15 @@ public class SoftwareFmProjectHtmlRipperTest extends TestCase {
 	}
 
 	private void checkReads(String groupId, String artifactId, String version, String rawGroupId, String rawArtifactId, String rawVersion) {
-		ProjectData projectData = new ProjectData(fileAndDigest, groupId, artifactId, version);
-		ProjectData projectDataNoVersion = new ProjectData(fileAndDigest, groupId, artifactId, null);
+		ArtifactData artifactData = new ArtifactData(fileAndDigest, groupId, artifactId, version);
+		ArtifactData projectDataNoVersion = new ArtifactData(fileAndDigest, groupId, artifactId, null);
 		String gavDiv = MessageFormat.format(gavPattern, rawGroupId, rawArtifactId, rawVersion);
 		String gaDiv = MessageFormat.format(gaPattern, rawGroupId, rawArtifactId);
 
-		assertEquals(projectData, ripper.rip(fileAndDigest, "<root>" + gavDiv + "</root>"));
-		assertEquals(projectData, ripper.rip(fileAndDigest, "<root><div>" + gavDiv + "</div></root>"));
-		assertEquals(projectData, ripper.rip(fileAndDigest, "<root><div id='someid'>" + gavDiv + "</div></root>"));
-		assertEquals(projectData, ripper.rip(fileAndDigest, "<root><div id='someId'><div>" + gavDiv + "</div></div></root>"));
+		assertEquals(artifactData, ripper.rip(fileAndDigest, "<root>" + gavDiv + "</root>"));
+		assertEquals(artifactData, ripper.rip(fileAndDigest, "<root><div>" + gavDiv + "</div></root>"));
+		assertEquals(artifactData, ripper.rip(fileAndDigest, "<root><div id='someid'>" + gavDiv + "</div></root>"));
+		assertEquals(artifactData, ripper.rip(fileAndDigest, "<root><div id='someId'><div>" + gavDiv + "</div></div></root>"));
 
 		assertEquals(projectDataNoVersion, ripper.rip(fileAndDigest, "<root>" + gaDiv + "</root>"));
 		assertEquals(projectDataNoVersion, ripper.rip(fileAndDigest, "<root><div>" + gaDiv + "</div></root>"));

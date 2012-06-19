@@ -6,8 +6,8 @@ package org.softwarefm.eclipse.selection;
 
 import java.io.File;
 
-import org.softwarefm.eclipse.jdtBinding.ExpressionData;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 
 /**
  * When the user clicks on things in eclipse, these listeners are told about it.
@@ -30,7 +30,7 @@ import org.softwarefm.eclipse.jdtBinding.ProjectData;
  */
 public interface ISelectedBindingListener {
 
-	void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount);
+	void codeSelectionOccured(CodeData codeData, int selectionCount);
 
 	void notJavaElement(int selectionCount);
 
@@ -38,7 +38,7 @@ public interface ISelectedBindingListener {
 
 	void notInAJar(File file, int selectionCount);
 
-	void projectDetermined(ProjectData projectData, int selectionCount);
+	void artifactDetermined(ArtifactData artifactData, int selectionCount);
 
 	void unknownDigest(FileAndDigest fileAndDigest, int selectionCount);
 

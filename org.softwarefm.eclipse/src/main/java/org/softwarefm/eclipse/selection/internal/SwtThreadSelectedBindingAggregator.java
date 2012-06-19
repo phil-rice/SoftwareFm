@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Display;
-import org.softwarefm.eclipse.jdtBinding.ExpressionData;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.selection.ISelectedBindingListenerAndAdderRemover;
@@ -21,11 +21,11 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 		this.display = display;
 	}
 
-	public void classAndMethodSelectionOccured(final ExpressionData expressionData, final int selectionCount) {
+	public void codeSelectionOccured(final CodeData codeData, final int selectionCount) {
 		display.asyncExec(new Runnable() {
 			public void run() {
 				for (ISelectedBindingListener listener : listeners)
-					listener.classAndMethodSelectionOccured(expressionData, selectionCount);
+					listener.codeSelectionOccured(codeData, selectionCount);
 
 			}
 		});
@@ -59,11 +59,11 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 		});
 	}
 
-	public void projectDetermined(final ProjectData projectData, final int selectionCount) {
+	public void artifactDetermined(final ArtifactData artifactData, final int selectionCount) {
 		display.asyncExec(new Runnable() {
 			public void run() {
 				for (ISelectedBindingListener listener : listeners)
-					listener.projectDetermined(projectData, selectionCount);
+					listener.artifactDetermined(artifactData, selectionCount);
 			}
 		});
 	}

@@ -2,13 +2,13 @@ package org.softwarefm.eclipse.jdtBinding;
 
 import org.softwarefm.eclipse.selection.FileAndDigest;
 
-public class ProjectData {
+public class ArtifactData {
 	public final FileAndDigest fileAndDigest;
 	public final String groupId;
 	public final String artifactId;
 	public final String version;
 
-	public ProjectData(FileAndDigest fileAndDigest, String groupId, String artifactId, String version) {
+	public ArtifactData(FileAndDigest fileAndDigest, String groupId, String artifactId, String version) {
 		this.fileAndDigest = fileAndDigest;
 		this.groupId = groupId;
 		this.artifactId = artifactId;
@@ -17,7 +17,7 @@ public class ProjectData {
 
 	@Override
 	public String toString() {
-		return "ProjectData [fileNameAndDigest=" + fileAndDigest + ", groupId=" + groupId + ", artifactId=" + artifactId + ", version=" + version + "]";
+		return "ArtifactData [fileNameAndDigest=" + fileAndDigest + ", groupId=" + groupId + ", artifactId=" + artifactId + ", version=" + version + "]";
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class ProjectData {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ProjectData other = (ProjectData) obj;
+		ArtifactData other = (ArtifactData) obj;
 		if (artifactId == null) {
 			if (other.artifactId != null)
 				return false;

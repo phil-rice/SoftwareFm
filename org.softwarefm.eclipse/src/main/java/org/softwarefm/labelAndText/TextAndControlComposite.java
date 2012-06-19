@@ -7,8 +7,8 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.composite.SoftwareFmComposite;
-import org.softwarefm.eclipse.jdtBinding.ExpressionData;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.swt.Swts;
@@ -36,8 +36,8 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 				layout();
 			}
 
-			public void projectDetermined(ProjectData projectData, int selectionCount) {
-				TextAndControlComposite.this.projectDetermined(projectData, selectionCount);
+			public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+				TextAndControlComposite.this.artifactDetermined(artifactData, selectionCount);
 				layout();
 			}
 
@@ -51,8 +51,8 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 				layout();
 			}
 
-			public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
-				TextAndControlComposite.this.classAndMethodSelectionOccured(expressionData, selectionCount);
+			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
+				TextAndControlComposite.this.classAndMethodSelectionOccured(codeData, selectionCount);
 				layout();
 
 			}
@@ -83,7 +83,7 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 			this.text.setText(oldText.substring(0, index + 1) + text);
 	}
 
-	public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
+	public void classAndMethodSelectionOccured(CodeData codeData, int selectionCount) {
 	}
 
 	protected void notJavaElement(int selectionCount) {
@@ -95,7 +95,7 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 	public void notInAJar(File file, int selectionCount) {
 	}
 
-	public void projectDetermined(ProjectData projectData, int selectionCount) {
+	public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
 	}
 
 	public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {

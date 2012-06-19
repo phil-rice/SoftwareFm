@@ -7,7 +7,7 @@ import java.text.MessageFormat;
 
 import org.apache.maven.model.Model;
 import org.softwarefm.eclipse.constants.TemplateConstants;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.FileAndDigest;
@@ -36,15 +36,15 @@ public class MakeLink implements IMakeLink {
 		wiki.setUsingCompressedRequests(false);
 	}
 
-	public void makeDigestLink(ProjectData projectData) {
+	public void makeDigestLink(ArtifactData artifactData) {
 		try {
-			HostOffsetAndUrl projectUrl = urlStrategy.projectUrl(projectData);
-			HostOffsetAndUrl versionUrl = urlStrategy.versionUrl(projectData);
-			String digest = projectData.fileAndDigest.digest;
+			HostOffsetAndUrl projectUrl = urlStrategy.projectUrl(artifactData);
+			HostOffsetAndUrl versionUrl = urlStrategy.versionUrl(artifactData);
+			String digest = artifactData.fileAndDigest.digest;
 			if (digest == null)
 				throw new NullPointerException("Digest was null");
 			String template = templateStore.getTemplate(TemplateConstants.digestTemplate);
-			String entity = MessageFormat.format(template, projectData.groupId, projectData.artifactId, projectData.version, projectData.fileAndDigest.file.getName(), projectUrl.url, versionUrl.url);
+			String entity = MessageFormat.format(template, artifactData.groupId, artifactData.artifactId, artifactData.version, artifactData.fileAndDigest.file.getName(), projectUrl.url, versionUrl.url);
 			System.out.println("Entity:\n" + entity);
 
 			HostOffsetAndUrl digestUrl = urlStrategy.digestUrl(digest);
@@ -78,8 +78,8 @@ public class MakeLink implements IMakeLink {
 		}
 	}
 
-	public void populateProjectIfBlank(ProjectData projectData, Model model) {
-		String projectName = model == null ? projectData.artifactId : IMaven.Utils.getName(model);
+	public void populateProjectIfBlank(ArtifactData artifactData, Model model) {
+		String projectName = model == null ? artifactData.artifactId : IMaven.Utils.getName(model);
 		String description = Strings.nullSafeToString(model == null ? null : model.getDescription());
 		String projectWebsite = Strings.nullSafeToString(model == null ? null : model.getUrl());
 		String mailingList = "";
@@ -87,9 +87,9 @@ public class MakeLink implements IMakeLink {
 
 		String projectTemplate = templateStore.getTemplate(TemplateConstants.projectTemplate);
 		String projectEndTemplate = templateStore.getTemplate(TemplateConstants.projectEndTemplate);
-		String entity = MessageFormat.format(projectTemplate, projectData.groupId, projectData.artifactId, projectName, description, projectWebsite, mailingList, issues) + "\n" + projectEndTemplate;
+		String entity = MessageFormat.format(projectTemplate, artifactData.groupId, artifactData.artifactId, projectName, description, projectWebsite, mailingList, issues) + "\n" + projectEndTemplate;
 
-		String url = urlStrategy.projectUrl(projectData).url;
+		String url = urlStrategy.projectUrl(artifactData).url;
 		try {
 			wiki.getPageText(url);
 		} catch (FileNotFoundException e) {
@@ -101,7 +101,7 @@ public class MakeLink implements IMakeLink {
 
 	public static void main(String[] args) throws Exception {
 		FileAndDigest fileNameAndDigest = new FileAndDigest(new File("somePath/File.jar"), "012345");
-		ProjectData data = new ProjectData(fileNameAndDigest, "GroupId", "someArtifact", "someVersion");
+		ArtifactData data = new ArtifactData(fileNameAndDigest, "GroupId", "someArtifact", "someVersion");
 		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
 		ITemplateStore TemplateStore = ITemplateStore.Utils.templateStore(urlStrategy);
 		MakeLink makeLink = new MakeLink(urlStrategy, TemplateStore, new IHasCache() {

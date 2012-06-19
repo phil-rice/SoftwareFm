@@ -8,8 +8,8 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.TextKeys;
-import org.softwarefm.eclipse.jdtBinding.ExpressionData;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.labelAndText.TextAndControlComposite;
@@ -29,7 +29,7 @@ public class LinkComposite extends TextAndControlComposite<TabFolder> {
 	}
 
 	@Override
-	public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
+	public void classAndMethodSelectionOccured(CodeData codeData, int selectionCount) {
 		setText(searchingMsg());
 	}
 
@@ -44,8 +44,8 @@ public class LinkComposite extends TextAndControlComposite<TabFolder> {
 	}
 
 	@Override
-	public void projectDetermined(ProjectData projectData, int selectionCount) {
-		setText(projectDeterminedMsg(TextKeys.msgLinkProjectDetermined, projectData));
+	public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+		setText(artifactDeterminedMsg(TextKeys.msgLinkArtifactDetermined, artifactData));
 		tabFolder.setSelection(manualImportTabItem);
 	}
 

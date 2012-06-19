@@ -30,10 +30,10 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.softwarefm.eclipse.jdtBinding.ExpressionData;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
-import org.softwarefm.eclipse.selection.IProjectStrategy;
+import org.softwarefm.eclipse.selection.IArtifactStrategy;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
 import org.softwarefm.utilities.collections.Files;
 
@@ -42,10 +42,10 @@ import org.softwarefm.utilities.collections.Files;
 @SuppressWarnings("restriction")
 public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<ITextSelection, Expression> {
 
-	private final IProjectStrategy<ITextSelection> projectStrategy;
+	private final IArtifactStrategy<ITextSelection> artifactStrategy;
 
-	public EclipseSelectedBindingStrategy(IProjectStrategy<ITextSelection> projectStrategy) {
-		this.projectStrategy = projectStrategy;
+	public EclipseSelectedBindingStrategy(IArtifactStrategy<ITextSelection> artifactStrategy) {
+		this.artifactStrategy = artifactStrategy;
 	}
 
 	@Override
@@ -75,11 +75,11 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 	}
 
 	@Override
-	public ExpressionData findExpressionData(ITextSelection selection, Expression expression, int selectionCount) {
+	public CodeData findExpressionData(ITextSelection selection, Expression expression, int selectionCount) {
 		final IJavaElement javaElement = findJavaElement(expression);
 		if (javaElement == null)
 			return null;
-		ExpressionData expressionData = findSimplifiedExpressionData(javaElement, expression);
+		CodeData expressionData = findSimplifiedCodeData(javaElement, expression);
 		return expressionData;
 	}
 
@@ -106,16 +106,16 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 	}
 
 	// At this point we sigh in sadness about Java's weak class system, and regret the inability to modify Expression in anyway. Clojure multimethods where are you know
-	public ExpressionData findSimplifiedExpressionData(IJavaElement javaElement, Expression expression) {
+	public CodeData findSimplifiedCodeData(IJavaElement javaElement, Expression expression) {
 		if (expression instanceof IMethodBinding) {// javaElement instanceof IMethod
 			String packageName = ((IMethodBinding) expression).getDeclaringClass().getPackage().getName();
 			String className = javaElement.getParent().getElementName();
 			String methodName = javaElement.getElementName();
-			return new ExpressionData(packageName, className, methodName);
+			return new CodeData(packageName, className, methodName);
 		} else if (expression instanceof ITypeBinding) {// javaElement instanceof IClassFile
 			String packageName = ((ITypeBinding) expression).getPackage().getName();
 			String className = javaElement.getElementName();
-			return new ExpressionData(packageName, className);
+			return new CodeData(packageName, className);
 		} else if (javaElement instanceof ResolvedSourceMethod) {
 			ResolvedSourceMethod resolvedSourceMethod = (ResolvedSourceMethod) javaElement;
 			IType classFile = resolvedSourceMethod.getDeclaringType();
@@ -123,7 +123,7 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 			String packageName = packageFragment.getElementName();
 			String className = classFile.getElementName();
 			String methodName = resolvedSourceMethod.getElementName();
-			return new ExpressionData(packageName, className, methodName);
+			return new CodeData(packageName, className, methodName);
 
 		} else if (javaElement instanceof ResolvedBinaryMethod) {
 			ResolvedBinaryMethod resolvedBinaryMethod = (ResolvedBinaryMethod) javaElement;
@@ -132,28 +132,28 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 			String packageName = packageFragment.getElementName();
 			String className = classFile.getElementName();
 			String methodName = resolvedBinaryMethod.getElementName();
-			return new ExpressionData(packageName, className, methodName);
+			return new CodeData(packageName, className, methodName);
 
 		} else if (javaElement instanceof ResolvedBinaryType) {
 			ResolvedBinaryType resolvedBinaryType = (ResolvedBinaryType) javaElement;
 			IPackageFragment packageFragment = resolvedBinaryType.getPackageFragment();
 			String packageName = packageFragment.getElementName();
 			String className = resolvedBinaryType.getElementName();
-			return new ExpressionData(packageName, className);
+			return new CodeData(packageName, className);
 		} else if (javaElement instanceof ResolvedSourceType) {
 			ResolvedSourceType resolvedSourceType = (ResolvedSourceType) javaElement;
 			IPackageFragment packageFragment = resolvedSourceType.getPackageFragment();
 			String packageName = packageFragment.getElementName();
 			String className = resolvedSourceType.getElementName();
-			return new ExpressionData(packageName, className);
+			return new CodeData(packageName, className);
 		}
 		return null;
 
 	}
 
 	@Override
-	public ProjectData findProject(ITextSelection selection, FileAndDigest fileAndDigest, int selectionCount) {
-		return projectStrategy.findProject(selection, fileAndDigest, selectionCount);
+	public ArtifactData findArtifact(ITextSelection selection, FileAndDigest fileAndDigest, int selectionCount) {
+		return artifactStrategy.findArtifact(selection, fileAndDigest, selectionCount);
 	}
 
 	static ITypeRoot getJavaInput(IEditorPart part) {

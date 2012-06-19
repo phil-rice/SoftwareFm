@@ -1,8 +1,8 @@
 package org.softwarefm.eclipse.url;
 
 import org.softwarefm.eclipse.actions.SfmActionState;
-import org.softwarefm.eclipse.jdtBinding.ExpressionData;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.url.internal.UrlStrategy;
 import org.softwarefm.eclipse.url.internal.UrlStrategyWithActionBarState;
 import org.softwarefm.utilities.constants.CommonConstants;
@@ -17,13 +17,13 @@ public interface IUrlStrategy {
 	/** The media wiki api offset. This will often be mediawiki */
 	String apiOffset();
 
-	HostOffsetAndUrl classAndMethodUrl(ExpressionData expressionData);
+	HostOffsetAndUrl classAndMethodUrl(CodeData codeData);
 
 	HostOffsetAndUrl digestUrl(String digest);
 
-	HostOffsetAndUrl projectUrl(ProjectData projectData);
+	HostOffsetAndUrl projectUrl(ArtifactData artifactData);
 
-	HostOffsetAndUrl versionUrl(ProjectData projectData);
+	HostOffsetAndUrl versionUrl(ArtifactData artifactData);
 
 	HostOffsetAndUrl templateUrl(String name);
 

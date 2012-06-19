@@ -12,7 +12,7 @@ import junit.framework.TestCase;
 import org.apache.maven.model.Model;
 import org.easymock.EasyMock;
 import org.softwarefm.eclipse.constants.TemplateConstants;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.FileAndDigest;
@@ -28,7 +28,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 
 	private final static Random random = new Random();
 	private final static String version = random.nextInt(100) + "." + random.nextInt(100);
-	private final static ProjectData projectData = new ProjectData(new FileAndDigest(new File("someFileName"), "012345"), "someGroupId", "someArtifactId", version);
+	private final static ArtifactData artifactData = new ArtifactData(new FileAndDigest(new File("someFileName"), "012345"), "someGroupId", "someArtifactId", version);
 	private IUrlStrategy urlStrategy;
 	private MakeLink makeLink;
 	private HostOffsetAndUrl projectUrl;
@@ -39,20 +39,20 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 	public void testMakesDigestLinkClearsCacheAndCallsPostMakeDigest() {
 		cache.clearCaches();
 		EasyMock.replay(cache);
-		makeLink.makeDigestLink(projectData);
+		makeLink.makeDigestLink(artifactData);
 		checkPageForWikiText(makeLink, "digest:012345", "someGroupId\n" + //
 				"someArtifactId\n" + //
 				version + "\n" + //
 				"\n" + //
 				"This page is the link from the file someFileName and the pages:\n" + //
-				"* [[project/someGroupId/someArtifactId]]\n" + //
-				"* [[project/someGroupId/someArtifactId/" + version + "]]");
+				"* [[artifact:someGroupId/someArtifactId]]\n" + //
+				"* [[artifact:someGroupId/someArtifactId/" + version + "]]");
 	}
 
 	public void testPopulateProjectWhenBlankWithNoModel() throws Exception {
 		deleteProjectInWiki();
 		EasyMock.replay(cache);
-		makeLink.populateProjectIfBlank(projectData, null);
+		makeLink.populateProjectIfBlank(artifactData, null);
 		checkPageForWikiTextAndProjectEnd(makeLink, projectUrl.url, "{{Template:Project\n" + //
 				"|groupId=someGroupId\n" + //
 				"|artifactId=someArtifactId\n" + //
@@ -67,7 +67,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 	public void testPopulateProjectWhenNotBlankDoesntChangeAnything() {
 		EasyMock.replay(cache);
 		makeLink.set(projectUrl.url, "test");
-		makeLink.populateProjectIfBlank(projectData, null);
+		makeLink.populateProjectIfBlank(artifactData, null);
 		checkPageForWikiText(makeLink, projectUrl.url, "test\n");
 	}
 
@@ -78,7 +78,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 		IMaven maven = IMaven.Utils.makeImport();
 		URL resource = getClass().getResource("pomWithLittleData.xml");
 		Model model = maven.pomToModel(resource.toURI().toString());
-		makeLink.populateProjectIfBlank(projectData, model);
+		makeLink.populateProjectIfBlank(artifactData, model);
 		checkPageForWikiTextAndProjectEnd(makeLink, projectUrl.url, "{{Template:Project\n" + //
 				"|groupId=someGroupId\n" + //
 				"|artifactId=someArtifactId\n" + //
@@ -97,7 +97,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 		IMaven maven = IMaven.Utils.makeImport();
 		URL resource = getClass().getResource("populatedPom.xml");
 		Model model = maven.pomToModel(resource.toURI().toString());
-		makeLink.populateProjectIfBlank(projectData, model);
+		makeLink.populateProjectIfBlank(artifactData, model);
 		checkPageForWikiTextAndProjectEnd(makeLink, projectUrl.url, "{{Template:Project\n" + //
 				"|groupId=someGroupId\n" + //
 				"|artifactId=someArtifactId\n" + //
@@ -135,7 +135,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 		urlStrategy = IUrlStrategy.Utils.urlStrategy();
 		cache = EasyMock.createMock(IHasCache.class);
 		makeLink = (MakeLink) IMakeLink.Utils.makeLink(urlStrategy, cache);
-		projectUrl = urlStrategy.projectUrl(projectData);
+		projectUrl = urlStrategy.projectUrl(artifactData);
 		wiki = makeLink.getWiki();
 		templateStore = makeLink.templateStore;
 

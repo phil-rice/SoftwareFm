@@ -2,13 +2,13 @@ package org.softwarefm.softwarefm.views;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.composite.ClassAndMethodComposite;
+import org.softwarefm.eclipse.composite.CodeComposite;
 
-public class ClassAndMethodView extends SoftwareFmView<ClassAndMethodComposite> {
+public class ClassAndMethodView extends SoftwareFmView<CodeComposite> {
 
 	@Override
-	public ClassAndMethodComposite makePanel(Composite parent, SoftwareFmContainer<?> container) {
-		return new ClassAndMethodComposite(parent, container);
+	public CodeComposite makePanel(Composite parent, SoftwareFmContainer<?> container) {
+		return new CodeComposite(parent, container);
 	}
 
 }

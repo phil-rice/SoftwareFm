@@ -2,8 +2,8 @@ package org.softwarefm.eclipse.url.internal;
 
 import junit.framework.TestCase;
 
-import org.softwarefm.eclipse.jdtBinding.ExpressionData;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.url.HostOffsetAndUrl;
 import org.softwarefm.eclipse.url.IUrlStrategy;
 
@@ -11,8 +11,8 @@ public class UrlStrategyTest extends TestCase {
 	private final static UrlStrategy urlStrategy = (UrlStrategy) IUrlStrategy.Utils.urlStrategy("someHost", "offset");
 
 	public void testClassAndMethodUrl() {
-		assertEquals(new HostOffsetAndUrl("someHost", "offset","java/package/class"), urlStrategy.classAndMethodUrl(new ExpressionData("package", "class")));
-		assertEquals(new HostOffsetAndUrl("someHost", "offset", "java/package/class/meth"), urlStrategy.classAndMethodUrl(new ExpressionData("package", "class", "meth")));
+		assertEquals(new HostOffsetAndUrl("someHost", "offset","code:package/class"), urlStrategy.classAndMethodUrl(new CodeData("package", "class")));
+		assertEquals(new HostOffsetAndUrl("someHost", "offset", "code:package/class/meth"), urlStrategy.classAndMethodUrl(new CodeData("package", "class", "meth")));
 	}
 
 	public void testDigest() {
@@ -20,11 +20,11 @@ public class UrlStrategyTest extends TestCase {
 	}
 
 	public void testProjectData() {
-		assertEquals(new HostOffsetAndUrl("someHost", "offset", "project/group/art"), urlStrategy.projectUrl(new ProjectData(null, "group", "art", "ver")));
+		assertEquals(new HostOffsetAndUrl("someHost", "offset", "artifact:group/art"), urlStrategy.projectUrl(new ArtifactData(null, "group", "art", "ver")));
 	}
 
 	public void testVersionData() {
-		assertEquals(new HostOffsetAndUrl("someHost", "offset", "project/group/art/ver"), urlStrategy.versionUrl(new ProjectData(null, "group", "art", "ver")));
+		assertEquals(new HostOffsetAndUrl("someHost", "offset", "artifact:group/art/ver"), urlStrategy.versionUrl(new ArtifactData(null, "group", "art", "ver")));
 	}
 
 }

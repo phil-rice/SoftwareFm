@@ -3,45 +3,45 @@ package org.softwarefm.eclipse.cache;
 import java.io.File;
 import java.util.Map;
 
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.utilities.exceptions.CannotAddDuplicateKeyException;
 import org.softwarefm.utilities.maps.IHasCache;
 import org.softwarefm.utilities.maps.Maps;
 
-public interface IProjectDataCache extends IHasCache {
+public interface IArtifactDataCache extends IHasCache {
 
 	void addNotFound(FileAndDigest fileAndDigest);
 
-	void addProjectData(ProjectData projectData);
+	void addProjectData(ArtifactData artifactData);
 
-	CachedProjectData projectData(File file);
+	CachedArtifactData projectData(File file);
 
 	public static class Utils {
-		public static IProjectDataCache projectDataCache() {
-			return new IProjectDataCache() {
-				private final Map<File, CachedProjectData> cache = Maps.newMap();
+		public static IArtifactDataCache artifactDataCache() {
+			return new IArtifactDataCache() {
+				private final Map<File, CachedArtifactData> cache = Maps.newMap();
 
 				public void clearCaches() {
 					cache.clear();
 				}
 
-				public CachedProjectData projectData(File file) {
+				public CachedArtifactData projectData(File file) {
 					return cache.get(file);
 				}
 
-				public void addProjectData(ProjectData projectData) {
-					File file = projectData.fileAndDigest.file;
+				public void addProjectData(ArtifactData artifactData) {
+					File file = artifactData.fileAndDigest.file;
 					if (cache.containsKey(file))
 						throw new CannotAddDuplicateKeyException(file.toString());
-					cache.put(file, CachedProjectData.found(projectData));
+					cache.put(file, CachedArtifactData.found(artifactData));
 				}
 
 				public void addNotFound(FileAndDigest fileAndDigest) {
 					File file = fileAndDigest.file;
 					if (cache.containsKey(file))
 						throw new CannotAddDuplicateKeyException(file.toString());
-					cache.put(file, CachedProjectData.notFound(fileAndDigest));
+					cache.put(file, CachedArtifactData.notFound(fileAndDigest));
 
 				}
 			};

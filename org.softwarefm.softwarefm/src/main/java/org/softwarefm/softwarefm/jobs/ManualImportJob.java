@@ -7,14 +7,14 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.softwarefm.eclipse.constants.TextKeys;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.resources.IResourceGetter;
 
-public class ManualImportJob implements ICallback2<ProjectData, Integer> {
+public class ManualImportJob implements ICallback2<ArtifactData, Integer> {
 
 	private final IMakeLink makeLink;
 	private final IResourceGetter resourceGetter;
@@ -27,18 +27,18 @@ public class ManualImportJob implements ICallback2<ProjectData, Integer> {
 	}
 
 	@Override
-	public void process(final ProjectData projectData, final Integer thisSelectionId) throws Exception {
-		final String name = IResourceGetter.Utils.getMessageOrException(resourceGetter, TextKeys.jobManualImportTitle, projectData.groupId, projectData.artifactId, projectData.version);
+	public void process(final ArtifactData artifactData, final Integer thisSelectionId) throws Exception {
+		final String name = IResourceGetter.Utils.getMessageOrException(resourceGetter, TextKeys.jobManualImportTitle, artifactData.groupId, artifactData.artifactId, artifactData.version);
 		Job job = new Job(name) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					monitor.beginTask(name, 2);
 					monitor.subTask("Creating Link");
-					makeLink.makeDigestLink(projectData);
+					makeLink.makeDigestLink(artifactData);
 					monitor.internalWorked(1);
 					monitor.subTask("Populating project if needed");
-					makeLink.populateProjectIfBlank(projectData, null);
+					makeLink.populateProjectIfBlank(artifactData, null);
 					monitor.internalWorked(1);
 					IWorkbench workbench = PlatformUI.getWorkbench();
 					workbench.getDisplay().asyncExec(new Runnable() {

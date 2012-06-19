@@ -5,9 +5,9 @@ import java.util.concurrent.ExecutorService;
 import org.eclipse.jface.text.ITextSelection;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.actions.SfmActionState;
-import org.softwarefm.eclipse.cache.IProjectDataCache;
+import org.softwarefm.eclipse.cache.IArtifactDataCache;
 import org.softwarefm.eclipse.constants.TextKeys;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.tests.SwtTest;
 import org.softwarefm.eclipse.url.HostOffsetAndUrl;
@@ -41,7 +41,7 @@ public class SoftwareFmActivatorTest extends SwtTest {
 		assertSame(state1, state2);
 		IUrlStrategy urlStrategy = activator.getContainer().urlStrategy;
 		state1.setUrlSuffix("someSuffix");
-		assertEquals(new HostOffsetAndUrl(CommonConstants.softwareFmHost, CommonConstants.softwareFmPageOffset, "project", "g", "a#someSuffix"), urlStrategy.projectUrl(new ProjectData(null, "g", "a", "v")));
+		assertEquals(new HostOffsetAndUrl(CommonConstants.softwareFmHost, CommonConstants.softwareFmPageOffset, "project", "g", "a#someSuffix"), urlStrategy.projectUrl(new ArtifactData(null, "g", "a", "v")));
 
 		activator.dispose();
 		
@@ -53,18 +53,18 @@ public class SoftwareFmActivatorTest extends SwtTest {
 	}
 	
 	public void testProjectDataCache(){
-		IProjectDataCache cache1 = activator.getProjectDataCache();
-		IProjectDataCache cache2 = activator.getProjectDataCache();
+		IArtifactDataCache cache1 = activator.getArtifactDataCache();
+		IArtifactDataCache cache2 = activator.getArtifactDataCache();
 		SoftwareFmContainer<ITextSelection> container = activator.getContainer();
 		assertSame(cache1, cache2);
-		assertSame(cache1, container.projectDataCache);
+		assertSame(cache1, container.artifactDataCache);
 		activator.dispose();
 		
-		IProjectDataCache cache1b = activator.getProjectDataCache();
-		IProjectDataCache cache2b = activator.getProjectDataCache();
+		IArtifactDataCache cache1b = activator.getArtifactDataCache();
+		IArtifactDataCache cache2b = activator.getArtifactDataCache();
 		SoftwareFmContainer<ITextSelection> containerb = activator.getContainer();
 		assertSame(cache1b, cache2b);
-		assertSame(cache1b, containerb.projectDataCache);
+		assertSame(cache1b, containerb.artifactDataCache);
 		assertNotSame(cache1, cache1b);
 		
 	}

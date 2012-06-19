@@ -15,7 +15,7 @@ import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.actions.SfmActionState;
 import org.softwarefm.eclipse.actions.internal.ActionBarComposite;
 import org.softwarefm.eclipse.actions.internal.SfmActionBarConfigurator;
-import org.softwarefm.eclipse.cache.IProjectDataCache;
+import org.softwarefm.eclipse.cache.IArtifactDataCache;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
@@ -48,24 +48,25 @@ public class SoftwareFmCompositeWithActionsUnit extends HasComposite {
 			Swts.Show.xUnit(SoftwareFmCompositeWithActionsUnit.class.getSimpleName(), new File("src/test/resources/org/softwarefm/eclipse/composite"), "dat", new ISituationListAndBuilder<SoftwareFmCompositeWithActionsUnit, String>() {
 				public SoftwareFmCompositeWithActionsUnit makeChild(Composite parent) throws Exception {
 					final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay());
-					IProjectDataCache projectDataCache = IProjectDataCache.Utils.projectDataCache();
+					IArtifactDataCache artifactDataCache = IArtifactDataCache.Utils.artifactDataCache();
 					SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>> manager = new SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>>(//
 							listenerManager, //
 							ISelectedBindingStrategy.Utils.fromMap(), //
 							threadingPool, //
-							projectDataCache,//
+							artifactDataCache,//
 							ICallback.Utils.rethrow());
 					IUrlStrategy rawUrlStrategy = IUrlStrategy.Utils.urlStrategy();
 					SfmActionState state = new SfmActionState();
 					IUrlStrategy urlStrategy = IUrlStrategy.Utils.withActionBarState(rawUrlStrategy, state);
 					ITemplateStore templateStore = ITemplateStore.Utils.templateStore(rawUrlStrategy);
-					final IMakeLink makeLink = IMakeLink.Utils.makeLink(rawUrlStrategy, templateStore, projectDataCache);
+					final IMakeLink makeLink = IMakeLink.Utils.makeLink(rawUrlStrategy, templateStore, artifactDataCache);
 					SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
 							manager, //
 							IMaven.Utils.importPomWithSysouts(makeLink, manager),//
 							IMakeLink.Utils.manuallyImportWhenNotInEclipse(makeLink, manager),//
 							templateStore, //
-							projectDataCache);
+							artifactDataCache,//
+							state);
 					SoftwareFmCompositeWithActionsUnit softwareFmComposite = new SoftwareFmCompositeWithActionsUnit(parent, container, state);
 					return softwareFmComposite;
 				}

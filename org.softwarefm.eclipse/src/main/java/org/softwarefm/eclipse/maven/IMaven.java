@@ -7,7 +7,7 @@ import java.net.URL;
 import org.apache.maven.model.IssueManagement;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.internal.Maven;
 import org.softwarefm.eclipse.selection.FileAndDigest;
@@ -82,7 +82,7 @@ public interface IMaven {
 					maven.downloadJar(model);
 					System.out.println("Imported to local repository");
 					FileAndDigest fileAndDigest = new FileAndDigest(jarFile, Files.digestAsHexString(jarFile));
-					makeLink.makeDigestLink(new ProjectData(fileAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model)));
+					makeLink.makeDigestLink(new ArtifactData(fileAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model)));
 					manager.reselect(thisSelectionId);
 					
 				}

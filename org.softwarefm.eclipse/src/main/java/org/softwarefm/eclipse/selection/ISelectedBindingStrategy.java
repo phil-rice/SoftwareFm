@@ -3,10 +3,10 @@ package org.softwarefm.eclipse.selection;
 import java.io.File;
 import java.util.Map;
 
-import org.softwarefm.eclipse.jdtBinding.ExpressionData;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
-import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectHtmlRipper;
-import org.softwarefm.eclipse.selection.internal.SoftwareFmProjectStrategy;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
+import org.softwarefm.eclipse.selection.internal.SoftwareFmArtifactHtmlRipper;
+import org.softwarefm.eclipse.selection.internal.SoftwareFmArtifactStrategy;
 import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.utilities.http.IHttpClient;
 
@@ -20,12 +20,12 @@ import org.softwarefm.utilities.http.IHttpClient;
  * <p>
  * There are no assumptions about the threading model. Internally the strategy may be simple, or multi threaded.
  */
-public interface ISelectedBindingStrategy<S, N> extends IProjectStrategy<S> {
+public interface ISelectedBindingStrategy<S, N> extends IArtifactStrategy<S> {
 
 	/** May return null */
 	N findNode(S selection, int selectionCount);
 
-	ExpressionData findExpressionData(S selection, N node, int selectionCount);
+	CodeData findExpressionData(S selection, N node, int selectionCount);
 
 	/** The filename/digest will be null if the strategy cannot work out file. The digest will be null if the filename isn't a jar */
 	File findFile(S selection, N node, int selectionCount);
@@ -33,8 +33,8 @@ public interface ISelectedBindingStrategy<S, N> extends IProjectStrategy<S> {
 	FileAndDigest findDigest(S selection, N node, File file, int selectionCount);
 
 	public static class Utils {
-		public static <S> IProjectStrategy<S> softwareFmProjectStrategy(IUrlStrategy urlStrategy) {
-			return new SoftwareFmProjectStrategy<S>(IHttpClient.Utils.builder(), new SoftwareFmProjectHtmlRipper(), urlStrategy);
+		public static <S> IArtifactStrategy<S> softwareFmProjectStrategy(IUrlStrategy urlStrategy) {
+			return new SoftwareFmArtifactStrategy<S>(IHttpClient.Utils.builder(), new SoftwareFmArtifactHtmlRipper(), urlStrategy);
 		}
 
 		public static ISelectedBindingStrategy<Map<String, Object>, Map<String, Object>> fromMap() {
@@ -43,18 +43,18 @@ public interface ISelectedBindingStrategy<S, N> extends IProjectStrategy<S> {
 					return selection;
 				}
 
-				public ExpressionData findExpressionData(Map<String, Object> selection, Map<String, Object> node, int selectionCount) {
-					return new ExpressionData((String) selection.get("package"), (String) selection.get("class"), (String) selection.get("method"));
+				public CodeData findExpressionData(Map<String, Object> selection, Map<String, Object> node, int selectionCount) {
+					return new CodeData((String) selection.get("package"), (String) selection.get("class"), (String) selection.get("method"));
 				}
 
-				public ProjectData findProject(Map<String, Object> selection, FileAndDigest fileAndDigest, int selectionCount) {
+				public ArtifactData findArtifact(Map<String, Object> selection, FileAndDigest fileAndDigest, int selectionCount) {
 					String groupid = (String) selection.get("groupid");
 					String artefactId = (String) selection.get("artifactid");
 					String version = (String) selection.get("version");
 					if (groupid == null)
 						return null;
 					else
-						return new ProjectData(fileAndDigest, groupid, artefactId, version);
+						return new ArtifactData(fileAndDigest, groupid, artefactId, version);
 				}
 
 				public File findFile(Map<String, Object> selection, Map<String, Object> node, int selectionCount) {

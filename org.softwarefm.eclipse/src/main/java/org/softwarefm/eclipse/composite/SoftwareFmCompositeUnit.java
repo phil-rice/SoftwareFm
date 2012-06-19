@@ -15,7 +15,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.cache.IProjectDataCache;
+import org.softwarefm.eclipse.actions.SfmActionState;
+import org.softwarefm.eclipse.cache.IArtifactDataCache;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.IHasSelectionBindingManager;
@@ -101,12 +102,12 @@ public class SoftwareFmCompositeUnit {
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> classAndMethodCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
-			return new ClassAndMethodComposite(parent, container);
+			return new CodeComposite(parent, container);
 		}
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> projectCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
-			return new ProjectComposite(parent, container);
+			return new ArtifactComposite(parent, container);
 		}
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> manualImportCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
@@ -135,22 +136,23 @@ public class SoftwareFmCompositeUnit {
 
 	public static SoftwareFmContainer<Map<String, Object>> makeContainer(final ExecutorService threadingPool) {
 		final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay());
-		IProjectDataCache projectDataCache = IProjectDataCache.Utils.projectDataCache();
+		IArtifactDataCache artifactDataCache = IArtifactDataCache.Utils.artifactDataCache();
 		SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>> manager = new SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>>(//
 				listenerManager, //
 				ISelectedBindingStrategy.Utils.fromMap(), //
 				threadingPool, //
-				projectDataCache,//
+				artifactDataCache,//
 				ICallback.Utils.rethrow());
 		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
 		ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
-		final IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, templateStore, projectDataCache);
+		final IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, templateStore, artifactDataCache);
 		SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
 				manager, //
 				IMaven.Utils.importPomWithSysouts(makeLink, manager),//
 				IMakeLink.Utils.manuallyImportWhenNotInEclipse(makeLink, manager),//
 				templateStore, //
-				projectDataCache);
+				artifactDataCache, //
+				new SfmActionState());
 		return container;
 	}
 }

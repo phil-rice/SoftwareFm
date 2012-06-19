@@ -6,7 +6,7 @@ import java.util.List;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.TextKeys;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.IHasSelectionBindingManager;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
@@ -57,14 +57,14 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 				Strings.firstNCharacters(fileAndDigest.digest, 6));
 	}
 
-	public String projectDeterminedMsg(String key, ProjectData projectData) {
-		FileAndDigest fileAndDigest = projectData.fileAndDigest;
+	public String artifactDeterminedMsg(String key, ArtifactData artifactData) {
+		FileAndDigest fileAndDigest = artifactData.fileAndDigest;
 		return msg(key, //
 				fileAndDigest.file,//
 				fileAndDigest.digest,//
 				Strings.firstNCharacters(fileAndDigest.digest, 6), //
-				projectData,//
-				projectData.groupId, projectData.artifactId, projectData.version);
+				artifactData,//
+				artifactData.groupId, artifactData.artifactId, artifactData.version);
 
 	}
 

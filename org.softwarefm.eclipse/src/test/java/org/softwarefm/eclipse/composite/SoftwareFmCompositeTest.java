@@ -6,7 +6,7 @@ import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 
-public class SoftwareFmCompositeTest extends AbstractSoftwareFmCompositeTest<ClassAndMethodComposite> {
+public class SoftwareFmCompositeTest extends AbstractSoftwareFmCompositeTest<CodeComposite> {
 
 	public void testAddListenerDelegatesToManager() {
 		assertEquals(1, listenerManager.getListeners().size());
@@ -29,13 +29,13 @@ public class SoftwareFmCompositeTest extends AbstractSoftwareFmCompositeTest<Cla
 		assertEquals("SoftwareFM was unable to work out what sort of JavaElement the selected item was", panel.notJavaElementMsg());
 		assertEquals("The selected item was defined in file "+ file + " which isn't a jar", panel.notInAJarMsg(file));
 		assertEquals("File " + file + " Digest 0123456789 Digest6 012345", panel.digestDeterminedMsg(TextKeys.msgTestUnknownDigest, fileAndDigest));
-		assertEquals("File " + file + " Digest 0123456789 Digest6 012345 ProjectData " + projectData + " GroupId g ArtifactId a Version v", panel.projectDeterminedMsg(TextKeys.msgTestProjectDetermined, projectData));
+		assertEquals("File " + file + " Digest 0123456789 Digest6 012345 ArtifactData " + artifactData + " GroupId g ArtifactId a Version v", panel.artifactDeterminedMsg(TextKeys.msgTestArtifactDetermined, artifactData));
 		assertEquals("File " + file + " Digest 0123456789 Digest6 012345", panel.unknownDigestMsg(TextKeys.msgTestUnknownDigest, fileAndDigest));
 	}
 
 	@Override
-	protected ClassAndMethodComposite makePanel(Composite parent, SoftwareFmContainer<?> container) {
-		return new ClassAndMethodComposite(parent, container);
+	protected CodeComposite makePanel(Composite parent, SoftwareFmContainer<?> container) {
+		return new CodeComposite(parent, container);
 	}
 
 }

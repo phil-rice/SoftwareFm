@@ -6,8 +6,8 @@ import java.util.List;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.TextKeys;
-import org.softwarefm.eclipse.jdtBinding.ExpressionData;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.SelectedBindingAdapter;
 import org.softwarefm.labelAndText.IButtonConfig;
@@ -24,28 +24,28 @@ import org.softwarefm.utilities.strings.Strings;
 final class ManualImportComposite extends TextAndFormComposite {
 
 	private FileAndDigest fileAndDigest;
-	protected ProjectData projectData;
+	protected ArtifactData artifactData;
 
 	ManualImportComposite(Composite parent, SoftwareFmContainer<?> container) {
 		super(parent, container);
 		addListener(new SelectedBindingAdapter() {
 			@Override
 			public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
-				projectData = null;
+				artifactData = null;
 				ManualImportComposite.this.fileAndDigest = fileAndDigest;
 			}
 
 			@Override
-			public void projectDetermined(ProjectData projectData, int selectionCount) {
-				ManualImportComposite.this.projectData = projectData;
-				setText(unknownDigestMsg(TextKeys.msgManualImportProjectDetermined, projectData.fileAndDigest));
-				setText(TextKeys.keyManualImportGroupId, projectData.groupId);
-				setText(TextKeys.keyManualImportArtifactId, projectData.artifactId);
-				setText(TextKeys.keyManualImportVersion, projectData.version);
+			public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+				ManualImportComposite.this.artifactData = artifactData;
+				setText(unknownDigestMsg(TextKeys.msgManualImportArtifactDetermined, artifactData.fileAndDigest));
+				setText(TextKeys.keyManualImportGroupId, artifactData.groupId);
+				setText(TextKeys.keyManualImportArtifactId, artifactData.artifactId);
+				setText(TextKeys.keyManualImportVersion, artifactData.version);
 			}
 
 			private void clearForm() {
-				projectData = null;
+				artifactData = null;
 				fileAndDigest = null;
 
 				setText(TextKeys.keyManualImportGroupId, "<Not Relevant>");
@@ -66,8 +66,8 @@ final class ManualImportComposite extends TextAndFormComposite {
 			}
 
 			@Override
-			public void classAndMethodSelectionOccured(ExpressionData expressionData, int selectionCount) {
-				projectData = null;
+			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
+				artifactData = null;
 				setText(TextKeys.keyManualImportGroupId, "<Searching>");
 				setText(TextKeys.keyManualImportArtifactId, "<Searching>");
 				setText(TextKeys.keyManualImportVersion, "<Searching>");
@@ -76,7 +76,7 @@ final class ManualImportComposite extends TextAndFormComposite {
 			@Override
 			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
 				ManualImportComposite.this.fileAndDigest = fileAndDigest;
-				projectData = null;
+				artifactData = null;
 
 				setText(unknownDigestMsg(TextKeys.msgManualImportUnknownDigest, fileAndDigest));
 				setText(TextKeys.keyManualImportGroupId, "Enter Group Id");
@@ -105,13 +105,13 @@ final class ManualImportComposite extends TextAndFormComposite {
 						checkOk(result, TextKeys.keyManualImportGroupId);
 						checkOk(result, TextKeys.keyManualImportArtifactId);
 						checkOk(result, TextKeys.keyManualImportVersion);
-						if (projectData != null) {
-							boolean groupIdEqual = projectData.groupId.equals(getText(TextKeys.keyManualImportGroupId));
-							boolean artifactIdEqual = projectData.artifactId.equals(getText(TextKeys.keyManualImportArtifactId));
-							boolean versionEqul = projectData.version.equals(getText(TextKeys.keyManualImportVersion));
+						if (artifactData != null) {
+							boolean groupIdEqual = artifactData.groupId.equals(getText(TextKeys.keyManualImportGroupId));
+							boolean artifactIdEqual = artifactData.artifactId.equals(getText(TextKeys.keyManualImportArtifactId));
+							boolean versionEqul = artifactData.version.equals(getText(TextKeys.keyManualImportVersion));
 							boolean unchanged = groupIdEqual && artifactIdEqual && versionEqul;
 							if (unchanged)
-								result.add(new KeyAndProblem(null, IResourceGetter.Utils.getMessageOrException(container.resourceGetter, TextKeys.errorManualImportprojectDataUnchanged)));
+								result.add(new KeyAndProblem(null, IResourceGetter.Utils.getMessageOrException(container.resourceGetter, TextKeys.errorManualImportArtifactDataUnchanged)));
 						}
 						return result;
 					}
@@ -133,9 +133,9 @@ final class ManualImportComposite extends TextAndFormComposite {
 								String groupId = getText(TextKeys.keyManualImportGroupId);
 								String artifactId = getText(TextKeys.keyManualImportArtifactId);
 								String version = getText(TextKeys.keyManualImportVersion);
-								ProjectData projectData = new ProjectData(fileAndDigest, groupId, artifactId, version);
+								ArtifactData artifactData = new ArtifactData(fileAndDigest, groupId, artifactId, version);
 								setEnabledForButton(TextKeys.btnSharedOk, false);
-								ICallback2.Utils.call(container.importManually, projectData, container.selectedBindingManager.currentSelectionId());
+								ICallback2.Utils.call(container.importManually, artifactData, container.selectedBindingManager.currentSelectionId());
 							}
 						}.run();
 					}

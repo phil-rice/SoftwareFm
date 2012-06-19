@@ -1,7 +1,8 @@
 package org.softwarefm.eclipse;
 
-import org.softwarefm.eclipse.cache.IProjectDataCache;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.actions.SfmActionState;
+import org.softwarefm.eclipse.cache.IArtifactDataCache;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.templates.ITemplateStore;
 import org.softwarefm.eclipse.url.IUrlStrategy;
@@ -12,8 +13,8 @@ import org.softwarefm.utilities.resources.IResourceGetter;
 
 public class SoftwareFmContainer<S> implements IHasCache {
 
-	public static <S> SoftwareFmContainer<S> make(IUrlStrategy urlStrategy, ISelectedBindingManager<S> manager, ICallback2<String, Integer> importPom, ICallback2<ProjectData, Integer> importManually, ITemplateStore templateStore,IProjectDataCache projectDataCache) {
-		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), manager, importPom, importManually, urlStrategy, templateStore, projectDataCache);
+	public static <S> SoftwareFmContainer<S> make(IUrlStrategy urlStrategy, ISelectedBindingManager<S> manager, ICallback2<String, Integer> importPom, ICallback2<ArtifactData, Integer> importManually, ITemplateStore templateStore, IArtifactDataCache artifactDataCache, SfmActionState state) {
+		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), manager, importPom, importManually, urlStrategy, templateStore, artifactDataCache, state);
 	}
 
 	public static <S> SoftwareFmContainer<S> makeForTests(IResourceGetter resourceGetter) {
@@ -21,10 +22,11 @@ public class SoftwareFmContainer<S> implements IHasCache {
 		return new SoftwareFmContainer<S>(resourceGetter, //
 				ISelectedBindingManager.Utils.<S> noManager(), //
 				ICallback2.Utils.<String, Integer> noCallback(), //
-				ICallback2.Utils.<ProjectData, Integer> noCallback(), //
+				ICallback2.Utils.<ArtifactData, Integer> noCallback(), //
 				urlStrategy,//
 				ITemplateStore.Utils.templateStore(urlStrategy),//
-				IProjectDataCache.Utils.projectDataCache());
+				IArtifactDataCache.Utils.artifactDataCache(), //
+				new SfmActionState());
 	}
 
 	public static <S> SoftwareFmContainer<S> makeForTests() {
@@ -34,23 +36,23 @@ public class SoftwareFmContainer<S> implements IHasCache {
 	public final IResourceGetter resourceGetter;
 	public final ISelectedBindingManager<S> selectedBindingManager;
 	public final ICallback2<String, Integer> importPom;
-	public final ICallback2<ProjectData, Integer> importManually;
+	public final ICallback2<ArtifactData, Integer> importManually;
 	public final IUrlStrategy urlStrategy;
-	public final IProjectDataCache projectDataCache;
+	public final IArtifactDataCache artifactDataCache;
+	public final SfmActionState state;
 
-	public SoftwareFmContainer(IResourceGetter resourceGetter, ISelectedBindingManager<S> selectedBindingManager, ICallback2<String, Integer> importPom, ICallback2<ProjectData, Integer> importManually, IUrlStrategy urlStrategy, ITemplateStore templateStore, IProjectDataCache projectDataCache) {
+	public SoftwareFmContainer(IResourceGetter resourceGetter, ISelectedBindingManager<S> selectedBindingManager, ICallback2<String, Integer> importPom, ICallback2<ArtifactData, Integer> importManually, IUrlStrategy urlStrategy, ITemplateStore templateStore, IArtifactDataCache artifactDataCache, SfmActionState state) {
 		this.resourceGetter = resourceGetter;
 		this.selectedBindingManager = selectedBindingManager;
 		this.importPom = importPom;
 		this.importManually = importManually;
 		this.urlStrategy = urlStrategy;
-		this.projectDataCache = projectDataCache;
+		this.artifactDataCache = artifactDataCache;
+		this.state = state;
 	}
 
 	public void clearCaches() {
-		projectDataCache.clearCaches();
-
+		artifactDataCache.clearCaches();
 	}
-
 
 }

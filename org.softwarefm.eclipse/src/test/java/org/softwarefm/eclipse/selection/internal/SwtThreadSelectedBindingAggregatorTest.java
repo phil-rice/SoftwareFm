@@ -3,8 +3,8 @@ package org.softwarefm.eclipse.selection.internal;
 import java.io.File;
 
 import org.easymock.EasyMock;
-import org.softwarefm.eclipse.jdtBinding.ExpressionData;
-import org.softwarefm.eclipse.jdtBinding.ProjectData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.tests.SwtTest;
@@ -15,17 +15,17 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 	private SwtThreadSelectedBindingAggregator<String> swtThreadSelectedBindingAggregator;
 	private ISelectedBindingListener listener1;
 	private ISelectedBindingListener listener2;
-	private final ExpressionData expressionData = new ExpressionData("package", "class");
+	private final CodeData codeData = new CodeData("package", "class");
 	private final File file = new File("filename");
 	private final FileAndDigest fileAndDigest = new FileAndDigest(file, "digest");
-	private final ProjectData projectData = new ProjectData(fileAndDigest, "g", "a", "v");
+	private final ArtifactData artifactData = new ArtifactData(fileAndDigest, "g", "a", "v");
 
 	// Note that the listeners are not thread safe mocks, so their calls will be in the same thread or an exception will occur
 	public void testClassAndMethodSelectionCalledInSwtThread() throws Exception {
 		checkCalledInSameThread(new ICallback<ISelectedBindingListener>() {
 
 			public void process(ISelectedBindingListener listener) throws Exception {
-				listener.classAndMethodSelectionOccured(expressionData, 1);
+				listener.codeSelectionOccured(codeData, 1);
 			}
 		});
 	}
@@ -62,7 +62,7 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 		checkCalledInSameThread(new ICallback<ISelectedBindingListener>() {
 
 			public void process(ISelectedBindingListener listener) throws Exception {
-				listener.projectDetermined(projectData, 1);
+				listener.artifactDetermined(artifactData, 1);
 			}
 		});
 	}

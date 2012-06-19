@@ -174,7 +174,11 @@ public class Tests {
 		Set<String> javaConstants = Sets.set(Iterables.map(Fields.constantFieldsOfClass(referenceClass, String.class), Fields.<String> constantFieldToValue()));
 		ResourceBundle bundle = ResourceBundle.getBundle(anchorClass.getPackage().getName() + "." + bundleName, Locale.getDefault(), anchorClass.getClassLoader());
 		for (String constant : javaConstants)
-			bundle.getString(constant);
+			try {
+				bundle.getString(constant);
+			} catch (Exception e) {
+				Assert.fail(constant +": " + e.getClass()+", " + e.getMessage());
+			}
 		for (String key : bundle.keySet())
 			Assert.assertTrue(key, javaConstants.contains(key));
 	}

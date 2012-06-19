@@ -32,14 +32,11 @@ public class SfmActionBarConfigurator implements IActionBarConfigurator {
 		actionBar.add(action("article", TextKeys.actionArticleTooltip, TextKeys.actionArticleSuffix));
 		actionBar.add(action("blog", TextKeys.actionBlogTooltip, TextKeys.actionBlogSuffix));
 		actionBar.add(action("rss", TextKeys.actionRssTooltip, TextKeys.actionRssSuffix));
-		actionBar.add(action("company", TextKeys.actionCompanyTooltip, TextKeys.actionCompanySuffix));
-		actionBar.add(action("merchandise", TextKeys.actionMerchandiseTooltip, TextKeys.actionMerchandiseSuffix));
-		actionBar.add(action("advert", TextKeys.actionAdvertTooltip, TextKeys.actionAdvertSuffix));
 	}
 
 	ISfmAction action(String item, String tooltipKey, String suffixKey) {
 		final String suffix = IResourceGetter.Utils.getOrException(resourceGetter, "action.actionBar." + item + ".suffix");
-		return ISfmAction.Utils.action(resourceGetter, ArtifactsAnchor.class, item + ".png", "action.actionBar." + item + ".tooltip", new Runnable() {
+		return ISfmAction.Utils.action(resourceGetter, ArtifactsAnchor.class, "sfm.icons.project."+item + ".16.png", "action.actionBar." + item + ".tooltip", new Runnable() {
 			public void run() {
 				actionState.setUrlSuffix(suffix);
 				selectedBindingManager.reselect(selectedBindingManager.currentSelectionId());
