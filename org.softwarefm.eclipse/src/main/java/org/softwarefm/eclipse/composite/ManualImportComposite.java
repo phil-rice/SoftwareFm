@@ -83,6 +83,10 @@ final class ManualImportComposite extends TextAndFormComposite {
 				setText(TextKeys.keyManualImportArtifactId, "Enter Artifact Id");
 				setText(TextKeys.keyManualImportVersion, "Enter Version Id");
 			}
+
+			public boolean invalid() {
+				return getComposite().isDisposed();
+			}
 		});
 	}
 

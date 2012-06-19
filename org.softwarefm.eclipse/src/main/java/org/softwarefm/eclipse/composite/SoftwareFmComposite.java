@@ -33,7 +33,6 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 	protected void addListener(ISelectedBindingListener listener) {
 		listeners.add(listener);
 		selectionBindingManager.addSelectedArtifactSelectionListener(listener);
-
 	}
 
 	public String msg(String key, Object... args) {

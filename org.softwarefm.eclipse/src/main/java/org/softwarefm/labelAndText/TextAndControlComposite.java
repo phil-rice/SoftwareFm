@@ -7,8 +7,8 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.composite.SoftwareFmComposite;
-import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.jdtBinding.ArtifactData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.swt.Swts;
@@ -55,6 +55,10 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 				TextAndControlComposite.this.classAndMethodSelectionOccured(codeData, selectionCount);
 				layout();
 
+			}
+
+			public boolean invalid() {
+				return getComposite().isDisposed();
 			}
 		});
 	}

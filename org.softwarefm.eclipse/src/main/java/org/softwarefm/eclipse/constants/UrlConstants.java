@@ -7,6 +7,7 @@ public class UrlConstants {
 
 	public static final String notJavaElementUrl = "http://" + Strings.url(CommonConstants.softwareFmHostAndPrefix, "notJavaElement");
 	public static final String notJarUrl = "http://" + Strings.url(CommonConstants.softwareFmHostAndPrefix, "notJar");
-	public static final String welcomeUrl = "http://" + Strings.url(CommonConstants.softwareFmHostAndPrefix, "welcome");
+	public static final String aboutArtifactComposite = "http://" + Strings.url(CommonConstants.softwareFmHostAndPrefix, "Help:ArtifactComposite");
+	public static final String aboutCodeComposite = "http://" + Strings.url(CommonConstants.softwareFmHostAndPrefix, "Help:CodeComposite");
 
 }

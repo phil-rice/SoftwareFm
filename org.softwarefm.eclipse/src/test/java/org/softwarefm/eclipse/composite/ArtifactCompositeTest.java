@@ -8,9 +8,9 @@ import org.softwarefm.utilities.constants.CommonConstants;
 public class ArtifactCompositeTest extends AbstractSoftwareFmCompositeTest<ArtifactComposite> {
 
 	public void testMessages() {
-		assertEquals(UrlConstants.welcomeUrl, panel.getTextOrUrl());// initial
+		assertEquals(UrlConstants.aboutArtifactComposite, panel.getTextOrUrl());// initial
 		listenerManager.codeSelectionOccured(classExpressionData, 0);
-		assertEquals(UrlConstants.welcomeUrl, panel.getTextOrUrl());// initial
+		assertEquals(UrlConstants.aboutArtifactComposite, panel.getTextOrUrl());// initial
 		assertEquals(panel.getBrowser(), panel.getTopControl());
 
 		checkDisplaysInBrowser("The selected item was defined in file " + file + "\nSearching...", new Runnable() {

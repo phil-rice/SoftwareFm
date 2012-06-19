@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.composite.ArtifactComposite;
 
-public class ProjectView extends SoftwareFmView<ArtifactComposite> {
+public class ArtifactView extends SoftwareFmView<ArtifactComposite> {
 
 	@Override
 	public ArtifactComposite makePanel(Composite parent, SoftwareFmContainer<?> container) {

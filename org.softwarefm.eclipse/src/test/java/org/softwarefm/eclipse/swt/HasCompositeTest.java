@@ -1,5 +1,7 @@
 package org.softwarefm.eclipse.swt;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Layout;
 import org.softwarefm.eclipse.tests.SwtTest;
@@ -19,4 +21,16 @@ public class HasCompositeTest extends SwtTest {
 		assertSame(layout, hasComposite.getComposite().getLayout());
 	}
 
+	public void testDisposeOfHasCompositeIsCalledWhenCompositeIsDisposed(){
+		final AtomicInteger count = new AtomicInteger();
+		HasComposite hasComposite = new HasComposite(shell){
+			@Override
+			public void dispose() {
+				count.incrementAndGet();
+			}
+		};
+		hasComposite.getComposite().dispose();
+		assertEquals(1, count.get());
+		
+	}
 }

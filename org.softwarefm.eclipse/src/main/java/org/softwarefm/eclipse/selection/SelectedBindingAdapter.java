@@ -2,10 +2,10 @@ package org.softwarefm.eclipse.selection;
 
 import java.io.File;
 
-import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.jdtBinding.ArtifactData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
 
-public class SelectedBindingAdapter implements ISelectedBindingListener {
+abstract public class SelectedBindingAdapter implements ISelectedBindingListener {
 
 	public void codeSelectionOccured(CodeData codeData, int selectionCount) {
 	}
@@ -24,5 +24,6 @@ public class SelectedBindingAdapter implements ISelectedBindingListener {
 
 	public void notJavaElement(int selectionCount) {
 	}
+
 
 }

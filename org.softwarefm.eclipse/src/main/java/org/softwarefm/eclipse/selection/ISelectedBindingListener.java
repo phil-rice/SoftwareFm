@@ -6,8 +6,8 @@ package org.softwarefm.eclipse.selection;
 
 import java.io.File;
 
-import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.jdtBinding.ArtifactData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
 
 /**
  * When the user clicks on things in eclipse, these listeners are told about it.
@@ -29,6 +29,9 @@ import org.softwarefm.eclipse.jdtBinding.ArtifactData;
  * The selection count is so that execution can be aborted if a newer selection has been seen
  */
 public interface ISelectedBindingListener {
+	
+	/** If returns true, should be removed from the listener list */
+	boolean invalid();
 
 	void codeSelectionOccured(CodeData codeData, int selectionCount);
 

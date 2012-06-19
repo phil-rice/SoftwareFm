@@ -5,6 +5,7 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.constants.UrlConstants;
 import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.selection.SelectedBindingAdapter;
 
@@ -25,8 +26,19 @@ public class CodeComposite extends SoftwareFmComposite {
 				browser.setUrl(url);
 			}
 
+			public boolean invalid() {
+				return getComposite().isDisposed();
+			}
+
 		});
+		browser.setUrl(UrlConstants.aboutCodeComposite);
 	}
+
+	@Override
+	public void dispose() {
+		System.out.println("CodeComposite dispose called");
+		super.dispose();
+	};
 
 	public String getUrl() {
 		return url;

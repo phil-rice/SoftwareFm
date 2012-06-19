@@ -8,8 +8,8 @@ public class ViewsTest extends SwtTest {
 
 	public void testViewsMakeAPanel() {
 		checkView(new AllView());
-		checkView(new ClassAndMethodView());
-		checkView(new ProjectView());
+		checkView(new CodeView());
+		checkView(new ArtifactView());
 		checkView(new SoftwareFmDebugView());
 	}
 

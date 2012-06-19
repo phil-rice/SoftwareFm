@@ -12,7 +12,7 @@
             name="Code"
             icon="icons/class.png"
             category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.ClassAndMethodView"
+            class="org.softwarefm.softwarefm.views.CodeView"
             id="org.softwarefm.softwarefm.views.ClassAndMethodView">
       </view>
 
@@ -20,7 +20,7 @@
             name="Artifact"
             icon="icons/project.png"
             category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.ProjectView"
+            class="org.softwarefm.softwarefm.views.ArtifactView"
             id="org.softwarefm.softwarefm.views.ProjectView">
       </view>
       <view

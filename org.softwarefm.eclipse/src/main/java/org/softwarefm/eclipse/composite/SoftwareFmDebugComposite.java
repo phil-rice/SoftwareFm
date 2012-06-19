@@ -7,8 +7,8 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
-import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.jdtBinding.ArtifactData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 
@@ -42,6 +42,10 @@ public class SoftwareFmDebugComposite extends SoftwareFmComposite {
 
 			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
 				text.append("Unknown Digest: (" + selectionCount + ") " + fileAndDigest + "\n");
+			}
+
+			public boolean invalid() {
+				return getComposite().isDisposed();
 			}
 		});
 	}

@@ -21,10 +21,15 @@ abstract public class SoftwareFmView<C extends SoftwareFmComposite> extends View
 		makePanel(parent, container);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		configureToolbar(toolBarManager);
-
 	}
 
 	protected void configureToolbar(IToolBarManager toolBarManager) {
+	}
+	
+	@Override
+	public void dispose() {
+		System.out.println(getClass().getSimpleName() +".dispose was called");
+		super.dispose();
 	}
 
 	@Override

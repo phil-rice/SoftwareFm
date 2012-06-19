@@ -21,7 +21,7 @@ public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
 				return new LinkComposite(from, container);
 			}
 		});
-		setUrlAndShow(UrlConstants.welcomeUrl);
+		setUrlAndShow(UrlConstants.aboutArtifactComposite);
 		addListener(new ISelectedBindingListener() {
 			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
 			}
@@ -46,6 +46,10 @@ public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
 				String url = urlStrategy.projectUrl(artifactData).getHostAndUrl();
 				setUrlAndShow(url);
 				container.state.setUrlSuffix(null);
+			}
+
+			public boolean invalid() {
+				return getComposite().isDisposed();
 			}
 		});
 	}

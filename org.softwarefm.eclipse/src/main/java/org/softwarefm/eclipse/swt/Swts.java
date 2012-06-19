@@ -631,6 +631,7 @@ public class Swts {
 
 			@Override
 			public void dispose() {
+				System.out.println("Disposing of " + description);
 				dispose.dispose();
 				super.dispose();
 			}
