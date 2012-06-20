@@ -14,7 +14,11 @@ public abstract class TextAndFormComposite extends TextAndControlComposite<Form>
 
 	@Override
 	protected Form makeComponent(SoftwareFmContainer<?> container, Composite parent) {
-		return form = new Form(parent, SWT.NULL, container, makeButtonConfigurator(), makeKeys());
+		return form = new Form(parent, SWT.NULL, container, makeButtonConfigurator(), makeProblemHandler(), makeKeys());
+	}
+
+	protected IFormProblemHandler makeProblemHandler() {
+		return null;
 	}
 
 	public void setText(String key, String text) {

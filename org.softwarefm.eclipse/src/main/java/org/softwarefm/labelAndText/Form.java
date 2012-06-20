@@ -1,6 +1,5 @@
 package org.softwarefm.labelAndText;
 
-
 import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
@@ -39,6 +38,7 @@ import org.softwarefm.utilities.strings.Strings;
 public class Form extends Composite implements IGetTextWithKey {
 	private final List<String> keys;
 	private final ButtonComposite buttonComposite;
+	private final IFormProblemHandler globalProblemHandler;
 
 	public static class LabelAndTextHolderLayout extends Layout {
 
@@ -157,8 +157,9 @@ public class Form extends Composite implements IGetTextWithKey {
 
 	}
 
-	public Form(Composite parent, int style, final SoftwareFmContainer<?> container, IButtonConfigurator buttonConfigurator, String... keys) {
+	public Form(Composite parent, int style, final SoftwareFmContainer<?> container, IButtonConfigurator buttonConfigurator, IFormProblemHandler globalProblemHandler, String... keys) {
 		super(parent, style);
+		this.globalProblemHandler = globalProblemHandler;
 		this.keys = Lists.immutableCopy(keys);
 		setLayout(new LabelAndTextHolderLayout());
 		IResourceGetter resourceGetter = container.resourceGetter;
@@ -197,14 +198,18 @@ public class Form extends Composite implements IGetTextWithKey {
 
 	void updateButtonStatus() {
 		List<KeyAndProblem> problems = buttonComposite.updateButtonStatus(this);
+		globalProblemHandler.handleAllProblems(problems);
 		Map<String, List<String>> map = Maps.newMap();
 		for (KeyAndProblem problem : problems)
 			Maps.addToList(map, problem.key, problem.problem);
+
 		for (String key : keys) {
 			List<String> problemsForKey = map.get(key);
 			LabelAndTextComposite labelAndText = getLabelAndTextFor(key);
 			labelAndText.setProblems(Lists.nullSafe(problemsForKey));
 		}
+		List<String> globalProblems = map.get(null);
+		globalProblemHandler.handleGlobalProblems(globalProblems);
 
 	}
 
@@ -220,7 +225,7 @@ public class Form extends Composite implements IGetTextWithKey {
 						TextKeys.btnSharedOk, "OK", TextKeys.btnSharedCancel, "Cancel",//
 						"one", "One", "two", "Two", "three", "Three", "four", "Four", "five", "Five", "six", "Six", "seven", "Seven");
 				SoftwareFmContainer<?> container = SoftwareFmContainer.makeForTests(resourceGetter);
-				Form form = new Form(from, SWT.BORDER, container, IButtonConfigurator.Utils.okCancel(Runnables.sysout("ok"), Runnables.sysout("cancel")), "one", "two", "three", "four", "five", "six", "seven");
+				Form form = new Form(from, SWT.BORDER, container, IButtonConfigurator.Utils.okCancel(Runnables.sysout("ok"), Runnables.sysout("cancel")), IFormProblemHandler.Utils.sysoutHandler(), "one", "two", "three", "four", "five", "six", "seven");
 				return form;
 			}
 		});
