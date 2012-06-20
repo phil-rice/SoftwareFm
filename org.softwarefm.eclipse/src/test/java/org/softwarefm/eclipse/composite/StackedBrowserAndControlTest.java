@@ -43,15 +43,15 @@ public class StackedBrowserAndControlTest extends AbstractSoftwareFmCompositeTes
 	public void testSetTextEnsuresBrowserInShown() {
 		panel.showSecondaryControl();
 		panel.setText("some text");
-		// assertEquals("some text", panel.getBrowser().getText()); //would like to assert that the text goes into the browser...but was unable to work out how to do so
-		assertEquals(panel.getBrowser(), panel.getTopControl());
+		// assertEquals("some text", panel.getBrowser().getText()); //would like  to assert that the text goes into the browser...but was unable to work out how to do so
+		assertEquals(panel.getBrowserForTest(), panel.getTopControl());
 	}
 
 	public void testSetUrlAndShowEnsuresBrowserInShown() {
 		panel.showSecondaryControl();
 		panel.setUrlAndShow(UrlConstants.notJarUrl);
 		// assertEquals(UrlConstants.notJarUrl, panel.getBrowser().getUrl());
-		assertEquals(panel.getBrowser(), panel.getTopControl());
+		assertEquals(panel.getBrowserForTest(), panel.getTopControl());
 	}
 
 	private int getLayoutCount() {

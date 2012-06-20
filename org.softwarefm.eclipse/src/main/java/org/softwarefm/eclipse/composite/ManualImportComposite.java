@@ -87,6 +87,11 @@ final class ManualImportComposite extends TextAndFormComposite {
 			public boolean invalid() {
 				return getComposite().isDisposed();
 			}
+			
+			@Override
+			public String toString() {
+				return ManualImportComposite.this.getClass().getSimpleName();
+			}
 		});
 	}
 

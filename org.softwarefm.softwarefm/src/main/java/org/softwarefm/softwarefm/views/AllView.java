@@ -7,7 +7,7 @@ import org.softwarefm.eclipse.composite.AllComposite;
 public class AllView extends SoftwareFmView<AllComposite> {
 
 	@Override
-	public AllComposite makePanel(Composite parent, SoftwareFmContainer<?> container) {
+	public AllComposite makeSoftwareFmComposite(Composite parent, SoftwareFmContainer<?> container) {
 		return new AllComposite(parent, container);
 	}
 

@@ -14,6 +14,12 @@ import org.softwarefm.utilities.tests.Tests;
 
 public class StringsTest extends TestCase {
 
+	public void testOneLine(){
+		assertEquals("abc", Strings.oneLine("abc"));
+		assertEquals("a b c", Strings.oneLine("a\nb\nc"));
+		assertEquals("a b c", Strings.oneLine("a\rb\rc"));
+	}
+	
 	public void testFromHex() {
 		checkFromHex("00", 0);
 		checkFromHex("09", 9);

@@ -1,6 +1,7 @@
 package org.softwarefm.eclipse.composite;
 
 import java.io.File;
+import java.text.MessageFormat;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
@@ -13,6 +14,7 @@ import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.swt.HasComposite;
 import org.softwarefm.eclipse.url.IUrlStrategy;
+import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.resources.IResourceGetter;
 import org.softwarefm.utilities.strings.Strings;
@@ -22,12 +24,22 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 	private final ISelectedBindingManager<?> selectionBindingManager;
 	protected final IResourceGetter resourceGetter;
 	protected final IUrlStrategy urlStrategy;
+	protected ICallback2<Object, String> logger;
 
 	public SoftwareFmComposite(Composite parent, SoftwareFmContainer<?> container) {
 		super(parent);
 		this.selectionBindingManager = container.selectedBindingManager;
 		this.resourceGetter = container.resourceGetter;
 		urlStrategy = container.urlStrategy;
+	}
+
+	public void setLogger(ICallback2<Object, String> logger) {
+		this.logger = logger;
+	}
+
+	protected void log(Object source, String message, Object...args) {
+		if (logger != null)
+			ICallback2.Utils.call(logger, source, MessageFormat.format(message, args));
 	}
 
 	protected void addListener(ISelectedBindingListener listener) {
@@ -45,7 +57,7 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 
 	public String unknownDigestMsg(String key, FileAndDigest fileAndDigest) {
 		assert fileAndDigest.digest != null : fileAndDigest;
-		String result = msg(key, fileAndDigest.file.getPath(),fileAndDigest.digest, Strings.firstNCharacters(fileAndDigest.digest, 6) );
+		String result = msg(key, fileAndDigest.file.getPath(), fileAndDigest.digest, Strings.firstNCharacters(fileAndDigest.digest, 6));
 		return result;
 	}
 

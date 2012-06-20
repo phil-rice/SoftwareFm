@@ -13,6 +13,7 @@ import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.utilities.resources.IResourceGetter;
+import org.softwarefm.utilities.strings.Strings;
 
 abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 
@@ -59,6 +60,11 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 
 			public boolean invalid() {
 				return getComposite().isDisposed();
+			}
+			
+			@Override
+			public String toString() {
+				return TextAndControlComposite.this.getClass().getSimpleName() + " Text: " + Strings.oneLine(getText());
 			}
 		});
 	}

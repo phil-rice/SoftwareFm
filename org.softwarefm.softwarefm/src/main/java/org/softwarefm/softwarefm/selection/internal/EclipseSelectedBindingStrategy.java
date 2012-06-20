@@ -170,22 +170,28 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 	}
 
 	private IJavaElement findJavaElement(Expression from) {
-		ASTNode parent = from.getParent();
-		if (parent instanceof MethodInvocation) {
-			IMethodBinding resolveMethodBinding = ((MethodInvocation) parent).resolveMethodBinding();
-			IJavaElement result = resolveMethodBinding.getJavaElement();
-			return result;
-		}
-		if (parent instanceof MethodDeclaration) {
-			IMethodBinding methodBinding = ((MethodDeclaration) parent).resolveBinding();
-			IJavaElement result = methodBinding.getJavaElement();
-			return result;
-		}
-		ITypeBinding binding = from.resolveTypeBinding();
-		if (binding == null)
+		try {
+			ASTNode parent = from.getParent();
+			if (parent instanceof MethodInvocation) {
+				IMethodBinding resolveMethodBinding = ((MethodInvocation) parent).resolveMethodBinding();
+				IJavaElement result = resolveMethodBinding.getJavaElement();
+				return result;
+			}
+			if (parent instanceof MethodDeclaration) {
+				IMethodBinding methodBinding = ((MethodDeclaration) parent).resolveBinding();
+				IJavaElement result = methodBinding.getJavaElement();
+				return result;
+			}
+			ITypeBinding binding = from.resolveTypeBinding();
+			if (binding == null)
+				return null;
+			IJavaElement javaElement = binding.getJavaElement();
+			return javaElement;
+		} catch (Exception e) {
+			//TODO Swalloes exception. Probably want to have a message sent
+			e.printStackTrace();
 			return null;
-		IJavaElement javaElement = binding.getJavaElement();
-		return javaElement;
+		}
 	}
 
 

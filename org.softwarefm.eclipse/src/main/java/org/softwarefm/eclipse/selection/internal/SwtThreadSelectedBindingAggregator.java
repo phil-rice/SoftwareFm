@@ -114,4 +114,8 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 		return false;
 	}
 
+	public List<ISelectedBindingListener> listeners() {
+		return Collections.unmodifiableList(listeners);
+	}
+
 }

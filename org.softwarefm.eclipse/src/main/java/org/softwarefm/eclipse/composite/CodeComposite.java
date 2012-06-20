@@ -29,6 +29,12 @@ public class CodeComposite extends SoftwareFmComposite {
 			public boolean invalid() {
 				return getComposite().isDisposed();
 			}
+			
+			@Override
+			public String toString() {
+				CodeComposite codeComposite = CodeComposite.this;
+				return codeComposite.getClass().getSimpleName() +"@" + System.identityHashCode(codeComposite) +" Browser: " + browser.isDisposed() + " Url: " + url;
+			}
 
 		});
 		browser.setUrl(UrlConstants.aboutCodeComposite);
@@ -42,5 +48,10 @@ public class CodeComposite extends SoftwareFmComposite {
 
 	public String getUrl() {
 		return url;
+	}
+	
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() +" (" + getUrl() + ") " + browser;
 	}
 }

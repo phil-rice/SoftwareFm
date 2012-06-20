@@ -1,5 +1,7 @@
 package org.softwarefm.eclipse.selection;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.Future;
 
 import org.softwarefm.utilities.future.Futures;
@@ -36,6 +38,10 @@ public interface ISelectedBindingManager<S> extends ISelectedBindingListenerAdde
 				}
 
 				public void reselect(int selectionId) {
+				}
+
+				public List<ISelectedBindingListener> listeners() {
+					return Collections.emptyList();
 				}
 			};
 		}

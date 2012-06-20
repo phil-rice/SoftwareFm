@@ -122,7 +122,7 @@ public class SoftwareFmCompositeUnit {
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> debugCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
-			return new SoftwareFmDebugComposite(parent, container);
+			return new DebugTextComposite(parent, container);
 		}
 	};
 

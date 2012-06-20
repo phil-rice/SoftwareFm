@@ -7,7 +7,7 @@ import org.softwarefm.eclipse.composite.CodeComposite;
 public class CodeView extends SoftwareFmView<CodeComposite> {
 
 	@Override
-	public CodeComposite makePanel(Composite parent, SoftwareFmContainer<?> container) {
+	public CodeComposite makeSoftwareFmComposite(Composite parent, SoftwareFmContainer<?> container) {
 		return new CodeComposite(parent, container);
 	}
 

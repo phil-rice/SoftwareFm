@@ -51,7 +51,18 @@ public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
 			public boolean invalid() {
 				return getComposite().isDisposed();
 			}
+
+			@Override
+			public String toString() {
+				ArtifactComposite artifactComposite = ArtifactComposite.this;
+				return artifactComposite.getClass().getSimpleName() + "@" + System.identityHashCode(artifactComposite) + " Url/text: " + getTextOrUrl();
+			}
 		});
+	}
+
+	@Override
+	public String toString() {
+		return getClass().getSimpleName() + " (" + getTextOrUrl() + ") " + getBrowserForTest();
 	}
 
 	public static void main(String[] args) {

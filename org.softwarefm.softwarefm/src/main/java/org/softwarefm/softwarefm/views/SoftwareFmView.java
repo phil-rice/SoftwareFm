@@ -12,13 +12,14 @@ import org.softwarefm.softwarefm.SoftwareFmActivator;
 import org.softwarefm.softwarefm.action.EclipseActionBar;
 
 abstract public class SoftwareFmView<C extends SoftwareFmComposite> extends ViewPart {
-	abstract public C makePanel(Composite parent, SoftwareFmContainer<?> container);
+	abstract public C makeSoftwareFmComposite(Composite parent, SoftwareFmContainer<?> container);
 
 	@Override
 	public void createPartControl(Composite parent) {
 		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
 		SoftwareFmContainer<?> container = activator.getContainer();
-		makePanel(parent, container);
+		C panel = makeSoftwareFmComposite(parent, container);
+		activator.addView(this, panel);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		configureToolbar(toolBarManager);
 	}
@@ -28,7 +29,8 @@ abstract public class SoftwareFmView<C extends SoftwareFmComposite> extends View
 	
 	@Override
 	public void dispose() {
-		System.out.println(getClass().getSimpleName() +".dispose was called");
+		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
+		activator.removeView(this);
 		super.dispose();
 	}
 

@@ -34,7 +34,7 @@
             name="Debug - Text"
             icon="icons/debug.png"
             category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.SoftwareFmDebugView"
+            class="org.softwarefm.softwarefm.views.DebugTextView"
             id="org.softwarefm.softwarefm.views.SoftwareFmDebugView">
       </view>
       <view

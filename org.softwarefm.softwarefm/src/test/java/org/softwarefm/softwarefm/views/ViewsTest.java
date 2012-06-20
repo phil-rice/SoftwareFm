@@ -10,12 +10,12 @@ public class ViewsTest extends SwtTest {
 		checkView(new AllView());
 		checkView(new CodeView());
 		checkView(new ArtifactView());
-		checkView(new SoftwareFmDebugView());
+		checkView(new DebugTextView());
 	}
 
 	private <C extends SoftwareFmComposite> void checkView(SoftwareFmView<C> view) {
 		SoftwareFmContainer<Object> container = SoftwareFmContainer.makeForTests();
-		C panel = view.makePanel(shell, container);
+		C panel = view.makeSoftwareFmComposite(shell, container);
 		assertNotNull(panel);
 
 	}

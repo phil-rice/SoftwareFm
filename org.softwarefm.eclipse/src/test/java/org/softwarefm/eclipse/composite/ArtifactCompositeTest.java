@@ -11,7 +11,7 @@ public class ArtifactCompositeTest extends AbstractSoftwareFmCompositeTest<Artif
 		assertEquals(UrlConstants.aboutArtifactComposite, panel.getTextOrUrl());// initial
 		listenerManager.codeSelectionOccured(classExpressionData, 0);
 		assertEquals(UrlConstants.aboutArtifactComposite, panel.getTextOrUrl());// initial
-		assertEquals(panel.getBrowser(), panel.getTopControl());
+		assertEquals(panel.getBrowserForTest(), panel.getTopControl());
 
 		checkDisplaysInBrowser("The selected item was defined in file " + file + "\nSearching...", new Runnable() {
 			public void run() {
@@ -34,7 +34,7 @@ public class ArtifactCompositeTest extends AbstractSoftwareFmCompositeTest<Artif
 		runnable.run();
 		dispatchUntilQueueEmpty();
 		assertEquals(expected, panel.getTextOrUrl());
-		assertEquals(panel.getBrowser(), panel.getTopControl());
+		assertEquals(panel.getBrowserForTest(), panel.getTopControl());
 	}
 
 	@Override

@@ -4,6 +4,9 @@
 
 package org.softwarefm.eclipse.selection;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.softwarefm.eclipse.swt.IDispose;
 
 public interface ISelectedBindingListenerAdderAndRemover extends IDispose {
@@ -12,6 +15,8 @@ public interface ISelectedBindingListenerAdderAndRemover extends IDispose {
 
 	void removeSelectedArtifactSelectionListener(ISelectedBindingListener listener);
 
+	List<ISelectedBindingListener> listeners();
+	
 	public static class Utils {
 		public static ISelectedBindingListenerAdderAndRemover noSelectedBindingManager() {
 			return new ISelectedBindingListenerAdderAndRemover() {
@@ -22,6 +27,10 @@ public interface ISelectedBindingListenerAdderAndRemover extends IDispose {
 				}
 
 				public void dispose() {
+				}
+
+				public List<ISelectedBindingListener> listeners() {
+					return Collections.emptyList();
 				}
 			};
 		}

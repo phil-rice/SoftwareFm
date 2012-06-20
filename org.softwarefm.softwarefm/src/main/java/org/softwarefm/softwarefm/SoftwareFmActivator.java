@@ -1,5 +1,8 @@
 package org.softwarefm.softwarefm;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -11,6 +14,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -19,6 +23,7 @@ import org.softwarefm.eclipse.Marker;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.actions.SfmActionState;
 import org.softwarefm.eclipse.cache.IArtifactDataCache;
+import org.softwarefm.eclipse.composite.SoftwareFmComposite;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.IArtifactStrategy;
@@ -36,8 +41,10 @@ import org.softwarefm.softwarefm.jobs.MavenImportJob;
 import org.softwarefm.softwarefm.plugins.Plugins;
 import org.softwarefm.softwarefm.selection.internal.EclipseSelectedBindingStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.http.IHttpClient;
+import org.softwarefm.utilities.maps.Maps;
 import org.softwarefm.utilities.resources.IResourceGetter;
 
 /**
@@ -68,14 +75,20 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 
 	private SfmActionState sfmActionState;
 
+	private Map<IViewPart, List<SoftwareFmComposite>> views;
+
+	private ICallback2<Object, String> logger;
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
+		views = Maps.newMap();
 	}
 
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		views = null;
 		plugin = null;
 		super.stop(context);
 		dispose();
@@ -90,6 +103,21 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	public void setLogger(ICallback2<Object, String> logger) {
+		this.logger = logger;
+	}
+
+	public ICallback2<Object, String> getLogger() {
+		return new ICallback2<Object, String>() {
+
+			@Override
+			public void process(Object arg0, String arg1) throws Exception {
+				if (logger != null)
+					logger.process(arg0, arg1);
+			}
+		};
+	}
+
 	protected Display getDisplay() {
 		if (displayForTests != null)
 			return displayForTests;
@@ -99,7 +127,18 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 
 	public ISelectedBindingManager<ITextSelection> getSelectionBindingManager() {
 		return selectionBindingManager == null ? makeSelectionBindingManager() : selectionBindingManager;
+	}
 
+	public void addView(IViewPart part, SoftwareFmComposite composite) {
+		Maps.addToList(views, part, composite);
+	}
+
+	public void removeView(IViewPart part) {
+		views.remove(part);
+	}
+
+	public Map<IViewPart, List<SoftwareFmComposite>> getViews() {
+		return Collections.unmodifiableMap(views);
 	}
 
 	private ISelectedBindingManager<ITextSelection> makeSelectionBindingManager() {
@@ -114,6 +153,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				selectionListener = new ISelectionListener() {
 					@Override
 					public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+						System.out.println("Selection occured");
 						if (selection instanceof ITextSelection)
 							selectionBindingManager.selectionOccured((ITextSelection) selection);
 						else

@@ -5,14 +5,16 @@
 package org.softwarefm.eclipse.selection.internal;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwarefm.eclipse.cache.CachedArtifactData;
 import org.softwarefm.eclipse.cache.IArtifactDataCache;
-import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.jdtBinding.ArtifactData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingListener;
 import org.softwarefm.eclipse.selection.ISelectedBindingListenerAndAdderRemover;
@@ -159,6 +161,10 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 
 	public void dispose() {
 		listenerManager.dispose();
+	}
+
+	public List<ISelectedBindingListener> listeners() {
+		return Collections.unmodifiableList(listenerManager.listeners());
 	}
 
 }

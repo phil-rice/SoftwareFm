@@ -1,13 +1,12 @@
 
 Known Issues:
-* Better project take on workflow. 
-** import via published maven pom
-** Current crappy manual method specifying groupid/artifactid/version using wiki page is probably ok for now
-** special handling of rt.jar / classes.jar
+* Need special handling of rt.jar / classes.jar
+* Doesn't run on Macintoshes
 * Need a better naming convention for nested classes.
 	For example should be package/parentClass/nestedClass, and has to work with nested/nested etc classes
 * Anonymous classes are handled very poorly: package//method is not a good url
-
+* Doesn't detect classes/methods in jars
+* When views close, the listeners are not disposed
 
 The build process sucks. Big time conflict between Maven and Eclipse
 * You need to run "build.bat" which will:
