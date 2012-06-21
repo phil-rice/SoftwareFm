@@ -198,7 +198,7 @@ public class Form extends Composite implements IGetTextWithKey {
 
 	void updateButtonStatus() {
 		List<KeyAndProblem> problems = buttonComposite.updateButtonStatus(this);
-		globalProblemHandler.handleAllProblems(problems);
+		globalProblemHandler.handleAllProblems(buttonComposite, problems);
 		Map<String, List<String>> map = Maps.newMap();
 		for (KeyAndProblem problem : problems)
 			Maps.addToList(map, problem.key, problem.problem);
@@ -209,7 +209,7 @@ public class Form extends Composite implements IGetTextWithKey {
 			labelAndText.setProblems(Lists.nullSafe(problemsForKey));
 		}
 		List<String> globalProblems = map.get(null);
-		globalProblemHandler.handleGlobalProblems(globalProblems);
+		globalProblemHandler.handleGlobalProblems(buttonComposite, Lists.nullSafe(globalProblems));
 
 	}
 

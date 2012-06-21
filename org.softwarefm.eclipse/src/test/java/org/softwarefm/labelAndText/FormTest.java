@@ -22,12 +22,15 @@ public class FormTest extends SwtTest {
 
 	private final static List<KeyAndProblem> noProblemList = Collections.emptyList();
 
+	private final static KeyAndProblem globalProblem1 = new KeyAndProblem(null, "globalProblem1");
+	private final static KeyAndProblem globalProblem2 = new KeyAndProblem(null, "globalProblem2");
 	private final static KeyAndProblem groupIdProblem = new KeyAndProblem(TextKeys.keyManualImportGroupId, "groupIdProblem");
 	private final static KeyAndProblem groupIdProblem2 = new KeyAndProblem(TextKeys.keyManualImportGroupId, "groupIdProblem2");
 	private final static KeyAndProblem artifactIdProblem = new KeyAndProblem(TextKeys.keyManualImportArtifactId, "artifactIdProblem");
 
 	private final static List<KeyAndProblem> groupIdProblemList = Arrays.asList(groupIdProblem);
 	private final static List<KeyAndProblem> groupId12AndArtifactIdProblemList = Arrays.asList(groupIdProblem, groupIdProblem2, artifactIdProblem);
+	private final static List<KeyAndProblem> groupId12ArtifactIdAndGlobal1Global2ProblemList = Arrays.asList(groupIdProblem, groupIdProblem2, artifactIdProblem, globalProblem1, globalProblem2);
 
 	private Form form;
 	private ButtonExecutorMock ok;
@@ -43,6 +46,7 @@ public class FormTest extends SwtTest {
 	private Text groupIdText;
 
 	private Text versionText;
+	private MemoryFormProblemHandler memoryHandler;
 
 	public void testUsesButtonExecutorsOnConstructorToSetButtonStatus() {
 		checkCanExecuteCounts(1, 1);
@@ -50,7 +54,7 @@ public class FormTest extends SwtTest {
 		assertTrue(form.getButton(TextKeys.btnSharedCancel).isEnabled());
 
 		ok.canExecute = noProblemList;
-		form = new Form(shell, SWT.NULL, container, buttonConfigurator, keys);
+		form = new Form(shell, SWT.NULL, container, buttonConfigurator, IFormProblemHandler.Utils.noHandler(), keys);
 		assertTrue(form.getButton(TextKeys.btnSharedOk).isEnabled());
 		assertTrue(form.getButton(TextKeys.btnSharedCancel).isEnabled());
 	}
@@ -131,6 +135,17 @@ public class FormTest extends SwtTest {
 		assertEquals("", versionText.getToolTipText());
 	}
 
+	public void testErrorsAreReportedInFormProblemHandler() {
+		assertEquals(Collections.singletonList(groupIdProblem), Lists.getOnly(memoryHandler.problems));
+		assertEquals(Collections.emptyList(), Lists.getOnly(memoryHandler.globalProblems));
+	}
+
+	public void testProblemsWithNullKeyAreGlobalProblems() {
+		ok.canExecute = groupId12ArtifactIdAndGlobal1Global2ProblemList;
+		form.updateButtonStatus();
+		assertEquals(Arrays.asList(Collections.emptyList(), Arrays.asList("globalProblem1", "globalProblem2")), memoryHandler.globalProblems);
+	}
+
 	public void testAggregatesProblemsFromMultipleButtons() {
 		ok.canExecute = groupId12AndArtifactIdProblemList;
 		form.updateButtonStatus();
@@ -174,7 +189,8 @@ public class FormTest extends SwtTest {
 		container = SoftwareFmContainer.makeForTests();
 		buttonConfigurator = IButtonConfigurator.Utils.make(ok, cancel);
 		keys = new String[] { TextKeys.keyManualImportGroupId, TextKeys.keyManualImportArtifactId, TextKeys.keyManualImportVersion };
-		form = new Form(shell, SWT.NULL, container, buttonConfigurator, keys);
+		memoryHandler = IFormProblemHandler.Utils.memoryHandler();
+		form = new Form(shell, SWT.NULL, container, buttonConfigurator, memoryHandler, keys);
 		texts = getTexts();
 		groupIdText = texts.get(0);
 		artifactIdText = texts.get(1);

@@ -1,6 +1,7 @@
 package org.softwarefm.eclipse.composite;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.swt.widgets.Composite;
@@ -13,6 +14,7 @@ import org.softwarefm.eclipse.selection.SelectedBindingAdapter;
 import org.softwarefm.labelAndText.IButtonConfig;
 import org.softwarefm.labelAndText.IButtonConfigurator;
 import org.softwarefm.labelAndText.IButtonCreator;
+import org.softwarefm.labelAndText.IFormProblemHandler;
 import org.softwarefm.labelAndText.IGetTextWithKey;
 import org.softwarefm.labelAndText.KeyAndProblem;
 import org.softwarefm.labelAndText.TextAndFormComposite;
@@ -94,6 +96,11 @@ final class ManualImportComposite extends TextAndFormComposite {
 			}
 		});
 	}
+	
+	@Override
+	protected IFormProblemHandler makeProblemHandler() {
+		return IFormProblemHandler.Utils.buttonTooltipProblemHandler(TextKeys.btnSharedProblems);
+	}
 
 	@Override
 	protected String[] makeKeys() {
@@ -151,6 +158,18 @@ final class ManualImportComposite extends TextAndFormComposite {
 
 					public String key() {
 						return TextKeys.btnSharedOk;
+					}
+				});
+				creator.createButton(new IButtonConfig() {
+					public List<KeyAndProblem> canExecute(IGetTextWithKey textWithKey) {
+						return Collections.emptyList();
+					}
+					
+					public void execute() throws Exception {
+					}
+					
+					public String key() {
+						return TextKeys.btnSharedProblems;
 					}
 				});
 			}

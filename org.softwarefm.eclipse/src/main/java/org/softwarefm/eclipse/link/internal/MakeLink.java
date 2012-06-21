@@ -85,8 +85,8 @@ public class MakeLink implements IMakeLink {
 		String mailingList = "";
 		String issues = Strings.nullSafeToString(model == null ? null : IMaven.Utils.getIssueManagementUrl(model));
 
-		String projectTemplate = templateStore.getTemplate(TemplateConstants.projectTemplate);
-		String projectEndTemplate = templateStore.getTemplate(TemplateConstants.projectEndTemplate);
+		String projectTemplate = templateStore.getTemplate(TemplateConstants.artifactTemplate);
+		String projectEndTemplate = templateStore.getTemplate(TemplateConstants.artifactEndTemplate);
 		String entity = MessageFormat.format(projectTemplate, artifactData.groupId, artifactData.artifactId, projectName, description, projectWebsite, mailingList, issues) + "\n" + projectEndTemplate;
 
 		String url = urlStrategy.projectUrl(artifactData).url;

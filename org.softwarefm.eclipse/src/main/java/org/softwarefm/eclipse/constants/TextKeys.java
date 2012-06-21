@@ -8,6 +8,7 @@ public class TextKeys {
 	public static final String msgSharedNotAJar = "message.shared.notAJar";
 	public static final String errorSharedNeedsValue = "error.shared.needsValue";
 	public static final String btnSharedOk = "button.shared.ok";
+	public static final String btnSharedProblems = "button.shared.problems";
 	public static final String btnSharedCancel = "button.shared.cancel";
 
 	// Artifact

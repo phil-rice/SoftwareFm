@@ -53,7 +53,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 		deleteProjectInWiki();
 		EasyMock.replay(cache);
 		makeLink.populateProjectIfBlank(artifactData, null);
-		checkPageForWikiTextAndProjectEnd(makeLink, projectUrl.url, "{{Template:Project\n" + //
+		checkPageForWikiTextAndProjectEnd(makeLink, projectUrl.url, "{{Template:Artifact\n" + //
 				"|groupId=someGroupId\n" + //
 				"|artifactId=someArtifactId\n" + //
 				"|projectName=someArtifactId\n" + //
@@ -79,7 +79,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 		URL resource = getClass().getResource("pomWithLittleData.xml");
 		Model model = maven.pomToModel(resource.toURI().toString());
 		makeLink.populateProjectIfBlank(artifactData, model);
-		checkPageForWikiTextAndProjectEnd(makeLink, projectUrl.url, "{{Template:Project\n" + //
+		checkPageForWikiTextAndProjectEnd(makeLink, projectUrl.url, "{{Template:Artifact\n" + //
 				"|groupId=someGroupId\n" + //
 				"|artifactId=someArtifactId\n" + //
 				"|projectName=someArtifactId\n" + //
@@ -98,7 +98,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 		URL resource = getClass().getResource("populatedPom.xml");
 		Model model = maven.pomToModel(resource.toURI().toString());
 		makeLink.populateProjectIfBlank(artifactData, model);
-		checkPageForWikiTextAndProjectEnd(makeLink, projectUrl.url, "{{Template:Project\n" + //
+		checkPageForWikiTextAndProjectEnd(makeLink, projectUrl.url, "{{Template:Artifact\n" + //
 				"|groupId=someGroupId\n" + //
 				"|artifactId=someArtifactId\n" + //
 				"|projectName=someName\n" + //
@@ -125,7 +125,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 	}
 
 	private void checkPageForWikiTextAndProjectEnd(IMakeLink makeLink, String title, String expected) {
-		String projectEndTemplate = templateStore.getTemplate(TemplateConstants.projectEndTemplate);
+		String projectEndTemplate = templateStore.getTemplate(TemplateConstants.artifactEndTemplate);
 		checkPageForWikiText(makeLink, title, expected + "\n\n" + projectEndTemplate);
 	}
 

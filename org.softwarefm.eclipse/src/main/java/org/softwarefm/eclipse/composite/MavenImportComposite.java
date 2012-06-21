@@ -1,5 +1,6 @@
 package org.softwarefm.eclipse.composite;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
@@ -11,6 +12,7 @@ import org.softwarefm.labelAndText.Form;
 import org.softwarefm.labelAndText.IButtonConfig;
 import org.softwarefm.labelAndText.IButtonConfigurator;
 import org.softwarefm.labelAndText.IButtonCreator;
+import org.softwarefm.labelAndText.IFormProblemHandler;
 import org.softwarefm.labelAndText.IGetTextWithKey;
 import org.softwarefm.labelAndText.KeyAndProblem;
 import org.softwarefm.labelAndText.TextAndControlComposite;
@@ -53,9 +55,21 @@ public class MavenImportComposite extends TextAndControlComposite<Form> {
 						return result;
 					}
 				});
+				creator.createButton(new IButtonConfig() {
+					public List<KeyAndProblem> canExecute(IGetTextWithKey textWithKey) {
+						return Collections.emptyList();
+					}
+
+					public void execute() throws Exception {
+					}
+
+					public String key() {
+						return TextKeys.btnSharedProblems;
+					}
+				});
 			}
 		};
-		return form = new Form(getComposite(), SWT.NULL, container, buttonConfigurator, TextKeys.keyMavenImportPomUrl);
+		return form = new Form(getComposite(), SWT.NULL, container, buttonConfigurator, IFormProblemHandler.Utils.buttonTooltipProblemHandler(TextKeys.btnSharedProblems), TextKeys.keyMavenImportPomUrl);
 	}
 
 	public static void main(String[] args) {

@@ -15,7 +15,7 @@ public class DebugTextView extends SoftwareFmView<DebugTextComposite> {
 	public DebugTextComposite makeSoftwareFmComposite(Composite parent, SoftwareFmContainer<?> container) {
 		DebugTextComposite debugTextComposite = new DebugTextComposite(parent, container);
 		debugTextComposite.setViewGetter(new Callable<Map<Object,List<Object>>>() {
-			@SuppressWarnings("unchecked")
+			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
 			public Map<Object, List<Object>> call() throws Exception {
 				return (Map)SoftwareFmActivator.getDefault().getViews();

@@ -2,6 +2,7 @@ package org.softwarefm.eclipse.composite;
 
 import java.util.Arrays;
 
+import org.eclipse.swt.widgets.Control;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.tests.SwtTest;
@@ -17,8 +18,8 @@ public class MavenImportCompositeTest extends SwtTest {
 		assertEquals("", mavenImportComposite.form.getText(TextKeys.keyMavenImportPomUrl));
 		assertFalse(form.getButton(TextKeys.btnMavenImportUsePom).isEnabled());
 	}
-	
-	public void testButtonIsOnlyEnabledWhenUrlHasLegalValue(){
+
+	public void testButtonIsOnlyEnabledWhenUrlHasLegalValue() {
 		checkButtonEnabled("", false);
 		checkButtonEnabled("legal.Url", true);
 		checkButtonEnabled("legal.Url/a1/b2/c3/d4", true);
@@ -28,7 +29,8 @@ public class MavenImportCompositeTest extends SwtTest {
 
 	private void checkButtonEnabled(String string, boolean expected) {
 		form.setText(TextKeys.keyMavenImportPomUrl, string);
-		assertEquals(expected, form.getButton(TextKeys.btnMavenImportUsePom).isEnabled());
+		Control button = form.getButton(TextKeys.btnMavenImportUsePom);
+		assertEquals(expected, button.isEnabled());
 	}
 
 	@Override

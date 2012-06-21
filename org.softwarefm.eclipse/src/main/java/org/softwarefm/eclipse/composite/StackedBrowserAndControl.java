@@ -58,7 +58,7 @@ public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmC
 	}
 
 	public void setText(String text) {
-		log(this, "setText-cancelled({0})", text);
+		log(this, "setText({0})", text);
 		this.textOrUrl = text;
 		browser.setText(text);
 		browserOnTop();

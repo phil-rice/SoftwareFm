@@ -81,7 +81,6 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 
 	public String notInAJarMsg(File file) {
 		return msg(TextKeys.msgSharedNotAJar, file);
-
 	}
 
 	@Override
