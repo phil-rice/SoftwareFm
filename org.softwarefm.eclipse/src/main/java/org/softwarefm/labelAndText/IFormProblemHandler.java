@@ -2,17 +2,22 @@ package org.softwarefm.labelAndText;
 
 import java.util.List;
 
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Button;
+import org.softwarefm.eclipse.constants.ImageConstants;
 import org.softwarefm.utilities.collections.Iterables;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.strings.Strings;
 
 public interface IFormProblemHandler {
 
-	/** The handler is notified about all the problems 
-	 * @param buttonComposite TODO*/
+	/**
+	 * The handler is notified about all the problems
+	 * 
+	 * @param buttonComposite
+	 *            TODO
+	 */
 	void handleAllProblems(ButtonComposite buttonComposite, List<KeyAndProblem> problems);
 
 	/** These are the problems that don't have a key (i.e. key is null) */
@@ -24,7 +29,9 @@ public interface IFormProblemHandler {
 		}
 
 		/** global problems are reported in this buttons tooltip */
-		public static IFormProblemHandler buttonTooltipProblemHandler(final String buttonKey) {
+		public static IFormProblemHandler buttonTooltipProblemHandler(final String buttonKey, final ImageRegistry imageRegistry) {
+			assert imageRegistry.get(ImageConstants.exclamationAction) != null;
+			assert imageRegistry.get(ImageConstants.exclamationInaction) != null;
 			return new IFormProblemHandler() {
 				public void handleGlobalProblems(ButtonComposite buttonComposite, List<String> globalProblems) {
 				}
@@ -38,8 +45,8 @@ public interface IFormProblemHandler {
 					Button button = (Button) buttonComposite.getButton(buttonKey);
 					button.setToolTipText(problemText);
 					boolean problem = problems.size() > 0;
-					Color color = button.getDisplay().getSystemColor(problem ? SWT.COLOR_RED : SWT.COLOR_WIDGET_BACKGROUND);
-					button.setBackground(color);
+					Image image = problem ? imageRegistry.get(ImageConstants.exclamationAction) : imageRegistry.get(ImageConstants.exclamationInaction);
+					button.setImage(image);
 					button.setEnabled(problem);
 				}
 			};

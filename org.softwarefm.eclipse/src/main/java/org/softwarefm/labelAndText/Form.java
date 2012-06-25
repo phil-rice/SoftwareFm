@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
@@ -21,6 +22,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Text;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.constants.ImageConstants;
 import org.softwarefm.eclipse.constants.SwtConstants;
 import org.softwarefm.eclipse.constants.SwtErrorMessages;
 import org.softwarefm.eclipse.constants.TextKeys;
@@ -90,7 +92,7 @@ public class Form extends Composite implements IGetTextWithKey {
 			final Label label;
 			final Text text;
 
-			public LabelAndTextComposite(Composite parent, int style) {
+			public LabelAndTextComposite(Composite parent, int style, ImageRegistry imageRegistry) {
 				super(parent, style);
 				label = new Label(this, SWT.NULL);
 				text = new Text(this, SWT.NULL);
@@ -129,12 +131,12 @@ public class Form extends Composite implements IGetTextWithKey {
 		}
 
 		@Override
-		protected Composite makeComposite(Composite parent) {
-			return new LabelAndTextComposite(parent, SWT.NULL);
+		protected Composite makeComposite(Composite parent, ImageRegistry imageRegistry) {
+			return new LabelAndTextComposite(parent, SWT.NULL, imageRegistry);
 		}
 
-		public LabelAndText(Composite parent, String title) {
-			super(parent);
+		public LabelAndText(Composite parent, ImageRegistry imageRegistry, String title) {
+			super(parent, imageRegistry);
 			composite = (LabelAndTextComposite) getComposite();
 			composite.label.setText(title);
 		}
@@ -164,7 +166,7 @@ public class Form extends Composite implements IGetTextWithKey {
 		setLayout(new LabelAndTextHolderLayout());
 		IResourceGetter resourceGetter = container.resourceGetter;
 		for (String key : keys)
-			new LabelAndText(this, IResourceGetter.Utils.getOrException(resourceGetter, key)).addModifyListener(new ModifyListener() {
+			new LabelAndText(this, container.imageRegistry, IResourceGetter.Utils.getOrException(resourceGetter, key)).addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent event) {
 					updateButtonStatus();
 				}
@@ -224,7 +226,9 @@ public class Form extends Composite implements IGetTextWithKey {
 				IResourceGetter resourceGetter = new ResourceGetterMock(//
 						TextKeys.btnSharedOk, "OK", TextKeys.btnSharedCancel, "Cancel",//
 						"one", "One", "two", "Two", "three", "Three", "four", "Four", "five", "Five", "six", "Six", "seven", "Seven");
-				SoftwareFmContainer<?> container = SoftwareFmContainer.makeForTests(resourceGetter);
+				SoftwareFmContainer<?> container = SoftwareFmContainer.makeForTests(from.getDisplay(),resourceGetter);
+				ImageRegistry imageRegistry = new ImageRegistry(from.getDisplay());
+				ImageConstants.initializeImageRegistry(from.getDisplay(), imageRegistry);
 				Form form = new Form(from, SWT.BORDER, container, IButtonConfigurator.Utils.okCancel(Runnables.sysout("ok"), Runnables.sysout("cancel")), IFormProblemHandler.Utils.sysoutHandler(), "one", "two", "three", "four", "five", "six", "seven");
 				return form;
 			}

@@ -44,7 +44,7 @@ public class CodeComposite extends SoftwareFmComposite {
 	public void dispose() {
 		System.out.println("CodeComposite dispose called");
 		super.dispose();
-	};
+	}
 
 	public String getUrl() {
 		return url;

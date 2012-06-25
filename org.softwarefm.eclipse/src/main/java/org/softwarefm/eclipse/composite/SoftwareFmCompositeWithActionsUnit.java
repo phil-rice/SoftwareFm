@@ -9,6 +9,7 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Shell;
 import org.softwarefm.eclipse.SoftwareFmContainer;
@@ -60,13 +61,15 @@ public class SoftwareFmCompositeWithActionsUnit extends HasComposite {
 					IUrlStrategy urlStrategy = IUrlStrategy.Utils.withActionBarState(rawUrlStrategy, state);
 					ITemplateStore templateStore = ITemplateStore.Utils.templateStore(rawUrlStrategy);
 					final IMakeLink makeLink = IMakeLink.Utils.makeLink(rawUrlStrategy, templateStore, artifactDataCache);
+					ImageRegistry imageRegistry = new ImageRegistry(parent.getDisplay());
 					SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
 							manager, //
 							IMaven.Utils.importPomWithSysouts(makeLink, manager),//
 							IMakeLink.Utils.manuallyImportWhenNotInEclipse(makeLink, manager),//
 							templateStore, //
 							artifactDataCache,//
-							state);
+							state,//
+							imageRegistry);
 					SoftwareFmCompositeWithActionsUnit softwareFmComposite = new SoftwareFmCompositeWithActionsUnit(parent, container, state);
 					return softwareFmComposite;
 				}

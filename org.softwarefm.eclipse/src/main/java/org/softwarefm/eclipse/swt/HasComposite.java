@@ -1,5 +1,6 @@
 package org.softwarefm.eclipse.swt;
 
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -9,11 +10,14 @@ public class HasComposite implements IHasComposite, IDispose {
 
 	private final Composite content;
 
+	public HasComposite(Composite parent, ImageRegistry imageRegistry) {
+		this.content = makeComposite(parent, imageRegistry);
+	}
 	public HasComposite(Composite parent) {
-		this.content = makeComposite(parent);
+		this(parent, null);
 	}
 
-	protected Composite makeComposite(Composite parent) {
+	protected Composite makeComposite(Composite parent, ImageRegistry imageRegistry) {
 		return Swts.newCompositeWithDispose(parent, SWT.NULL, getClass().getSimpleName(), this);
 	}
 

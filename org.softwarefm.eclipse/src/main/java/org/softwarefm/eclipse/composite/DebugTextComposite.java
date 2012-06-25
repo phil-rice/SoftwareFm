@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.FocusEvent;
@@ -26,7 +27,6 @@ import org.softwarefm.utilities.strings.Strings;
 public class DebugTextComposite extends SoftwareFmComposite {
 
 	private TabFolder tabFolder;
-	private final SoftwareFmContainer<?> container;
 	private StyledText listenersText;
 	private StyledText viewsText;
 	private Callable<Map<Object, List<Object>>> viewGetter;
@@ -34,7 +34,6 @@ public class DebugTextComposite extends SoftwareFmComposite {
 
 	public DebugTextComposite(Composite parent, final SoftwareFmContainer<?> container) {
 		super(parent, container);
-		this.container = container;
 		TabItem listenerItem = new TabItem(tabFolder, SWT.NULL);
 		final StyledText listenerText = new StyledText(tabFolder, SWT.WRAP | SWT.READ_ONLY);
 		listenerItem.setText("Listener");
@@ -143,7 +142,7 @@ public class DebugTextComposite extends SoftwareFmComposite {
 	}
 
 	@Override
-	protected Composite makeComposite(Composite parent) {
+	protected Composite makeComposite(Composite parent, ImageRegistry imageRegistry) {
 		return tabFolder = new TabFolder(parent, SWT.NULL);
 	}
 

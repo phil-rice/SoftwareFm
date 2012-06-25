@@ -4,13 +4,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Text;
 import org.softwarefm.eclipse.SoftwareFmContainer;
+import org.softwarefm.eclipse.constants.ImageConstants;
 import org.softwarefm.eclipse.constants.TextKeys;
 import org.softwarefm.eclipse.swt.Swts;
 import org.softwarefm.eclipse.tests.SwtTest;
@@ -59,6 +62,20 @@ public class FormTest extends SwtTest {
 		assertTrue(form.getButton(TextKeys.btnSharedCancel).isEnabled());
 	}
 
+	public void testImages() {
+		ImageRegistry imageRegistry = new ImageRegistry(display);
+		ImageConstants.initializeImageRegistry(display, imageRegistry);
+		IFormProblemHandler problemHandler = IFormProblemHandler.Utils.buttonTooltipProblemHandler(TextKeys.btnSharedProblems, imageRegistry);
+		form = new Form(shell, SWT.NULL, container, buttonConfigurator, problemHandler, keys);
+		Button problemButton = (Button) form.getButton(TextKeys.btnSharedProblems);
+		assertEquals(imageRegistry.get(ImageConstants.exclamationAction), problemButton.getImage());
+
+		ok.canExecute = noProblemList;
+		form.updateButtonStatus();
+
+		assertEquals(imageRegistry.get(ImageConstants.exclamationInaction), problemButton.getImage());
+	}
+
 	public void testSetTextCausesButtonStatusToChange() {
 		for (Text text : texts) {
 			assertFalse(form.getButton(TextKeys.btnSharedOk).isEnabled());
@@ -82,7 +99,7 @@ public class FormTest extends SwtTest {
 					if (gChild instanceof Text)
 						texts.add((Text) gChild);
 				}
-		assertEquals(3, texts.size());
+		assertEquals(4, texts.size());
 		return texts;
 	}
 
@@ -140,6 +157,7 @@ public class FormTest extends SwtTest {
 		assertEquals(Collections.emptyList(), Lists.getOnly(memoryHandler.globalProblems));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testProblemsWithNullKeyAreGlobalProblems() {
 		ok.canExecute = groupId12ArtifactIdAndGlobal1Global2ProblemList;
 		form.updateButtonStatus();
@@ -186,10 +204,11 @@ public class FormTest extends SwtTest {
 		super.setUp();
 		ok = new ButtonExecutorMock(TextKeys.btnSharedOk, groupIdProblemList);
 		cancel = new ButtonExecutorMock(TextKeys.btnSharedCancel, noProblemList);
-		container = SoftwareFmContainer.makeForTests();
-		buttonConfigurator = IButtonConfigurator.Utils.make(ok, cancel);
-		keys = new String[] { TextKeys.keyManualImportGroupId, TextKeys.keyManualImportArtifactId, TextKeys.keyManualImportVersion };
-		memoryHandler = IFormProblemHandler.Utils.memoryHandler();
+		ButtonExecutorMock problems = new ButtonExecutorMock(TextKeys.btnSharedProblems, noProblemList);
+		container = SoftwareFmContainer.makeForTests(display);
+		buttonConfigurator = IButtonConfigurator.Utils.make(ok, cancel, problems);
+		keys = new String[] { TextKeys.keyManualImportGroupId, TextKeys.keyManualImportArtifactId, TextKeys.keyManualImportVersion, TextKeys.btnSharedProblems };
+		memoryHandler= IFormProblemHandler.Utils.memoryHandler();
 		form = new Form(shell, SWT.NULL, container, buttonConfigurator, memoryHandler, keys);
 		texts = getTexts();
 		groupIdText = texts.get(0);

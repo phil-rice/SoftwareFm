@@ -14,7 +14,7 @@ public class ViewsTest extends SwtTest {
 	}
 
 	private <C extends SoftwareFmComposite> void checkView(SoftwareFmView<C> view) {
-		SoftwareFmContainer<Object> container = SoftwareFmContainer.makeForTests();
+		SoftwareFmContainer<Object> container = SoftwareFmContainer.makeForTests(display);
 		C panel = view.makeSoftwareFmComposite(shell, container);
 		assertNotNull(panel);
 

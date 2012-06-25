@@ -9,6 +9,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
@@ -24,6 +25,7 @@ import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.actions.SfmActionState;
 import org.softwarefm.eclipse.cache.IArtifactDataCache;
 import org.softwarefm.eclipse.composite.SoftwareFmComposite;
+import org.softwarefm.eclipse.constants.ImageConstants;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.IArtifactStrategy;
@@ -99,6 +101,12 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return plugin == null ? plugin = new SoftwareFmActivator() : plugin;
 	}
 
+	@Override
+	protected void initializeImageRegistry(ImageRegistry reg) {
+		super.initializeImageRegistry(reg);
+		ImageConstants.initializeImageRegistry(getDisplay(), reg);
+	}
+
 	public static SoftwareFmActivator getDefault() {
 		return plugin;
 	}
@@ -109,8 +117,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 
 	public ICallback2<Object, String> getLogger() {
 		return new ICallback2<Object, String>() {
-
-			@Override
 			public void process(Object arg0, String arg1) throws Exception {
 				if (logger != null)
 					logger.process(arg0, arg1);
@@ -192,7 +198,8 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			MavenImportJob mavenImport = new MavenImportJob(maven, makeLink, resourceGetter, selectionBindingManager);
 			ManualImportJob manualImport = new ManualImportJob(makeLink, resourceGetter, selectionBindingManager);
 			ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
-			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState()) : container;
+			ImageRegistry imageRegistry = SoftwareFmActivator.getDefault().getImageRegistry();
+			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState(), imageRegistry) : container;
 		}
 	}
 
@@ -234,7 +241,6 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			executor = null;
 			if (displayForTests == null)
 				Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
-					@Override
 					public void process(ISelectionService t) throws Exception {
 						t.removePostSelectionListener(selectionListener);
 					}

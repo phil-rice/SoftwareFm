@@ -25,9 +25,11 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 	protected final IResourceGetter resourceGetter;
 	protected final IUrlStrategy urlStrategy;
 	protected ICallback2<Object, String> logger;
+	protected final SoftwareFmContainer<?> container;
 
 	public SoftwareFmComposite(Composite parent, SoftwareFmContainer<?> container) {
 		super(parent);
+		this.container = container;
 		this.selectionBindingManager = container.selectedBindingManager;
 		this.resourceGetter = container.resourceGetter;
 		urlStrategy = container.urlStrategy;

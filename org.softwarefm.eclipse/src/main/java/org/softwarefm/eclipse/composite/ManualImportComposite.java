@@ -40,6 +40,7 @@ final class ManualImportComposite extends TextAndFormComposite {
 			@Override
 			public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
 				ManualImportComposite.this.artifactData = artifactData;
+				fileAndDigest = artifactData.fileAndDigest;
 				setText(unknownDigestMsg(TextKeys.msgManualImportArtifactDetermined, artifactData.fileAndDigest));
 				setText(TextKeys.keyManualImportGroupId, artifactData.groupId);
 				setText(TextKeys.keyManualImportArtifactId, artifactData.artifactId);
@@ -99,7 +100,7 @@ final class ManualImportComposite extends TextAndFormComposite {
 	
 	@Override
 	protected IFormProblemHandler makeProblemHandler() {
-		return IFormProblemHandler.Utils.buttonTooltipProblemHandler(TextKeys.btnSharedProblems);
+		return IFormProblemHandler.Utils.buttonTooltipProblemHandler(TextKeys.btnSharedProblems, container.imageRegistry);
 	}
 
 	@Override

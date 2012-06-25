@@ -9,14 +9,17 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.actions.SfmActionState;
 import org.softwarefm.eclipse.cache.IArtifactDataCache;
+import org.softwarefm.eclipse.constants.ImageConstants;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.IHasSelectionBindingManager;
@@ -46,7 +49,7 @@ public class SoftwareFmCompositeUnit {
 		}
 
 		@Override
-		protected Composite makeComposite(Composite parent) {
+		protected Composite makeComposite(Composite parent, ImageRegistry imageRegistry) {
 			return tabFolder = new TabFolder(parent, SWT.NULL);
 		}
 
@@ -66,7 +69,7 @@ public class SoftwareFmCompositeUnit {
 		try {
 			Swts.Show.xUnit(title, new File("src/test/resources/org/softwarefm/eclipse/composite"), "dat", new ISituationListAndBuilder<Holder, String>() {
 				public Holder makeChild(Composite parent) throws Exception {
-					SoftwareFmContainer<Map<String, Object>> container = makeContainer(threadingPool);
+					SoftwareFmContainer<Map<String, Object>> container = makeContainer(threadingPool, parent.getDisplay());
 					Holder holder = new Holder(parent, container.selectedBindingManager);
 					for (IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> creator : creators) {
 						SoftwareFmComposite softwareFmComposite = Functions.call(creator, holder.getComposite(), container);
@@ -134,7 +137,7 @@ public class SoftwareFmCompositeUnit {
 		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), creators);
 	}
 
-	public static SoftwareFmContainer<Map<String, Object>> makeContainer(final ExecutorService threadingPool) {
+	public static SoftwareFmContainer<Map<String, Object>> makeContainer(final ExecutorService threadingPool, Display display) {
 		final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay());
 		IArtifactDataCache artifactDataCache = IArtifactDataCache.Utils.artifactDataCache();
 		SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>> manager = new SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>>(//
@@ -146,13 +149,16 @@ public class SoftwareFmCompositeUnit {
 		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
 		ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
 		final IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, templateStore, artifactDataCache);
+		ImageRegistry imageRegistry = new ImageRegistry(display);
+		ImageConstants.initializeImageRegistry(display, imageRegistry);
 		SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
 				manager, //
 				IMaven.Utils.importPomWithSysouts(makeLink, manager),//
 				IMakeLink.Utils.manuallyImportWhenNotInEclipse(makeLink, manager),//
 				templateStore, //
 				artifactDataCache, //
-				new SfmActionState());
+				new SfmActionState(),//
+				imageRegistry);
 		return container;
 	}
 }

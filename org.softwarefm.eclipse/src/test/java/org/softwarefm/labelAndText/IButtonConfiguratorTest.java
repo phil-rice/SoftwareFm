@@ -16,19 +16,19 @@ public class IButtonConfiguratorTest extends SwtTest {
 
 	public void testOk() {
 		CountRunnable ok = Runnables.count();
-		IButtonConfigurator.Utils.ok(ok).configure( container, IButtonCreator.Utils.creator(shell, container.resourceGetter));
+		IButtonConfigurator.Utils.ok(ok).configure(container, IButtonCreator.Utils.creator(shell, container.resourceGetter));
 		Control[] children = shell.getChildren();
 		assertEquals(1, children.length);
-		checkButton((Button) children[0], ok,TextKeys.btnSharedOk);
+		checkButton((Button) children[0], ok, TextKeys.btnSharedOk);
 	}
 
 	public void testOkCancel() {
 		CountRunnable ok = Runnables.count();
 		CountRunnable cancel = Runnables.count();
-		IButtonConfigurator.Utils.okCancel(ok, cancel).configure( container, IButtonCreator.Utils.creator(shell, container.resourceGetter));
+		IButtonConfigurator.Utils.okCancel(ok, cancel).configure(container, IButtonCreator.Utils.creator(shell, container.resourceGetter));
 		Control[] children = shell.getChildren();
 		assertEquals(2, children.length);
-		checkButton((Button) children[0], cancel,TextKeys.btnSharedCancel);
+		checkButton((Button) children[0], cancel, TextKeys.btnSharedCancel);
 		checkButton((Button) children[1], ok, TextKeys.btnSharedOk);
 	}
 
@@ -43,6 +43,6 @@ public class IButtonConfiguratorTest extends SwtTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		container = SoftwareFmContainer.makeForTests(new ResourceGetterMock(TextKeys.btnSharedOk, "OkName", TextKeys.btnSharedCancel, "CancelName"));
+		container = SoftwareFmContainer.makeForTests(display, new ResourceGetterMock(TextKeys.btnSharedOk, "OkName", TextKeys.btnSharedCancel, "CancelName"));
 	}
 }

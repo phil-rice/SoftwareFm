@@ -8,6 +8,7 @@ package org.softwarefm.eclipse.swt;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StyledText;
@@ -29,7 +30,7 @@ public class SituationListAnd<T extends IHasControl, V> extends HasComposite {
 	private SashForm sashForm;
 
 	@Override
-	protected Composite makeComposite(Composite parent) {
+	protected Composite makeComposite(Composite parent, ImageRegistry imageRegistry) {
 		return sashForm = Swts.newSashForm(parent, SWT.HORIZONTAL, getClass().getSimpleName());
 	}
 

@@ -3,12 +3,14 @@ package org.softwarefm.eclipse.composite;
 import java.io.File;
 
 import org.easymock.EasyMock;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.actions.SfmActionState;
 import org.softwarefm.eclipse.cache.IArtifactDataCache;
-import org.softwarefm.eclipse.jdtBinding.CodeData;
+import org.softwarefm.eclipse.constants.ImageConstants;
 import org.softwarefm.eclipse.jdtBinding.ArtifactData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
 import org.softwarefm.eclipse.selection.internal.SelectedArtifactSelectionManager;
@@ -64,13 +66,16 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
 		initialListeners = listenerManager.getListeners().size();
 		assertEquals(0, initialListeners);
+		ImageRegistry imageRegistry = new ImageRegistry(display);
+		ImageConstants.initializeImageRegistry(display, imageRegistry);
 		panel = makePanel(shell, SoftwareFmContainer.make(urlStrategy, //
 				selectedArtifactSelectionManager,//
 				ICallback2.Utils.<String, Integer> exception("ImportPom shouldnt be used"),//
 				ICallback2.Utils.<ArtifactData, Integer> exception("ImportPom shouldnt be used"),//
 				ITemplateStore.Utils.templateStore(urlStrategy), //
 				IArtifactDataCache.Utils.artifactDataCache(),//
-				new SfmActionState()));
+				new SfmActionState(),//
+				imageRegistry));
 	}
 
 	@Override
