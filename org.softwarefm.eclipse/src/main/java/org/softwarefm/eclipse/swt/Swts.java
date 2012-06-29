@@ -312,7 +312,7 @@ public class Swts {
 			});
 		}
 
-		public static <T extends IHasControl, V> void xUnit(String title, final ISituationListAndBuilder<T,V> builder, final Map<String, V> situationMap) {
+		public static <T extends IHasControl, V> void xUnit(String title, final ISituationListAndBuilder<T, V> builder, final Map<String, V> situationMap) {
 			Swts.Show.display(title, new IFunction1<Composite, Composite>() {
 				public Composite apply(Composite from) throws Exception {
 					final Callable<? extends Iterable<String>> situationsCallable = new Callable<Iterable<String>>() {
@@ -320,7 +320,7 @@ public class Swts {
 							return situationMap.keySet();
 						}
 					};
-					final SituationListAnd<T, V> result = new SituationListAnd<T,V>(from, situationsCallable, builder);
+					final SituationListAnd<T, V> result = new SituationListAnd<T, V>(from, situationsCallable, builder);
 					result.addListener(new ISituationListListener<T>() {
 						public void selected(T hasControl, String selectedItem) throws Exception {
 							V value = situationMap.get(selectedItem);
@@ -569,6 +569,12 @@ public class Swts {
 				addGrabVerticalToGridData(lastChild, true);
 			}
 
+		}
+
+		public static void oneRowWithControlGrabbingWidth(Composite composite, Control control) {
+			Control[] children = composite.getChildren();
+			composite.setLayout(new GridLayout(children.length, false));
+			control.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		}
 
 	}
@@ -1338,6 +1344,25 @@ public class Swts {
 			Assert.assertEquals(strings[i], item.getText(i));
 		Assert.assertEquals(columns.length, strings.length);
 
+	}
+
+	public static void addItemToStartOfCombo(Combo combo, String value, int maxSize) {
+		combo.setText(value);
+		String[] items = combo.getItems();
+		boolean found = false;
+		for (int i = 0; i < items.length && !found; i++) {
+			if (items[i].equals(value))
+				found = true;
+		}
+		if (!found) {
+			if (items.length >= maxSize) {
+				System.arraycopy(items, 0, items, 1, items.length - 1);
+				items[0] = value;
+				combo.setItems(items);
+			} else {
+				combo.add(value, 0);
+			}
+		}
 	}
 
 }

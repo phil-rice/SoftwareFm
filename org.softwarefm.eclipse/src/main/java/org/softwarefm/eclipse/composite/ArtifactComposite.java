@@ -62,7 +62,7 @@ public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
 
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() + " (" + getTextOrUrl() + ") " + getBrowserForTest();
+		return getClass().getSimpleName() + " (" + getTextOrUrl() + ")";
 	}
 
 	public static void main(String[] args) {
@@ -74,5 +74,6 @@ public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
 			}
 		});
 	}
+
 
 }
