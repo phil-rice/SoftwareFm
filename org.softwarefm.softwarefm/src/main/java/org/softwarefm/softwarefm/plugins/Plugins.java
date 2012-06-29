@@ -9,6 +9,7 @@ import java.util.List;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.ISelectionService;
+import org.eclipse.ui.IWindowListener;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
@@ -16,8 +17,15 @@ import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.exceptions.WrappedException;
 
+
 public class Plugins {
 
+	public static void addWindowListener(IWindowListener listener){
+		IWorkbench workbench = PlatformUI.getWorkbench();
+		workbench.addWindowListener(listener);
+		
+	}
+	
 	public static void walkSelectionServices(ICallback<ISelectionService> callback) {
 		try {
 			IWorkbench workbench = PlatformUI.getWorkbench();

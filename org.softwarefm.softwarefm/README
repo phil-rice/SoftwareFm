@@ -27,3 +27,4 @@ RELEASE NOTES:
 1.7.7: Attempting to fix issue in which code didn't work on mac
 1.7.8: No longer shipping with eclipse files
 1.7.10: Error messages in forms now give more feedback
+1.7.11: Browser has url line and buttons, selection story now works when windows opened / closed

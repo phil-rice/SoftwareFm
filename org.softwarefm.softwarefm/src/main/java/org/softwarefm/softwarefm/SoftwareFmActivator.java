@@ -11,12 +11,10 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.text.ITextSelection;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -41,6 +39,7 @@ import org.softwarefm.eclipse.url.IUrlStrategy;
 import org.softwarefm.softwarefm.jobs.ManualImportJob;
 import org.softwarefm.softwarefm.jobs.MavenImportJob;
 import org.softwarefm.softwarefm.plugins.Plugins;
+import org.softwarefm.softwarefm.plugins.WorkbenchWindowListenerManager;
 import org.softwarefm.softwarefm.selection.internal.EclipseSelectedBindingStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.callbacks.ICallback2;
@@ -147,6 +146,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		return Collections.unmodifiableMap(views);
 	}
 
+	@SuppressWarnings("unused")
 	private ISelectedBindingManager<ITextSelection> makeSelectionBindingManager() {
 		synchronized (lock) {
 			if (selectionBindingManager == null) {
@@ -156,23 +156,46 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				ISelectedBindingStrategy<ITextSelection, Expression> strategy = new EclipseSelectedBindingStrategy(projectStrategy);
 				ExecutorService executor = getExecutorService();
 				selectionBindingManager = new SelectedArtifactSelectionManager<ITextSelection, Expression>(listenerManager, strategy, executor, getArtifactDataCache(), ICallback.Utils.sysErrCallback());
-				selectionListener = new ISelectionListener() {
-					@Override
-					public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-						System.out.println("Selection occured");
-						if (selection instanceof ITextSelection)
-							selectionBindingManager.selectionOccured((ITextSelection) selection);
-						else
-							selectionBindingManager.selectionOccured(null);
-					}
-				};
-				if (displayForTests == null)
-					Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
-						@Override
-						public void process(ISelectionService t) throws Exception {
-							t.addPostSelectionListener(selectionListener);
-						}
-					});
+				new WorkbenchWindowListenerManager(selectionBindingManager);
+//				selectionListener = new ISelectionListener() {
+//					@Override
+//					public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+//						System.out.println("Selection occured");
+//						if (selection instanceof ITextSelection)
+//							selectionBindingManager.selectionOccured((ITextSelection) selection);
+//						else
+//							selectionBindingManager.selectionOccured(null);
+//					}
+//				};
+//				if (displayForTests == null)
+//					Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
+//						@Override
+//						public void process(ISelectionService t) throws Exception {
+//							t.addPostSelectionListener(selectionListener);
+//						}
+//					});
+//				Plugins.addWindowListener(new IWindowListener() {
+//					
+//					@Override
+//					public void windowOpened(IWorkbenchWindow window) {
+//						System.out.println("Window opened");
+//					}
+//					
+//					@Override
+//					public void windowDeactivated(IWorkbenchWindow window) {
+//						System.out.println("Window deactivated");
+//					}
+//					
+//					@Override
+//					public void windowClosed(IWorkbenchWindow window) {
+//						System.out.println("Window closed");
+//					}
+//					
+//					@Override
+//					public void windowActivated(IWorkbenchWindow window) {
+//						System.out.println("Window activated");
+//					}
+//				});
 			}
 
 		}
