@@ -4,11 +4,13 @@ import java.io.File;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeRoot;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Expression;
@@ -36,6 +38,7 @@ import org.softwarefm.eclipse.selection.FileAndDigest;
 import org.softwarefm.eclipse.selection.IArtifactStrategy;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
 import org.softwarefm.utilities.collections.Files;
+import org.softwarefm.utilities.exceptions.WrappedException;
 
 /** This file hopefully contains all the eclipse specific stuff. */
 
@@ -63,6 +66,20 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 				if (typeRoot instanceof ICompilationUnit) {
 					ICompilationUnit cu = (ICompilationUnit) typeRoot;
 					CompilationUnit root = SharedASTProvider.getAST(cu, SharedASTProvider.WAIT_NO, null);
+					if (root != null) {
+						ASTNode node = NodeFinder.perform(root, textSelection.getOffset(), textSelection.getLength());
+						if (node instanceof Expression)
+							return (Expression) node;
+					}
+				} else if (typeRoot instanceof IClassFile) {
+					IClassFile cf = (IClassFile) typeRoot;
+					try {
+						IJavaElement elementAt = cf.getElementAt(textSelection.getOffset());
+						System.out.println(elementAt);
+					} catch (JavaModelException e) {
+						throw WrappedException.wrap(e);
+					}
+					CompilationUnit root = SharedASTProvider.getAST(cf, SharedASTProvider.WAIT_NO, null);
 					if (root != null) {
 						ASTNode node = NodeFinder.perform(root, textSelection.getOffset(), textSelection.getLength());
 						if (node instanceof Expression)
@@ -188,11 +205,10 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 			IJavaElement javaElement = binding.getJavaElement();
 			return javaElement;
 		} catch (Exception e) {
-			//TODO Swalloes exception. Probably want to have a message sent
+			// TODO Swalloes exception. Probably want to have a message sent
 			e.printStackTrace();
 			return null;
 		}
 	}
-
 
 }
