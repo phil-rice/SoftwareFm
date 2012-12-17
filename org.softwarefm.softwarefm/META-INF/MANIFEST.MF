@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Softwarefm
 Bundle-SymbolicName: org.softwarefm.softwarefm; singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.softwarefm.softwarefm.SoftwareFmActivator
+Bundle-Activator: org.softwarefm.softwarefm.SoftwareFmPlugin
 Bundle-Vendor: SoftwareFM
 Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.ui;bundle-version="3.7.0",
@@ -38,7 +38,9 @@ Bundle-ClassPath: .,
  lib/sisu-inject-bean-1.4.2.jar,
  lib/sisu-inject-plexus-1.4.2.jar,
  lib/swt-3.3.0-v3346.jar,
- lib/utilities-0.0.1-SNAPSHOT.jar
+ lib/utilities-0.0.1-SNAPSHOT.jar,
+ lib/miglayout-core-4.2.jar,
+ lib/miglayout-swt-4.2.jar
 Export-Package: org.softwarefm.softwarefm,
  org.softwarefm.softwarefm.action,
  org.softwarefm.softwarefm.jobs,

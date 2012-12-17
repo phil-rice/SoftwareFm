@@ -41,6 +41,8 @@ public interface IHttpClient {
 
 	IHttpClient withEntity(String entity);
 
+	IHttpClient withEntity(byte[] entity);
+
 	IResponse execute();
 
 	public static class Utils {

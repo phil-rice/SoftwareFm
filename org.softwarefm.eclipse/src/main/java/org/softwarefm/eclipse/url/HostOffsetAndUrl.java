@@ -18,9 +18,22 @@ public class HostOffsetAndUrl {
 		this.url = Strings.url(fragments);
 	}
 
+	public String getOffsetAndUrl() {
+		return Strings.url(offset, url);
+	}
+
+	public URL getHttpUrl() {
+		try {
+			return new URL(getHttpHostAndUrl());
+		} catch (MalformedURLException e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
 	public String getHostAndUrl() {
 		return Strings.url(host, offset, url);
 	}
+
 	public String getHttpHostAndUrl() {
 		return "http://" + Strings.url(host, offset, url);
 	}
@@ -65,18 +78,6 @@ public class HostOffsetAndUrl {
 		} else if (!url.equals(other.url))
 			return false;
 		return true;
-	}
-
-	public String getOffsetAndUrl() {
-		return Strings.url(offset, url);
-	}
-
-	public URL getHttpUrl() {
-		try {
-			return new URL(getHttpHostAndUrl());
-		} catch (MalformedURLException e) {
-			throw WrappedException.wrap(e);
-		}
 	}
 
 }

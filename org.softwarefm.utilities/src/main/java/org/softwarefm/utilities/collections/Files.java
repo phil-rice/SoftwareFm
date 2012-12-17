@@ -363,6 +363,26 @@ public class Files {
 			throw WrappedException.wrap(e);
 		}
 	}
+	public static void setTextSafely(File file, String text) {
+		try {
+			File canonicalFile = file.getCanonicalFile();
+			File safeFile = new File(canonicalFile+"$$tmp");
+			FileWriter fileWriter = new FileWriter(safeFile);
+			BufferedWriter out = new BufferedWriter(fileWriter);
+			try {
+				out.write(text);
+			} finally {
+				out.close();
+				fileWriter.close();
+				file.delete();
+				boolean canDo = safeFile.renameTo(file);
+				if (!canDo)
+					setText(file, text);
+			}
+		} catch (IOException e) {
+			throw WrappedException.wrap(e);
+		}
+	}
 
 	public static File downloadAndPutIndirectory(String url, File directory) {
 		directory.mkdirs();

@@ -442,6 +442,19 @@ public class Swts {
 			return label;
 		}
 
+		public static Button makeMigCheckboxButton(Composite parent, String text, String constraint){
+			Button button = new Button(parent, SWT.CHECK);
+			button.setText(text);
+			button.setLayoutData(constraint);
+			return button;
+		}
+		public static Button makeMigPushButton(Composite parent, String text, String constraint){
+			Button button = new Button(parent, SWT.PUSH);
+			button.setText(text);
+			button.setLayoutData(constraint);
+			return button;
+		}
+		
 		public static Button makeRadioButton(Composite parent, IResourceGetter resourceGetter, String key, final Runnable runnable) {
 			String title = IResourceGetter.Utils.getOrException(resourceGetter, key);
 			return makeRadioButton(parent, title, runnable);

@@ -22,10 +22,16 @@ public class FilesTest extends TestCase {
 		checkDefaultMimeType("application/java-archive", "abc.jar");
 		checkDefaultMimeType("text/plain", "abc.unknown");
 	}
+	
+	public void testSetFileSafelySavesFileIfNoIssues(){
+		fail();
+	}
+	public void testSetFileSafelyDoesntDamageFileIfCannotSave(){
+		fail();
+	}
 
 	private void checkDefaultMimeType(String expected, String fileName) {
 		assertEquals(expected, Files.defaultMimeType(fileName));
-
 	}
 
 	@Test

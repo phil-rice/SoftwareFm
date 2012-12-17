@@ -24,18 +24,26 @@ import org.softwarefm.eclipse.actions.SfmActionState;
 import org.softwarefm.eclipse.cache.IArtifactDataCache;
 import org.softwarefm.eclipse.composite.SoftwareFmComposite;
 import org.softwarefm.eclipse.constants.ImageConstants;
+import org.softwarefm.eclipse.jdtBinding.ArtifactData;
+import org.softwarefm.eclipse.jdtBinding.CodeData;
 import org.softwarefm.eclipse.link.IMakeLink;
 import org.softwarefm.eclipse.maven.IMaven;
 import org.softwarefm.eclipse.selection.IArtifactStrategy;
 import org.softwarefm.eclipse.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.eclipse.selection.ISelectedBindingManager;
 import org.softwarefm.eclipse.selection.ISelectedBindingStrategy;
+import org.softwarefm.eclipse.selection.SelectedBindingAdapter;
 import org.softwarefm.eclipse.selection.internal.SelectedArtifactSelectionManager;
 import org.softwarefm.eclipse.selection.internal.SoftwareFmArtifactHtmlRipper;
 import org.softwarefm.eclipse.selection.internal.SoftwareFmArtifactStrategy;
 import org.softwarefm.eclipse.selection.internal.SwtThreadSelectedBindingAggregator;
 import org.softwarefm.eclipse.templates.ITemplateStore;
+import org.softwarefm.eclipse.url.HostOffsetAndUrl;
 import org.softwarefm.eclipse.url.IUrlStrategy;
+import org.softwarefm.eclipse.usage.IUsage;
+import org.softwarefm.eclipse.usage.IUsageReporter;
+import org.softwarefm.eclipse.usage.UsageConstants;
+import org.softwarefm.eclipse.usage.internal.Usage;
 import org.softwarefm.softwarefm.jobs.ManualImportJob;
 import org.softwarefm.softwarefm.jobs.MavenImportJob;
 import org.softwarefm.softwarefm.plugins.Plugins;
@@ -44,6 +52,7 @@ import org.softwarefm.softwarefm.selection.internal.EclipseSelectedBindingStrate
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.http.IHttpClient;
 import org.softwarefm.utilities.maps.Maps;
 import org.softwarefm.utilities.resources.IResourceGetter;
@@ -51,11 +60,11 @@ import org.softwarefm.utilities.resources.IResourceGetter;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class SoftwareFmActivator extends AbstractUIPlugin {
+public class SoftwareFmPlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = SoftwareFmActivator.class.getPackage().getName();
+	public static final String PLUGIN_ID = SoftwareFmPlugin.class.getPackage().getName();
 
-	private static SoftwareFmActivator plugin;
+	private static SoftwareFmPlugin plugin;
 
 	private static Display displayForTests;
 	private final Object lock = new Object();
@@ -80,11 +89,20 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 
 	private ICallback2<Object, String> logger;
 
+	private IUsage usage;
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
 		views = Maps.newMap();
+		new Thread() {
+			@Override
+			public void run() {
+				setName("Initialising Selection Binding Manager");
+				getSelectionBindingManager();
+			}
+		}.start();
 	}
 
 	@Override
@@ -95,9 +113,9 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		dispose();
 	}
 
-	public static SoftwareFmActivator makeActivatorForTests(Display display) {
+	public static SoftwareFmPlugin makeActivatorForTests(Display display) {
 		displayForTests = display;
-		return plugin == null ? plugin = new SoftwareFmActivator() : plugin;
+		return plugin == null ? plugin = new SoftwareFmPlugin() : plugin;
 	}
 
 	@Override
@@ -106,8 +124,12 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 		ImageConstants.initializeImageRegistry(getDisplay(), reg);
 	}
 
-	public static SoftwareFmActivator getDefault() {
+	public static SoftwareFmPlugin getDefault() {
 		return plugin;
+	}
+
+	public boolean recordUsage() {
+		return getPreferenceStore().getBoolean(UsageConstants.recordUsageKey);
 	}
 
 	public void setLogger(ICallback2<Object, String> logger) {
@@ -131,7 +153,35 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 	}
 
 	public ISelectedBindingManager<ITextSelection> getSelectionBindingManager() {
-		return selectionBindingManager == null ? makeSelectionBindingManager() : selectionBindingManager;
+		return selectionBindingManager == null ? selectionBindingManager = makeSelectionBindingManager() : selectionBindingManager;
+	}
+
+	public IUsage getUsage() {
+		return usage == null ? usage = makeUsage() : usage;
+	}
+
+	private IUsage makeUsage() {
+		synchronized (lock) {
+			final Usage usage = new Usage();
+			final IUsageReporter reporter = IUsageReporter.Utils.reporter();
+			Thread thread = new Thread() {
+				@Override
+				public void run() {
+					while (true) {
+						try {
+							Thread.sleep(UsageConstants.updatePeriod);
+							if (recordUsage())
+								reporter.report(usage);
+						} catch (InterruptedException e) {
+							throw WrappedException.wrap(e);
+						}
+					}
+				}
+			};
+			thread.setName("Usage updater");
+			thread.start();
+			return usage;
+		}
 	}
 
 	public void addView(IViewPart part, SoftwareFmComposite composite) {
@@ -155,47 +205,72 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 				IArtifactStrategy<ITextSelection> projectStrategy = new SoftwareFmArtifactStrategy<ITextSelection>(IHttpClient.Utils.builder(), new SoftwareFmArtifactHtmlRipper(), urlStrategy);
 				ISelectedBindingStrategy<ITextSelection, Expression> strategy = new EclipseSelectedBindingStrategy(projectStrategy);
 				ExecutorService executor = getExecutorService();
-				selectionBindingManager = new SelectedArtifactSelectionManager<ITextSelection, Expression>(listenerManager, strategy, executor, getArtifactDataCache(), ICallback.Utils.sysErrCallback());
+				SelectedArtifactSelectionManager<ITextSelection, Expression> selectionBindingManager = new SelectedArtifactSelectionManager<ITextSelection, Expression>(listenerManager, strategy, executor, getArtifactDataCache(), ICallback.Utils.sysErrCallback());
 				new WorkbenchWindowListenerManager(selectionBindingManager);
-//				selectionListener = new ISelectionListener() {
-//					@Override
-//					public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-//						System.out.println("Selection occured");
-//						if (selection instanceof ITextSelection)
-//							selectionBindingManager.selectionOccured((ITextSelection) selection);
-//						else
-//							selectionBindingManager.selectionOccured(null);
-//					}
-//				};
-//				if (displayForTests == null)
-//					Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
-//						@Override
-//						public void process(ISelectionService t) throws Exception {
-//							t.addPostSelectionListener(selectionListener);
-//						}
-//					});
-//				Plugins.addWindowListener(new IWindowListener() {
-//					
-//					@Override
-//					public void windowOpened(IWorkbenchWindow window) {
-//						System.out.println("Window opened");
-//					}
-//					
-//					@Override
-//					public void windowDeactivated(IWorkbenchWindow window) {
-//						System.out.println("Window deactivated");
-//					}
-//					
-//					@Override
-//					public void windowClosed(IWorkbenchWindow window) {
-//						System.out.println("Window closed");
-//					}
-//					
-//					@Override
-//					public void windowActivated(IWorkbenchWindow window) {
-//						System.out.println("Window activated");
-//					}
-//				});
+				selectionBindingManager.addSelectedArtifactSelectionListener(new SelectedBindingAdapter() {
+
+					@Override
+					public void codeSelectionOccured(CodeData codeData, int selectionCount) {
+						if (codeData.className != null) {
+							HostOffsetAndUrl url = getContainer().urlStrategy.classAndMethodUrl(codeData);
+							IUsage usage = getUsage();
+							usage.selected(url.url);
+						}
+					}
+
+					@Override
+					public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+						HostOffsetAndUrl url = container.urlStrategy.versionUrl(artifactData);
+						IUsage usage = getUsage();
+						usage.selected(url.url);
+					}
+
+					@Override
+					public boolean invalid() {
+						return false;
+					}
+				});
+				return selectionBindingManager;
+				//
+				// selectionListener = new ISelectionListener() {
+				// @Override
+				// public void selectionChanged(IWorkbenchPart part, ISelection selection) {
+				// System.out.println("Selection occured");
+				// if (selection instanceof ITextSelection)
+				// selectionBindingManager.selectionOccured((ITextSelection) selection);
+				// else
+				// selectionBindingManager.selectionOccured(null);
+				// }
+				// };
+				// if (displayForTests == null)
+				// Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
+				// @Override
+				// public void process(ISelectionService t) throws Exception {
+				// t.addPostSelectionListener(selectionListener);
+				// }
+				// });
+				// Plugins.addWindowListener(new IWindowListener() {
+				//
+				// @Override
+				// public void windowOpened(IWorkbenchWindow window) {
+				// System.out.println("Window opened");
+				// }
+				//
+				// @Override
+				// public void windowDeactivated(IWorkbenchWindow window) {
+				// System.out.println("Window deactivated");
+				// }
+				//
+				// @Override
+				// public void windowClosed(IWorkbenchWindow window) {
+				// System.out.println("Window closed");
+				// }
+				//
+				// @Override
+				// public void windowActivated(IWorkbenchWindow window) {
+				// System.out.println("Window activated");
+				// }
+				// });
 			}
 
 		}
@@ -221,7 +296,7 @@ public class SoftwareFmActivator extends AbstractUIPlugin {
 			MavenImportJob mavenImport = new MavenImportJob(maven, makeLink, resourceGetter, selectionBindingManager);
 			ManualImportJob manualImport = new ManualImportJob(makeLink, resourceGetter, selectionBindingManager);
 			ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
-			ImageRegistry imageRegistry = SoftwareFmActivator.getDefault().getImageRegistry();
+			ImageRegistry imageRegistry = SoftwareFmPlugin.getDefault().getImageRegistry();
 			return container == null ? new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState(), imageRegistry) : container;
 		}
 	}

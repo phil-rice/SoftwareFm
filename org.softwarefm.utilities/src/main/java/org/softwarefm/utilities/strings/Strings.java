@@ -6,25 +6,65 @@ package org.softwarefm.utilities.strings;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.text.MessageFormat;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import org.softwarefm.utilities.collections.Files;
 import org.softwarefm.utilities.collections.Iterables;
 import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.collections.Sets;
 import org.softwarefm.utilities.constants.UtilityMessages;
+import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.functions.IFunction1;
 
 public class Strings {
 
 	private final static Pattern urlFriendlyPattern = Pattern.compile("(([\\w]+:)?//)?(([\\d\\w]|%[a-fA-f\\d]{2,2})+(:([\\d\\w]|%[a-fA-f\\d]{2,2})+)?@)?([\\d\\w][-\\d\\w]{0,253}[\\d\\w]\\.)+[\\w]{2,4}(:[\\d]+)?(/([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)*(\\?(&?([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})=?)*)?(#([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)?");
 	private static String digits = "0123456789abcdef";
+
+	public static byte[] zip(String str)  {
+		try {
+			if (str == null || str.length() == 0) {
+				return new byte[0];
+			}
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			GZIPOutputStream gzip = new GZIPOutputStream(out);
+			gzip.write(str.getBytes());
+			gzip.close();
+			return out.toByteArray();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	public static String unzip(byte[] raw)  {
+		try {
+			if (raw == null || raw.length == 0) {
+				return "";
+			}
+			GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(raw));
+			BufferedReader bf = new BufferedReader(new InputStreamReader(gis, "ISO-8859-1"));
+			String outStr = "";
+			String line;
+			while ((line = bf.readLine()) != null) {
+				outStr += line;
+			}
+			return outStr;
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
 
 	public static boolean isEmail(String email) {
 		Matcher matcher = Pattern.compile("[\\w-]+@([\\w-]+\\.)+[\\w-]+").matcher(email);

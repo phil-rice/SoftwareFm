@@ -110,9 +110,15 @@ public class StringsTest extends TestCase {
 
 		assertNull(Strings.oneStartsWith(Arrays.asList("one", "two"), "/one"));
 		assertNull(Strings.oneStartsWith(Arrays.asList("one", "two"), " two"));
-
 	}
 
+	public void testZipUnZip(){
+		String original = "Some Initial <Text> with <Text> some times repeated and some $%^&*()!\"£_+<>?,./ funny <Text>";
+		byte[] zipped = Strings.zip(original);
+		String unzipped = Strings.unzip(zipped);
+		assertEquals(unzipped, original);
+	}
+	
 	public void testIsUrlFriendly() {
 		assertTrue(Strings.isUrlFriendly("www.abc"));
 		assertTrue(Strings.isUrlFriendly("www.a_c"));

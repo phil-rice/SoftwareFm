@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.composite.DebugTextComposite;
-import org.softwarefm.softwarefm.SoftwareFmActivator;
+import org.softwarefm.softwarefm.SoftwareFmPlugin;
 
 public class DebugTextView extends SoftwareFmView<DebugTextComposite> {
 
@@ -18,10 +18,10 @@ public class DebugTextView extends SoftwareFmView<DebugTextComposite> {
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			@Override
 			public Map<Object, List<Object>> call() throws Exception {
-				return (Map)SoftwareFmActivator.getDefault().getViews();
+				return (Map)SoftwareFmPlugin.getDefault().getViews();
 			}
 		});
-		SoftwareFmActivator.getDefault().setLogger(debugTextComposite.logger());
+		SoftwareFmPlugin.getDefault().setLogger(debugTextComposite.logger());
 		return debugTextComposite;
 	}
 

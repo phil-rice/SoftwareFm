@@ -20,7 +20,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpParams;
@@ -42,9 +42,9 @@ public class HttpClientBuilder implements IHttpClient {
 	public final List<NameValuePair> headers;
 	public final List<NameValuePair> parameters;
 	private final HttpClient client;
-	private final String entity;
+	private final byte[] entity;
 
-	public HttpClientBuilder(HttpClient client, HttpHost host, String url, HttpMethod method, String entity, List<NameValuePair> headers, List<NameValuePair> parameters) {
+	public HttpClientBuilder(HttpClient client, HttpHost host, String url, HttpMethod method, byte[] entity, List<NameValuePair> headers, List<NameValuePair> parameters) {
 		super();
 		this.client = client;
 		this.host = host;
@@ -68,7 +68,7 @@ public class HttpClientBuilder implements IHttpClient {
 			if (entity != null)
 				if (base instanceof HttpPost) {
 					HttpPost post = (HttpPost) base;
-					post.setEntity(new StringEntity(entity));
+					post.setEntity(new ByteArrayEntity(entity));
 				}
 
 			HttpResponse httpResponse = client.execute(base);
@@ -168,6 +168,9 @@ public class HttpClientBuilder implements IHttpClient {
 	}
 
 	public IHttpClient withEntity(String entity) {
+		return new HttpClientBuilder(client, host, url, method, entity.getBytes(), headers, parameters);
+	}
+	public IHttpClient withEntity(byte[] entity) {
 		return new HttpClientBuilder(client, host, url, method, entity, headers, parameters);
 	}
 

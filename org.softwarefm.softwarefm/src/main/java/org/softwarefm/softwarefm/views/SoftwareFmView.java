@@ -8,7 +8,7 @@ import org.softwarefm.eclipse.SoftwareFmContainer;
 import org.softwarefm.eclipse.actions.IActionBarConfigurator;
 import org.softwarefm.eclipse.actions.SfmActionState;
 import org.softwarefm.eclipse.composite.SoftwareFmComposite;
-import org.softwarefm.softwarefm.SoftwareFmActivator;
+import org.softwarefm.softwarefm.SoftwareFmPlugin;
 import org.softwarefm.softwarefm.action.EclipseActionBar;
 
 abstract public class SoftwareFmView<C extends SoftwareFmComposite> extends ViewPart {
@@ -16,7 +16,7 @@ abstract public class SoftwareFmView<C extends SoftwareFmComposite> extends View
 
 	@Override
 	public void createPartControl(Composite parent) {
-		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
+		SoftwareFmPlugin activator = SoftwareFmPlugin.getDefault();
 		SoftwareFmContainer<?> container = activator.getContainer();
 		C panel = makeSoftwareFmComposite(parent, container);
 		activator.addView(this, panel);
@@ -29,7 +29,7 @@ abstract public class SoftwareFmView<C extends SoftwareFmComposite> extends View
 	
 	@Override
 	public void dispose() {
-		SoftwareFmActivator activator = SoftwareFmActivator.getDefault();
+		SoftwareFmPlugin activator = SoftwareFmPlugin.getDefault();
 		activator.removeView(this);
 		super.dispose();
 	}
@@ -39,8 +39,8 @@ abstract public class SoftwareFmView<C extends SoftwareFmComposite> extends View
 	}
 
 	protected void configureToolbarWithProjectStuff(IToolBarManager toolBarManager) {
-		SfmActionState actionState = SoftwareFmActivator.getDefault().getActionState();
-		SoftwareFmContainer<ITextSelection> container = SoftwareFmActivator.getDefault().getContainer();
+		SfmActionState actionState = SoftwareFmPlugin.getDefault().getActionState();
+		SoftwareFmContainer<ITextSelection> container = SoftwareFmPlugin.getDefault().getContainer();
 		IActionBarConfigurator configurator = IActionBarConfigurator.Utils.sfmConfigurator(container.resourceGetter, actionState, container.selectedBindingManager);
 		EclipseActionBar eclipseActionBar = new EclipseActionBar(toolBarManager);
 		configurator.configure(eclipseActionBar);

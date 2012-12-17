@@ -44,6 +44,19 @@
             class="org.softwarefm.softwarefm.views.DebugLinkView"
             id="org.softwarefm.softwarefm.views.DebugLinkView">
       </view>
+      <view
+            name="Debug - Usage"
+            icon="icons/debug.png"
+            category="org.softwarefm"
+            class="org.softwarefm.softwarefm.views.DebugUsageView"
+            id="org.softwarefm.softwarefm.views.DebugUsageView">
+      </view>
    </extension>
+   <extension point="org.eclipse.ui.preferencePages">
+	 	<page 
+	 	    id="org.softwarefm.preference.Page"
+	 		name="SoftwareFM" class="org.softwarefm.preference.SoftwareFMPreferencePage">
+	   	</page>
 
+	</extension>
 </plugin>

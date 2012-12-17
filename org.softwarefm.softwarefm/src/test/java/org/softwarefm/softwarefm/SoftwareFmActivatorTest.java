@@ -17,7 +17,7 @@ import org.softwarefm.utilities.resources.IResourceGetter;
 
 public class SoftwareFmActivatorTest extends SwtTest {
 
-	private SoftwareFmActivator activator;
+	private SoftwareFmPlugin activator;
 
 	public void testContainer() {
 		SoftwareFmContainer<ITextSelection> container = activator.getContainer();
@@ -34,8 +34,8 @@ public class SoftwareFmActivatorTest extends SwtTest {
 		activator.dispose();
 		assertNotSame(resourceGetter, activator.getContainer().resourceGetter);
 	}
-	
-	public void testActionState(){
+
+	public void testActionState() {
 		SfmActionState state1 = activator.getActionState();
 		SfmActionState state2 = activator.getActionState();
 		assertSame(state1, state2);
@@ -44,29 +44,33 @@ public class SoftwareFmActivatorTest extends SwtTest {
 		assertEquals(new HostOffsetAndUrl(CommonConstants.softwareFmHost, CommonConstants.softwareFmPageOffset, "project", "g", "a#someSuffix"), urlStrategy.projectUrl(new ArtifactData(null, "g", "a", "v")));
 
 		activator.dispose();
-		
+
 		SfmActionState state1a = activator.getActionState();
 		SfmActionState state2a = activator.getActionState();
 		assertSame(state1a, state2a);
 		assertNotSame(state1, state1a);
-		
+
 	}
-	
-	public void testProjectDataCache(){
+
+	public void testProjectDataCache() {
 		IArtifactDataCache cache1 = activator.getArtifactDataCache();
 		IArtifactDataCache cache2 = activator.getArtifactDataCache();
 		SoftwareFmContainer<ITextSelection> container = activator.getContainer();
 		assertSame(cache1, cache2);
 		assertSame(cache1, container.artifactDataCache);
 		activator.dispose();
-		
+
 		IArtifactDataCache cache1b = activator.getArtifactDataCache();
 		IArtifactDataCache cache2b = activator.getArtifactDataCache();
 		SoftwareFmContainer<ITextSelection> containerb = activator.getContainer();
 		assertSame(cache1b, cache2b);
 		assertSame(cache1b, containerb.artifactDataCache);
 		assertNotSame(cache1, cache1b);
-		
+
+	}
+
+	public void testUsage() {
+		fail();
 	}
 
 	public void testSelectionBindingManager() {
@@ -77,7 +81,7 @@ public class SoftwareFmActivatorTest extends SwtTest {
 		assertNotSame(manager, activator.getContainer().selectedBindingManager);
 	}
 
-	public void testGetUrlStrategy(){
+	public void testGetUrlStrategy() {
 		SoftwareFmContainer<ITextSelection> container1 = activator.getContainer();
 		SoftwareFmContainer<ITextSelection> container2 = activator.getContainer();
 		assertSame(container1.urlStrategy, container2.urlStrategy);
@@ -85,7 +89,7 @@ public class SoftwareFmActivatorTest extends SwtTest {
 		activator.dispose();
 		assertNotSame(activator.getContainer().urlStrategy, container1.urlStrategy);
 	}
-	
+
 	public void testExecutorService() {
 		ExecutorService service1 = activator.getExecutorService();
 		ExecutorService service2 = activator.getExecutorService();
@@ -100,7 +104,7 @@ public class SoftwareFmActivatorTest extends SwtTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		activator = SoftwareFmActivator.makeActivatorForTests(display);
+		activator = SoftwareFmPlugin.makeActivatorForTests(display);
 	}
 
 	@Override
