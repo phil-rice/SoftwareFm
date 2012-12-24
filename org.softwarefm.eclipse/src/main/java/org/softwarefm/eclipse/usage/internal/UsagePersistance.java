@@ -22,25 +22,24 @@ import org.softwarefm.utilities.exceptions.WrappedException;
 
 public class UsagePersistance implements IUsagePersistance {
 
-	@SuppressWarnings("unchecked")
-	public IUsage load(String text) {
-		Usage usage = new Usage();
+	public void populate(IUsage usage, String text) {
+		usage.nuke();
 		if (text != null && text.length() > 0)
 			try {
 				SAXBuilder builder = new SAXBuilder();
 				Document document = builder.build(new StringReader(text));
 				Element rootNode = document.getRootElement();
 				List<Element> items = new ArrayList<Element>(rootNode.getChildren("Item"));
-			
+
 				for (Element item : items) {
 					String path = getAttributeAsString(item, "path");
 					int count = getAttributeAsInt(item, "count");
-					usage.setUsageStat(path, new UsageStats(count));
+					usage.setUsage(path, new UsageStats(count));
 				}
+				usage.fireListeners();
 			} catch (Exception e) {
 				throw WrappedException.wrap(e);
 			}
-		return usage;
 	}
 
 	private String getAttributeAsString(Element item, String key) {
@@ -73,7 +72,7 @@ public class UsagePersistance implements IUsagePersistance {
 			usageElement.setAttribute("version", "1.0");
 			List<String> keys = new ArrayList<String>(stats.keySet());
 			Collections.sort(keys);
-			for (String key: keys) {
+			for (String key : keys) {
 				Element item = new Element("Item");
 				usageElement.addContent(item);
 				item.setAttribute("path", key);

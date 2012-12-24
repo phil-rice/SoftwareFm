@@ -24,12 +24,12 @@ public class DebugUsageView extends ViewPart {
 		final IUsage usage = SoftwareFmPlugin.getDefault().getUsage();
 		usage.addUsageListener(new IUsageListener() {
 			@Override
-			public void usageOccured(String usageString) {
+			public void usageChanged() {
 				try {
 					String raw = persistance.save(usage);
 					int rawBytes = raw.getBytes("UTF-8").length;
 					int zippedBytes = Strings.zip(raw).length;
-					text.setText(usageString + "\nRaw: " + rawBytes + " Zipped: " + zippedBytes + "\n" + raw);
+					text.setText("Raw: " + rawBytes + " Zipped: " + zippedBytes + "\n" + raw);
 				} catch (UnsupportedEncodingException e) {
 					text.setText(Exceptions.classAndMessage(e));
 				}

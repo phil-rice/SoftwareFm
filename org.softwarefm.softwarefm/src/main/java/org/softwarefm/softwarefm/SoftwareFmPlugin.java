@@ -52,6 +52,7 @@ import org.softwarefm.softwarefm.selection.internal.EclipseSelectedBindingStrate
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.http.IHttpClient;
 import org.softwarefm.utilities.maps.Maps;
@@ -90,6 +91,8 @@ public class SoftwareFmPlugin extends AbstractUIPlugin {
 	private ICallback2<Object, String> logger;
 
 	private IUsage usage;
+
+	private IMultipleListenerList multipleListenerList;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -162,7 +165,7 @@ public class SoftwareFmPlugin extends AbstractUIPlugin {
 
 	private IUsage makeUsage() {
 		synchronized (lock) {
-			final Usage usage = new Usage();
+			final Usage usage = new Usage(getMultipleListenerList());
 			final IUsageReporter reporter = IUsageReporter.Utils.reporter();
 			Thread thread = new Thread() {
 				@Override
@@ -182,6 +185,10 @@ public class SoftwareFmPlugin extends AbstractUIPlugin {
 			thread.start();
 			return usage;
 		}
+	}
+
+	public IMultipleListenerList getMultipleListenerList() {
+		return multipleListenerList == null ? multipleListenerList = IMultipleListenerList.Utils.defaultList() : multipleListenerList;
 	}
 
 	public void addView(IViewPart part, SoftwareFmComposite composite) {
@@ -231,46 +238,6 @@ public class SoftwareFmPlugin extends AbstractUIPlugin {
 					}
 				});
 				return selectionBindingManager;
-				//
-				// selectionListener = new ISelectionListener() {
-				// @Override
-				// public void selectionChanged(IWorkbenchPart part, ISelection selection) {
-				// System.out.println("Selection occured");
-				// if (selection instanceof ITextSelection)
-				// selectionBindingManager.selectionOccured((ITextSelection) selection);
-				// else
-				// selectionBindingManager.selectionOccured(null);
-				// }
-				// };
-				// if (displayForTests == null)
-				// Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
-				// @Override
-				// public void process(ISelectionService t) throws Exception {
-				// t.addPostSelectionListener(selectionListener);
-				// }
-				// });
-				// Plugins.addWindowListener(new IWindowListener() {
-				//
-				// @Override
-				// public void windowOpened(IWorkbenchWindow window) {
-				// System.out.println("Window opened");
-				// }
-				//
-				// @Override
-				// public void windowDeactivated(IWorkbenchWindow window) {
-				// System.out.println("Window deactivated");
-				// }
-				//
-				// @Override
-				// public void windowClosed(IWorkbenchWindow window) {
-				// System.out.println("Window closed");
-				// }
-				//
-				// @Override
-				// public void windowActivated(IWorkbenchWindow window) {
-				// System.out.println("Window activated");
-				// }
-				// });
 			}
 
 		}
@@ -351,6 +318,8 @@ public class SoftwareFmPlugin extends AbstractUIPlugin {
 			container = null;
 			urlStrategy = null;
 			sfmActionState = null;
+			multipleListenerList = null;
+			usage = null;
 		}
 	}
 }

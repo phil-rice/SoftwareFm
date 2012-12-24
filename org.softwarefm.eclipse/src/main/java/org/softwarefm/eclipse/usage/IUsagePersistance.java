@@ -5,7 +5,7 @@ import org.softwarefm.eclipse.usage.internal.UsagePersistance;
 
 public interface IUsagePersistance {
 
-	IUsage load(String text);
+	void populate(IUsage usage, String text);
 
 	String save(IUsage usage);
 
