@@ -19,12 +19,12 @@ import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.strings.Strings;
 
 public class UsageServerHandler implements HttpRequestHandler {
-	
+
 	private final IMultipleListenerList dummyListenerList = IMultipleListenerList.Utils.defaultList();
 	private final IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
 	private final ICallback<IUsage> callback;
 
-	public UsageServerHandler( ICallback<IUsage> callback) {
+	public UsageServerHandler(ICallback<IUsage> callback) {
 		this.callback = callback;
 	}
 
@@ -42,7 +42,7 @@ public class UsageServerHandler implements HttpRequestHandler {
 	}
 
 	public static void main(String[] args) throws InterruptedException {
-		IUsageServer.Utils.usageServer(80, ICallback.Utils.<IUsage>sysoutCallback(), ICallback.Utils.sysErrCallback()).start();
+		IUsageServer.Utils.usageServer(80, ICallback.Utils.<IUsage> sysoutCallback(), ICallback.Utils.sysErrCallback()).start();
 		while (true)
 			Thread.sleep(10000);
 	}

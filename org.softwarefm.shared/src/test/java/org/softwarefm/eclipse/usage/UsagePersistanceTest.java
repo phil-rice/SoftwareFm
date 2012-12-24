@@ -1,12 +1,10 @@
-package org.softwarefm.eclipse.usage.internal;
+package org.softwarefm.eclipse.usage;
 
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
-import org.softwarefm.eclipse.usage.IUsage;
-import org.softwarefm.eclipse.usage.IUsageListener;
-import org.softwarefm.eclipse.usage.IUsagePersistance;
-import org.softwarefm.eclipse.usage.UsageStats;
+import org.softwarefm.eclipse.usage.internal.Usage;
+import org.softwarefm.eclipse.usage.internal.UsagePersistance;
 import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.maps.Maps;
 

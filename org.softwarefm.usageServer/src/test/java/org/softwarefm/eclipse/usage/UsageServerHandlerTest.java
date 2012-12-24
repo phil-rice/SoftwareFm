@@ -1,10 +1,11 @@
-package org.softwarefm.eclipse.usage.internal;
+package org.softwarefm.eclipse.usage;
 
 import junit.framework.TestCase;
 
 import org.softwarefm.eclipse.usage.IUsage;
 import org.softwarefm.eclipse.usage.IUsageReporter;
 import org.softwarefm.eclipse.usage.IUsageServer;
+import org.softwarefm.eclipse.usage.internal.Usage;
 import org.softwarefm.utilities.callbacks.MemoryCallback;
 import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.http.IHttpServer;
