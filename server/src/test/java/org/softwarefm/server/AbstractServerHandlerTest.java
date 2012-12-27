@@ -2,10 +2,12 @@ package org.softwarefm.server;
 
 import junit.framework.TestCase;
 
+import org.apache.http.HttpStatus;
 import org.apache.http.protocol.HttpRequestHandler;
 import org.softwarefm.utilities.callbacks.MemoryCallback;
 import org.softwarefm.utilities.http.IHttpClient;
 import org.softwarefm.utilities.http.IHttpServer;
+import org.softwarefm.utilities.http.IResponse;
 
 public abstract class AbstractServerHandlerTest<H extends HttpRequestHandler> extends TestCase {
 
@@ -16,6 +18,12 @@ public abstract class AbstractServerHandlerTest<H extends HttpRequestHandler> ex
 	protected MemoryCallback<Throwable> memoryThrowable;
 	protected H handler;
 	protected IHttpClient httpClient;
+
+	protected String checkCall(IHttpClient client) {
+		IResponse response = client.execute();
+		assertEquals(HttpStatus.SC_OK, response.statusCode());
+		return response.asString();
+	}
 
 	@Override
 	protected void setUp() throws Exception {
@@ -29,8 +37,8 @@ public abstract class AbstractServerHandlerTest<H extends HttpRequestHandler> ex
 	@Override
 	protected void tearDown() throws Exception {
 		super.tearDown();
-		memoryThrowable.assertNotCalled();
 		if (httpServer != null)
 			httpServer.shutdown();
+		memoryThrowable.assertNotCalled();
 	}
 }

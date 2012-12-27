@@ -6,16 +6,15 @@ import java.util.List;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
-import org.apache.http.protocol.HttpRequestHandler;
 import org.softwarefm.eclipse.usage.IUsagePersistance;
 import org.softwarefm.eclipse.usage.IUsageStats;
+import org.softwarefm.server.AbstractHandler;
 import org.softwarefm.shared.friend.IFriendAndFriendManager;
 import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.strings.Strings;
 
-public class FriendServerHandler implements HttpRequestHandler {
+public class FriendServerHandler extends AbstractHandler {
 
 	private final IFriendAndFriendManager manager;
 	private final IUsagePersistance usagePersistance;
@@ -31,11 +30,11 @@ public class FriendServerHandler implements HttpRequestHandler {
 			String uri = request.getRequestLine().getUri();
 			List<String> fragments = Strings.splitIgnoreBlanks(uri, "/");
 			if (method.equalsIgnoreCase("GET")) {
-				int index = findMarker(method, fragments, "friendsUsage", 1);
-				String user = fragments.get(index+1);
+				int friendsUsageIndex = findMarker(method, fragments, "friendsUsage", 1);
+				String user = fragments.get(friendsUsageIndex+1);
 				ISimpleMap<String, IUsageStats> friendsUsage = manager.friendsUsage(user);
 				String text = usagePersistance.save(friendsUsage);
-				response.setEntity(new StringEntity(text));
+				reply(response, text);
 
 			} else {
 				int index = findMarker(method, fragments, "user", 2);
@@ -54,13 +53,6 @@ public class FriendServerHandler implements HttpRequestHandler {
 		} catch (Throwable e) {
 			throw new HttpException("Unexpected error ", e);
 		}
-	}
-
-	private int findMarker(String method, List<String> fragments, String marker, int sizeAfterMarker) throws HttpException {
-		int index = fragments.indexOf(marker);
-		if (index == -1 || fragments.size() != index + sizeAfterMarker + 1)
-			throw new HttpException("Malformed Url. Method " + method + " Url: " + fragments);
-		return index;
 	}
 
 }

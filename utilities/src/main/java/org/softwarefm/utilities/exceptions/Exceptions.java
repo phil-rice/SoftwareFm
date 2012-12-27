@@ -18,4 +18,8 @@ public class Exceptions {
 		return e.getMessage() == null ? raw : raw + ", " + e.getMessage();
 	}
 
+	public static String serialize(Exception e, String separator) {
+		return classAndMessage(e)+separator +stackTraceString(e.getStackTrace(), separator);
+	}
+
 }

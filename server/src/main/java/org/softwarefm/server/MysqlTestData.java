@@ -1,4 +1,4 @@
-package org.softwarefm.server.usage.internal;
+package org.softwarefm.server;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.jdbc.core.JdbcTemplate;

@@ -59,6 +59,7 @@ public class HttpServer implements IHttpServer {
 				try {
 					super.handleRequest(conn, context);
 				} catch (Exception e) {
+					// Shouldn't get here...the handlers are supposed to throw HttpExceptions
 					ICallback.Utils.call(exceptionHandler, e);
 					conn.close();
 				}

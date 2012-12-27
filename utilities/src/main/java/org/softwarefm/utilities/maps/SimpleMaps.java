@@ -40,6 +40,11 @@ public class SimpleMaps {
 			public List<K> keys() {
 				return keyList;
 			}
+			
+			@Override
+			public String toString() {
+				return map.toString();
+			}
 
 		};
 	}

@@ -5,8 +5,8 @@ import java.util.HashSet;
 import junit.framework.TestCase;
 
 import org.softwarefm.eclipse.usage.UsageStatData;
-import org.softwarefm.server.usage.internal.MysqlTestData;
-import org.softwarefm.server.usage.internal.UsageMysqlCallback;
+import org.softwarefm.server.MysqlTestData;
+import org.softwarefm.server.usage.internal.UsageMysqlCallbackAndGetter;
 import org.softwarefm.shared.usage.UsageTestData;
 import org.softwarefm.utilities.collections.Sets;
 import org.softwarefm.utilities.tests.Tests;
@@ -15,7 +15,7 @@ import org.softwarefm.utilities.time.ITime;
 public class FriendManagerServerTest extends TestCase {
 
 	private FriendManagerServer friends;
-	private UsageMysqlCallback usage;
+	private UsageMysqlCallbackAndGetter usage;
 
 	public void testAddingFriends() {
 		friends.add("u1", "fr1_1");
@@ -68,7 +68,7 @@ public class FriendManagerServerTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		friends = new FriendManagerServer(MysqlTestData.dataSource);
-		usage = new UsageMysqlCallback(MysqlTestData.dataSource, ITime.Utils.system());
+		usage = new UsageMysqlCallbackAndGetter(MysqlTestData.dataSource, ITime.Utils.system());
 		MysqlTestData.template.execute("delete from usage_table");
 		MysqlTestData.template.execute("delete from friends");
 	}

@@ -4,6 +4,7 @@ import java.sql.Date;
 
 import junit.framework.TestCase;
 
+import org.softwarefm.server.MysqlTestData;
 import org.softwarefm.server.usage.IUsageCallback;
 import org.softwarefm.shared.usage.UsageTestData;
 import org.softwarefm.utilities.time.ITime;

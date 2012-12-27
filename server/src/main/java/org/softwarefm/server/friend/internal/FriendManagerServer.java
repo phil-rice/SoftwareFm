@@ -12,7 +12,10 @@ import org.softwarefm.eclipse.usage.IUsageStats;
 import org.softwarefm.eclipse.usage.UsageStatData;
 import org.softwarefm.server.MySqlStrings;
 import org.softwarefm.shared.friend.IFriendAndFriendManager;
+import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.maps.ISimpleMap;
+import org.softwarefm.utilities.maps.Maps;
+import org.softwarefm.utilities.maps.SimpleMaps;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
@@ -41,10 +44,9 @@ public class FriendManagerServer implements IFriendAndFriendManager {
 		}, user);
 	}
 
-
 	public IUsageStats path(String user, String path) {
 		final Map<String, UsageStatData> result = new HashMap<String, UsageStatData>();
-		template.query(MySqlStrings.friendTimesFromUserPath, new RowCallbackHandler() {
+		template.query(MySqlStrings.friendTimesFromUserAndPath, new RowCallbackHandler() {
 			public void processRow(ResultSet rs) throws SQLException {
 				String friend = rs.getString(MySqlStrings.friendsField);
 				int times = rs.getInt(MySqlStrings.timesField);
@@ -55,7 +57,23 @@ public class FriendManagerServer implements IFriendAndFriendManager {
 	}
 
 	public ISimpleMap<String, IUsageStats> friendsUsage(String user) {
-		return null;
+		final Map<String, Map<String, UsageStatData>> raw = new HashMap<String, Map<String, UsageStatData>>();
+		template.query(MySqlStrings.friendPathAndTimesFromUser, new RowCallbackHandler() {
+			@Override
+			public void processRow(ResultSet rs) throws SQLException {
+				String friend = rs.getString(MySqlStrings.friendsField);
+				String path = rs.getString(MySqlStrings.pathField);
+				int times = rs.getInt(MySqlStrings.timesField);
+				Maps.put(raw, friend, path, new UsageStatData(times));
+			}
+		}, user);
+		Map<String, IUsageStats> result = Maps.mapTheMap(raw, new IFunction1<Map<String, UsageStatData>, IUsageStats>() {
+			@Override
+			public IUsageStats apply(Map<String, UsageStatData> from) throws Exception {
+				return IUsageStats.Utils.fromMap(from);
+			}
+		});
+		return SimpleMaps.fromMap(result);
 	}
 
 }

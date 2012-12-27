@@ -13,6 +13,7 @@ public interface IUsagePersistance {
 
 	ISimpleMap<String, IUsageStats> parseFriendsUsage(String text);
 
+	
 	public static class Utils {
 		public static IUsagePersistance persistance() {
 			return new UsagePersistance();

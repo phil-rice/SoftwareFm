@@ -467,7 +467,15 @@ public class Maps {
 		if (map == null)
 			throw new IllegalStateException(MessageFormat.format(UtilityMessages.cannotFindMapForGet, data, Arrays.asList(keys)));
 		map.put(keys[keys.length - 1], value);
-
+	}
+	
+	public static <K1, K2, V> void put(Map<K1, Map<K2, V>> map, K1 key1, K2 key2, V value){
+		Map<K2, V> map1 = map.get(key1);
+		if (map1 == null)
+			map.put(key1, map1 = new HashMap<K2, V>());
+		if (map1.containsKey(key2))
+				throw new IllegalStateException("Already have a value for " + key1 + "," + key2 + " which is " + map.get(key2));
+		map1.put(key2, value);
 	}
 
 	@SuppressWarnings("unchecked")
