@@ -3,6 +3,8 @@ package org.softwarefm.shared.usage;
 import org.softwarefm.eclipse.usage.IUsageStats;
 import org.softwarefm.eclipse.usage.internal.Usage;
 import org.softwarefm.utilities.events.IMultipleListenerList;
+import org.softwarefm.utilities.maps.ISimpleMap;
+import org.softwarefm.utilities.maps.SimpleMaps;
 
 public class UsageTestData {
 
@@ -33,5 +35,8 @@ public class UsageTestData {
 	public static IUsageStats statsa2b1 = usagea2b1.getStats();
 	public static IUsageStats statsb1c2 = usageb1c2.getStats();
 	public static IUsageStats statsc1d1 = usagec1d1.getStats();
+	
+	public static ISimpleMap<String,IUsageStats> fr1_a1b3_fr2_b1c2 = SimpleMaps.makeMap("fr1", statsa1b3, "fr2", statsb1c2);
+	
 
 }

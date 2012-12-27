@@ -20,43 +20,83 @@ import org.softwarefm.eclipse.usage.IUsagePersistance;
 import org.softwarefm.eclipse.usage.IUsageStats;
 import org.softwarefm.eclipse.usage.UsageStatData;
 import org.softwarefm.utilities.exceptions.WrappedException;
+import org.softwarefm.utilities.maps.ISimpleMap;
+import org.softwarefm.utilities.maps.SimpleMaps;
 
 public class UsagePersistance implements IUsagePersistance {
 
-	public IUsageStats populate(String text) {
-		Map<String, UsageStatData> result = new HashMap<String, UsageStatData>();
-		if (text != null && text.length() > 0)
-			try {
-				SAXBuilder builder = new SAXBuilder();
-				Document document = builder.build(new StringReader(text));
-				Element rootNode = document.getRootElement();
-				List<Element> items = new ArrayList<Element>(rootNode.getChildren("Item"));
+	private final static IUsageStats empty = IUsageStats.Utils.from();
 
-				for (Element item : items) {
-					String path = getAttributeAsString(item, "path");
-					int count = getAttributeAsInt(item, "count");
-					result.put(path, new UsageStatData(count));
-				}
-			} catch (Exception e) {
-				throw WrappedException.wrap(e);
-			}
+	public IUsageStats parse(String text) {
+		if (text != null && text.length() > 0) {
+			Element rootNode = getRootElementFromText(text);
+			return nodeToUsage(rootNode);
+		}
+		return empty;
+	}
+
+	private IUsageStats nodeToUsage(Element rootNode) {
+		Map<String, UsageStatData> result = new HashMap<String, UsageStatData>();
+		if (!rootNode.getName().equalsIgnoreCase("Usage"))
+			throw new IllegalArgumentException("Expecting Usage Have " + rootNode);
+		List<Element> items = new ArrayList<Element>(rootNode.getChildren("Item"));
+
+		for (Element item : items) {
+			String path = getAttributeAsString(item, "path");
+			int count = getAttributeAsInt(item, "count");
+			result.put(path, new UsageStatData(count));
+		}
 		return IUsageStats.Utils.fromMap(result);
 	}
 
-	public String save(IUsageStats usageStats) {
+	private Element getRootElementFromText(String text) {
 		try {
-			Element usageElement = new Element("Usage");
-			Document doc = new Document(usageElement);
-			doc.setRootElement(usageElement);
-			usageElement.setAttribute("version", "1.0");
-			List<String> keys = new ArrayList<String>(usageStats.keys());
-			Collections.sort(keys);
-			for (String key : keys) {
-				Element item = new Element("Item");
-				usageElement.addContent(item);
-				item.setAttribute("path", key);
-				item.setAttribute("count", Integer.toString(usageStats.get(key).count));
-			}
+			SAXBuilder builder = new SAXBuilder();
+			Document document = builder.build(new StringReader(text));
+			Element rootNode = document.getRootElement();
+			return rootNode;
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	public String save(IUsageStats usageStats) {
+		Element usageElement = usage(usageStats);
+		return elementToString(usageElement);
+	}
+
+	@Override
+	public ISimpleMap<String, IUsageStats> parseFriendsUsage(String text) {
+		if (text == null|| text.equals(""))
+			return SimpleMaps.empty();
+		Element rootNode = getRootElementFromText(text);
+		if (!rootNode.getName().equalsIgnoreCase("Friends"))
+			throw new IllegalArgumentException("Expected Friends had " + rootNode);
+		Map<String, IUsageStats> result = new HashMap<String, IUsageStats>();
+		for (Element usage : (List<Element>) rootNode.getChildren()) {
+			IUsageStats usageStats = nodeToUsage(usage);
+			String name = usage.getAttributeValue("name");
+			result.put(name, usageStats);
+		}
+		return SimpleMaps.fromMap(result);
+	}
+
+	@Override
+	public String save(ISimpleMap<String, IUsageStats> friendsUsage) {
+		Element friendsElement = new Element("Friends");
+		friendsElement.setAttribute("version", "1.0");
+		for (String key : friendsUsage.keys()) {
+			Element usage = usage(friendsUsage.get(key));
+			usage.setAttribute("name", key);
+			friendsElement.addContent(usage);
+		}
+
+		return elementToString(friendsElement);
+	}
+
+	private String elementToString(Element element) {
+		try {
+			Document doc = new Document(element);
 			XMLOutputter xmlOutput = new XMLOutputter();
 			xmlOutput.setFormat(Format.getPrettyFormat());
 			StringWriter writer = new StringWriter();
@@ -66,6 +106,21 @@ public class UsagePersistance implements IUsagePersistance {
 		} catch (IOException e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	private Element usage(IUsageStats usageStats) {
+		Element usageElement = new Element("Usage");
+
+		usageElement.setAttribute("version", "1.0");
+		List<String> keys = new ArrayList<String>(usageStats.keys());
+		Collections.sort(keys);
+		for (String key : keys) {
+			Element item = new Element("Item");
+			usageElement.addContent(item);
+			item.setAttribute("path", key);
+			item.setAttribute("count", Integer.toString(usageStats.get(key).count));
+		}
+		return usageElement;
 	}
 
 	private String getAttributeAsString(Element item, String key) {

@@ -55,12 +55,14 @@ public class Strings {
 			}
 			GZIPInputStream gis = new GZIPInputStream(new ByteArrayInputStream(raw));
 			BufferedReader bf = new BufferedReader(new InputStreamReader(gis, "ISO-8859-1"));
-			String outStr = "";
+			StringBuilder builder = new StringBuilder();
 			String line;
 			while ((line = bf.readLine()) != null) {
-				outStr += line;
+				if (builder.length()>0)
+					builder.append("\n");
+				builder.append(line);
 			}
-			return outStr;
+			return builder.toString();
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -517,7 +519,7 @@ public class Strings {
 		return raw.replaceAll("\n", "").replaceAll("\r", "").replaceAll("\f", "");
 	}
 
-	public static String firstSegment(String raw, String separator) {
+	public static String head(String raw, String separator) {
 		if (raw == null)
 			return null;
 		int index = raw.indexOf(separator);
@@ -525,7 +527,15 @@ public class Strings {
 			return raw;
 		else
 			return raw.substring(0, index);
-
+	}
+	public static String tail(String raw, String separator) {
+		if (raw == null)
+			return null;
+		int index = raw.indexOf(separator);
+		if (index == -1)
+			return "";
+		else
+			return raw.substring(index+1);
 	}
 
 	public static String segment(String raw, String separator, int i) {

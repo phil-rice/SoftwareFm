@@ -1,21 +1,23 @@
 package org.softwarefm.server.friend.internal;
 
 import org.easymock.EasyMock;
-import org.softwarefm.eclipse.usage.UsageStatData;
+import org.softwarefm.eclipse.usage.IUsagePersistance;
+import org.softwarefm.eclipse.usage.IUsageStats;
 import org.softwarefm.server.AbstractServerHandlerTest;
 import org.softwarefm.shared.friend.IFriendAndFriendManager;
 import org.softwarefm.shared.usage.UsageTestData;
 import org.softwarefm.utilities.http.IResponse;
 import org.softwarefm.utilities.maps.ISimpleMap;
-import org.softwarefm.utilities.maps.SimpleMaps;
+import org.softwarefm.utilities.tests.Tests;
 
 public class FriendServerHandlerTest extends AbstractServerHandlerTest<FriendServerHandler> {
 
 	private IFriendAndFriendManager manager;
+	private final IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
 
 	@Override
 	protected FriendServerHandler createHandler() {
-		return new FriendServerHandler(manager = EasyMock.createMock(IFriendAndFriendManager.class));
+		return new FriendServerHandler(persistance, manager = EasyMock.createMock(IFriendAndFriendManager.class));
 	}
 
 	public void testAdd() {
@@ -35,17 +37,14 @@ public class FriendServerHandlerTest extends AbstractServerHandlerTest<FriendSer
 	}
 
 	public void testGetReturnsAllUsageAboutAllFriends() {
-		EasyMock.expect(manager.friendsUsage("u1")).andReturn(makeMap("fr1", UsageTestData.statsa1b3));
+		EasyMock.expect(manager.friendsUsage("u1")).andReturn(UsageTestData.fr1_a1b3_fr2_b1c2);
 		replay();
 		
 		httpServer.start();
 		IResponse response = httpClient.get("friendsUsage/u1").execute();
 		assertEquals(200, response.statusCode());
-	}
-
-
-	private ISimpleMap<String, ISimpleMap<String, UsageStatData>> makeMap(Object...nameAndStats) {
-		return SimpleMaps.makeMap(nameAndStats);
+		ISimpleMap<String, IUsageStats> actual = persistance.parseFriendsUsage(response.asString());
+		Tests.assertEquals(UsageTestData.fr1_a1b3_fr2_b1c2, actual);
 	}
 
 	private void replay() {

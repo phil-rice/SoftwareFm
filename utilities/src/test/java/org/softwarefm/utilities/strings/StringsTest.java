@@ -27,6 +27,19 @@ public class StringsTest extends TestCase {
 		byte[] actual = Strings.fromHex("000102030405060708090a0b0c0d0e0f101112");
 		assertTrue(Arrays.equals(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 }, actual));
 	}
+	
+	public void testFirst(){
+		checkFirstTail("axbcxdxe", "x", "a", "bcxdxe");
+		checkFirstTail("axbcxdxe", "q", "axbcxdxe", "");
+		checkFirstTail("axbcxdxe", "e", "axbcxdx", "");
+		checkFirstTail("", "e", "", "");
+	}
+	
+	private void checkFirstTail(String string, String marker, String expectedHead, String expectedTail) {
+		assertEquals(expectedHead, Strings.head(string, marker));
+		assertEquals(expectedTail, Strings.tail(string, marker));
+	}
+
 
 	public void testTrim(){
 		assertEquals("bcd", Strings.trim("abcd", 'a'));
@@ -113,7 +126,11 @@ public class StringsTest extends TestCase {
 	}
 
 	public void testZipUnZip(){
-		String original = "Some Initial <Text> with <Text> some times repeated and some $%^&*()!_+<>?,./ funny <Text>";
+		checkZipUnZip("Some Initial <Text> with <Text> some times repeated and some $%^&*()!_+<>?,./ funny <Text>");
+		checkZipUnZip("line1\nline2\nline3");
+	}
+
+	private void checkZipUnZip(String original) {
 		byte[] zipped = Strings.zip(original);
 		String unzipped = Strings.unzip(zipped);
 		assertEquals(unzipped, original);
@@ -220,9 +237,9 @@ public class StringsTest extends TestCase {
 	}
 
 	public void testFirstSegment() {
-		assertEquals("a", Strings.firstSegment("a.b.c", "."));
-		assertEquals("a.b.c", Strings.firstSegment("a.b.c", ":"));
-		assertEquals(null, Strings.firstSegment(null, "."));
+		assertEquals("a", Strings.head("a.b.c", "."));
+		assertEquals("a.b.c", Strings.head("a.b.c", ":"));
+		assertEquals(null, Strings.head(null, "."));
 
 	}
 

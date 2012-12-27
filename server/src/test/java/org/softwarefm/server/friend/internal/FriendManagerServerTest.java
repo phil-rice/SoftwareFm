@@ -51,10 +51,10 @@ public class FriendManagerServerTest extends TestCase {
 		friends.add("u1", "fr1_2");
 		friends.add("u2", "fr2_1");
 		
-		usage.process("ip1", "u1", UsageTestData.usagea2b1);
-		usage.process("ip2", "fr1_1", UsageTestData.usageb1c2);
-		usage.process("ip3", "fr1_2", UsageTestData.usagec1d1);
-		usage.process("ip3", "fr2_1", UsageTestData.usagea1b3);
+		usage.process("ip1", "u1", UsageTestData.statsa2b1);
+		usage.process("ip2", "fr1_1", UsageTestData.statsb1c2);
+		usage.process("ip3", "fr1_2", UsageTestData.statsc1d1);
+		usage.process("ip3", "fr2_1", UsageTestData.statsa1b3);
 
 		Tests.assertMapEquals(friends.path("u1", "a"));
 		Tests.assertMapEquals(friends.path("u1", "b"), "fr1_1", new UsageStatData(2));

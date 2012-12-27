@@ -4,7 +4,7 @@ import org.softwarefm.eclipse.usage.internal.UsageReporter;
 
 public interface IUsageReporter {
 
-	void report(IUsageStats usage);
+	void report(String user, IUsageStats usage);
 
 	public static class Utils {
 		public static IUsageReporter reporter(String host, int port) {

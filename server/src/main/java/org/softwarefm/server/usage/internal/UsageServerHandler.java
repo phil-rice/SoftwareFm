@@ -13,20 +13,21 @@ import org.apache.http.protocol.HttpRequestHandler;
 import org.apache.http.util.EntityUtils;
 import org.softwarefm.eclipse.usage.IUsage;
 import org.softwarefm.eclipse.usage.IUsagePersistance;
-import org.softwarefm.eclipse.usage.UsageStatData;
+import org.softwarefm.eclipse.usage.IUsageStats;
+import org.softwarefm.server.usage.IUsageCallback;
 import org.softwarefm.server.usage.IUsageServer;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.events.IMultipleListenerList;
-import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.strings.Strings;
 
 public class UsageServerHandler implements HttpRequestHandler {
 
 	private final IMultipleListenerList dummyListenerList = IMultipleListenerList.Utils.defaultList();
-	private final IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
-	private final ICallback<ISimpleMap<String, UsageStatData>> callback;
+	private final IUsagePersistance persistance;
+	private final IUsageCallback callback;
 
-	public UsageServerHandler(ICallback<ISimpleMap<String, UsageStatData>> callback) {
+	public UsageServerHandler(IUsagePersistance persistance, IUsageCallback callback) {
+		this.persistance = persistance;
 		this.callback = callback;
 	}
 
@@ -36,9 +37,11 @@ public class UsageServerHandler implements HttpRequestHandler {
 		if ("POST".equalsIgnoreCase(method) && request instanceof BasicHttpEntityEnclosingRequest) {
 			HttpEntity httpEntity = ((BasicHttpEntityEnclosingRequest) request).getEntity();
 			byte[] byteArray = EntityUtils.toByteArray(httpEntity);
-			String usageText = Strings.unzip(byteArray);
-			ISimpleMap<String, UsageStatData> newStats = persistance.populate(usageText);
-			ICallback.Utils.call(callback, newStats);
+			String text = Strings.unzip(byteArray);
+			String user = Strings.head(text, "\n");
+			String usageText = Strings.tail(text, "\n");
+			IUsageStats stats = persistance.parse(usageText);
+			callback.process("", user, stats);
 		}
 	}
 

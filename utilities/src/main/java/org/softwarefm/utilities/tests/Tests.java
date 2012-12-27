@@ -194,6 +194,7 @@ public class Tests {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static <T1 extends Collection<?>, T2> void assertEqualsAsSet(T1 actual, T2... expected) {
 		Assert.assertEquals(new HashSet<T2>(Arrays.<T2> asList(expected)), new HashSet(actual));
 

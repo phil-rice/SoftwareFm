@@ -6,9 +6,11 @@ import java.util.List;
 import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.protocol.HttpRequestHandler;
-import org.softwarefm.eclipse.usage.UsageStatData;
+import org.softwarefm.eclipse.usage.IUsagePersistance;
+import org.softwarefm.eclipse.usage.IUsageStats;
 import org.softwarefm.shared.friend.IFriendAndFriendManager;
 import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.strings.Strings;
@@ -16,8 +18,10 @@ import org.softwarefm.utilities.strings.Strings;
 public class FriendServerHandler implements HttpRequestHandler {
 
 	private final IFriendAndFriendManager manager;
+	private final IUsagePersistance usagePersistance;
 
-	public FriendServerHandler(IFriendAndFriendManager manager) {
+	public FriendServerHandler(IUsagePersistance usagePersistance, IFriendAndFriendManager manager) {
+		this.usagePersistance = usagePersistance;
 		this.manager = manager;
 	}
 
@@ -29,7 +33,9 @@ public class FriendServerHandler implements HttpRequestHandler {
 			if (method.equalsIgnoreCase("GET")) {
 				int index = findMarker(method, fragments, "friendsUsage", 1);
 				String user = fragments.get(index+1);
-				ISimpleMap<String, ISimpleMap<String, UsageStatData>> friendsUsage = manager.friendsUsage(user);
+				ISimpleMap<String, IUsageStats> friendsUsage = manager.friendsUsage(user);
+				String text = usagePersistance.save(friendsUsage);
+				response.setEntity(new StringEntity(text));
 
 			} else {
 				int index = findMarker(method, fragments, "user", 2);

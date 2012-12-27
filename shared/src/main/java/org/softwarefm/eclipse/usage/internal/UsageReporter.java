@@ -17,10 +17,11 @@ public class UsageReporter implements IUsageReporter {
 		client = IHttpClient.Utils.builder().host(host, port).post("");
 	}
 
-	public void report(IUsageStats usageStats) {
+	public void report(String user, IUsageStats usageStats) {
 		try {
 			String text = persistance.save(usageStats);
-			byte[] zipped = Strings.zip(text);
+			byte[] zipped = Strings.zip(user + "\n" + text);
+			String checkUnZips = Strings.unzip(zipped);
 			client.withEntity(zipped).execute();
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);

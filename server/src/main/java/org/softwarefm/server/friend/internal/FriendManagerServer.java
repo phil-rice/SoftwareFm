@@ -8,11 +8,11 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.softwarefm.eclipse.usage.IUsageStats;
 import org.softwarefm.eclipse.usage.UsageStatData;
 import org.softwarefm.server.MySqlStrings;
 import org.softwarefm.shared.friend.IFriendAndFriendManager;
 import org.softwarefm.utilities.maps.ISimpleMap;
-import org.softwarefm.utilities.maps.SimpleMaps;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
 import org.springframework.jdbc.core.RowMapper;
@@ -42,7 +42,7 @@ public class FriendManagerServer implements IFriendAndFriendManager {
 	}
 
 
-	public ISimpleMap<String, UsageStatData> path(String user, String path) {
+	public IUsageStats path(String user, String path) {
 		final Map<String, UsageStatData> result = new HashMap<String, UsageStatData>();
 		template.query(MySqlStrings.friendTimesFromUserPath, new RowCallbackHandler() {
 			public void processRow(ResultSet rs) throws SQLException {
@@ -51,10 +51,10 @@ public class FriendManagerServer implements IFriendAndFriendManager {
 				result.put(friend, new UsageStatData(times));
 			}
 		}, user, path);
-		return SimpleMaps.fromMap(result);
+		return IUsageStats.Utils.fromMap(result);
 	}
 
-	public ISimpleMap<String, ISimpleMap<String, UsageStatData>> friendsUsage(String user) {
+	public ISimpleMap<String, IUsageStats> friendsUsage(String user) {
 		return null;
 	}
 

@@ -16,7 +16,7 @@ public class UsageMysqlCallbackTest extends TestCase {
 	private Date date;
 
 	public void testUpdatesUsageInDatabase() throws Exception {
-		callback.process("someIp", "someUser", UsageTestData.usagea2b1);
+		callback.process("someIp", "someUser", UsageTestData.statsa2b1);
 		assertEquals(2, template.queryForInt("select count(*) from usage_table"));
 		assertEquals("someIp", template.queryForObject("select ip from usage_table where user=? and path=?", String.class, "someUser", "a"));
 		assertEquals(2, template.queryForInt("select times from usage_table where user=? and path=?", "someUser", "a"));
@@ -25,9 +25,9 @@ public class UsageMysqlCallbackTest extends TestCase {
 	}
 
 	public void testAppends() throws Exception {
-		callback.process("someIp", "someUser", UsageTestData.usagea2b1);
-		callback.process("someIp", "someUser", UsageTestData.usagea2b1);
-		callback.process("someIp", "someUser", UsageTestData.usagea2b1);
+		callback.process("someIp", "someUser", UsageTestData.statsa2b1);
+		callback.process("someIp", "someUser", UsageTestData.statsa2b1);
+		callback.process("someIp", "someUser", UsageTestData.statsa2b1);
 		assertEquals(6, template.queryForInt("select count(*) from usage_table"));
 		assertEquals(3, template.queryForInt("select count(*) from usage_table where user=? and path=? and ip=?", "someUser", "a", "someIp"));
 		assertEquals(3, template.queryForInt("select count(*) from usage_table where user=? and path=? and times=?", "someUser", "a", 2));
