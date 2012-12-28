@@ -7,10 +7,10 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.softwarefm.eclipse.usage.IUsageStats;
-import org.softwarefm.eclipse.usage.UsageStatData;
 import org.softwarefm.server.MySqlStrings;
 import org.softwarefm.server.usage.IUsageCallbackAndGetter;
+import org.softwarefm.shared.usage.IUsageStats;
+import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.time.ITime;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;

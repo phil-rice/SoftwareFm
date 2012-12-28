@@ -2,8 +2,8 @@ package org.softwarefm.server.usage;
 
 import javax.sql.DataSource;
 
-import org.softwarefm.eclipse.usage.IUsageStats;
 import org.softwarefm.server.usage.internal.UsageMysqlCallbackAndGetter;
+import org.softwarefm.shared.usage.IUsageStats;
 import org.softwarefm.utilities.time.ITime;
 
 public interface IUsageCallback {

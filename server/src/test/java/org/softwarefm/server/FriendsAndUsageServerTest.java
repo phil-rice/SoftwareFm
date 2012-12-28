@@ -5,8 +5,8 @@ import java.util.Arrays;
 import junit.framework.TestCase;
 
 import org.apache.http.HttpStatus;
-import org.softwarefm.eclipse.usage.IUsagePersistance;
-import org.softwarefm.eclipse.usage.IUsageStats;
+import org.softwarefm.shared.usage.IUsagePersistance;
+import org.softwarefm.shared.usage.IUsageStats;
 import org.softwarefm.shared.usage.UsageTestData;
 import org.softwarefm.utilities.callbacks.MemoryCallback;
 import org.softwarefm.utilities.http.IHttpClient;

@@ -1,0 +1,30 @@
+
+Known Issues:
+* Need special handling of rt.jar / classes.jar
+* Doesn't run on Macintoshes
+* Need a better naming convention for nested classes.
+	For example should be package/parentClass/nestedClass, and has to work with nested/nested etc classes
+* Anonymous classes are handled very poorly: package//method is not a good url
+* Doesn't detect classes/methods in jars
+* When views close, the listeners are not disposed
+
+The build process sucks. Big time conflict between Maven and Eclipse
+* You need to run "build.bat" which will:
+** build / run tests / install the jars org.sofwarefm.utilities and org.softwarefm.eclipse into the maven repository
+** copy the required jars from the maven repository to the lib folder of the org.softwarefm.software folder
+** You need to modify the first line "set m2=c:\users\phil\.m2\repository" to point to your maven repository
+** If you are a *nix user, then the batch file needs to be turned into a script file. For example \s need changing to / and the "copy" to "cp", and the files persmissions need to be made executable
+** I will try and improve this in the near future 
+  
+  
+  
+RELEASE NOTES:
+1.7.1: First version using MediaWiki
+1.7.2: Polish added: nicer text, slightly nicer link, fewer windows
+1.7.3: Speed up: cached results for project look up
+1.7.5: Now use name spaces Code: and Artifact:
+1.7.6: Project renamed to Artifact throughout code base
+1.7.7: Attempting to fix issue in which code didn't work on mac
+1.7.8: No longer shipping with eclipse files
+1.7.10: Error messages in forms now give more feedback
+1.7.11: Browser has url line and buttons, selection story now works when windows opened / closed

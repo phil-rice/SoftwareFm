@@ -10,10 +10,10 @@ import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.constants.TextKeys;
 import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
+import org.softwarefm.core.labelAndText.TextAndControlComposite;
+import org.softwarefm.core.labelAndText.TextAndFormComposite;
 import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.swt.Swts;
-import org.softwarefm.labelAndText.TextAndControlComposite;
-import org.softwarefm.labelAndText.TextAndFormComposite;
 import org.softwarefm.utilities.functions.IFunction1;
 
 public class LinkComposite extends TextAndControlComposite<TabFolder> {

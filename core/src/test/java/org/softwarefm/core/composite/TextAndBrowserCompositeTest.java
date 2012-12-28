@@ -1,6 +1,6 @@
 package org.softwarefm.core.composite;
 
-import org.softwarefm.labelAndText.TextAndBrowserComposite;
+import org.softwarefm.core.labelAndText.TextAndBrowserComposite;
 
 public abstract class TextAndBrowserCompositeTest< P extends TextAndBrowserComposite> extends AbstractSoftwareFmCompositeTest<P> {
 

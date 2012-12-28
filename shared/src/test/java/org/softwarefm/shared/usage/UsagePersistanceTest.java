@@ -2,10 +2,7 @@ package org.softwarefm.shared.usage;
 
 import junit.framework.TestCase;
 
-import org.softwarefm.eclipse.usage.IUsagePersistance;
-import org.softwarefm.eclipse.usage.IUsageStats;
-import org.softwarefm.eclipse.usage.UsageStatData;
-import org.softwarefm.eclipse.usage.internal.UsagePersistance;
+import org.softwarefm.shared.usage.internal.UsagePersistance;
 import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.tests.Tests;
 

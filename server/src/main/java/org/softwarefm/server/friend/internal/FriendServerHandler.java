@@ -7,10 +7,10 @@ import org.apache.http.HttpException;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.protocol.HttpContext;
-import org.softwarefm.eclipse.usage.IUsagePersistance;
-import org.softwarefm.eclipse.usage.IUsageStats;
 import org.softwarefm.server.AbstractHandler;
 import org.softwarefm.shared.friend.IFriendAndFriendManager;
+import org.softwarefm.shared.usage.IUsagePersistance;
+import org.softwarefm.shared.usage.IUsageStats;
 import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.strings.Strings;
 

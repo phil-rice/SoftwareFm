@@ -5,8 +5,8 @@ import java.util.Arrays;
 import org.eclipse.swt.widgets.Control;
 import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.constants.TextKeys;
+import org.softwarefm.core.labelAndText.Form;
 import org.softwarefm.core.tests.SwtTest;
-import org.softwarefm.labelAndText.Form;
 
 public class MavenImportCompositeTest extends SwtTest {
 

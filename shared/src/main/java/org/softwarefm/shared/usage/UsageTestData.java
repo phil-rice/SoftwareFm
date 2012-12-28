@@ -1,7 +1,6 @@
 package org.softwarefm.shared.usage;
 
-import org.softwarefm.eclipse.usage.IUsageStats;
-import org.softwarefm.eclipse.usage.internal.Usage;
+import org.softwarefm.shared.usage.internal.Usage;
 import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.maps.SimpleMaps;

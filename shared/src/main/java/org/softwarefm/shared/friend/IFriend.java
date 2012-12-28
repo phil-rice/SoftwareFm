@@ -2,7 +2,7 @@ package org.softwarefm.shared.friend;
 
 import java.util.List;
 
-import org.softwarefm.eclipse.usage.IUsageStats;
+import org.softwarefm.shared.usage.IUsageStats;
 import org.softwarefm.utilities.maps.ISimpleMap;
 
 public interface IFriend {

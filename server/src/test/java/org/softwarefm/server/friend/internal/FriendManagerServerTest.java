@@ -4,9 +4,9 @@ import java.util.HashSet;
 
 import junit.framework.TestCase;
 
-import org.softwarefm.eclipse.usage.UsageStatData;
 import org.softwarefm.server.MysqlTestData;
 import org.softwarefm.server.usage.internal.UsageMysqlCallbackAndGetter;
+import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.shared.usage.UsageTestData;
 import org.softwarefm.utilities.collections.Sets;
 import org.softwarefm.utilities.tests.Tests;

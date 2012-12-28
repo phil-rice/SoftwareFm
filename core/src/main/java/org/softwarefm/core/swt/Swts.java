@@ -62,7 +62,7 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.softwarefm.core.constants.SwtConstants;
-import org.softwarefm.labelAndText.IButtonConfig;
+import org.softwarefm.core.labelAndText.IButtonConfig;
 import org.softwarefm.utilities.arrays.ArrayHelper;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.collections.Files;
@@ -1377,5 +1377,27 @@ public class Swts {
 			}
 		}
 	}
+
+	public static Label createMigLabel(Composite parent, String text, String constraint) {
+		Label result = new Label(parent, SWT.NULL);
+		result.setLayoutData(constraint);
+		result.setText(text);
+		return result;
+	}
+	public static Text createMigText(Composite parent, String text, String constraint) {
+		Text result = new Text(parent, SWT.NULL);
+		result.setLayoutData(constraint);
+		result.setText(text);
+		return result;
+	}
+
+	public static StyledText createMigStyledText(Composite parent, int style,  String text, String constraint) {
+		StyledText result = new StyledText(parent, style);
+		result.setLayoutData(constraint);
+		result.setText(text);
+		return result;
+	}
+	
+
 
 }

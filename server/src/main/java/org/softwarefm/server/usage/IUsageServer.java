@@ -1,6 +1,6 @@
 package org.softwarefm.server.usage;
 
-import org.softwarefm.eclipse.usage.IUsage;
+import org.softwarefm.shared.usage.IUsage;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.http.IHttpServer;
 

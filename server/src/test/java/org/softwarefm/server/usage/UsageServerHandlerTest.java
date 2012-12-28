@@ -2,10 +2,10 @@ package org.softwarefm.server.usage;
 
 import org.apache.http.HttpStatus;
 import org.easymock.EasyMock;
-import org.softwarefm.eclipse.usage.IUsagePersistance;
-import org.softwarefm.eclipse.usage.IUsageReporter;
 import org.softwarefm.server.AbstractServerHandlerTest;
 import org.softwarefm.server.usage.internal.UsageServerHandler;
+import org.softwarefm.shared.usage.IUsagePersistance;
+import org.softwarefm.shared.usage.IUsageReporter;
 import org.softwarefm.shared.usage.UsageTestData;
 import org.softwarefm.utilities.http.IHttpClient;
 import org.softwarefm.utilities.http.IResponse;

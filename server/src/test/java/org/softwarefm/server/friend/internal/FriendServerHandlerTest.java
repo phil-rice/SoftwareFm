@@ -1,10 +1,10 @@
 package org.softwarefm.server.friend.internal;
 
 import org.easymock.EasyMock;
-import org.softwarefm.eclipse.usage.IUsagePersistance;
-import org.softwarefm.eclipse.usage.IUsageStats;
 import org.softwarefm.server.AbstractServerHandlerTest;
 import org.softwarefm.shared.friend.IFriendAndFriendManager;
+import org.softwarefm.shared.usage.IUsagePersistance;
+import org.softwarefm.shared.usage.IUsageStats;
 import org.softwarefm.shared.usage.UsageTestData;
 import org.softwarefm.utilities.http.IResponse;
 import org.softwarefm.utilities.maps.ISimpleMap;

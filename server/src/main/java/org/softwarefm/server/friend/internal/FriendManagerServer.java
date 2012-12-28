@@ -8,10 +8,10 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
-import org.softwarefm.eclipse.usage.IUsageStats;
-import org.softwarefm.eclipse.usage.UsageStatData;
 import org.softwarefm.server.MySqlStrings;
 import org.softwarefm.shared.friend.IFriendAndFriendManager;
+import org.softwarefm.shared.usage.IUsageStats;
+import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.maps.Maps;

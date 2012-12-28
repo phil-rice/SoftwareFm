@@ -1,6 +1,6 @@
 package org.softwarefm.server.usage;
 
-import org.softwarefm.eclipse.usage.IUsageStats;
+import org.softwarefm.shared.usage.IUsageStats;
 
 public interface IUsageGetter {
 	IUsageStats getStats(String user);

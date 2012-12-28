@@ -5,12 +5,12 @@ package org.softwarefm.server;
 import javax.sql.DataSource;
 
 import org.apache.http.protocol.HttpRequestHandler;
-import org.softwarefm.eclipse.usage.IUsagePersistance;
 import org.softwarefm.server.friend.internal.FriendManagerServer;
 import org.softwarefm.server.friend.internal.FriendServerHandler;
 import org.softwarefm.server.usage.internal.UsageMysqlCallbackAndGetter;
 import org.softwarefm.server.usage.internal.UsageServerHandler;
 import org.softwarefm.shared.friend.IFriendAndFriendManager;
+import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.http.IHttpServer;
 import org.softwarefm.utilities.time.ITime;
