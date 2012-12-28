@@ -30,7 +30,8 @@ public class FriendsConfigurator implements IRegistryConfigurator {
 			@Override
 			public StatusAndEntity execute(HttpMethod method, Map<String, String> parameters, HttpEntity entity) throws Exception {
 				String user = parameters.get(ConfiguratorConstants.userParam);
-				return StatusAndEntity.ok(Strings.join(manager.friendNames(user), ","));
+				String result = Strings.join(manager.friendNames(user), ",");
+				return StatusAndEntity.ok(result);
 			}
 		}, ConfiguratorConstants.listFriendsPattern, ConfiguratorConstants.userParam);
 

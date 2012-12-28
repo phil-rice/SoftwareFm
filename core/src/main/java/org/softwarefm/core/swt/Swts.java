@@ -1397,6 +1397,17 @@ public class Swts {
 		result.setText(text);
 		return result;
 	}
+	public static org.eclipse.swt.widgets.List createMigStyledList(Composite parent, int style,  String constraint) {
+		org.eclipse.swt.widgets.List result = new org.eclipse.swt.widgets.List(parent, style);
+		result.setLayoutData(constraint);
+		return result;
+	}
+
+	public static Text createMigLabelAndTextForForm(Composite composite, String label, String text) {
+		createMigLabel(composite, label, "");
+		return Swts.createMigText(composite, text, "growx,wrap");
+		
+	}
 	
 
 
