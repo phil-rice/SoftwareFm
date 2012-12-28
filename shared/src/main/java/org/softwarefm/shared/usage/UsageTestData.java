@@ -36,6 +36,7 @@ public class UsageTestData {
 	public static IUsageStats statsc1d1 = usagec1d1.getStats();
 	
 	public static ISimpleMap<String,IUsageStats> fr1_a1b3_fr2_b1c2 = SimpleMaps.makeMap("fr1", statsa1b3, "fr2", statsb1c2);
+	public static ISimpleMap<String, UsageStatData> a_fr1_1 = SimpleMaps.makeMap("fr1", new UsageStatData(1));
 	
 
 }

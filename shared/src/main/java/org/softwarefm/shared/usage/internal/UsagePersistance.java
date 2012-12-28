@@ -60,7 +60,7 @@ public class UsagePersistance implements IUsagePersistance {
 		}
 	}
 
-	public String save(IUsageStats usageStats) {
+	public String saveUsageStats(IUsageStats usageStats) {
 		Element usageElement = usage(usageStats);
 		return elementToString(usageElement);
 	}
@@ -82,7 +82,7 @@ public class UsagePersistance implements IUsagePersistance {
 	}
 
 	@Override
-	public String save(ISimpleMap<String, IUsageStats> friendsUsage) {
+	public String saveFriendsUsage(ISimpleMap<String, IUsageStats> friendsUsage) {
 		Element friendsElement = new Element("Friends");
 		friendsElement.setAttribute("version", "1.0");
 		for (String key : friendsUsage.keys()) {

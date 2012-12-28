@@ -34,14 +34,14 @@ public class UsagePersistanceTest extends TestCase {
 	}
 	
 	private void checkSaveLoad(ISimpleMap<String, IUsageStats> friendsUsage) {
-		String string = usagePersistance.save(friendsUsage);
+		String string = usagePersistance.saveFriendsUsage(friendsUsage);
 		ISimpleMap<String, IUsageStats> newValue = usagePersistance.parseFriendsUsage(string);
 		assertNotSame(newValue, friendsUsage);
 		Tests.assertEquals(friendsUsage, newValue);
 	}
 
 	private void checkSaveLoad(IUsageStats original) {
-		String string = usagePersistance.save(original);
+		String string = usagePersistance.saveUsageStats(original);
 		ISimpleMap<String, UsageStatData> newValue = usagePersistance.parse(string);
 		assertNotSame(newValue, original);
 		Tests.assertEquals(original, newValue);

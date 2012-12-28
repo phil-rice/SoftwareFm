@@ -8,6 +8,9 @@ package org.softwarefm.utilities.http;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.http.Header;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
@@ -25,11 +28,15 @@ public interface IHttpClient {
 
 	IHttpClient post(String url);
 
+	IHttpClient put(String url);
+
 	IHttpClient get(String url);
 
 	IHttpClient head(String url);
 
 	IHttpClient delete(String url);
+
+	IHttpClient method(HttpMethod method, String url);
 
 	IHttpClient addHeader(String name, String value);
 
@@ -50,5 +57,22 @@ public interface IHttpClient {
 			return new HttpClientBuilder(new DefaultHttpClient(new ThreadSafeClientConnManager()), null, null, null, null, null, Collections.<NameValuePair> emptyList());
 		}
 
+		public static boolean headerEquals(HttpResponse response, String name, String value) {
+			Header[] headers = response.getHeaders(name);
+			if (headers != null)
+				for (Header header : headers)
+					if (value.equals(header.getValue()))
+						return true;
+			return false;
+		}
+
+		public static boolean headerEquals(HttpRequest request, String name, String value) {
+			Header[] headers = request.getHeaders(name);
+			if (headers != null)
+				for (Header header : headers)
+					if (value.equals(header.getValue()))
+						return true;
+			return false;
+		}
 	}
 }

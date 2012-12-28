@@ -6,6 +6,7 @@
    <packaging>pom</packaging>
    <modules>
       <module>../utilities</module>
+      <module>../httpServer</module>
       <module>../shared</module>
       <module>../core</module>
       <module>../server</module>

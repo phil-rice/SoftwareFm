@@ -19,7 +19,7 @@ public class UsageReporter implements IUsageReporter {
 
 	public void report(String user, IUsageStats usageStats) {
 		try {
-			String text = persistance.save(usageStats);
+			String text = persistance.saveUsageStats(usageStats);
 			byte[] zipped = Strings.zip(text);
 			Strings.unzip(zipped); //just check it unzips
 			client.post("usage/" + user).withEntity(zipped).execute();

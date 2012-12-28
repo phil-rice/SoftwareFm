@@ -13,12 +13,12 @@ public class Exceptions {
 		return Strings.join(Iterables.iterable(stackTrace), separator);
 	}
 
-	public static String classAndMessage(Exception e) {
+	public static String classAndMessage(Throwable e) {
 		String raw = e.getClass().getSimpleName();
 		return e.getMessage() == null ? raw : raw + ", " + e.getMessage();
 	}
 
-	public static String serialize(Exception e, String separator) {
+	public static String serialize(Throwable e, String separator) {
 		return classAndMessage(e)+separator +stackTraceString(e.getStackTrace(), separator);
 	}
 

@@ -7,9 +7,9 @@ public interface IUsagePersistance {
 
 	IUsageStats parse(String text);
 
-	String save(IUsageStats usageStats);
+	String saveUsageStats(IUsageStats usageStats);
 
-	String save(ISimpleMap<String, IUsageStats> friendsUsage);
+	String saveFriendsUsage(ISimpleMap<String, IUsageStats> friendsUsage);
 
 	ISimpleMap<String, IUsageStats> parseFriendsUsage(String text);
 
@@ -19,4 +19,6 @@ public interface IUsagePersistance {
 			return new UsagePersistance();
 		}
 	}
+
+
 }

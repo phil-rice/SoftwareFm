@@ -26,7 +26,7 @@ public class DebugUsageView extends ViewPart {
 			@Override
 			public void usageChanged() {
 				try {
-					String raw = persistance.save(usage.getStats());
+					String raw = persistance.saveUsageStats(usage.getStats());
 					int rawBytes = raw.getBytes("UTF-8").length;
 					int zippedBytes = Strings.zip(raw).length;
 					text.setText("Raw: " + rawBytes + " Zipped: " + zippedBytes + "\n" + raw);
