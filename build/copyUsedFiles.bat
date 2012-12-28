@@ -38,8 +38,9 @@ copy %m2%\org\codehaus\plexus\plexus-component-annotations\1.5.4\plexus-componen
 copy %m2%\org\codehaus\plexus\plexus-classworlds\2.2.3\plexus-classworlds-2.2.3.jar lib
 copy %m2%\org\sonatype\sisu\sisu-inject-bean\1.4.2\sisu-inject-bean-1.4.2.jar lib
 copy %m2%\org\sonatype\sisu\sisu-guice\2.1.7\sisu-guice-2.1.7-noaop.jar lib
+copy %m2%\\com\miglayout\miglayout-swt\4.2\miglayout-swt-4.2.jar lib
+copy %m2%\\com\miglayout\miglayout-core\4.2\miglayout-core-4.2.jar lib
 copy %m2%\org\softwarefm\utilities\0.0.1-SNAPSHOT\utilities-0.0.1-SNAPSHOT.jar lib
 copy %m2%\org\softwarefm\core\0.0.1-SNAPSHOT\core-0.0.1-SNAPSHOT.jar lib
 copy %m2%\org\softwarefm\shared\0.0.1-SNAPSHOT\shared-0.0.1-SNAPSHOT.jar lib
-
 
