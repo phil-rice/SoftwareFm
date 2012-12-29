@@ -3,6 +3,7 @@ package org.softwarefm.shared.friend;
 import java.util.List;
 
 import org.softwarefm.shared.usage.IUsageStats;
+import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.maps.ISimpleMap;
 
 public interface IFriend {
@@ -11,6 +12,6 @@ public interface IFriend {
 
 	ISimpleMap<String, IUsageStats> friendsUsage(String user);
 
-	IUsageStats path(String user, String path);
+	ISimpleMap<String, UsageStatData> pathToFriendsUsage(String user, String path);
 
 }

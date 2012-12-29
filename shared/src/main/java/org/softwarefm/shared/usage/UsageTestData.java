@@ -8,6 +8,7 @@ import org.softwarefm.utilities.maps.SimpleMaps;
 public class UsageTestData {
 
 	public static Usage usagea1b3;
+	public static Usage usagea2b6;
 	public static Usage usagea2b1;
 	public static Usage usageb1c2;
 	public static Usage usagec1d1;
@@ -26,11 +27,21 @@ public class UsageTestData {
 		UsageTestData.usagea1b3.selected("b");
 		UsageTestData.usagea1b3.selected("b");
 		UsageTestData.usagea1b3.selected("b");
+		UsageTestData.usagea2b6 = new Usage(IMultipleListenerList.Utils.defaultList());
+		UsageTestData.usagea2b6.selected("a");
+		UsageTestData.usagea2b6.selected("a");
+		UsageTestData.usagea2b6.selected("b");
+		UsageTestData.usagea2b6.selected("b");
+		UsageTestData.usagea2b6.selected("b");
+		UsageTestData.usagea2b6.selected("b");
+		UsageTestData.usagea2b6.selected("b");
+		UsageTestData.usagea2b6.selected("b");
 		UsageTestData.usagec1d1 = new Usage(IMultipleListenerList.Utils.defaultList());
 		UsageTestData.usagec1d1.selected("c");
 		UsageTestData.usagec1d1.selected("d");
 	}
 	public static IUsageStats statsa1b3 = usagea1b3.getStats();
+	public static IUsageStats statsa2b6 = usagea2b6.getStats();
 	public static IUsageStats statsa2b1 = usagea2b1.getStats();
 	public static IUsageStats statsb1c2 = usageb1c2.getStats();
 	public static IUsageStats statsc1d1 = usagec1d1.getStats();

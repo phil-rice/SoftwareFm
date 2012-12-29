@@ -11,7 +11,6 @@ import javax.sql.DataSource;
 import org.softwarefm.server.MySqlStrings;
 import org.softwarefm.shared.friend.IFriendAndFriendManager;
 import org.softwarefm.shared.usage.IUsageStats;
-import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.maps.Maps;
@@ -44,33 +43,34 @@ public class FriendManagerServer implements IFriendAndFriendManager {
 		}, user);
 	}
 
-	public IUsageStats path(String user, String path) {
-		final Map<String, UsageStatData> result = new HashMap<String, UsageStatData>();
+	@Override
+	public IUsageStats pathToFriendsUsage(String user, String path) {
+		final Map<String, Integer> result = new HashMap<String, Integer>();
 		template.query(MySqlStrings.friendTimesFromUserAndPath, new RowCallbackHandler() {
 			public void processRow(ResultSet rs) throws SQLException {
 				String friend = rs.getString(MySqlStrings.friendsField);
 				int times = rs.getInt(MySqlStrings.timesField);
-				result.put(friend, new UsageStatData(times));
+				Maps.add(result	, friend ,times);
 			}
 		}, user, path);
-		return IUsageStats.Utils.fromMap(result);
+		return IUsageStats.Utils.fromIntegerMap(result);
 	}
 
 	public ISimpleMap<String, IUsageStats> friendsUsage(String user) {
-		final Map<String, Map<String, UsageStatData>> raw = new HashMap<String, Map<String, UsageStatData>>();
+		final Map<String, Map<String, Integer>> raw = new HashMap<String, Map<String,Integer>>();
 		template.query(MySqlStrings.friendPathAndTimesFromUser, new RowCallbackHandler() {
 			@Override
 			public void processRow(ResultSet rs) throws SQLException {
 				String friend = rs.getString(MySqlStrings.friendsField);
 				String path = rs.getString(MySqlStrings.pathField);
 				int times = rs.getInt(MySqlStrings.timesField);
-				Maps.put(raw, friend, path, new UsageStatData(times));
+				Maps.add(raw, friend, path, times);
 			}
 		}, user);
-		Map<String, IUsageStats> result = Maps.mapTheMap(raw, new IFunction1<Map<String, UsageStatData>, IUsageStats>() {
+		Map<String, IUsageStats> result = Maps.mapTheMap(raw, new IFunction1<Map<String, Integer>, IUsageStats>() {
 			@Override
-			public IUsageStats apply(Map<String, UsageStatData> from) throws Exception {
-				return IUsageStats.Utils.fromMap(from);
+			public IUsageStats apply(Map<String, Integer> from) throws Exception {
+				return IUsageStats.Utils.fromIntegerMap(from);
 			}
 		});
 		return SimpleMaps.fromMap(result);

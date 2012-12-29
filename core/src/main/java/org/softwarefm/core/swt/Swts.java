@@ -57,6 +57,8 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
@@ -442,19 +444,20 @@ public class Swts {
 			return label;
 		}
 
-		public static Button makeMigCheckboxButton(Composite parent, String text, String constraint){
+		public static Button makeMigCheckboxButton(Composite parent, String text, String constraint) {
 			Button button = new Button(parent, SWT.CHECK);
 			button.setText(text);
 			button.setLayoutData(constraint);
 			return button;
 		}
-		public static Button makeMigPushButton(Composite parent, String text, String constraint){
+
+		public static Button makeMigPushButton(Composite parent, String text, String constraint) {
 			Button button = new Button(parent, SWT.PUSH);
 			button.setText(text);
 			button.setLayoutData(constraint);
 			return button;
 		}
-		
+
 		public static Button makeRadioButton(Composite parent, IResourceGetter resourceGetter, String key, final Runnable runnable) {
 			String title = IResourceGetter.Utils.getOrException(resourceGetter, key);
 			return makeRadioButton(parent, title, runnable);
@@ -1384,6 +1387,7 @@ public class Swts {
 		result.setText(text);
 		return result;
 	}
+
 	public static Text createMigText(Composite parent, String text, String constraint) {
 		Text result = new Text(parent, SWT.NULL);
 		result.setLayoutData(constraint);
@@ -1391,13 +1395,14 @@ public class Swts {
 		return result;
 	}
 
-	public static StyledText createMigStyledText(Composite parent, int style,  String text, String constraint) {
+	public static StyledText createMigStyledText(Composite parent, int style, String text, String constraint) {
 		StyledText result = new StyledText(parent, style);
 		result.setLayoutData(constraint);
 		result.setText(text);
 		return result;
 	}
-	public static org.eclipse.swt.widgets.List createMigStyledList(Composite parent, int style,  String constraint) {
+
+	public static org.eclipse.swt.widgets.List createMigList(Composite parent, int style, String constraint) {
 		org.eclipse.swt.widgets.List result = new org.eclipse.swt.widgets.List(parent, style);
 		result.setLayoutData(constraint);
 		return result;
@@ -1406,9 +1411,21 @@ public class Swts {
 	public static Text createMigLabelAndTextForForm(Composite composite, String label, String text) {
 		createMigLabel(composite, label, "");
 		return Swts.createMigText(composite, text, "growx,wrap");
-		
-	}
-	
 
+	}
+
+	public static TabFolder createMigTab(Composite parent, int style, String constraints) {
+		TabFolder result = new TabFolder(parent, style);
+		result.setLayoutData(constraints);
+		return result;
+
+	}
+
+	public static TabItem createTabItem(TabFolder tabFolder, int style, String text, Control control) {
+		TabItem result = new TabItem(tabFolder, style);
+		result.setText(text);
+		result.setControl(control);
+		return result;
+	}
 
 }

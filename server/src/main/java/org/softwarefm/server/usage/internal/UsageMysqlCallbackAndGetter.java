@@ -10,7 +10,7 @@ import javax.sql.DataSource;
 import org.softwarefm.server.MySqlStrings;
 import org.softwarefm.server.usage.IUsageCallbackAndGetter;
 import org.softwarefm.shared.usage.IUsageStats;
-import org.softwarefm.shared.usage.UsageStatData;
+import org.softwarefm.utilities.maps.Maps;
 import org.softwarefm.utilities.time.ITime;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
@@ -33,14 +33,14 @@ public class UsageMysqlCallbackAndGetter implements IUsageCallbackAndGetter {
 
 	@Override
 	public IUsageStats getStats(String user) {
-		final Map<String, UsageStatData> result = new HashMap<String, UsageStatData>();
+		final Map<String, Integer> result = new HashMap<String, Integer>();
 		template.query(MySqlStrings.selectFromUsage, new RowCallbackHandler() {
 			@Override
 			public void processRow(ResultSet rs) throws SQLException {
-				result.put(rs.getString(MySqlStrings.pathField), new UsageStatData(rs.getInt(MySqlStrings.timesField)));
+				Maps.add(result, rs.getString(MySqlStrings.pathField), rs.getInt(MySqlStrings.timesField));
 			}
 		}, user);
-		return IUsageStats.Utils.fromMap(result);
+		return IUsageStats.Utils.fromIntegerMap(result);
 	}
 
 }

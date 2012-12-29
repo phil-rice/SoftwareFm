@@ -33,8 +33,8 @@ public class FriendManagerServerTest extends TestCase {
 		assertEquals(Sets.makeSet("fr1_2"), new HashSet<String>(friends.friendNames("u1")));
 		assertEquals(Sets.makeSet("fr2_1"), new HashSet<String>(friends.friendNames("u2")));
 	}
-	
-	public void testAddingFriendsMultipleTimesDoesntAddDuplicates(){
+
+	public void testAddingFriendsMultipleTimesDoesntAddDuplicates() {
 		friends.add("u1", "fr1_1");
 		friends.add("u1", "fr1_1");
 		friends.add("u1", "fr1_1");
@@ -42,26 +42,60 @@ public class FriendManagerServerTest extends TestCase {
 		friends.add("u1", "fr1_2");
 		assertEquals(1, MysqlTestData.template.queryForInt("select count(1) from friends where user=? and friend=?", "u1", "fr1_1"));
 		assertEquals(1, MysqlTestData.template.queryForInt("select count(1) from friends where user=? and friend=?", "u1", "fr1_2"));
-		
-		
+
 	}
 
 	public void testUsage() throws Exception {
 		friends.add("u1", "fr1_1");
 		friends.add("u1", "fr1_2");
 		friends.add("u2", "fr2_1");
-		
+
 		usage.process("ip1", "u1", UsageTestData.statsa2b1);
 		usage.process("ip2", "fr1_1", UsageTestData.statsb1c2);
 		usage.process("ip3", "fr1_2", UsageTestData.statsc1d1);
 		usage.process("ip3", "fr2_1", UsageTestData.statsa1b3);
 
-		Tests.assertMapEquals(friends.path("u1", "a"));
-		Tests.assertMapEquals(friends.path("u1", "b"), "fr1_1", new UsageStatData(2));
-		Tests.assertMapEquals(friends.path("u1", "c"), "fr1_1", new UsageStatData(1), "fr1_2",new UsageStatData(1));
-		Tests.assertMapEquals(friends.path("u2", "a"), "fr2_1", new UsageStatData(1));
-		Tests.assertMapEquals(friends.path("u2", "b"), "fr2_1", new UsageStatData(3));
-		Tests.assertMapEquals(friends.path("u2", "c"));
+		Tests.assertMapEquals(friends.pathToFriendsUsage("u1", "a"));
+		Tests.assertMapEquals(friends.pathToFriendsUsage("u1", "b"), "fr1_1", new UsageStatData(2));
+		Tests.assertMapEquals(friends.pathToFriendsUsage("u1", "c"), "fr1_1", new UsageStatData(1), "fr1_2", new UsageStatData(1));
+		Tests.assertMapEquals(friends.pathToFriendsUsage("u2", "a"), "fr2_1", new UsageStatData(1));
+		Tests.assertMapEquals(friends.pathToFriendsUsage("u2", "b"), "fr2_1", new UsageStatData(3));
+		Tests.assertMapEquals(friends.pathToFriendsUsage("u2", "c"));
+	}
+
+	public void testUsageWorksIfMultipleEntries() {
+		friends.add("u1", "fr1_1");
+		usage.process("ip1", "fr1_1", UsageTestData.statsa1b3);
+		usage.process("ip1", "fr1_1", UsageTestData.statsa1b3);
+		Tests.assertMapEquals(friends.pathToFriendsUsage("u1", "a"), "fr1_1", new UsageStatData(2));
+		Tests.assertMapEquals(friends.pathToFriendsUsage("u1", "b"), "fr1_1", new UsageStatData(6));
+	}
+
+	public void testFriendsUsage() {
+		friends.add("u1", "fr1_1");
+		friends.add("u1", "fr1_2");
+		friends.add("u2", "fr2_1");
+
+		usage.process("ip1", "u1", UsageTestData.statsa2b1);
+		usage.process("ip2", "fr1_1", UsageTestData.statsb1c2);
+		usage.process("ip3", "fr1_2", UsageTestData.statsc1d1);
+		usage.process("ip3", "fr2_1", UsageTestData.statsa1b3);
+
+		Tests.assertMapEquals(friends.friendsUsage("u1"), "fr1_1", UsageTestData.statsb1c2, "fr1_2", UsageTestData.statsc1d1);
+	}
+
+	public void testFriendsUsageifMultipleEntires() {
+		friends.add("u1", "fr1_1");
+		friends.add("u1", "fr1_2");
+		friends.add("u2", "fr2_1");
+
+		usage.process("ip1", "u1", UsageTestData.statsa2b1);
+		usage.process("ip2", "fr1_1", UsageTestData.statsa1b3);
+		usage.process("ip2", "fr1_1", UsageTestData.statsa1b3);
+		usage.process("ip3", "fr1_2", UsageTestData.statsc1d1);
+		usage.process("ip3", "fr2_1", UsageTestData.statsa1b3);
+
+		Tests.assertMapEquals(friends.friendsUsage("u1"), "fr1_1", UsageTestData.statsa2b6, "fr1_2", UsageTestData.statsc1d1);
 	}
 
 	@Override

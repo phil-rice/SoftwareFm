@@ -393,6 +393,13 @@ public class Maps {
 		map.put(key, size + intFor(map, key));
 	}
 
+	public static <K1, K2> void add(Map<K1, Map<K2, Integer>> map, K1 key1, K2 key2, Integer value) {
+		Map<K2, Integer> map1 = map.get(key1);
+		if (map1 == null)
+			map.put(key1, map1 = new HashMap<K2, Integer>());
+		add(map1, key2, value);
+	}
+
 	public static <K> int intFor(Map<K, Integer> map, K key) {
 		Integer existing = map.get(key);
 		return existing == null ? 0 : existing;

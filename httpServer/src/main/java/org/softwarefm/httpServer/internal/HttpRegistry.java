@@ -1,10 +1,12 @@
 package org.softwarefm.httpServer.internal;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -24,6 +26,7 @@ import org.softwarefm.utilities.strings.Strings;
 
 public class HttpRegistry implements IHttpRegistry {
 
+	private final Logger logger = Logger.getLogger(getClass().getName());
 	private final List<RouteMatcherAndRouteHandler> routes = new ArrayList<RouteMatcherAndRouteHandler>();
 	private final IRouteMatcherFactory factory;
 
@@ -41,10 +44,12 @@ public class HttpRegistry implements IHttpRegistry {
 		List<String> routeFragments = Strings.splitIgnoreBlanks(uri, "/");
 		Map<String, String> parameters = new HashMap<String, String>();
 		IRouteHandler routeHandler = findRouteHandlerAndUpdateParameters(parameters, method, uri, routeFragments);
+		logger.info(MessageFormat.format("Processing {0} {1} {2} {3}", method, uri, routeHandler.getClass().getName(), parameters));
 		if (routeHandler instanceof IRouteHandlerWithParameters)
 			addParameters(parameters, httpEntity);
 
 		StatusAndEntity statusAndEntity = routeHandler.execute(method, parameters, httpEntity);
+		logger.info(MessageFormat.format("   result{0}",statusAndEntity));
 		return statusAndEntity;
 	}
 

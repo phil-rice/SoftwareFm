@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.maps.Maps;
 
@@ -62,6 +63,15 @@ public interface IUsageStats extends ISimpleMap<String, UsageStatData> {
 
 		public static IUsageStats from(Object... nameAndStats) {
 			return fromMap( Maps.<String, UsageStatData> makeMap(nameAndStats));
+		}
+
+		public static IUsageStats fromIntegerMap(Map<String, Integer> result) {
+			return fromMap(Maps.mapTheMap(result, new IFunction1<Integer, UsageStatData>() {
+				@Override
+				public UsageStatData apply(Integer from) throws Exception {
+					return new UsageStatData(from);
+				}
+			}));
 		}
 	}
 

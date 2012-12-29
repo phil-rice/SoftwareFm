@@ -1,102 +1,160 @@
 package org.softwarefm.core.friends;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
 import net.miginfocom.swt.MigLayout;
 
+import org.apache.http.HttpStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Text;
-import org.softwarefm.core.swt.HasComposite;
+import org.softwarefm.core.client.AbstractMigComposite;
+import org.softwarefm.core.client.IUserConnectionDetails;
 import org.softwarefm.core.swt.Swts;
 import org.softwarefm.server.configurator.ConfiguratorConstants;
-import org.softwarefm.utilities.functions.IFunction1;
-import org.softwarefm.utilities.http.IHttpClient;
+import org.softwarefm.shared.friend.IFriend;
+import org.softwarefm.shared.usage.IUsagePersistance;
+import org.softwarefm.shared.usage.IUsageStats;
+import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.http.IResponse;
+import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.strings.Strings;
 
-public class FriendsComposite extends HasComposite {
+public class FriendsComposite extends AbstractMigComposite {
 
-	private final Text hostText;
-	private final Text portText;
-	private final Text userText;
 	private final Text friendText;
-	private final List friendsListText;
+	private final List friendsList;
 	private Menu menu;
+	private final List friendsUsageList;
+	private final IUsagePersistance persistance;
+	private ISimpleMap<String, IUsageStats> friendsUsage;
+	private final IUserConnectionDetails userConnectionDetails;
+	private final Button sendButton;
 
-	public FriendsComposite(Composite parent) {
-		super(parent);
-		Composite composite = getComposite();
-		composite.setLayout(new MigLayout("fill", "[][grow]", "[][][][][grow]"));
-		hostText = Swts.createMigLabelAndTextForForm(composite, "Host", "localhost");
-		portText = Swts.createMigLabelAndTextForForm(composite, "Port", "8082");
-		userText = Swts.createMigLabelAndTextForForm(composite, "User", "me");
+	public FriendsComposite(Composite parent, final IUserConnectionDetails userConnectionDetails, final IFriend friend, IUsagePersistance persistance) {
+		super(parent, new MigLayout("fill", "[][grow]", "[][][grow]"));
+		this.userConnectionDetails = userConnectionDetails;
+		this.persistance = persistance;
+		final Composite composite = getComposite();
 		friendText = Swts.createMigLabelAndTextForForm(composite, "Friend", "");
 		friendText.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {
-				String user = getUser();
+				sendButton.notifyListeners(SWT.Selection, new Event());
+			}
+		});
+
+		sendButton = Swts.Buttons.makeMigPushButton(composite, "Add", "split 2, span 2");
+		sendButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String user = userConnectionDetails.getUser();
 				String friend = getFriend();
 				if (friend.length() > 0) {
 					System.out.println("Adding " + friend + " as friend of " + user);
-					System.out.println(IHttpClient.Utils.builder().host(getHost(), getPort()).post(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, user, friend)).execute());
+					System.out.println(userConnectionDetails.getHttpClient().post(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, user, friend)).execute());
 					getFriends(user);
-
 				}
 			}
 		});
-		friendsListText = Swts.createMigStyledList(composite, SWT.NULL, "grow,spanx 2");
-		friendsListText.setMenu(menu = new Menu(friendsListText));
+		Swts.Buttons.makeMigPushButton(composite, "Refresh", "wrap").addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String user = userConnectionDetails.getUser();
+				getFriends(user);
+			}
+
+		});
+
+		friendsList = Swts.createMigList(composite, SWT.MULTI, "span 2, split 2,grow");
+		friendsUsageList = Swts.createMigList(composite, SWT.NULL, "grow");
+
+		friendsList.setMenu(menu = new Menu(friendsList));
 		MenuItem deleteItem = new MenuItem(menu, SWT.NONE);
 		deleteItem.setText("delete");
 		deleteItem.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				String[] selection = friendsListText.getSelection();
+				String[] selection = friendsList.getSelection();
 				if (selection != null)
 					for (String sel : selection)
-						System.out.println(IHttpClient.Utils.builder().host(getHost(), getPort()).delete(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, getUser(), sel)).execute());
-				getFriends(getUser());
+						System.out.println(userConnectionDetails.getHttpClient().delete(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, userConnectionDetails.getUser(), sel)).execute());
+				getFriends(userConnectionDetails.getUser());
 			}
 		});
-		getFriends(getUser());
+		getFriends(userConnectionDetails.getUser());
+		friendsList.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String[] selections = friendsList.getSelection();
+				friendsUsageList.removeAll();
+				if (friendsUsage != null) {
+					Collection<String> paths = new HashSet<String>();
+					for (String friend : selections) {
+						IUsageStats usageStats = friendsUsage.get(friend);
+						if (usageStats != null)
+							paths.addAll(usageStats.keys());
+					}
+					ArrayList<String> sortedPaths = new ArrayList<String>(paths);
+					Collections.sort(sortedPaths);
+					for (String path : sortedPaths) {
+						StringBuilder builder = new StringBuilder();
+
+						for (String friend : selections) {
+							IUsageStats usageStats = friendsUsage.get(friend);
+							if (usageStats != null) {
+								UsageStatData statData = usageStats.get(path);
+								if (statData != null) {
+									if (builder.length() > 0)
+										builder.append(',');
+									builder.append(friend + ":" + statData.count);
+								}
+							}
+						}
+						String result = path + " -- > " + builder;
+						friendsUsageList.add(result);
+					}
+				}
+			}
+		});
 	}
 
-	private void getFriends(String user) {
-		IResponse friendsListResponse = IHttpClient.Utils.builder().host(getHost(), getPort()).get(MessageFormat.format(ConfiguratorConstants.listFriendsPattern, user)).execute();
-		System.out.println(friendsListResponse);
-		friendsListText.removeAll();
-		for (String item : Strings.splitIgnoreBlanks(friendsListResponse.asString(), ","))
-			friendsListText.add(item);
-	}
-
-	protected String getHost() {
-		return hostText.getText();
-	}
-
-	protected int getPort() {
-		return Integer.parseInt(portText.getText());
+	private void getFriends(final String user) {
+		async(new Runnable() {
+			@Override
+			public void run() {
+				final IResponse friendsListResponse = userConnectionDetails.getHttpClient().get(MessageFormat.format(ConfiguratorConstants.listFriendsPattern, user)).execute();
+				System.out.println("FriendsList: " + friendsListResponse);
+				final IResponse friendsUsageResponse = userConnectionDetails.getHttpClient().get(MessageFormat.format(ConfiguratorConstants.friendsUsagePattern, user)).execute();
+				System.out.println("FriendsUsage: " + friendsUsageResponse);
+				getComposite().getDisplay().asyncExec(new Runnable() {
+					public void run() {
+						friendsList.removeAll();
+						if (friendsListResponse.statusCode() == HttpStatus.SC_OK)
+							for (String item : Strings.splitIgnoreBlanks(friendsListResponse.asString(), ","))
+								friendsList.add(item);
+						if (friendsUsageResponse.statusCode() == HttpStatus.SC_OK)
+							friendsUsage = persistance.parseFriendsUsage(friendsUsageResponse.asString());
+						friendsUsageList.removeAll();
+					}
+				});
+			}
+		});
 	}
 
 	protected String getFriend() {
 		return friendText.getText();
 	}
 
-	protected String getUser() {
-		return userText.getText();
-	}
-
-	public static void main(String[] args) {
-		Swts.Show.display("FriendsComposite", new IFunction1<Composite, Composite>() {
-			@Override
-			public Composite apply(Composite from) throws Exception {
-				return new FriendsComposite(from).getComposite();
-			}
-		});
-	}
 }

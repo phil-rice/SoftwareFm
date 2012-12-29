@@ -39,4 +39,10 @@ public class StatusAndEntity {
 		this.zipped = zipped;
 	}
 
+	@Override
+	public String toString() {
+		return "StatusAndEntity [status=" + status + ", entity=" + entity + ", zipped=" + zipped + "]";
+	}
+
+
 }

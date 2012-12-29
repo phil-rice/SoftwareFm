@@ -1,5 +1,8 @@
 package org.softwarefm.server;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.sql.DataSource;
 
 import org.softwarefm.httpServer.IHttpServer;
@@ -15,6 +18,7 @@ public class SoftwareFmServer {
 	
 	
 	public SoftwareFmServer(DataSource dataSource, int port) {
+		Logger.getLogger(Logger.GLOBAL_LOGGER_NAME).setLevel(Level.ALL);
 		IHttpServer httpServer = IHttpServer.Utils.server(10, IHttpServer.Utils.simpleParams("SoftwareFmUsageAndFriendsServer/1.0"), port, ICallback.Utils.sysErrCallback());
 		DataSource datasource = MysqlTestData.dataSource;
 		UsageMysqlCallbackAndGetter callbackAndGetter = new UsageMysqlCallbackAndGetter(datasource, ITime.Utils.system());
