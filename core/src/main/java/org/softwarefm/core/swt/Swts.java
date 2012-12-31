@@ -30,6 +30,8 @@ import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.custom.TableEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -256,7 +258,7 @@ public class Swts {
 			try {
 				Display display = new Display();
 				Shell shell = new Shell(display);
-				shell.setSize(600, 400);
+				shell.setSize(1300, 500);
 				shell.setText(title);
 				shell.setLayout(new FillLayout());
 				builder.apply(shell);
@@ -490,6 +492,15 @@ public class Swts {
 				if (child instanceof Button)
 					((Button) child).setSelection(child == button);
 			}
+		}
+
+		public static Button makeMigButtonForTest(Composite parent, String text, Listener listener, String migConstraint) {
+			Button result = new Button(parent, SWT.PUSH);
+			result.setLayoutData(migConstraint);
+			result.setText(text);
+			result.addListener(SWT.Selection, listener);
+			return result;
+
 		}
 	}
 
@@ -959,6 +970,11 @@ public class Swts {
 	public static void dispatchUntilQueueEmpty(Display display) {
 		while (display.readAndDispatch())
 			doNothing();
+	}
+
+	public static void dispatchUntilLatch(Display display, CountDownLatch latch) {
+		while (latch.getCount() != 0)
+			dispatchUntilQueueEmpty(display);
 	}
 
 	private static void doNothing() {
@@ -1453,7 +1469,7 @@ public class Swts {
 		return browser;
 	}
 
-	public static Composite createMigComposite(Composite parent,  int style, MigLayout layout,String constraint) {
+	public static Composite createMigComposite(Composite parent, int style, MigLayout layout, String constraint) {
 		Composite composite = new Composite(parent, style);
 		composite.setLayout(layout);
 		composite.setLayoutData(constraint);
@@ -1465,6 +1481,17 @@ public class Swts {
 		result.setImage(imageRegistry.get(imageKey));
 		result.addListener(SWT.Selection, listener);
 		return result;
+	}
+
+	public static void addPaintListenerToDrawLineUnderChild(final Composite parent, final Composite child, final int color) {
+		parent.addPaintListener(new PaintListener() {
+			public void paintControl(PaintEvent e) {
+				Point childSize = child.getSize();
+				e.gc.setForeground(parent.getDisplay().getSystemColor(color));
+				e.gc.drawLine(0, childSize.y, childSize.x, childSize.y);
+			}
+		});
+
 	}
 
 }

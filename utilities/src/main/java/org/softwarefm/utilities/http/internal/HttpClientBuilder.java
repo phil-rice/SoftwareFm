@@ -77,7 +77,7 @@ public class HttpClientBuilder implements IHttpClient {
 			String mimeType = findMimeType(entity);
 
 			boolean zipped = IHttpClient.Utils.headerEquals(httpResponse, "Content-Encoding", "gzip");
-			String responseString = entity == null? null : (zipped ? Strings.unzip(EntityUtils.toByteArray(entity)) : EntityUtils.toString(entity));
+			String responseString = entity == null ? null : (zipped ? Strings.unzip(EntityUtils.toByteArray(entity)) : EntityUtils.toString(entity));
 			List<Header> headers = Arrays.asList(httpResponse.getAllHeaders());
 			Response response = new Response(//
 					httpResponse.getStatusLine().getStatusCode(), //
@@ -158,24 +158,29 @@ public class HttpClientBuilder implements IHttpClient {
 		return new HttpClientBuilder(client, new HttpHost(host, port), url, method, entity, headers, parameters);
 	}
 
-	public IHttpClient put(String url) {
-		return new HttpClientBuilder(client, host, url, HttpMethod.PUT, entity, headers, parameters);
+	public IHttpClient put(String urlPattern, Object... params) {
+		return new HttpClientBuilder(client, host, MessageFormat.format(urlPattern, params), HttpMethod.PUT, entity, headers, parameters);
 	}
 
-	public IHttpClient post(String url) {
-		return new HttpClientBuilder(client, host, url, HttpMethod.POST, entity, headers, parameters);
+	public IHttpClient post(String urlPattern, Object... params) {
+		return new HttpClientBuilder(client, host, MessageFormat.format(urlPattern, params), HttpMethod.POST, entity, headers, parameters);
 	}
 
-	public IHttpClient get(String url) {
-		return new HttpClientBuilder(client, host, url, HttpMethod.GET, entity, headers, parameters);
+	public IHttpClient get(String urlPattern, Object... params) {
+		return new HttpClientBuilder(client, host, MessageFormat.format(urlPattern, params), HttpMethod.GET, entity, headers, parameters);
 	}
 
-	public IHttpClient head(String url) {
-		return new HttpClientBuilder(client, host, url, HttpMethod.HEAD, entity, headers, parameters);
+	public IHttpClient head(String urlPattern, Object... params) {
+		return new HttpClientBuilder(client, host, MessageFormat.format(urlPattern, params), HttpMethod.HEAD, entity, headers, parameters);
 	}
 
-	public IHttpClient delete(String url) {
-		return new HttpClientBuilder(client, host, url, HttpMethod.DELETE, entity, headers, parameters);
+	public IHttpClient delete(String urlPattern, Object... params) {
+		return new HttpClientBuilder(client, host, MessageFormat.format(urlPattern, params), HttpMethod.DELETE, entity, headers, parameters);
+	}
+
+	@Override
+	public IHttpClient method(HttpMethod method, String urlPattern, Object... params) {
+		return new HttpClientBuilder(client, host, url, method, entity, headers, parameters);
 	}
 
 	public IHttpClient withParameters(List<NameValuePair> nameAndValues) {
@@ -204,11 +209,6 @@ public class HttpClientBuilder implements IHttpClient {
 
 	public IHttpClient addParam(String name, String value) {
 		return new HttpClientBuilder(client, host, url, method, entity, headers, Lists.append(parameters, new BasicNameValuePair(name, value)));
-	}
-
-	@Override
-	public IHttpClient method(HttpMethod method, String url) {
-		return new HttpClientBuilder(client, host, url, method, entity, headers, parameters);
 	}
 
 }

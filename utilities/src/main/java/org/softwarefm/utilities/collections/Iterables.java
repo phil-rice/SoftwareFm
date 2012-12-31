@@ -28,7 +28,6 @@ public class Iterables {
 	public static <T> Iterable<T> times(final int count, final T value) {
 		return new AbstractFindNextIterable<T, AtomicInteger>() {
 
-			
 			@Override
 			protected T findNext(AtomicInteger context) throws Exception {
 				int index = context.getAndIncrement();
@@ -38,7 +37,6 @@ public class Iterables {
 					return value;
 			}
 
-			
 			@Override
 			protected AtomicInteger reset() throws Exception {
 				return new AtomicInteger();
@@ -49,7 +47,7 @@ public class Iterables {
 	// public static <To> Iterable<To> times(final int count, final IFunction1<Integer, To> fn) {
 	// return new AbstractFindNextIterable<To, AtomicInteger>() {
 	//
-	// 
+	//
 	// protected To findNext(AtomicInteger context) throws Exception {
 	// int index = context.getAndIncrement();
 	// if (index >= count)
@@ -58,7 +56,7 @@ public class Iterables {
 	// return fn.apply(index);
 	// }
 	//
-	// 
+	//
 	// protected AtomicInteger reset() throws Exception {
 	// return new AtomicInteger();
 	// }
@@ -67,7 +65,7 @@ public class Iterables {
 
 	public static <From, To> Future<To> fold(ExecutorService service, final Iterable<From> iterable, final IFoldFunction<From, To> foldFunction, final To initial) {
 		return service.submit(new Callable<To>() {
-			
+
 			public To call() throws Exception {
 				return fold(foldFunction, iterable, initial);
 			}
@@ -77,7 +75,6 @@ public class Iterables {
 	public static <T> Iterable<T> filter(final Iterable<T> from, final IFunction1<T, Boolean> acceptor) {
 		return new AbstractFindNextIterable<T, Iterator<T>>() {
 
-			
 			@Override
 			protected T findNext(Iterator<T> context) {
 				try {
@@ -92,7 +89,6 @@ public class Iterables {
 				}
 			}
 
-			
 			@Override
 			protected Iterator<T> reset() throws Exception {
 				return from.iterator();
@@ -111,7 +107,6 @@ public class Iterables {
 	public static <T> Future<Void> processCallbacks(ExecutorService service, final Iterable<T> iterable, final ICallback<T> callback) {
 		return (Future<Void>) service.submit(new Runnable() {
 
-			
 			public void run() {
 				processCallbacks(iterable, callback);
 			}
@@ -136,17 +131,14 @@ public class Iterables {
 			throw new NullPointerException();
 		return new Iterable<To>() {
 
-			
 			public Iterator<To> iterator() {
 				return new Iterator<To>() {
 					private final Iterator<From> iterator = from.iterator();
 
-					
 					public boolean hasNext() {
 						return iterator.hasNext();
 					}
 
-					
 					public To next() {
 						try {
 							return convertor.apply(iterator.next());
@@ -155,7 +147,6 @@ public class Iterables {
 						}
 					}
 
-					
 					public void remove() {
 						iterator.remove();
 					}
@@ -169,17 +160,14 @@ public class Iterables {
 			throw new NullPointerException();
 		return new Iterable<To>() {
 
-			
 			public Iterator<To> iterator() {
 				return new Iterator<To>() {
 					private int i = 0;
 
-					
 					public boolean hasNext() {
 						return i < from.size();
 					}
 
-					
 					public To next() {
 						try {
 							return convertor.apply(from.get(i++));
@@ -188,7 +176,6 @@ public class Iterables {
 						}
 					}
 
-					
 					public void remove() {
 						throw new UnsupportedOperationException();
 					}
@@ -199,7 +186,7 @@ public class Iterables {
 
 	public static <T> Iterable<T> tail(final Iterable<T> iterable) {
 		return new AbstractFindNextIterable<T, Iterator<T>>() {
-			
+
 			@Override
 			protected T findNext(Iterator<T> context) throws Exception {
 				if (!context.hasNext())
@@ -207,7 +194,6 @@ public class Iterables {
 				return context.next();
 			}
 
-			
 			@Override
 			protected Iterator<T> reset() throws Exception {
 				Iterator<T> iterator = iterable.iterator();
@@ -221,7 +207,6 @@ public class Iterables {
 	public static <T> Iterable<T> iterable(final Iterator<T> iterator) {
 		return new Iterable<T>() {
 
-			
 			public Iterator<T> iterator() {
 				return iterator;
 			}
@@ -247,13 +232,11 @@ public class Iterables {
 	public static <From, To> Iterable<To> split(final Iterable<From> from, final IFunction1<From, Iterable<To>> convertor) {
 		return new AbstractFindNextIterable<To, SplitContext<From, To>>() {
 
-			
 			@Override
 			protected To findNext(SplitContext<From, To> context) {
 				return context.findNext();
 			}
 
-			
 			@Override
 			protected SplitContext<From, To> reset() throws Exception {
 				return new SplitContext<From, To>(from.iterator(), convertor);
@@ -264,13 +247,11 @@ public class Iterables {
 	public static <From extends Iterable<To>, To> Iterable<To> split(final Iterable<From> from) {
 		return new AbstractFindNextIterable<To, SplitContext<From, To>>() {
 
-			
 			@Override
 			protected To findNext(SplitContext<From, To> context) {
 				return context.findNext();
 			}
 
-			
 			@Override
 			protected SplitContext<From, To> reset() throws Exception {
 				return new SplitContext<From, To>(from.iterator(), Functions.<From, Iterable<To>> identity());
@@ -284,7 +265,7 @@ public class Iterables {
 
 	public static <T> Iterable<T> remove(final Iterable<T> iterable, final IFunction1<T, Boolean> removeFn) {
 		return new AbstractFindNextIterable<T, Iterator<T>>() {
-			
+
 			@Override
 			protected T findNext(Iterator<T> context) throws Exception {
 				while (context.hasNext()) {
@@ -295,7 +276,6 @@ public class Iterables {
 				return null;
 			}
 
-			
 			@Override
 			protected Iterator<T> reset() throws Exception {
 				return iterable.iterator();

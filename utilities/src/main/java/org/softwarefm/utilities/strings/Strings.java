@@ -33,7 +33,7 @@ public class Strings {
 	private final static Pattern urlFriendlyPattern = Pattern.compile("(([\\w]+:)?//)?(([\\d\\w]|%[a-fA-f\\d]{2,2})+(:([\\d\\w]|%[a-fA-f\\d]{2,2})+)?@)?([\\d\\w][-\\d\\w]{0,253}[\\d\\w]\\.)+[\\w]{2,4}(:[\\d]+)?(/([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)*(\\?(&?([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})=?)*)?(#([-+_~.\\d\\w]|%[a-fA-f\\d]{2,2})*)?");
 	private static String digits = "0123456789abcdef";
 
-	public static byte[] zip(String str)  {
+	public static byte[] zip(String str) {
 		try {
 			if (str == null || str.length() == 0) {
 				return new byte[0];
@@ -48,7 +48,7 @@ public class Strings {
 		}
 	}
 
-	public static String unzip(byte[] raw)  {
+	public static String unzip(byte[] raw) {
 		try {
 			if (raw == null || raw.length == 0) {
 				return "";
@@ -58,7 +58,7 @@ public class Strings {
 			StringBuilder builder = new StringBuilder();
 			String line;
 			while ((line = bf.readLine()) != null) {
-				if (builder.length()>0)
+				if (builder.length() > 0)
 					builder.append("\n");
 				builder.append(line);
 			}
@@ -528,6 +528,7 @@ public class Strings {
 		else
 			return raw.substring(0, index);
 	}
+
 	public static String tail(String raw, String separator) {
 		if (raw == null)
 			return null;
@@ -535,7 +536,7 @@ public class Strings {
 		if (index == -1)
 			return "";
 		else
-			return raw.substring(index+1);
+			return raw.substring(index + 1);
 	}
 
 	public static String segment(String raw, String separator, int i) {
@@ -590,6 +591,26 @@ public class Strings {
 
 	public static boolean isIdentifier(String text) {
 		return text.equals(forUrl(text));
+	}
+
+	public static int indexAfter(String string, String item, int start) {
+		if (start < 0)
+			return -1;
+		int index = string.indexOf(item, start);
+		if (index < 0)
+			return index;
+		return index + item.length();
+	}
+
+	public static String findItem(String container, String startMarker, String endMarker) {
+		int startName = Strings.indexAfter(container, startMarker, 0);
+		if (startName <0)
+			return null;
+		int endName = container.indexOf(endMarker, startName);
+		if (endName <0)
+			return null;
+		String name = container.substring(startName, endName);
+		return name;
 	}
 
 }

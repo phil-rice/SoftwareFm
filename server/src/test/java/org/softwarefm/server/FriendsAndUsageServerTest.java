@@ -1,6 +1,5 @@
 package org.softwarefm.server;
 
-import java.text.MessageFormat;
 import java.util.Arrays;
 
 import javax.sql.DataSource;
@@ -35,28 +34,28 @@ public class FriendsAndUsageServerTest extends AbstractHttpServerTest {
 	}
 
 	public void testAddFriends() {
-		checkCall(httpClient.post(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, "u1", "fr1")));
-		checkCall(httpClient.post(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, "u1", "fr2")));
-		checkCall(httpClient.post(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, "u1", "fr2")));
-		checkCall(httpClient.post(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, "u1", "fr3")));
-		checkCall(httpClient.post(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, "u2", "frX")));
+		checkCall(httpClient.post(ConfiguratorConstants.addDeleteFriendPattern, "u1", "fr1"));
+		checkCall(httpClient.post(ConfiguratorConstants.addDeleteFriendPattern, "u1", "fr2"));
+		checkCall(httpClient.post(ConfiguratorConstants.addDeleteFriendPattern, "u1", "fr2"));
+		checkCall(httpClient.post(ConfiguratorConstants.addDeleteFriendPattern, "u1", "fr3"));
+		checkCall(httpClient.post(ConfiguratorConstants.addDeleteFriendPattern, "u2", "frX"));
 
 		Tests.assertEqualsAsSet(Arrays.asList("fr1", "fr2", "fr3"), friendManager.friendNames("u1"));
 		Tests.assertEqualsAsSet(Arrays.asList("frX"), friendManager.friendNames("u2"));
 	}
 
 	public void testFriendsUsage() {
-		checkCall(httpClient.post(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, "u1", "fr1")));
-		checkCall(httpClient.post(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, "u1", "fr2")));
-		checkCall(httpClient.post(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, "u2", "fr_u2")));
+		checkCall(httpClient.post(ConfiguratorConstants.addDeleteFriendPattern, "u1", "fr1"));
+		checkCall(httpClient.post(ConfiguratorConstants.addDeleteFriendPattern, "u1", "fr2"));
+		checkCall(httpClient.post(ConfiguratorConstants.addDeleteFriendPattern, "u2", "fr_u2"));
 
 
-		checkCall(httpClient.post(MessageFormat.format(ConfiguratorConstants.userPattern, "u1")).withEntity(Strings.zip( persistance.saveUsageStats(UsageTestData.statsc1d1))));
-		checkCall(httpClient.post(MessageFormat.format(ConfiguratorConstants.userPattern, "fr1")).withEntity(Strings.zip( persistance.saveUsageStats(UsageTestData.statsa1b3))));
-		checkCall(httpClient.post(MessageFormat.format(ConfiguratorConstants.userPattern, "fr2")).withEntity(Strings.zip( persistance.saveUsageStats(UsageTestData.statsb1c2))));
-		checkCall(httpClient.post(MessageFormat.format(ConfiguratorConstants.userPattern, "fr_u2")).withEntity(Strings.zip(persistance.saveUsageStats(UsageTestData.statsa2b1))));
+		checkCall(httpClient.post(ConfiguratorConstants.userPattern, "u1").withEntity(Strings.zip( persistance.saveUsageStats(UsageTestData.statsc1d1))));
+		checkCall(httpClient.post(ConfiguratorConstants.userPattern, "fr1").withEntity(Strings.zip( persistance.saveUsageStats(UsageTestData.statsa1b3))));
+		checkCall(httpClient.post(ConfiguratorConstants.userPattern, "fr2").withEntity(Strings.zip( persistance.saveUsageStats(UsageTestData.statsb1c2))));
+		checkCall(httpClient.post(ConfiguratorConstants.userPattern, "fr_u2").withEntity(Strings.zip(persistance.saveUsageStats(UsageTestData.statsa2b1))));
 
-		String text = checkCall(httpClient.get(MessageFormat.format(ConfiguratorConstants.friendsUsagePattern, "u1")));
+		String text = checkCall(httpClient.get(ConfiguratorConstants.friendsUsagePattern, "u1"));
 		ISimpleMap<String, IUsageStats> usage = persistance.parseFriendsUsage(text);
 		Tests.assertEquals(UsageTestData.fr1_a1b3_fr2_b1c2, usage);
 	}

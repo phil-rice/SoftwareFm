@@ -1,6 +1,5 @@
 package org.softwarefm.core.usage;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -87,7 +86,7 @@ public class UsageComposite extends AbstractMigComposite {
 	private void getRemoteUsage() {
 		async(new Runnable() {
 			public void run() {
-				IResponse response =userConnectionDetails. getHttpClient().get(MessageFormat.format(ConfiguratorConstants.userPattern, userConnectionDetails.getUser())).execute();
+				IResponse response =userConnectionDetails. getHttpClient().get(ConfiguratorConstants.userPattern, userConnectionDetails.getUser()).execute();
 				IUsageStats usageStats = usagePersistance.parse(response.asString());
 				updateDisplay(remoteUsageList, usageStats);
 			}

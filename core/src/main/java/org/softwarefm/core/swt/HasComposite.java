@@ -39,4 +39,7 @@ public class HasComposite implements IHasComposite, IDispose {
 	public void setLayout(Layout layout) {
 		content.setLayout(layout);
 	}
+	public void setLayoutData(Object layoutData) {
+		content.setLayoutData(layoutData);
+	}
 }

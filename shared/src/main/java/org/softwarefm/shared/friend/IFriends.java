@@ -6,7 +6,7 @@ import org.softwarefm.shared.usage.IUsageStats;
 import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.maps.ISimpleMap;
 
-public interface IFriend {
+public interface IFriends {
 
 	List<String> friendNames(String user);
 

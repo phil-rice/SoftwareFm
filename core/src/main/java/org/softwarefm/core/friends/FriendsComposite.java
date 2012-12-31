@@ -1,6 +1,5 @@
 package org.softwarefm.core.friends;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,7 +22,7 @@ import org.softwarefm.core.client.AbstractMigComposite;
 import org.softwarefm.core.client.IUserConnectionDetails;
 import org.softwarefm.core.swt.Swts;
 import org.softwarefm.server.configurator.ConfiguratorConstants;
-import org.softwarefm.shared.friend.IFriend;
+import org.softwarefm.shared.friend.IFriends;
 import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.IUsageStats;
 import org.softwarefm.shared.usage.UsageStatData;
@@ -42,7 +41,7 @@ public class FriendsComposite extends AbstractMigComposite {
 	private final IUserConnectionDetails userConnectionDetails;
 	private final Button sendButton;
 
-	public FriendsComposite(Composite parent, final IUserConnectionDetails userConnectionDetails, final IFriend friend, IUsagePersistance persistance) {
+	public FriendsComposite(Composite parent, final IUserConnectionDetails userConnectionDetails, final IFriends friends, IUsagePersistance persistance) {
 		super(parent, new MigLayout("fill", "[][grow]", "[][][grow]"));
 		this.userConnectionDetails = userConnectionDetails;
 		this.persistance = persistance;
@@ -63,7 +62,7 @@ public class FriendsComposite extends AbstractMigComposite {
 				String friend = getFriend();
 				if (friend.length() > 0) {
 					System.out.println("Adding " + friend + " as friend of " + user);
-					System.out.println(userConnectionDetails.getHttpClient().post(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, user, friend)).execute());
+					System.out.println(userConnectionDetails.getHttpClient().post(ConfiguratorConstants.addDeleteFriendPattern, user, friend).execute());
 					getFriends(user);
 				}
 			}
@@ -89,7 +88,7 @@ public class FriendsComposite extends AbstractMigComposite {
 				String[] selection = friendsList.getSelection();
 				if (selection != null)
 					for (String sel : selection)
-						System.out.println(userConnectionDetails.getHttpClient().delete(MessageFormat.format(ConfiguratorConstants.addDeleteFriendPattern, userConnectionDetails.getUser(), sel)).execute());
+						System.out.println(userConnectionDetails.getHttpClient().delete(ConfiguratorConstants.addDeleteFriendPattern, userConnectionDetails.getUser(), sel).execute());
 				getFriends(userConnectionDetails.getUser());
 			}
 		});
@@ -134,9 +133,9 @@ public class FriendsComposite extends AbstractMigComposite {
 		async(new Runnable() {
 			@Override
 			public void run() {
-				final IResponse friendsListResponse = userConnectionDetails.getHttpClient().get(MessageFormat.format(ConfiguratorConstants.listFriendsPattern, user)).execute();
+				final IResponse friendsListResponse = userConnectionDetails.getHttpClient().get(ConfiguratorConstants.listFriendsPattern, user).execute();
 				System.out.println("FriendsList: " + friendsListResponse);
-				final IResponse friendsUsageResponse = userConnectionDetails.getHttpClient().get(MessageFormat.format(ConfiguratorConstants.friendsUsagePattern, user)).execute();
+				final IResponse friendsUsageResponse = userConnectionDetails.getHttpClient().get(ConfiguratorConstants.friendsUsagePattern, user).execute();
 				System.out.println("FriendsUsage: " + friendsUsageResponse);
 				getComposite().getDisplay().asyncExec(new Runnable() {
 					public void run() {

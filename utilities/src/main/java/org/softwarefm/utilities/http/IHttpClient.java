@@ -26,17 +26,17 @@ public interface IHttpClient {
 
 	IHttpClient host(String host, int port);
 
-	IHttpClient post(String url);
+	IHttpClient post(String urlPattern, Object...params);
 
-	IHttpClient put(String url);
+	IHttpClient put(String urlPattern, Object...params);
 
-	IHttpClient get(String url);
+	IHttpClient get(String urlPattern, Object...params);
 
-	IHttpClient head(String url);
+	IHttpClient head(String urlPattern, Object...params);
 
-	IHttpClient delete(String url);
+	IHttpClient delete(String urlPattern, Object...params);
 
-	IHttpClient method(HttpMethod method, String url);
+	IHttpClient method(HttpMethod method, String urlPattern, Object...params);
 
 	IHttpClient addHeader(String name, String value);
 

@@ -2,12 +2,20 @@ package org.softwarefm.core.friends;
 
 import java.util.List;
 
-import org.softwarefm.shared.friend.IFriend;
+import org.softwarefm.core.client.IUserConnectionDetails;
+import org.softwarefm.shared.friend.IFriends;
 import org.softwarefm.shared.usage.IUsageStats;
 import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.maps.ISimpleMap;
 
-public class FriendManagerLocal implements IFriend {
+public class FriendLocal implements IFriends {
+
+	
+	private  IUserConnectionDetails userConnectionDetails;
+
+	public void setUserConnectionDetails(IUserConnectionDetails userConnectionDetails) {
+		this.userConnectionDetails = userConnectionDetails;
+	}
 
 	@Override
 	public List<String> friendNames(String user) {

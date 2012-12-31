@@ -29,6 +29,7 @@ class BrowserToolbar extends BrowserHelper implements IUpdateButtonStatus{
 				updateButtonStatus();
 			}
 		});
+		updateButtonStatus();
 	}
 
 	@Override
