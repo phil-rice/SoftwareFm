@@ -35,7 +35,7 @@ public class ActionBarComposite extends HasComposite implements IActionBar {
 	}
 
 	public static void main(String[] args) {
-		Swts.Show.display(ActionBarComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Swts.Show.displayFormLayout(ActionBarComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			public Composite apply(Composite from) throws Exception {
 				IResourceGetter resourceGetter = SoftwareFmContainer.makeForTests(from.getDisplay()).resourceGetter;
 				ActionBarComposite actionBarComposite = new ActionBarComposite(from);

@@ -94,7 +94,7 @@ public class Form extends Composite implements IGetTextWithKey {
 	}
 
 	public static void main(String[] args) {
-		Swts.Show.display(Form.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Swts.Show.displayFormLayout(Form.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 
 			public Composite apply(Composite from) throws Exception {
 				IResourceGetter resourceGetter = new ResourceGetterMock(//

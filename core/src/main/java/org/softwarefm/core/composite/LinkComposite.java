@@ -80,7 +80,7 @@ public class LinkComposite extends TextAndControlComposite<TabFolder> {
 	}
 
 	public static void main(String[] args) {
-		Swts.Show.display(LinkComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Swts.Show.displayFormLayout(LinkComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			public Composite apply(Composite from) throws Exception {
 				SoftwareFmContainer<Object> container = SoftwareFmContainer.makeForTests(from.getDisplay());
 				return new LinkComposite(from, container).getComposite();

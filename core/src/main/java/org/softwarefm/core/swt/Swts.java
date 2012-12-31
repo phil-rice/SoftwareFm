@@ -18,9 +18,11 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
 import junit.framework.Assert;
+import net.miginfocom.swt.MigLayout;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.custom.StackLayout;
@@ -37,6 +39,7 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -63,6 +66,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
 import org.softwarefm.core.constants.SwtConstants;
 import org.softwarefm.core.labelAndText.IButtonConfig;
 import org.softwarefm.utilities.arrays.ArrayHelper;
@@ -247,14 +252,16 @@ public class Swts {
 
 	public static class Show {
 
-		public static void displayNoLayout(String title, IFunction1<Composite, Composite> builder) {
+		public static void display(String title, IFunction1<Composite, Composite> builder) {
 			try {
 				Display display = new Display();
 				Shell shell = new Shell(display);
 				shell.setSize(600, 400);
 				shell.setText(title);
+				shell.setLayout(new FillLayout());
 				builder.apply(shell);
 				shell.open();
+				Swts.layoutDump(shell);
 				while (!shell.isDisposed()) {
 					if (!display.readAndDispatch())
 						display.sleep();
@@ -265,7 +272,7 @@ public class Swts {
 			}
 		}
 
-		public static void display(String title, IFunction1<Composite, Composite> builder) {
+		public static void displayFormLayout(String title, IFunction1<Composite, Composite> builder) {
 			try {
 				Display display = new Display();
 				Shell shell = new Shell(display);
@@ -292,7 +299,7 @@ public class Swts {
 		}
 
 		public static <T extends IHasControl> void xUnit(String title, final File root, final String extension, final ISituationListAndBuilder<T, String> builder) {
-			Swts.Show.display(title, new IFunction1<Composite, Composite>() {
+			Swts.Show.displayFormLayout(title, new IFunction1<Composite, Composite>() {
 				public Composite apply(Composite from) throws Exception {
 					Callable<? extends Iterable<String>> situations = new Callable<Iterable<String>>() {
 						public Iterable<String> call() throws Exception {
@@ -315,7 +322,7 @@ public class Swts {
 		}
 
 		public static <T extends IHasControl, V> void xUnit(String title, final ISituationListAndBuilder<T, V> builder, final Map<String, V> situationMap) {
-			Swts.Show.display(title, new IFunction1<Composite, Composite>() {
+			Swts.Show.displayFormLayout(title, new IFunction1<Composite, Composite>() {
 				public Composite apply(Composite from) throws Exception {
 					final Callable<? extends Iterable<String>> situationsCallable = new Callable<Iterable<String>>() {
 						public Iterable<String> call() throws Exception {
@@ -1425,6 +1432,38 @@ public class Swts {
 		TabItem result = new TabItem(tabFolder, style);
 		result.setText(text);
 		result.setControl(control);
+		return result;
+	}
+
+	public static ToolBar createMigToolbar(Composite parent, int style, String constraint) {
+		ToolBar toolBar = new ToolBar(parent, style);
+		toolBar.setLayoutData(constraint);
+		return toolBar;
+	}
+
+	public static Combo createMigCombo(Composite parent, int style, String constraint) {
+		Combo result = new Combo(parent, style);
+		result.setLayoutData(constraint);
+		return result;
+	}
+
+	public static Browser createMigBrowser(Composite parent, int style, String constraint) {
+		Browser browser = new Browser(parent, style);
+		browser.setLayoutData(constraint);
+		return browser;
+	}
+
+	public static Composite createMigComposite(Composite parent,  int style, MigLayout layout,String constraint) {
+		Composite composite = new Composite(parent, style);
+		composite.setLayout(layout);
+		composite.setLayoutData(constraint);
+		return composite;
+	}
+
+	public static ToolItem createPushToolItem(ToolBar toolbar, ImageRegistry imageRegistry, String imageKey, Listener listener) {
+		ToolItem result = new ToolItem(toolbar, SWT.PUSH);
+		result.setImage(imageRegistry.get(imageKey));
+		result.addListener(SWT.Selection, listener);
 		return result;
 	}
 

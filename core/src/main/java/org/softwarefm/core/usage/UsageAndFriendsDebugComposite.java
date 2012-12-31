@@ -26,7 +26,7 @@ public class UsageAndFriendsDebugComposite extends AbstractClientAndUserComposit
 	}
 	
 	public static void main(String[] args) {
-		Swts.Show.display("Usage and Friends", new IFunction1<Composite, Composite>() {
+		Swts.Show.displayFormLayout("Usage and Friends", new IFunction1<Composite, Composite>() {
 			@Override
 			public Composite apply(Composite from) throws Exception {
 				return new UsageAndFriendsDebugComposite(from,  new Usage(IMultipleListenerList.Utils.defaultList()), IUsagePersistance.Utils.persistance(), new FriendManagerLocal()).getComposite();

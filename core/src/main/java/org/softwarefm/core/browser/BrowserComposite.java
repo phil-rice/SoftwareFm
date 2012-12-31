@@ -3,40 +3,24 @@ package org.softwarefm.core.browser;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
-import org.eclipse.swt.browser.LocationEvent;
-import org.eclipse.swt.browser.LocationListener;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Layout;
-import org.eclipse.swt.widgets.Listener;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
 import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.composite.SoftwareFmComposite;
-import org.softwarefm.core.constants.ImageConstants;
 import org.softwarefm.core.swt.Swts;
 import org.softwarefm.utilities.functions.IFunction1;
 
 public class BrowserComposite extends SoftwareFmComposite {
 
 	private final Browser browser;
-	private final ToolBar toolbar;
+	private final BrowserToolbar browserToolbar;
 	private final Composite rowComposite;
-	private final Combo urlCombo;
-	private final ToolItem backButton;
-	private final ToolItem forwardButton;
-	private final ToolItem stopButton;
-	private final ToolItem refreshButton;
+	private final BrowserUrlCombo browserUrlCombo;
 
 	public static class BrowserCompositeLayout extends Layout {
 
@@ -58,7 +42,7 @@ public class BrowserComposite extends SoftwareFmComposite {
 			int y = topRowSize.y;
 			int middleY = 1;
 			topRow.setBounds(ca.x, ca.y, ca.width, y);
-			
+
 			main.setBounds(ca.x, ca.y + y + middleY, ca.width, ca.height - y - middleY);
 		}
 
@@ -66,93 +50,50 @@ public class BrowserComposite extends SoftwareFmComposite {
 
 	public BrowserComposite(final Composite parent, SoftwareFmContainer<?> container) {
 		super(parent, container);
-		rowComposite = Swts.newComposite(getComposite(), SWT.NULL, "TopRow");
-		toolbar = new ToolBar(rowComposite, SWT.NULL);
-		urlCombo = new Combo(rowComposite, SWT.DROP_DOWN);
-
 		ImageRegistry imageRegistry = container.imageRegistry;
-		backButton = new ToolItem(toolbar, SWT.PUSH);
-		backButton.setImage(imageRegistry.get(ImageConstants.backButton));
+		IBrowserGetter browserGetter = getBrowserGetter();
 
-		forwardButton = new ToolItem(toolbar, SWT.PUSH);
-		forwardButton.setImage(imageRegistry.get(ImageConstants.forwardButton));
-
-		stopButton = new ToolItem(toolbar, SWT.PUSH);
-		stopButton.setImage(imageRegistry.get(ImageConstants.stopButton));
-
-		refreshButton = new ToolItem(toolbar, SWT.PUSH);
-		refreshButton.setImage(imageRegistry.get(ImageConstants.refreshButton));
-
-		Swts.Grid.oneRowWithControlGrabbingWidth(rowComposite, urlCombo);
-
+		rowComposite = Swts.newComposite(getComposite(), SWT.NULL, "TopRow");
 		browser = new Browser(getComposite(), SWT.NULL);
 
-		updateButtonStatus();
-		browser.addLocationListener(new LocationListener() {
-			public void changing(LocationEvent event) {
-			}
+		browserToolbar = new BrowserToolbar(rowComposite, browser, imageRegistry);
+		browserUrlCombo = new BrowserUrlCombo(rowComposite, browser, browserToolbar);
 
-			public void changed(LocationEvent event) {
-				if (event.top) {
-					Swts.addItemToStartOfCombo(urlCombo, event.location, 10);
-				}
-				updateButtonStatus();
-			}
-		});
-		backButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				browser.back();
-			}
-		});
-		forwardButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				browser.forward();
-			}
-		});
-		stopButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				browser.stop();
-			}
-		});
-		refreshButton.addListener(SWT.Selection, new Listener() {
-			public void handleEvent(Event event) {
-				browser.refresh();
-			}
-		});
-		urlCombo.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				browser.setUrl(urlCombo.getText());
-			}
+		Swts.Grid.oneRowWithControlGrabbingWidth(rowComposite, browserUrlCombo.getControl());
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
 
-			}
-		});
-		urlCombo.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				updateButtonStatus();
-			}
-		});
+		browserToolbar.updateButtonStatus();
+	
 		browser.setUrl("www.google.com");
 		setLayout(new BrowserCompositeLayout());
 		getComposite().addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
 				Point rowSize = rowComposite.getSize();
 				e.gc.setForeground(parent.getDisplay().getSystemColor(SWT.COLOR_GRAY));
-				e.gc.drawLine(0, rowSize.y , rowSize.x, rowSize.y );
+				e.gc.drawLine(0, rowSize.y, rowSize.x, rowSize.y);
 			}
 		});
 	}
 
-	private void updateButtonStatus() {
-		backButton.setEnabled(browser.isBackEnabled());
-		forwardButton.setEnabled(browser.isForwardEnabled());
+	private IBrowserGetter getBrowserGetter() {
+		return new IBrowserGetter() {
+			@Override
+			public void updateButtonStatus() {
+				updateButtonStatus();
+			}
+			
+			@Override
+			public Browser getBrowser() {
+				if (browser == null)
+					throw new IllegalStateException("Cannot access browser yet: not instantiated");
+				return browser;
+			}
+		};
 	}
 
 	public void setUrl(String url) {
 		browser.setUrl(url);
-		updateButtonStatus();
+		browserToolbar.updateButtonStatus();
 	}
 
 	public static void main(String[] args) {

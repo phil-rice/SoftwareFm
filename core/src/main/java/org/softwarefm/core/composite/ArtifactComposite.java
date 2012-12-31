@@ -66,7 +66,7 @@ public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
 	}
 
 	public static void main(String[] args) {
-		Swts.Show.display(ArtifactComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Swts.Show.displayFormLayout(ArtifactComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			public Composite apply(Composite from) throws Exception {
 				ArtifactComposite artifactComposite = new ArtifactComposite(from, SoftwareFmContainer.makeForTests(from.getDisplay()));
 				artifactComposite.setUrlAndShow(UrlConstants.notJarUrl);

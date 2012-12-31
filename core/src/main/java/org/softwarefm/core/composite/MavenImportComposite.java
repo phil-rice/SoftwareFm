@@ -73,7 +73,7 @@ public class MavenImportComposite extends TextAndControlComposite<Form> {
 	}
 
 	public static void main(String[] args) {
-		Swts.Show.display(MavenImportComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
+		Swts.Show.displayFormLayout(MavenImportComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			public Composite apply(Composite from) throws Exception {
 				return new MavenImportComposite(from, SoftwareFmContainer.makeForTests(from.getDisplay())).getComposite();
 			}
