@@ -11,6 +11,7 @@ import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.IUrlStrategy;
 import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.shared.usage.IUsagePersistance;
+import org.softwarefm.shared.usage.UsageFromServer;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.events.IMultipleListenerList;
@@ -19,10 +20,10 @@ import org.softwarefm.utilities.resources.IResourceGetter;
 
 public class SoftwareFmContainer<S> implements IHasCache {
 
-	public static <S> SoftwareFmContainer<S> make(IUrlStrategy urlStrategy, ISelectedBindingManager<S> manager, ICallback2<String, Integer> importPom, ICallback2<ArtifactData, Integer> importManually, ITemplateStore templateStore, IArtifactDataCache artifactDataCache, SfmActionState state, ImageRegistry imageRegistry) {
+	public static <S> SoftwareFmContainer<S> make(IUrlStrategy urlStrategy, ISelectedBindingManager<S> manager, ICallback2<String, Integer> importPom, ICallback2<ArtifactData, Integer> importManually, ITemplateStore templateStore, IArtifactDataCache artifactDataCache, SfmActionState state, ImageRegistry imageRegistry, UsageFromServer usageFromServer) {
 		IMultipleListenerList list = IMultipleListenerList.Utils.defaultList();
 		IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
-		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), manager, importPom, importManually, urlStrategy, templateStore, artifactDataCache, state, imageRegistry, list, ISocialManager.Utils.socialManager(list, persistance), persistance);
+		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), manager, importPom, importManually, urlStrategy, templateStore, artifactDataCache, state, imageRegistry, list, ISocialManager.Utils.socialManager(list, persistance), persistance, usageFromServer);
 	}
 
 	public static <S> SoftwareFmContainer<S> makeForTests(Display display, IResourceGetter resourceGetter) {
@@ -31,6 +32,7 @@ public class SoftwareFmContainer<S> implements IHasCache {
 		ImageConstants.initializeImageRegistry(display, imageRegistry);
 		IMultipleListenerList list = IMultipleListenerList.Utils.defaultList();
 		IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
+		UsageFromServer usageFromServer = null;
 		return new SoftwareFmContainer<S>(resourceGetter, //
 				ISelectedBindingManager.Utils.<S> noManager(), //
 				ICallback2.Utils.<String, Integer> noCallback(), //
@@ -38,7 +40,7 @@ public class SoftwareFmContainer<S> implements IHasCache {
 				urlStrategy,//
 				ITemplateStore.Utils.templateStore(urlStrategy),//
 				IArtifactDataCache.Utils.artifactDataCache(), //
-				new SfmActionState(), imageRegistry, list, ISocialManager.Utils.socialManager(list, persistance), persistance);
+				new SfmActionState(), imageRegistry, list, ISocialManager.Utils.socialManager(list, persistance), persistance, usageFromServer);
 	}
 
 	public static <S> SoftwareFmContainer<S> makeForTests(Display display) {
@@ -56,8 +58,9 @@ public class SoftwareFmContainer<S> implements IHasCache {
 	public final IMultipleListenerList listenerList;
 	public final ISocialManager socialManager;
 	public final IUsagePersistance persistance;
+	public final UsageFromServer usageFromServer;
 
-	public SoftwareFmContainer(IResourceGetter resourceGetter, ISelectedBindingManager<S> selectedBindingManager, ICallback2<String, Integer> importPom, ICallback2<ArtifactData, Integer> importManually, IUrlStrategy urlStrategy, ITemplateStore templateStore, IArtifactDataCache artifactDataCache, SfmActionState state, ImageRegistry imageRegistry, IMultipleListenerList listenerList, ISocialManager socialManager,IUsagePersistance persistance) {
+	public SoftwareFmContainer(IResourceGetter resourceGetter, ISelectedBindingManager<S> selectedBindingManager, ICallback2<String, Integer> importPom, ICallback2<ArtifactData, Integer> importManually, IUrlStrategy urlStrategy, ITemplateStore templateStore, IArtifactDataCache artifactDataCache, SfmActionState state, ImageRegistry imageRegistry, IMultipleListenerList listenerList, ISocialManager socialManager, IUsagePersistance persistance, UsageFromServer usageFromServer) {
 		this.resourceGetter = resourceGetter;
 		this.selectedBindingManager = selectedBindingManager;
 		this.importPom = importPom;
@@ -69,6 +72,7 @@ public class SoftwareFmContainer<S> implements IHasCache {
 		this.listenerList = listenerList;
 		this.socialManager = socialManager;
 		this.persistance = persistance;
+		this.usageFromServer = usageFromServer;
 	}
 
 	public void clearCaches() {

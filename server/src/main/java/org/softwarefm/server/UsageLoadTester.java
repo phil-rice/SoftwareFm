@@ -1,12 +1,10 @@
 package org.softwarefm.server;
 
-import java.util.concurrent.Callable;
-
 import org.softwarefm.shared.usage.IUsageReporter;
+import org.softwarefm.shared.usage.IUsageThreadData;
 import org.softwarefm.shared.usage.UsageThread;
 import org.softwarefm.shared.usage.internal.Usage;
 import org.softwarefm.utilities.events.IMultipleListenerList;
-import org.softwarefm.utilities.runnable.Callables;
 
 public class UsageLoadTester {
 
@@ -18,7 +16,6 @@ public class UsageLoadTester {
 		try {
 			Usage usage = new Usage(IMultipleListenerList.Utils.defaultList());
 			IUsageReporter reporter = IUsageReporter.Utils.reporter("localhost", port);
-			Callable<Boolean> value = Callables.value(true);
 			reporter.report("someUser1", usage.getStats());
 			reporter.report("someUser2", usage.getStats());
 			reporter.report("someUser3", usage.getStats());
@@ -33,7 +30,17 @@ public class UsageLoadTester {
 			reporter.report("someUserC", usage.getStats());
 
 			System.out.println("Starting threads");
-			new UsageThread(usage, reporter, value, 5000).start();
+			new UsageThread(usage, reporter, new IUsageThreadData() {
+				@Override
+				public boolean recordUsage() {
+					return true;
+				}
+				
+				@Override
+				public String myName() {
+					return "someUser";
+				}
+			}, 5000).start();
 			Thread.sleep(10000000);
 		} finally {
 			System.out.println("Closing down");

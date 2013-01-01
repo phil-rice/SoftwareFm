@@ -18,6 +18,7 @@ import org.softwarefm.core.selection.internal.SwtThreadSelectedBindingAggregator
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.tests.SwtTest;
 import org.softwarefm.core.url.IUrlStrategy;
+import org.softwarefm.shared.usage.UsageFromServer;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.callbacks.MemoryCallback;
@@ -68,6 +69,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		assertEquals(0, initialListeners);
 		ImageRegistry imageRegistry = new ImageRegistry(display);
 		ImageConstants.initializeImageRegistry(display, imageRegistry);
+		UsageFromServer usageFromServer = null;
 		panel = makePanel(shell, SoftwareFmContainer.make(urlStrategy, //
 				selectedArtifactSelectionManager,//
 				ICallback2.Utils.<String, Integer> exception("ImportPom shouldnt be used"),//
@@ -75,7 +77,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 				ITemplateStore.Utils.templateStore(urlStrategy), //
 				IArtifactDataCache.Utils.artifactDataCache(),//
 				new SfmActionState(),//
-				imageRegistry));
+				imageRegistry,usageFromServer));
 	}
 
 	@Override

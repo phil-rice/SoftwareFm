@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -51,13 +50,16 @@ import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.shared.usage.IUsage;
 import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.IUsageReporter;
+import org.softwarefm.shared.usage.IUsageThreadData;
 import org.softwarefm.shared.usage.UsageConstants;
+import org.softwarefm.shared.usage.UsageFromServer;
 import org.softwarefm.shared.usage.UsageThread;
 import org.softwarefm.shared.usage.internal.Usage;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.events.IMultipleListenerList;
+import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.http.IHttpClient;
 import org.softwarefm.utilities.maps.Maps;
 import org.softwarefm.utilities.resources.IResourceGetter;
@@ -65,7 +67,7 @@ import org.softwarefm.utilities.resources.IResourceGetter;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
+public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup, IUsageThreadData {
 
 	public static final String PLUGIN_ID = SoftwareFmPlugin.class.getPackage().getName();
 
@@ -97,6 +99,8 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 	private IUsage usage;
 
 	private IMultipleListenerList multipleListenerList;
+
+	private UsageThread usageThread;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -175,17 +179,20 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 			System.out.println("Starting makeUsage");
 			final Usage usage = new Usage(getMultipleListenerList());
 			final IUsageReporter reporter = IUsageReporter.Utils.reporter();
-			Thread thread = new UsageThread(usage, reporter, new Callable<Boolean>() {
-				@Override
-				public Boolean call() throws Exception {
-					return recordUsage();
-				}
-			}, UsageConstants.updatePeriod);
-			thread.setName("Usage Updater");
-			thread.start();
+			usageThread = new UsageThread(usage, reporter,this, UsageConstants.updatePeriod);
+			usageThread.setName("Usage Updater");
+			usageThread.start();
 			return usage;
 		}
 	}
+	public void sendUsage() {
+		try {
+			usageThread.report();
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
 
 	public IMultipleListenerList getMultipleListenerList() {
 		return multipleListenerList == null ? multipleListenerList = IMultipleListenerList.Utils.defaultList() : multipleListenerList;
@@ -268,7 +275,8 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 			ImageRegistry imageRegistry = SoftwareFmPlugin.getDefault().getImageRegistry();
 			IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
 			IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
-			return new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState(), imageRegistry, listenerList, ISocialManager.Utils.socialManager(listenerList, persistance), persistance);
+			UsageFromServer usageFromServer = new UsageFromServer(UsageConstants.host, UsageConstants.port, persistance);
+			return new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState(), imageRegistry, listenerList, ISocialManager.Utils.socialManager(listenerList, persistance), persistance, usageFromServer);
 		}
 	}
 
@@ -331,4 +339,11 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 	public void earlyStartup() {
 		System.out.println(getClass().getSimpleName() + ".earlyStartup");
 	}
+
+	@Override
+	public String myName() {
+		return getContainer().socialManager.myName();
+	}
+
+
 }

@@ -466,6 +466,13 @@ public class Swts {
 			button.setLayoutData(constraint);
 			return button;
 		}
+		public static Button makeMigPushButton(Composite parent, String text, String constraint, Listener listener) {
+			Button button = new Button(parent, SWT.PUSH);
+			button.setText(text);
+			button.setLayoutData(constraint);
+			button.addListener(SWT.Selection, listener);
+			return button;
+		}
 
 		public static Button makeRadioButton(Composite parent, IResourceGetter resourceGetter, String key, final Runnable runnable) {
 			String title = IResourceGetter.Utils.getOrException(resourceGetter, key);

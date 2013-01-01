@@ -32,6 +32,7 @@ import org.softwarefm.core.swt.ISituationListAndBuilder;
 import org.softwarefm.core.swt.Swts;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.IUrlStrategy;
+import org.softwarefm.shared.usage.UsageFromServer;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.functions.Functions;
 import org.softwarefm.utilities.functions.IFunction2;
@@ -151,6 +152,7 @@ public class SoftwareFmCompositeUnit {
 		final IMakeLink makeLink = IMakeLink.Utils.makeLink(urlStrategy, templateStore, artifactDataCache);
 		ImageRegistry imageRegistry = new ImageRegistry(display);
 		ImageConstants.initializeImageRegistry(display, imageRegistry);
+		UsageFromServer usageFromServer = null;
 		SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
 				manager, //
 				IMaven.Utils.importPomWithSysouts(makeLink, manager),//
@@ -158,7 +160,7 @@ public class SoftwareFmCompositeUnit {
 				templateStore, //
 				artifactDataCache, //
 				new SfmActionState(),//
-				imageRegistry);
+				imageRegistry, usageFromServer);
 		return container;
 	}
 }

@@ -28,6 +28,7 @@ import org.softwarefm.core.swt.ISituationListAndBuilder;
 import org.softwarefm.core.swt.Swts;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.IUrlStrategy;
+import org.softwarefm.shared.usage.UsageFromServer;
 import org.softwarefm.utilities.callbacks.ICallback;
 
 public class SoftwareFmCompositeWithActionsUnit extends HasComposite {
@@ -62,6 +63,7 @@ public class SoftwareFmCompositeWithActionsUnit extends HasComposite {
 					ITemplateStore templateStore = ITemplateStore.Utils.templateStore(rawUrlStrategy);
 					final IMakeLink makeLink = IMakeLink.Utils.makeLink(rawUrlStrategy, templateStore, artifactDataCache);
 					ImageRegistry imageRegistry = new ImageRegistry(parent.getDisplay());
+					UsageFromServer usageFromServer = null;
 					SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
 							manager, //
 							IMaven.Utils.importPomWithSysouts(makeLink, manager),//
@@ -69,7 +71,8 @@ public class SoftwareFmCompositeWithActionsUnit extends HasComposite {
 							templateStore, //
 							artifactDataCache,//
 							state,//
-							imageRegistry);
+							imageRegistry,//
+							usageFromServer);
 					SoftwareFmCompositeWithActionsUnit softwareFmComposite = new SoftwareFmCompositeWithActionsUnit(parent, container, state);
 					return softwareFmComposite;
 				}
