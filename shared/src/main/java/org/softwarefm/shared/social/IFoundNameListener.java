@@ -1,4 +1,4 @@
-package org.softwarefm.core.browser;
+package org.softwarefm.shared.social;
 
 public interface IFoundNameListener {
 	

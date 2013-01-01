@@ -11,10 +11,12 @@ import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.events.IValid;
 import org.softwarefm.utilities.exceptions.MultipleExceptions;
+import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.maps.Maps;
 
 public class MultipleListenerList implements IMultipleListenerList {
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	final Map<Object, Map<Class<?>, List<Object>>> map = Collections.synchronizedMap(new HashMap());
 
 	public <L> void addListener(Object source, Class<L> clazz, L listener) {
@@ -43,8 +45,14 @@ public class MultipleListenerList implements IMultipleListenerList {
 			} catch (Throwable e) {
 				throwables.add(e);
 			}
-		if (throwables.size() > 0)
+		switch (throwables.size()) {
+		case 1:
+			throw WrappedException.wrap(throwables.get(0));
+		case 0:
+			break;
+		default:
 			throw new MultipleExceptions(throwables);
+		}
 	}
 
 }

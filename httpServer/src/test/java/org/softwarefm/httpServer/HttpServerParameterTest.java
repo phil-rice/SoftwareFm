@@ -1,11 +1,9 @@
 package org.softwarefm.httpServer;
 
 import org.apache.http.HttpStatus;
-import org.softwarefm.httpServer.routes.RouteHandlerMock;
 import org.softwarefm.utilities.http.HttpMethod;
 
 public class HttpServerParameterTest extends AbstractHttpServerTest {
-	private RouteHandlerMock handler;
 	private RouteHandlerWithParametersMock handlerWithParameters;
 
 	public void testExceptionifParametersAreDuplicated() {
@@ -35,7 +33,6 @@ public class HttpServerParameterTest extends AbstractHttpServerTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		handler = new RouteHandlerMock("handler", HttpStatus.SC_OK);
 		handlerWithParameters = new RouteHandlerWithParametersMock("handlerWithParameters", HttpStatus.SC_OK);
 	}
 }

@@ -13,6 +13,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.softwarefm.core.constants.ImageConstants;
 import org.softwarefm.core.swt.Swts;
 
+@SuppressWarnings("unused")
 class BrowserToolbar extends BrowserHelper implements IUpdateButtonStatus{
 	private ToolItem backButton;
 	private ToolItem forwardButton;

@@ -2,6 +2,8 @@ package org.softwarefm.core.friends;
 
 import java.util.List;
 
+import org.softwarefm.shared.social.FriendData;
+
 /**
  * The problem we have is that the browser is logged in, and the eclipse plugin (i.e. Java code) doesn't know who you are... So we could
  * <ul>

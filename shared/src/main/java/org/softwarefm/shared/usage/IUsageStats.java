@@ -1,6 +1,7 @@
 package org.softwarefm.shared.usage;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +63,7 @@ public interface IUsageStats extends ISimpleMap<String, UsageStatData> {
 		}
 
 		public static IUsageStats from(Object... nameAndStats) {
-			return fromMap( Maps.<String, UsageStatData> makeMap(nameAndStats));
+			return fromMap(Maps.<String, UsageStatData> makeMap(nameAndStats));
 		}
 
 		public static IUsageStats fromIntegerMap(Map<String, Integer> result) {
@@ -72,6 +73,22 @@ public interface IUsageStats extends ISimpleMap<String, UsageStatData> {
 					return new UsageStatData(from);
 				}
 			}));
+		}
+
+		private static IUsageStats empty = new IUsageStats() {
+			@Override
+			public List<String> keys() {
+				return Collections.emptyList();
+			}
+
+			@Override
+			public UsageStatData get(String key) {
+				return null;
+			}
+		};
+
+		public static IUsageStats empty() {
+			return empty;
 		}
 	}
 

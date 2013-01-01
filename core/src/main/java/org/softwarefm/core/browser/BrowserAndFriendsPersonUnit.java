@@ -11,11 +11,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.softwarefm.core.SoftwareFmContainer;
-import org.softwarefm.core.friends.FriendData;
 import org.softwarefm.core.friends.internal.WikiDataGetter;
 import org.softwarefm.core.friends.internal.WikiLoginHelperForTests;
 import org.softwarefm.core.swt.HasComposite;
 import org.softwarefm.core.swt.Swts;
+import org.softwarefm.shared.social.FriendData;
+import org.softwarefm.shared.social.IFoundFriendsListener;
+import org.softwarefm.shared.social.IFoundNameListener;
 import org.softwarefm.utilities.functions.IFunction1;
 
 /** This is a test class, allows the wiki data getter to be checked */
@@ -65,13 +67,13 @@ public class BrowserAndFriendsPersonUnit extends HasComposite {
 				browserAndFriendsComposite.setUrl("http://data.softwarefm.com/wiki/Code:Java.lang/String");
 			}
 		}, "");
-		browserAndFriendsComposite.addFoundFriendsListener(new IFoundFriendsListener() {
+		container.socialManager.addFoundFriendsListener(new IFoundFriendsListener() {
 			@Override
 			public void foundFriends(List<FriendData> friends) {
 				System.out.println("Found friends listener: " + friends);
 			}
 		});
-		browserAndFriendsComposite.addFoundNameListener(new IFoundNameListener() {
+		container.socialManager.addFoundNameListener(new IFoundNameListener() {
 			@Override
 			public void foundName(String name) {
 				System.out.println("Found name listener: " + name);

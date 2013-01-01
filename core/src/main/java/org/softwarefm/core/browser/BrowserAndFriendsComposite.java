@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.graphics.Image;
@@ -23,10 +24,9 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.softwarefm.core.SoftwareFmContainer;
-import org.softwarefm.core.friends.FriendData;
 import org.softwarefm.core.swt.Swts;
-import org.softwarefm.utilities.callbacks.ICallback;
-import org.softwarefm.utilities.events.IMultipleListenerList;
+import org.softwarefm.shared.social.FriendData;
+import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.strings.Strings;
@@ -41,7 +41,6 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 
 	private ToolBar friendsToolBar;
 	private final ImageRegistry imageRegistry;
-	private final IMultipleListenerList listenerList;
 	private String lastName;
 	protected List<FriendData> lastResult;
 
@@ -52,30 +51,7 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 	public BrowserAndFriendsComposite(Composite parent, SoftwareFmContainer<?> container, final String imageUrlPattern) {
 		super(parent, container);
 		imageRegistry = container.imageRegistry;
-		listenerList = container.listenerList;
-		browser.addLocationListener(new FriendsAndNameLocationListener(imageUrlPattern));
-		addFoundFriendsListener(new IFoundFriendsListener() {
-			@Override
-			public void foundFriends(List<FriendData> friends) {
-				setFriendData(friends);
-			}
-		});
-	}
-
-	public void addFoundNameListener(IFoundNameListener listener) {
-		listenerList.addListener(this, IFoundNameListener.class, listener);
-	}
-
-	public void removeFoundNameListener(IFoundNameListener listener) {
-		listenerList.removeListener(this, IFoundNameListener.class, listener);
-	}
-
-	public void addFoundFriendsListener(IFoundFriendsListener listener) {
-		listenerList.addListener(this, IFoundFriendsListener.class, listener);
-	}
-
-	public void removeFoundFriendsListener(IFoundFriendsListener listener) {
-		listenerList.removeListener(this, IFoundFriendsListener.class, listener);
+		browser.addLocationListener(new FriendsAndNameLocationListener(container.socialManager, browser, imageUrlPattern));
 	}
 
 	@Override
@@ -132,23 +108,15 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 
 	}
 
-	private void friendsChanged(final List<FriendData> result) {
-		if (!result.equals(lastResult)) {
-			lastResult = result;
-			listenerList.fire(BrowserAndFriendsComposite.this, IFoundFriendsListener.class, new ICallback<IFoundFriendsListener>() {
-				@Override
-				public void process(IFoundFriendsListener t) throws Exception {
-					t.foundFriends(result);
-				}
-			});
-		}
-	}
-
-	private class FriendsAndNameLocationListener implements LocationListener {
+	private static class FriendsAndNameLocationListener implements LocationListener {
 
 		private final String imageUrlPattern;
+		private final ISocialManager socialManager;
+		private final Browser browser;
 
-		private FriendsAndNameLocationListener(String imageUrlPattern) {
+		private FriendsAndNameLocationListener(ISocialManager socialManager, Browser browser, String imageUrlPattern) {
+			this.socialManager = socialManager;
+			this.browser = browser;
 			this.imageUrlPattern = imageUrlPattern;
 		}
 
@@ -159,20 +127,13 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 		@Override
 		public void changed(LocationEvent event) {
 			if (event.location.startsWith(siteUrl)) {
+				socialManager.setMyName(myName());
 				String newName = myName();
-				if (!Strings.safeEquals(newName, lastName)) {
-					lastName = newName;
-					friendsChanged(Collections.<FriendData> emptyList());
-					listenerList.fire(BrowserAndFriendsComposite.this, IFoundNameListener.class, new ICallback<IFoundNameListener>() {
-						@Override
-						public void process(IFoundNameListener t) throws Exception {
-							t.foundName(lastName);
-						}
-					});
-				}
+				if (!Strings.safeEquals(newName, socialManager.myName()))
+					socialManager.setFriendsData(Collections.<FriendData> emptyList());
 			}
-			if (lastName != null && event.location.equals("http://data.softwarefm.com/wiki/User:" + lastName)) {
-				String html = getHtml();
+			if (socialManager.myName() != null && event.location.equals("http://data.softwarefm.com/wiki/User:" + socialManager.myName())) {
+				String html = browser.getText();
 				final List<FriendData> result = new ArrayList<FriendData>();
 				String container = Strings.findItem(html, startOfFriendContainer, endOfFriendsContainer);
 				AtomicInteger index = new AtomicInteger();
@@ -184,13 +145,13 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 							break;
 						result.add(new FriendData(name, image == null ? null : MessageFormat.format(imageUrlPattern, image)));
 					}
-					friendsChanged(result);
+					socialManager.setFriendsData(result);
 				}
 			}
 		}
 
 		public String myName() {
-			String html = getHtml();
+			String html = browser.getText();
 			String container = Strings.findItem(html, "<div id=\"p-personal", "</div>");
 			if (container != null) {
 				String name = Strings.findItem(container, "User:", "\"");

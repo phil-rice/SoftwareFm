@@ -40,6 +40,7 @@ public class Jdoms {
 		return Lists.getOnly(result);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static Element findOnlyChildTag(Element parent, String tag) {
 		Iterator<Element> descendants = parent.getDescendants(new ElementFilter(tag));
 		if (descendants.hasNext()) {

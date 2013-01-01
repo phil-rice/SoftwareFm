@@ -14,13 +14,13 @@ public class UsagePersistanceTest extends TestCase {
 		ISimpleMap<String, UsageStatData> nullMap = usagePersistance.parse( null);
 		assertEquals(0, nullMap.keys().size());
 
-		ISimpleMap<String, UsageStatData> emptyMap = usagePersistance.parse( "");
-		assertEquals(0, emptyMap.keys().size());
-		ISimpleMap<String, IUsageStats> nullFriendsMap = usagePersistance.parseFriendsUsage( null);
-		assertEquals(0, nullFriendsMap.keys().size());
-		
-		ISimpleMap<String, IUsageStats> emptyFriendsMap = usagePersistance.parseFriendsUsage( "");
-		assertEquals(0, emptyFriendsMap.keys().size());
+//		ISimpleMap<String, UsageStatData> emptyMap = usagePersistance.parse( "");
+//		assertEquals(0, emptyMap.keys().size());
+//		ISimpleMap<String, IUsageStats> nullFriendsMap = usagePersistance.parseFriendsUsage( null);
+//		assertEquals(0, nullFriendsMap.keys().size());
+//		
+//		ISimpleMap<String, IUsageStats> emptyFriendsMap = usagePersistance.parseFriendsUsage( "");
+//		assertEquals(0, emptyFriendsMap.keys().size());
 	}
 
 	public void testSavesAndLoadsPersistanceData() {
@@ -29,16 +29,16 @@ public class UsagePersistanceTest extends TestCase {
 		checkSaveLoad(UsageTestData.statsc1d1);
 	}
 
-	public void testSavesAndLoadsFriendsUsage(){
-		checkSaveLoad(UsageTestData.fr1_a1b3_fr2_b1c2);
-	}
-	
-	private void checkSaveLoad(ISimpleMap<String, IUsageStats> friendsUsage) {
-		String string = usagePersistance.saveFriendsUsage(friendsUsage);
-		ISimpleMap<String, IUsageStats> newValue = usagePersistance.parseFriendsUsage(string);
-		assertNotSame(newValue, friendsUsage);
-		Tests.assertEquals(friendsUsage, newValue);
-	}
+	// public void testSavesAndLoadsFriendsUsage(){
+	// checkSaveLoad(UsageTestData.fr1_a1b3_fr2_b1c2);
+	// }
+	//
+	//	private void checkSaveLoad(ISimpleMap<String, IUsageStats> friendsUsage) {
+//		String string = usagePersistance.saveFriendsUsage(friendsUsage);
+//		ISimpleMap<String, IUsageStats> newValue = usagePersistance.parseFriendsUsage(string);
+//		assertNotSame(newValue, friendsUsage);
+//		Tests.assertEquals(friendsUsage, newValue);
+//	}
 
 	private void checkSaveLoad(IUsageStats original) {
 		String string = usagePersistance.saveUsageStats(original);

@@ -29,7 +29,7 @@ public class FilesTest extends TestCase {
 		assertEquals("someText", Files.getText(file));
 	}
 
-	public void testSetFileSafelyDoesntDamageFileIfCannotSave() throws IOException {
+	public void testSetFileSafelyDoesntDamageFileIfCannotSave() {
 		// TODO I don't know how to test this...
 	}
 

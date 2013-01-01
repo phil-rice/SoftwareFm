@@ -1,6 +1,7 @@
 package org.softwarefm.core.labelAndText;
 
 import java.io.File;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -12,6 +13,8 @@ import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.selection.ISelectedBindingListener;
 import org.softwarefm.core.swt.Swts;
+import org.softwarefm.shared.social.FriendData;
+import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.resources.IResourceGetter;
 import org.softwarefm.utilities.strings.Strings;
 
@@ -58,14 +61,27 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 
 			}
 
+			@Override
+			public void friendsArtifactUsage(ArtifactData artifactData, Map<FriendData, UsageStatData> friendsUsage) {
+				TextAndControlComposite.this.friendsArtifactUsage(artifactData, friendsUsage);
+				layout();
+			}
+
+			@Override
+			public void friendsCodeUsage(CodeData codeData, Map<FriendData, UsageStatData> friendsUsage) {
+				TextAndControlComposite.this.friendsCodeUsage(codeData, friendsUsage);
+				layout();
+			}
+
 			public boolean invalid() {
 				return getComposite().isDisposed();
 			}
-			
+
 			@Override
 			public String toString() {
 				return TextAndControlComposite.this.getClass().getSimpleName() + " Text: " + Strings.oneLine(getText());
 			}
+
 		});
 	}
 
@@ -109,6 +125,13 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 	}
 
 	public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
+	}
+
+	protected void friendsCodeUsage(CodeData codeData, Map<FriendData, UsageStatData> friendsUsage) {
+	}
+
+	protected void friendsArtifactUsage(ArtifactData artifactData, Map<FriendData, UsageStatData> friendsUsage) {
+
 	}
 
 	public String getText() {

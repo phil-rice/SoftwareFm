@@ -1,6 +1,7 @@
 package org.softwarefm.core.composite;
 
 import java.io.File;
+import java.util.Map;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.core.SoftwareFmContainer;
@@ -11,6 +12,8 @@ import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.selection.ISelectedBindingListener;
 import org.softwarefm.core.swt.Swts;
+import org.softwarefm.shared.social.FriendData;
+import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.functions.IFunction1;
 
 public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
@@ -57,6 +60,14 @@ public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
 				ArtifactComposite artifactComposite = ArtifactComposite.this;
 				return artifactComposite.getClass().getSimpleName() + "@" + System.identityHashCode(artifactComposite) + " Url/text: " + getTextOrUrl();
 			}
+
+			@Override
+			public void friendsArtifactUsage(ArtifactData artifactData, Map<FriendData, UsageStatData> friendsUsage) {
+			}
+
+			@Override
+			public void friendsCodeUsage(CodeData codeData, Map<FriendData, UsageStatData> friendsUsage) {
+			}
 		});
 	}
 
@@ -74,6 +85,5 @@ public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
 			}
 		});
 	}
-
 
 }

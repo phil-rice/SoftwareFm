@@ -5,9 +5,12 @@
 package org.softwarefm.core.selection;
 
 import java.io.File;
+import java.util.Map;
 
 import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
+import org.softwarefm.shared.social.FriendData;
+import org.softwarefm.shared.usage.UsageStatData;
 
 /**
  * When the user clicks on things in eclipse, these listeners are told about it.
@@ -29,7 +32,7 @@ import org.softwarefm.core.jdtBinding.CodeData;
  * The selection count is so that execution can be aborted if a newer selection has been seen
  */
 public interface ISelectedBindingListener {
-	
+
 	/** If returns true, should be removed from the listener list */
 	boolean invalid();
 
@@ -44,5 +47,9 @@ public interface ISelectedBindingListener {
 	void artifactDetermined(ArtifactData artifactData, int selectionCount);
 
 	void unknownDigest(FileAndDigest fileAndDigest, int selectionCount);
+
+	void friendsArtifactUsage(ArtifactData artifactData, Map<FriendData, UsageStatData> friendsUsage);
+
+	void friendsCodeUsage(CodeData codeData, Map<FriendData, UsageStatData> friendsUsage);
 
 }

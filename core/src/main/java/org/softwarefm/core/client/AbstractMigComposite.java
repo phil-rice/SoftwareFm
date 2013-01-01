@@ -5,7 +5,7 @@ import net.miginfocom.swt.MigLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.core.swt.HasComposite;
 
-public class AbstractMigComposite extends HasComposite{
+public class AbstractMigComposite extends HasComposite {
 
 	public AbstractMigComposite(Composite parent, MigLayout layout) {
 		super(parent);
@@ -21,7 +21,7 @@ public class AbstractMigComposite extends HasComposite{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-			};
+			}
 		}.start();
 	}
 

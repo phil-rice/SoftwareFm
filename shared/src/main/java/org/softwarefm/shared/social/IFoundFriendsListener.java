@@ -1,8 +1,7 @@
-package org.softwarefm.core.browser;
+package org.softwarefm.shared.social;
 
 import java.util.List;
 
-import org.softwarefm.core.friends.FriendData;
 
 public interface IFoundFriendsListener {
 

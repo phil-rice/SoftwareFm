@@ -1,4 +1,4 @@
-package org.softwarefm.core.friends;
+package org.softwarefm.shared.social;
 
 public class FriendData {
 

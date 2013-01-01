@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwarefm.core.browser.BrowserComposite;
-import org.softwarefm.core.friends.FriendData;
 import org.softwarefm.core.friends.IWikiDataGetter;
 import org.softwarefm.core.friends.IWikiGetterCallback;
+import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.utilities.strings.Strings;
 
 public class WikiDataGetter implements IWikiDataGetter {

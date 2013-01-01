@@ -4,6 +4,7 @@ import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.softwarefm.core.SoftwareFmContainer;
+import org.softwarefm.core.browser.BrowserAndFriendsComposite;
 import org.softwarefm.core.browser.BrowserComposite;
 import org.softwarefm.core.swt.IHasControl;
 import org.softwarefm.utilities.functions.Functions;
@@ -11,7 +12,7 @@ import org.softwarefm.utilities.functions.IFunction1;
 
 /** A composite with StackLayout in which the browserComposite can be showing, or some other composite */
 public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmComposite {
-	private final BrowserComposite browserComposite;
+	private final BrowserAndFriendsComposite browserComposite;
 	private final C control;
 	private final StackLayout layout;
 	int layoutCount;
@@ -19,7 +20,7 @@ public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmC
 
 	public StackedBrowserAndControl(Composite parent, SoftwareFmContainer<?> container, IFunction1<Composite, C> creator) {
 		super(parent, container);
-		browserComposite = new BrowserComposite(getComposite(), container);
+		browserComposite = new BrowserAndFriendsComposite(getComposite(), container);
 		control = Functions.call(creator, getComposite());
 		layout = new StackLayout();
 		setLayout(layout);

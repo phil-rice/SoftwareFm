@@ -18,7 +18,7 @@ public interface IRegistryConfigurator {
 					return "[" + from +"]";
 				}
 			});
-			return MessageFormat.format(pattern, params);
+			return MessageFormat.format(pattern, (Object[])params);
 		}
 	}
 }

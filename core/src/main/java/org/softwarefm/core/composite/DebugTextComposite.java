@@ -20,6 +20,8 @@ import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.selection.ISelectedBindingListener;
 import org.softwarefm.core.selection.ISelectedBindingManager;
+import org.softwarefm.shared.social.FriendData;
+import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.runnable.Callables;
 import org.softwarefm.utilities.strings.Strings;
@@ -100,13 +102,23 @@ public class DebugTextComposite extends SoftwareFmComposite {
 			public String toString() {
 				return DebugTextComposite.this.getClass().getSimpleName();
 			}
+
+			@Override
+			public void friendsArtifactUsage(ArtifactData artifactData, Map<FriendData, UsageStatData> friendsUsage) {
+				listenerText.append("friendsArtifactUsage: (" + artifactData + "," + friendsUsage + ")\n");
+			}
+
+			@Override
+			public void friendsCodeUsage(CodeData codeData, Map<FriendData, UsageStatData> friendsUsage) {
+				listenerText.append("friendsArtifactUsage: (" + codeData + "," + friendsUsage + ")\n");
+			}
 		});
 	}
 
 	public ICallback2<Object, String> logger() {
 		return new ICallback2<Object, String>() {
 			public void process(Object first, String second) throws Exception {
-				messageText.append(Thread.currentThread() + " " + first.getClass().getSimpleName() + " - " + second+"\n");
+				messageText.append(Thread.currentThread() + " " + first.getClass().getSimpleName() + " - " + second + "\n");
 			}
 		};
 

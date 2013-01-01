@@ -47,7 +47,9 @@ import org.softwarefm.eclipse.jobs.MavenImportJob;
 import org.softwarefm.eclipse.plugins.Plugins;
 import org.softwarefm.eclipse.plugins.WorkbenchWindowListenerManager;
 import org.softwarefm.eclipse.selection.internal.EclipseSelectedBindingStrategy;
+import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.shared.usage.IUsage;
+import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.IUsageReporter;
 import org.softwarefm.shared.usage.UsageConstants;
 import org.softwarefm.shared.usage.UsageThread;
@@ -264,7 +266,9 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 			ManualImportJob manualImport = new ManualImportJob(makeLink, resourceGetter, selectionBindingManager);
 			ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
 			ImageRegistry imageRegistry = SoftwareFmPlugin.getDefault().getImageRegistry();
-			return new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState(), imageRegistry, IMultipleListenerList.Utils.defaultList());
+			IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
+			IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
+			return new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState(), imageRegistry, listenerList, ISocialManager.Utils.socialManager(listenerList, persistance), persistance);
 		}
 	}
 

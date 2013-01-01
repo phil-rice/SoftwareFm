@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.swt.widgets.Display;
 import org.softwarefm.core.jdtBinding.ArtifactData;
@@ -11,6 +12,8 @@ import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.selection.ISelectedBindingListener;
 import org.softwarefm.core.selection.ISelectedBindingListenerAndAdderRemover;
+import org.softwarefm.shared.social.FriendData;
+import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.collections.Lists;
 
 public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingListenerAndAdderRemover<S> {
@@ -80,6 +83,28 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 				checkListeners();
 				for (ISelectedBindingListener listener : listeners)
 					listener.unknownDigest(fileAndDigest, selectionCount);
+			}
+		});
+	}
+
+	@Override
+	public void friendsArtifactUsage(final ArtifactData artifactData, final Map<FriendData, UsageStatData> friendsUsage) {
+		display.asyncExec(new Runnable() {
+			public void run() {
+				checkListeners();
+				for (ISelectedBindingListener listener : listeners)
+					listener.friendsArtifactUsage(artifactData, friendsUsage);
+			}
+		});
+	}
+
+	@Override
+	public void friendsCodeUsage(final CodeData codeData, final Map<FriendData, UsageStatData> friendsUsage) {
+		display.asyncExec(new Runnable() {
+			public void run() {
+				checkListeners();
+				for (ISelectedBindingListener listener : listeners)
+					listener.friendsCodeUsage(codeData, friendsUsage);
 			}
 		});
 	}

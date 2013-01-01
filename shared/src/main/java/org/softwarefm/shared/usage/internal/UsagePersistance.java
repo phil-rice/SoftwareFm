@@ -16,12 +16,12 @@ import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.softwarefm.shared.social.FriendData;
+import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.IUsageStats;
 import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.exceptions.WrappedException;
-import org.softwarefm.utilities.maps.ISimpleMap;
-import org.softwarefm.utilities.maps.SimpleMaps;
 
 public class UsagePersistance implements IUsagePersistance {
 
@@ -35,6 +35,7 @@ public class UsagePersistance implements IUsagePersistance {
 		return empty;
 	}
 
+	@SuppressWarnings("unchecked")
 	private IUsageStats nodeToUsage(Element rootNode) {
 		Map<String, UsageStatData> result = new HashMap<String, UsageStatData>();
 		if (!rootNode.getName().equalsIgnoreCase("Usage"))
@@ -66,33 +67,87 @@ public class UsagePersistance implements IUsagePersistance {
 	}
 
 	@Override
-	public ISimpleMap<String, IUsageStats> parseFriendsUsage(String text) {
-		if (text == null|| text.equals(""))
-			return SimpleMaps.empty();
-		Element rootNode = getRootElementFromText(text);
-		if (!rootNode.getName().equalsIgnoreCase("Friends"))
-			throw new IllegalArgumentException("Expected Friends had " + rootNode);
-		Map<String, IUsageStats> result = new HashMap<String, IUsageStats>();
-		for (Element usage : (List<Element>) rootNode.getChildren()) {
-			IUsageStats usageStats = nodeToUsage(usage);
-			String name = usage.getAttributeValue("name");
-			result.put(name, usageStats);
+	public void populate(ISocialManager manager, String saved) {
+		Element root = getRootElementFromText(saved);
+		String myName = root.getAttributeValue("name");
+		manager.setMyName(myName);
+		Element friends = root.getChild("Friends");
+		List<FriendData> friendDatas = new ArrayList<FriendData>();
+		for (Element friend : (List<Element>) friends.getChildren())
+			friendDatas.add(new FriendData(friend.getAttributeValue("name"), friend.getAttributeValue("imageUrl")));
+		manager.setFriendsData(friendDatas);
+		Element usage = root.getChild("Usage");
+		manager.clearUsageData();
+		for (Element person : (List<Element>) usage.getChildren()) {
+			String name = person.getAttributeValue("name");
+			IUsageStats usageStats = nodeToUsage(person);
+			manager.setUsageData(name, usageStats);
 		}
-		return SimpleMaps.fromMap(result);
 	}
 
 	@Override
-	public String saveFriendsUsage(ISimpleMap<String, IUsageStats> friendsUsage) {
-		Element friendsElement = new Element("Friends");
-		friendsElement.setAttribute("version", "1.0");
-		for (String key : friendsUsage.keys()) {
-			Element usage = usage(friendsUsage.get(key));
-			usage.setAttribute("name", key);
-			friendsElement.addContent(usage);
-		}
-
-		return elementToString(friendsElement);
+	public String save(ISocialManager manager) {
+		Element root = new Element("SocialManager");
+		if (manager.myName() != null)
+			root.setAttribute("name", manager.myName());
+		Element friends = friendData(manager.myFriends());
+		root.addContent(friends);
+		Element usage = usage(manager);
+		root.addContent(usage);
+		return elementToString(root);
 	}
+
+	private Element usage(ISocialManager manager) {
+		Element root = new Element("Usage");
+		for (String name : manager.names()) {
+			Element usageStats = usage(manager.getUsageStats(name));
+			usageStats.setAttribute("name", name);
+			root.addContent(usageStats);
+		}
+		return root;
+	}
+
+	private Element friendData(List<FriendData> myFriends) {
+		Element root = new Element("Friends");
+		for (FriendData data : myFriends) {
+			Element child = new Element("Friend");
+			child.setAttribute("name", data.name);
+			if (data.imageUrl != null)
+				child.setAttribute("imageUrl", data.imageUrl);
+			root.addContent(child);
+		}
+		return root;
+	}
+
+	// @SuppressWarnings("unchecked")
+	// @Override
+	// public ISimpleMap<String, IUsageStats> parseFriendsUsage(String text) {
+	// if (text == null|| text.equals(""))
+	// return SimpleMaps.empty();
+	// Element rootNode = getRootElementFromText(text);
+	// if (!rootNode.getName().equalsIgnoreCase("Friends"))
+	// throw new IllegalArgumentException("Expected Friends had " + rootNode);
+	// Map<String, IUsageStats> result = new HashMap<String, IUsageStats>();
+	// for (Element usage : (List<Element>) rootNode.getChildren()) {
+	// IUsageStats usageStats = nodeToUsage(usage);
+	// String name = usage.getAttributeValue("name");
+	// result.put(name, usageStats);
+	// }
+	// return SimpleMaps.fromMap(result);
+	// }
+	//
+	// @Override
+	// public String saveFriendsUsage(ISimpleMap<String, IUsageStats> friendsUsage) {
+	// Element friendsElement = new Element("Friends");
+	// friendsElement.setAttribute("version", "1.0");
+	// for (String key : friendsUsage.keys()) {
+	// Element usage = usage(friendsUsage.get(key));
+	// usage.setAttribute("name", key);
+	// friendsElement.addContent(usage);
+	// }
+	//
+	// return elementToString(friendsElement);
+	// }
 
 	private String elementToString(Element element) {
 		try {

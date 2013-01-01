@@ -15,6 +15,7 @@ public class StarRouteMatcher implements IRouteMatcher {
 		this.method = method;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Map<String, String> accept(HttpMethod method, String uri, List<String> fragments) {
 		if (this.method != method)

@@ -6,7 +6,6 @@ import org.softwarefm.shared.usage.IUsageReporter;
 import org.softwarefm.shared.usage.IUsageStats;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.http.IHttpClient;
-import org.softwarefm.utilities.http.IResponse;
 import org.softwarefm.utilities.strings.Strings;
 
 public class UsageReporter implements IUsageReporter {
@@ -24,8 +23,7 @@ public class UsageReporter implements IUsageReporter {
 			String text = persistance.saveUsageStats(usageStats);
 			byte[] zipped = Strings.zip(text);
 			Strings.unzip(zipped); // just check it unzips
-			System.out.println("Posting");
-			IResponse response = client.post(ConfiguratorConstants.userPattern, user).withEntity(zipped).execute();
+			client.post(ConfiguratorConstants.userPattern, user).withEntity(zipped).execute();
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
