@@ -20,11 +20,12 @@ public class Usage implements IUsage {
 	private final IListenerList<IUsageListener> listeners;
 
 	public Usage(IMultipleListenerList listenerList) {
-		listeners = IListenerList.Utils.list(listenerList, this);
+		listeners = IListenerList.Utils.list(listenerList, IUsageListener.class, this);
 	}
 
 	public void nuke() {
 		data.clear();
+		fireListeners();
 	}
 
 	public void selected(final String usage) {

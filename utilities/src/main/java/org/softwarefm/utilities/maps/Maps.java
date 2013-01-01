@@ -221,7 +221,12 @@ public class Maps {
 
 	public static <K, V> void addToList(Map<K, List<V>> map, K key, V value) {
 		Maps.addToCollection(map, ArrayList.class, key, value);
+	}
 
+	public static <K, V> void removeFromList(Map<K, List<V>> map, K key, V value) {
+		List<V> existing = map.get(key);
+		if (existing != null)
+			existing.remove(value);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -236,6 +241,22 @@ public class Maps {
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	public static <K1, K2, V> void addToList(Map<K1, Map<K2, List<V>>> map, K1 key1, K2 key2, V value) {
+		Map<K2, List<V>> map1 = Maps.findOrCreate(map, key1, new Callable<Map<K2, List<V>>>() {
+			@Override
+			public Map<K2, List<V>> call() throws Exception {
+				return new HashMap<K2, List<V>>();
+			}
+		});
+		addToList(map1, key2, value);
+	}
+
+	public static <K1, K2, V> void removeFromList(Map<K1, Map<K2, List<V>>> map, K1 key1, K2 key2, V value) {
+		Map<K2, List<V>> map1 = map.get(key1);
+		if (map != null)
+			removeFromList(map1, key2, value);
 	}
 
 	private static <K, V> Map<K, V> putInto(Map<K, V> result, Object... attributesAndValues) {
@@ -516,6 +537,13 @@ public class Maps {
 			return Collections.EMPTY_LIST;
 		else
 			return result;
+	}
+	@SuppressWarnings("unchecked")
+	public static <K1,K2, V> List<V> getOrEmptyList(Map<K1,Map<K2, List<V>>> map, K1 key1, K2 key2) {
+		Map<K2, List<V>> map1 = map.get(key1);
+		if (map1 != null)
+			return getOrEmptyList(map1, key2);
+		return Collections.EMPTY_LIST;
 	}
 
 	public static <K, V> void putIfNotNull(Map<K, V> map, K key, V value) {

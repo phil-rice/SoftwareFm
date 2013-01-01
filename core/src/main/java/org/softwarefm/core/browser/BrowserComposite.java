@@ -60,12 +60,10 @@ public class BrowserComposite extends HasComposite {
 
 			@Override
 			public void changing(LocationEvent event) {
-				System.out.println("Changing");
 			}
 
 			@Override
 			public void changed(LocationEvent event) {
-				System.out.println("Changed");
 				latch.countDown();
 			}
 		};

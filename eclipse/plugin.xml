@@ -12,51 +12,52 @@
             name="Code"
             icon="icons/class.png"
             category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.CodeView"
-            id="org.softwarefm.softwarefm.views.ClassAndMethodView">
+            class="org.softwarefm.eclipse.views.CodeView"
+            id="org.softwarefm.eclipse.views.ClassAndMethodView">
       </view>
 
       <view
             name="Artifact"
             icon="icons/project.png"
             category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.ArtifactView"
-            id="org.softwarefm.softwarefm.views.ProjectView">
+            class="org.softwarefm.eclipse.views.ArtifactView"
+            id="org.softwarefm.eclipse.views.ProjectView">
       </view>
       <view
             name="SoftwareFM"
             icon="icons/all.png"
             category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.AllView"
-            id="org.softwarefm.softwarefm.views.AllView">
+            class="org.softwarefm.eclipse.views.AllView"
+            id="org.softwarefm.eclipse.views.AllView">
       </view>
       <view
             name="Debug - Text"
             icon="icons/debug.png"
             category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.DebugTextView"
-            id="org.softwarefm.softwarefm.views.SoftwareFmDebugView">
+            class="org.softwarefm.eclipse.views.DebugTextView"
+            id="org.softwarefm.eclipse.views.SoftwareFmDebugView">
       </view>
       <view
             name="Debug - Link"
             icon="icons/debug.png"
             category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.DebugLinkView"
-            id="org.softwarefm.softwarefm.views.DebugLinkView">
+            class="org.softwarefm.eclipse.views.DebugLinkView"
+            id="org.softwarefm.eclipse.views.DebugLinkView">
       </view>
       <view
             name="Debug - Usage"
             icon="icons/debug.png"
             category="org.softwarefm"
-            class="org.softwarefm.softwarefm.views.DebugUsageView"
-            id="org.softwarefm.softwarefm.views.DebugUsageView">
+            class="org.softwarefm.eclipse.views.DebugUsageView"
+            id="org.softwarefm.eclipse.views.DebugUsageView">
       </view>
    </extension>
    <extension point="org.eclipse.ui.preferencePages">
 	 	<page 
 	 	    id="org.softwarefm.preference.Page"
-	 		name="SoftwareFM" class="org.softwarefm.preference.SoftwareFMPreferencePage">
+	 		name="SoftwareFM" class="org.softwarefm.eclipse.preference.SoftwareFMPreferencePage">
 	   	</page>
 
 	</extension>
+	 <extension point="org.eclipse.ui.startup" />
 </plugin>

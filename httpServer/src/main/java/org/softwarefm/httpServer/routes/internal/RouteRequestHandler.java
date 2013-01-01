@@ -29,6 +29,7 @@ public class RouteRequestHandler implements HttpRequestHandler {
 	public void handle(HttpRequest request, HttpResponse response, HttpContext context) throws HttpException, IOException {
 		try {
 			String uri = request.getRequestLine().getUri();
+			System.out.println("Processing " + request.getRequestLine());
 			HttpMethod method = HttpMethod.valueOf(request.getRequestLine().getMethod());
 			HttpEntity httpEntity = request instanceof BasicHttpEntityEnclosingRequest ? ((BasicHttpEntityEnclosingRequest) request).getEntity() : null;
 			StatusAndEntity statusAndEntity = registry.process(method, uri, httpEntity);

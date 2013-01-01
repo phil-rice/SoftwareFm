@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: Softwarefm
 Bundle-SymbolicName: eclipse;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.softwarefm.softwarefm.SoftwareFmPlugin
+Bundle-Activator: org.softwarefm.eclipse.SoftwareFmPlugin
 Bundle-Vendor: SoftwareFM
 Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.ui;bundle-version="3.7.0",
@@ -43,9 +43,9 @@ Bundle-ClassPath: .,
  lib/miglayout-swt-4.2.jar,
  lib/core-0.0.1-SNAPSHOT.jar,
  lib/shared-0.0.1-SNAPSHOT.jar
-Export-Package: org.softwarefm.softwarefm,
- org.softwarefm.softwarefm.action,
- org.softwarefm.softwarefm.jobs,
- org.softwarefm.softwarefm.plugins,
- org.softwarefm.softwarefm.selection.internal,
- org.softwarefm.softwarefm.views
+Export-Package: org.softwarefm.eclipse,
+ org.softwarefm.eclipse.action,
+ org.softwarefm.eclipse.jobs,
+ org.softwarefm.eclipse.plugins,
+ org.softwarefm.eclipse.selection.internal,
+ org.softwarefm.eclipse.views

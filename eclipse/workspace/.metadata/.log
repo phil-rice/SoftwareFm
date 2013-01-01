@@ -3,8 +3,8 @@ eclipse.buildId=unknown
 java.version=1.6.0_29
 java.vendor=Sun Microsystems Inc.
 BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_GB
-Framework arguments:  -version 3 -port 50571 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.rap.junit.runtime -classNames org.softwarefm.softwarefm.SoftwareFmPlugInTest -testpluginname org.softwarefm.softwarefm
-Command-line arguments:  -dev file:C:/Users/Phil/workspaces/softwareFm/.metadata/.plugins/org.eclipse.pde.core/pde-junit/dev.properties -os win32 -ws win32 -arch x86_64 -consoleLog -console -version 3 -port 50571 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.rap.junit.runtime -classNames org.softwarefm.softwarefm.SoftwareFmPlugInTest -testpluginname org.softwarefm.softwarefm
+Framework arguments:  -version 3 -port 50571 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.rap.junit.runtime -classNames org.softwarefm.eclipse.SoftwareFmPlugInTest -testpluginname org.softwarefm.eclipse
+Command-line arguments:  -dev file:C:/Users/Phil/workspaces/softwareFm/.metadata/.plugins/org.eclipse.pde.core/pde-junit/dev.properties -os win32 -ws win32 -arch x86_64 -consoleLog -console -version 3 -port 50571 -testLoaderClass org.eclipse.jdt.internal.junit4.runner.JUnit4TestLoader -loaderpluginname org.eclipse.rap.junit.runtime -classNames org.softwarefm.eclipse.SoftwareFmPlugInTest -testpluginname org.softwarefm.eclipse
 
 !ENTRY org.eclipse.debug.ui 4 0 2012-12-17 19:55:26.189
 !MESSAGE FrameworkEvent ERROR

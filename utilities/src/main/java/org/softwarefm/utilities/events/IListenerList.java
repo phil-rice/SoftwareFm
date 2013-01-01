@@ -10,8 +10,8 @@ public interface IListenerList<L> {
 	void fire(ICallback<L> callback);
 
 	public static class Utils {
-		public static <L> IListenerList<L> list(IMultipleListenerList list, Object source) {
-			return new ListenerList<L>(list, source);
+		public static <L> IListenerList<L> list(IMultipleListenerList list, Class<L> clazz, Object source) {
+			return new ListenerList<L>(list, clazz, source);
 		}
 	}
 

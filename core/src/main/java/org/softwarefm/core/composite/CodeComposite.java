@@ -3,20 +3,20 @@ package org.softwarefm.core.composite;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.core.SoftwareFmContainer;
-import org.softwarefm.core.browser.BrowserComposite;
+import org.softwarefm.core.browser.BrowserAndFriendsComposite;
 import org.softwarefm.core.constants.UrlConstants;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.SelectedBindingAdapter;
 
 public class CodeComposite extends SoftwareFmComposite {
 
-	private final BrowserComposite browser;
+	private final BrowserAndFriendsComposite browser;
 	private String url;
 
 	public CodeComposite(Composite parent, final SoftwareFmContainer<?> container) {
 		super(parent, container);
 		getComposite().setLayout(new FillLayout());
-		browser = new BrowserComposite(getComposite(), container);
+		browser = new BrowserAndFriendsComposite(getComposite(), container);
 		addListener(new SelectedBindingAdapter() {
 			@Override
 			public void codeSelectionOccured(CodeData codeData, int selectionCount) {

@@ -3,13 +3,12 @@ package org.softwarefm.core.friends.internal;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import org.jdom.Element;
 import org.softwarefm.core.browser.BrowserComposite;
 import org.softwarefm.core.friends.FriendData;
 import org.softwarefm.core.friends.IWikiDataGetter;
 import org.softwarefm.core.friends.IWikiGetterCallback;
-import org.softwarefm.utilities.jdom.Jdoms;
 import org.softwarefm.utilities.strings.Strings;
 
 public class WikiDataGetter implements IWikiDataGetter {
@@ -31,16 +30,10 @@ public class WikiDataGetter implements IWikiDataGetter {
 	@Override
 	public String myName() {
 		String html = browserComposite.getHtml();
-		int start = html.indexOf("<div id=\"p-personal");
-		if (start >= 0) {
-			int end = html.indexOf("</div>", start) + 6;
-			String div = html.substring(start, end);
-			for (Element li : Jdoms.findElementsWith(div, "li")) {
-				if ("pt-userpage".equals(li.getAttributeValue("id"))) {
-					Element a = Jdoms.findOnlyChildTag(li, "a");
-					return a.getText();
-				}
-			}
+		String container = Strings.findItem(html, "<div id=\"p-personal", "</div>");
+		if (container != null) {
+			String name = Strings.findItem(container, "User:", "\"");
+			return name;
 		}
 		return null;
 	}
@@ -57,30 +50,20 @@ public class WikiDataGetter implements IWikiDataGetter {
 			if (!browserComposite.getHtml().contains(friendsHomePageMarker))
 				System.out.println("Could not find home page with friends");
 			String html = browserComposite.getHtml();
-			int start = 0;
 			List<FriendData> result = new ArrayList<FriendData>();
-			while (true) {
-				start = html.indexOf(startOfFriendContainer, start);
-				if (start > 0) {
-					System.out.println("Start: " + start);
-					int end = Strings.indexAfter(html, endOfFriendsContainer, start);
-					System.out.println("End of container: " + end);
-					if (end >= 0) {
-						String container = html.substring(start, end);
-						String name = Strings.findItem(container, "User:", "\"");
-						String image = Strings.findItem(container, " src=\"", "\"");
-						if (name != null && image != null)
-							result.add(new FriendData(name, MessageFormat.format(imageUrlMask, image)));
-						start = end;
-						continue;
-					}
+			String container = Strings.findItem(html, startOfFriendContainer, endOfFriendsContainer);
+			AtomicInteger index = new AtomicInteger();
+			if (container != null)
+				while (true) {
+					String name = Strings.findItem(container, "User:", "\"", index);
+					String image = Strings.findItem(container, " src=\"", "\"", index);
+					if (name == null)
+						break;
+					result.add(new FriendData(name, image == null ? null : MessageFormat.format(imageUrlMask, image)));
 				}
-				System.out.println("Finished looking");
-				callback.success(result);
-				return;
-			}
+			System.out.println("Finished looking");
+			callback.success(result);
 
 		}
 	}
-
 }

@@ -3,10 +3,11 @@ package org.softwarefm.httpServer.internal;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
@@ -39,7 +40,7 @@ import org.softwarefm.utilities.http.HttpMethod;
 
 public class HttpServer implements IHttpServer {
 
-	private final ExecutorService service;
+	private final ThreadPoolExecutor service;
 	private Thread acceptThread;
 	private final int port;
 	private final HttpService httpService;
@@ -56,6 +57,14 @@ public class HttpServer implements IHttpServer {
 		this.port = port;
 		this.exceptionHandler = exceptionHandler;
 		service = new ThreadPoolExecutor(noOfThreads / 3, noOfThreads, 1, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(100));
+		service.setThreadFactory(new ThreadFactory() {
+			@Override
+			public Thread newThread(Runnable r) {
+				Thread thread = new Thread(r);
+				thread.setDaemon(true);
+				return thread;
+			}
+		});
 		HttpProcessor httpproc = new ImmutableHttpProcessor(new HttpResponseInterceptor[] { new ResponseDate(), new ResponseServer(), new ResponseContent(), new ResponseConnControl() });
 		registry = IHttpRegistry.Utils.registry();
 		routeRequestHandler = new RouteRequestHandler(registry);
@@ -68,7 +77,7 @@ public class HttpServer implements IHttpServer {
 	public void register(HttpMethod method, IRouteHandler routeHandler, String routePattern, String... params) {
 		registry.register(method, routeHandler, routePattern, params);
 	}
-	
+
 	@Override
 	public StatusAndEntity process(HttpMethod method, String uri, HttpEntity entity) {
 		try {
@@ -77,7 +86,7 @@ public class HttpServer implements IHttpServer {
 			throw WrappedException.wrap(e);
 		}
 	}
-	
+
 	@Override
 	public void configure(IRegistryConfigurator configurator) {
 		configurator.registerWith(this);
@@ -99,9 +108,18 @@ public class HttpServer implements IHttpServer {
 								public Void call() throws Exception {
 									HttpContext context = new BasicHttpContext(null);
 									DefaultHttpServerConnection conn = new DefaultHttpServerConnection();
-									conn.bind(socket, httpParams);
-									while (conn.isOpen())
-										httpService.handleRequest(conn, context);
+									try {
+										conn.bind(socket, httpParams);
+										while (conn.isOpen())
+											httpService.handleRequest(conn, context);
+									} catch (SocketTimeoutException e) {
+										// TODO I think it is normal for this to happen. But I don't know enough about http1.1 to be sure
+									} catch (Exception e) {
+										e.printStackTrace();
+										throw WrappedException.wrap(e);
+									} finally {
+										conn.close();
+									}
 									return null;
 								}
 							});
@@ -112,8 +130,10 @@ public class HttpServer implements IHttpServer {
 							throw WrappedException.wrap(e);
 						}
 					}
+					System.out.println("Accept thread closed down");
 				}
 			};
+			acceptThread.setDaemon(true);
 			acceptThread.setName("HttpServer accept thread");
 			acceptThread.start();
 			latch.await();
@@ -125,6 +145,7 @@ public class HttpServer implements IHttpServer {
 	public void shutdown() {
 		try {
 			cont = false;
+			service.shutdown();
 			if (acceptThread != null)
 				acceptThread.interrupt();
 			if (serverSocket != null)

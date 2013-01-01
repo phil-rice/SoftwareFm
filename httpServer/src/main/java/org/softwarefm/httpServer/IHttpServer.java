@@ -56,7 +56,7 @@ public interface IHttpServer extends IHttpRegistry {
 
 		public static HttpParams simpleParams(String serviceText) {
 			HttpParams params = new SyncBasicHttpParams()//
-					.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 5000)//
+					.setIntParameter(CoreConnectionPNames.SO_TIMEOUT, 2000)//
 					.setIntParameter(CoreConnectionPNames.SOCKET_BUFFER_SIZE, 8 * 1024)//
 					.setBooleanParameter(CoreConnectionPNames.STALE_CONNECTION_CHECK, false)//
 					.setBooleanParameter(CoreConnectionPNames.TCP_NODELAY, true)//

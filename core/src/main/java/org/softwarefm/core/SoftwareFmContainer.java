@@ -11,13 +11,14 @@ import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.IUrlStrategy;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.maps.IHasCache;
 import org.softwarefm.utilities.resources.IResourceGetter;
 
 public class SoftwareFmContainer<S> implements IHasCache {
 
 	public static <S> SoftwareFmContainer<S> make(IUrlStrategy urlStrategy, ISelectedBindingManager<S> manager, ICallback2<String, Integer> importPom, ICallback2<ArtifactData, Integer> importManually, ITemplateStore templateStore, IArtifactDataCache artifactDataCache, SfmActionState state, ImageRegistry imageRegistry) {
-		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), manager, importPom, importManually, urlStrategy, templateStore, artifactDataCache, state, imageRegistry);
+		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), manager, importPom, importManually, urlStrategy, templateStore, artifactDataCache, state, imageRegistry, IMultipleListenerList.Utils.defaultList());
 	}
 
 	public static <S> SoftwareFmContainer<S> makeForTests(Display display, IResourceGetter resourceGetter) {
@@ -31,7 +32,7 @@ public class SoftwareFmContainer<S> implements IHasCache {
 				urlStrategy,//
 				ITemplateStore.Utils.templateStore(urlStrategy),//
 				IArtifactDataCache.Utils.artifactDataCache(), //
-				new SfmActionState(), imageRegistry);
+				new SfmActionState(), imageRegistry, IMultipleListenerList.Utils.defaultList());
 	}
 
 	public static <S> SoftwareFmContainer<S> makeForTests(Display display) {
@@ -46,8 +47,9 @@ public class SoftwareFmContainer<S> implements IHasCache {
 	public final IArtifactDataCache artifactDataCache;
 	public final SfmActionState state;
 	public final ImageRegistry imageRegistry;
+	public final IMultipleListenerList listenerList;
 
-	public SoftwareFmContainer(IResourceGetter resourceGetter, ISelectedBindingManager<S> selectedBindingManager, ICallback2<String, Integer> importPom, ICallback2<ArtifactData, Integer> importManually, IUrlStrategy urlStrategy, ITemplateStore templateStore, IArtifactDataCache artifactDataCache, SfmActionState state, ImageRegistry imageRegistry) {
+	public SoftwareFmContainer(IResourceGetter resourceGetter, ISelectedBindingManager<S> selectedBindingManager, ICallback2<String, Integer> importPom, ICallback2<ArtifactData, Integer> importManually, IUrlStrategy urlStrategy, ITemplateStore templateStore, IArtifactDataCache artifactDataCache, SfmActionState state, ImageRegistry imageRegistry, IMultipleListenerList listenerList) {
 		this.resourceGetter = resourceGetter;
 		this.selectedBindingManager = selectedBindingManager;
 		this.importPom = importPom;
@@ -56,6 +58,7 @@ public class SoftwareFmContainer<S> implements IHasCache {
 		this.artifactDataCache = artifactDataCache;
 		this.state = state;
 		this.imageRegistry = imageRegistry;
+		this.listenerList = listenerList;
 	}
 
 	public void clearCaches() {

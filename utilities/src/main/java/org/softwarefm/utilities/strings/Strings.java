@@ -15,6 +15,7 @@ import java.text.MessageFormat;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
@@ -602,14 +603,19 @@ public class Strings {
 		return index + item.length();
 	}
 
+	
 	public static String findItem(String container, String startMarker, String endMarker) {
-		int startName = Strings.indexAfter(container, startMarker, 0);
+		return findItem(container, startMarker, endMarker, new AtomicInteger());
+	}
+	public static String findItem(String container, String startMarker, String endMarker, AtomicInteger startIndex) {
+		int startName = Strings.indexAfter(container, startMarker, startIndex.get());
 		if (startName <0)
 			return null;
 		int endName = container.indexOf(endMarker, startName);
 		if (endName <0)
 			return null;
 		String name = container.substring(startName, endName);
+		startIndex.set(endName + endMarker.length());
 		return name;
 	}
 

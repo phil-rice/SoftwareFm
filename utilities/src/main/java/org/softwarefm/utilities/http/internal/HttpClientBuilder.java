@@ -180,7 +180,7 @@ public class HttpClientBuilder implements IHttpClient {
 
 	@Override
 	public IHttpClient method(HttpMethod method, String urlPattern, Object... params) {
-		return new HttpClientBuilder(client, host, url, method, entity, headers, parameters);
+		return new HttpClientBuilder(client, host, MessageFormat.format(urlPattern, params), method, entity, headers, parameters);
 	}
 
 	public IHttpClient withParameters(List<NameValuePair> nameAndValues) {

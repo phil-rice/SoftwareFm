@@ -15,16 +15,20 @@ import org.softwarefm.utilities.maps.Maps;
 
 public class MultipleListenerList implements IMultipleListenerList {
 
-	final Map<Object, List<Object>> map = Collections.synchronizedMap(new HashMap<Object, List<Object>>());
+	final Map<Object, Map<Class<?>, List<Object>>> map = Collections.synchronizedMap(new HashMap());
 
-	public <L> void addListener(Object source, L listener) {
-		Maps.addToList(map, source, listener);
+	public <L> void addListener(Object source, Class<L> clazz, L listener) {
+		Maps.addToList(map, source, clazz, listener);
+	}
+
+	public <L> void removeListener(Object source, Class<L> clazz, L listener) {
+		Maps.removeFromList(map, source, clazz, listener);
 	}
 
 	@SuppressWarnings("unchecked")
-	public <L> void fire(Object source, ICallback<L> callback) {
+	public <L> void fire(Object source, Class<L> clazz, ICallback<L> callback) {
 		List<Throwable> throwables = new ArrayList<Throwable>();
-		List<L> list = (List<L>) Maps.getOrEmptyList(map, source);
+		List<L> list = (List<L>) Maps.getOrEmptyList(map, source, clazz);
 		for (Iterator<L> iterator = list.iterator(); iterator.hasNext();)
 			try {
 				L listener = iterator.next();

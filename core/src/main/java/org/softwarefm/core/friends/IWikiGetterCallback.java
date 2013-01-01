@@ -5,9 +5,6 @@ public interface IWikiGetterCallback <T>{
 	/** If the browser isn't logged in... */
 	void notLoggedIn();
 	
-	/** Some unpleasant response from the server */
-	void badResponse(int statusCode, String textFromServer);
-	
 	/** Got the data */
 	void success(T result);
 	
