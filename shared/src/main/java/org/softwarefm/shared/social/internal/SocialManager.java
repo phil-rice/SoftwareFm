@@ -82,7 +82,8 @@ public class SocialManager implements ISocialManager {
 
 	@Override
 	public void setUsageData(String name, IUsageStats stats) {
-		this.stats.put(name, stats);
+		if (name != null)
+			this.stats.put(name, stats);
 	}
 
 	@Override

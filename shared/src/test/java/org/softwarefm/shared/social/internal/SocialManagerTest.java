@@ -157,6 +157,16 @@ public class SocialManagerTest extends TestCase {
 		assertEquals(Collections.emptyList(), socialManager2.names());
 	}
 
+	public void testIgnoresNullNames() {
+		replay();
+		removeListeners();
+		socialManager.setUsageData(null, UsageTestData.statsa1b3);
+		assertEquals(0, socialManager.names().size());
+		assertNull(socialManager.getUsageStats(null));
+	}
+	
+	
+	
 	private void removeListeners() {
 		socialManager.removeFoundFriendsListener(foundFriendsListener1);
 		socialManager.removeFoundFriendsListener(foundFriendsListener2);
