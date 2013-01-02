@@ -16,6 +16,54 @@ import org.softwarefm.utilities.functions.IFunction1;
 
 public class SimpleMaps {
 
+	private static class SimpleMap<K, V> implements ISimpleMap<K, V> {
+		private final Map<K, V> map;
+		private final List<K> keyList;
+
+		private SimpleMap(Map<K, V> map) {
+			this.map = map;
+			keyList = Iterables.list(map.keySet());
+		}
+
+		public V get(K key) {
+			return map.get(key);
+		}
+
+		public List<K> keys() {
+			return keyList;
+		}
+
+		@Override
+		public String toString() {
+			return map.toString();
+		}
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((map == null) ? 0 : map.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			SimpleMap other = (SimpleMap) obj;
+			if (map == null) {
+				if (other.map != null)
+					return false;
+			} else if (!map.equals(other.map))
+				return false;
+			return true;
+		}
+		
+	}
+
 	public static <K, V> ISimpleMap<K, V> makeMap(Object... kvs) {
 		return fromMap(Maps.<K, V> makeLinkedMap(kvs));
 	}
@@ -28,25 +76,7 @@ public class SimpleMaps {
 	}
 
 	public static <K, V> ISimpleMap<K, V> fromMap(final Map<K, V> map) {
-		return new ISimpleMap<K, V>() {
-			private final List<K> keyList = Iterables.list(map.keySet());
-
-			
-			public V get(K key) {
-				return map.get(key);
-			}
-
-			
-			public List<K> keys() {
-				return keyList;
-			}
-			
-			@Override
-			public String toString() {
-				return map.toString();
-			}
-
-		};
+		return new SimpleMap<K, V>(map);
 	}
 
 	public static <K, V> Map<K, V> merge(Iterable<? extends ISimpleMap<K, V>> maps) {

@@ -6,12 +6,11 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.softwarefm.core.browser.BrowserComposite;
-import org.softwarefm.core.friends.IWikiDataGetter;
 import org.softwarefm.core.friends.IWikiGetterCallback;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.utilities.strings.Strings;
 
-public class WikiDataGetter implements IWikiDataGetter {
+public class WikiDataGetter  {
 
 	public final static String UserPagePattern = "http://data.softwarefm.com/wiki/User:{0}";
 	public final static String friendsHomePageMarker = "<a href=\"http://data.softwarefm.com/wiki/Special:ToggleUserPage\" rel=\"nofollow\">Use wiki userpage</a>";
@@ -27,7 +26,6 @@ public class WikiDataGetter implements IWikiDataGetter {
 		this.imageUrlMask = imageUrlMask;
 	}
 
-	@Override
 	public String myName() {
 		String html = browserComposite.getHtml();
 		String container = Strings.findItem(html, "<div id=\"p-personal", "</div>");
@@ -38,7 +36,6 @@ public class WikiDataGetter implements IWikiDataGetter {
 		return null;
 	}
 
-	@Override
 	public void myFriends(IWikiGetterCallback<List<FriendData>> callback) {
 		String myName = myName();
 		if (myName == null)

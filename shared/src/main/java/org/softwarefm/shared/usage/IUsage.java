@@ -1,7 +1,5 @@
 package org.softwarefm.shared.usage;
 
-
-
 public interface IUsage {
 
 	void selected(String usage);
@@ -12,7 +10,4 @@ public interface IUsage {
 
 	void nuke();
 
-	void addUsageListener(IUsageListener listener);
-
-	void fireListeners();
 }

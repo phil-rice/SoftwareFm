@@ -24,4 +24,9 @@ public class ListenerList<L> implements IListenerList<L> {
 		list.fire(source, clazz, callback);
 	}
 
+	public void removeListener(L listener) {
+		list.removeListener(source, clazz, listener);
+		
+	}
+
 }

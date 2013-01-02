@@ -4,11 +4,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.constants.TextKeys;
-import org.softwarefm.core.labelAndText.IButtonConfig;
-import org.softwarefm.core.labelAndText.IButtonConfigurator;
-import org.softwarefm.core.labelAndText.IButtonCreator;
 import org.softwarefm.core.swt.Swts;
 import org.softwarefm.core.tests.SwtTest;
+import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.utilities.resources.ResourceGetterMock;
 import org.softwarefm.utilities.runnable.Runnables;
 import org.softwarefm.utilities.runnable.Runnables.CountRunnable;
@@ -46,6 +44,7 @@ public class IButtonConfiguratorTest extends SwtTest {
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		container = SoftwareFmContainer.makeForTests(display, new ResourceGetterMock(TextKeys.btnSharedOk, "OkName", TextKeys.btnSharedCancel, "CancelName"));
+		ISocialManager socialManager = null;
+		container = SoftwareFmContainer.makeForTests(display, new ResourceGetterMock(TextKeys.btnSharedOk, "OkName", TextKeys.btnSharedCancel, "CancelName"),socialManager );
 	}
 }

@@ -46,8 +46,9 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
 				if (fileAndDigest.digest != null)
-					if (artifactData == null)
+					if (artifactData == null){
 						listenerManager.unknownDigest(fileAndDigest, selectionCount);
+					}
 					else
 						listenerManager.artifactDetermined(artifactData, selectionCount);
 				return artifactData;

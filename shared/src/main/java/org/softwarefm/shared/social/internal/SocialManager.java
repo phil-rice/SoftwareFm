@@ -12,17 +12,25 @@ import org.softwarefm.shared.social.IFoundNameListener;
 import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.IUsageStats;
+import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.events.IMultipleListenerList;
+import org.softwarefm.utilities.maps.ISimpleMap;
+import org.softwarefm.utilities.maps.Maps;
+import org.softwarefm.utilities.maps.SimpleMaps;
 import org.softwarefm.utilities.strings.Strings;
 
 public class SocialManager implements ISocialManager {
+	public static final UsageStatData empty = new UsageStatData(0);
 
 	private final IMultipleListenerList listenerList;
 	private List<FriendData> friends = Collections.emptyList();
 	private String name;
 	private final Map<String, IUsageStats> stats = new HashMap<String, IUsageStats>();
 	private final IUsagePersistance persistance;
+	// TODO ok this is a bodge...I need to restructure the data to fix it. At the moment usage is recorded url->usage, but actually the url has meaning, and I need to use it to hide version data
+	/** artifactUrl -> name -> usage */
+	private final Map<String, Map<String, Integer>> artifactStats = new HashMap<String, Map<String, Integer>>();
 
 	public SocialManager(IMultipleListenerList listenerList, IUsagePersistance persistance) {
 		super();
@@ -78,12 +86,21 @@ public class SocialManager implements ISocialManager {
 	@Override
 	public void clearUsageData() {
 		stats.clear();
+		artifactStats.clear();
 	}
 
 	@Override
 	public void setUsageData(String name, IUsageStats stats) {
-		if (name != null)
+		if (name != null) {
 			this.stats.put(name, stats);
+			for (String url : stats.keys()) {
+				// see todo at the top...yes this is nasty, buggy and knows too much about structure
+				if (url.startsWith("artifact")) {
+					String projectUrl = Strings.allButLastSegment(url, "/");
+					Maps.add(artifactStats, projectUrl, name, stats.get(url).count);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -121,5 +138,38 @@ public class SocialManager implements ISocialManager {
 	@Override
 	public List<String> names() {
 		return new ArrayList<String>(stats.keySet());
+	}
+
+	@Override
+	public UsageStatData getUsageStatsForCode(String name, String url) {
+		UsageStatData usageStatData = getUsageStats(name).get(url);
+		return usageStatData == null ? empty : usageStatData;
+	}
+
+	@Override
+	public UsageStatData getUsageStatsForArtifact(String name, String projectUrl) {
+		Map<String, Integer> map = artifactStats.get(projectUrl);
+		if (map != null) {
+			Integer integer = map.get(name);
+			if (integer !=null)
+				return new UsageStatData(integer);
+		}
+		return empty;
+	}
+
+	@Override
+	public ISimpleMap<FriendData, UsageStatData> getFriendsCodeUsage(String url) {
+		Map<FriendData, UsageStatData> result = new HashMap<FriendData, UsageStatData>();
+		for (FriendData data : myFriends())
+			result.put(data, getUsageStatsForCode(data.name, url));
+		return SimpleMaps.<FriendData, UsageStatData> fromMap(result);
+	}
+
+	@Override
+	public ISimpleMap<FriendData, UsageStatData> getFriendsArtifactUsage(String url) {
+		Map<FriendData, UsageStatData> result = new HashMap<FriendData, UsageStatData>();
+		for (FriendData data : myFriends())
+			result.put(data, getUsageStatsForArtifact(data.name, url));
+		return SimpleMaps.<FriendData, UsageStatData> fromMap(result);
 	}
 }

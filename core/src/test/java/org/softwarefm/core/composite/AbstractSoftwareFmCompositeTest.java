@@ -18,11 +18,14 @@ import org.softwarefm.core.selection.internal.SwtThreadSelectedBindingAggregator
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.tests.SwtTest;
 import org.softwarefm.core.url.IUrlStrategy;
+import org.softwarefm.shared.social.ISocialManager;
+import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.UsageFromServer;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.callbacks.MemoryCallback;
 import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.strings.Strings;
 
 public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmComposite> extends SwtTest {
@@ -48,6 +51,8 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 
 	private int initialListeners;
 
+	private ISocialManager socialManager;
+
 	abstract protected P makePanel(Composite parent, SoftwareFmContainer<?> container);
 
 	public void testDisposeRemovesSelfAsListener() {
@@ -63,6 +68,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		strategy = EasyMock.createMock(ISelectedBindingStrategy.class);
 		EasyMock.makeThreadSafe(strategy, true);
 		rememberedExceptions = ICallback.Utils.<Throwable> memory();
+		socialManager = ISocialManager.Utils.socialManager(IMultipleListenerList.Utils.defaultList(), IUsagePersistance.Utils.persistance());
 		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), IArtifactDataCache.Utils.artifactDataCache(), rememberedExceptions);
 		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
 		initialListeners = listenerManager.getListeners().size();
@@ -72,6 +78,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		UsageFromServer usageFromServer = null;
 		panel = makePanel(shell, SoftwareFmContainer.make(urlStrategy, //
 				selectedArtifactSelectionManager,//
+				socialManager,//
 				ICallback2.Utils.<String, Integer> exception("ImportPom shouldnt be used"),//
 				ICallback2.Utils.<ArtifactData, Integer> exception("ImportPom shouldnt be used"),//
 				ITemplateStore.Utils.templateStore(urlStrategy), //

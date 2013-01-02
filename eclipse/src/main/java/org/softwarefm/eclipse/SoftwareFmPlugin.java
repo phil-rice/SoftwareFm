@@ -47,6 +47,7 @@ import org.softwarefm.eclipse.plugins.Plugins;
 import org.softwarefm.eclipse.plugins.WorkbenchWindowListenerManager;
 import org.softwarefm.eclipse.selection.internal.EclipseSelectedBindingStrategy;
 import org.softwarefm.shared.social.ISocialManager;
+import org.softwarefm.shared.social.internal.SocialManager;
 import org.softwarefm.shared.usage.IUsage;
 import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.IUsageReporter;
@@ -101,6 +102,8 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup, IUsa
 	private IMultipleListenerList multipleListenerList;
 
 	private UsageThread usageThread;
+
+	private ISocialManager socialManager;
 
 	@Override
 	public void start(BundleContext context) throws Exception {
@@ -177,14 +180,15 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup, IUsa
 			if (usage != null)
 				return usage;
 			System.out.println("Starting makeUsage");
-			final Usage usage = new Usage(getMultipleListenerList());
+			final Usage usage = new Usage();
 			final IUsageReporter reporter = IUsageReporter.Utils.reporter();
-			usageThread = new UsageThread(usage, reporter,this, UsageConstants.updatePeriod);
+			usageThread = new UsageThread(usage, reporter, this, UsageConstants.updatePeriod);
 			usageThread.setName("Usage Updater");
 			usageThread.start();
 			return usage;
 		}
 	}
+
 	public void sendUsage() {
 		try {
 			usageThread.report();
@@ -192,7 +196,6 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup, IUsa
 			throw WrappedException.wrap(e);
 		}
 	}
-
 
 	public IMultipleListenerList getMultipleListenerList() {
 		return multipleListenerList == null ? multipleListenerList = IMultipleListenerList.Utils.defaultList() : multipleListenerList;
@@ -222,7 +225,6 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup, IUsa
 				SelectedArtifactSelectionManager<ITextSelection, Expression> selectionBindingManager = new SelectedArtifactSelectionManager<ITextSelection, Expression>(listenerManager, strategy, executor, getArtifactDataCache(), ICallback.Utils.sysErrCallback());
 				new WorkbenchWindowListenerManager(selectionBindingManager);
 				selectionBindingManager.addSelectedArtifactSelectionListener(new SelectedBindingAdapter() {
-
 					@Override
 					public void codeSelectionOccured(CodeData codeData, int selectionCount) {
 						if (codeData != null && codeData.className != null) {
@@ -255,6 +257,18 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup, IUsa
 		return executor == null ? executor = new ThreadPoolExecutor(CommonConstants.startThreadSize, CommonConstants.maxThreadSize, CommonConstants.threadStayAliveTimeMs, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(CommonConstants.maxOutStandingJobs)) : executor;
 	}
 
+	public ISocialManager getSocialManager() {
+		return socialManager == null ? makeSocialManager() : socialManager;
+	}
+
+	private ISocialManager makeSocialManager() {
+		synchronized (lock) {
+			if (socialManager != null)
+				return socialManager;
+			return new SocialManager(getMultipleListenerList(), IUsagePersistance.Utils.persistance());
+		}
+	}
+
 	public SoftwareFmContainer<ITextSelection> getContainer() {
 		return container == null ? container = makeContainer() : container;
 	}
@@ -276,7 +290,8 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup, IUsa
 			IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
 			IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
 			UsageFromServer usageFromServer = new UsageFromServer(UsageConstants.host, UsageConstants.port, persistance);
-			return new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState(), imageRegistry, listenerList, ISocialManager.Utils.socialManager(listenerList, persistance), persistance, usageFromServer);
+			ISocialManager socialManager = getSocialManager();
+			return new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState(), imageRegistry, listenerList, persistance, usageFromServer, socialManager);
 		}
 	}
 
@@ -331,6 +346,7 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup, IUsa
 			urlStrategy = null;
 			sfmActionState = null;
 			multipleListenerList = null;
+			socialManager = null;
 			usage = null;
 		}
 	}
@@ -344,6 +360,5 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup, IUsa
 	public String myName() {
 		return getContainer().socialManager.myName();
 	}
-
 
 }

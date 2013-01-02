@@ -4,7 +4,6 @@ import org.softwarefm.shared.usage.IUsageReporter;
 import org.softwarefm.shared.usage.IUsageThreadData;
 import org.softwarefm.shared.usage.UsageThread;
 import org.softwarefm.shared.usage.internal.Usage;
-import org.softwarefm.utilities.events.IMultipleListenerList;
 
 public class UsageLoadTester {
 
@@ -14,7 +13,7 @@ public class UsageLoadTester {
 		SoftwareFmServer softwareFmServer = new SoftwareFmServer(MysqlTestData.dataSource, port);
 		softwareFmServer.start();
 		try {
-			Usage usage = new Usage(IMultipleListenerList.Utils.defaultList());
+			Usage usage = new Usage();
 			IUsageReporter reporter = IUsageReporter.Utils.reporter("localhost", port);
 			reporter.report("someUser1", usage.getStats());
 			reporter.report("someUser2", usage.getStats());

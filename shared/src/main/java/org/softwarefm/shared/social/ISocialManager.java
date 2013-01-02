@@ -35,4 +35,5 @@ public interface ISocialManager extends ISocial {
 			return new SocialManager(listenerList, persistance);
 		}
 	}
+
 }

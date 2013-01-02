@@ -32,8 +32,11 @@ import org.softwarefm.core.swt.ISituationListAndBuilder;
 import org.softwarefm.core.swt.Swts;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.IUrlStrategy;
+import org.softwarefm.shared.social.ISocialManager;
+import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.UsageFromServer;
 import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.functions.Functions;
 import org.softwarefm.utilities.functions.IFunction2;
 
@@ -141,11 +144,14 @@ public class SoftwareFmCompositeUnit {
 	public static SoftwareFmContainer<Map<String, Object>> makeContainer(final ExecutorService threadingPool, Display display) {
 		final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay());
 		IArtifactDataCache artifactDataCache = IArtifactDataCache.Utils.artifactDataCache();
+		IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
+		IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
+		ISocialManager socialManager = ISocialManager.Utils.socialManager(listenerList, persistance);
 		SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>> manager = new SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>>(//
 				listenerManager, //
 				ISelectedBindingStrategy.Utils.fromMap(), //
 				threadingPool, //
-				artifactDataCache,//
+				artifactDataCache, //
 				ICallback.Utils.rethrow());
 		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
 		ITemplateStore templateStore = ITemplateStore.Utils.templateStore(urlStrategy);
@@ -155,6 +161,7 @@ public class SoftwareFmCompositeUnit {
 		UsageFromServer usageFromServer = null;
 		SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
 				manager, //
+				socialManager,//
 				IMaven.Utils.importPomWithSysouts(makeLink, manager),//
 				IMakeLink.Utils.manuallyImportWhenNotInEclipse(makeLink, manager),//
 				templateStore, //

@@ -1431,6 +1431,9 @@ public class Swts {
 		result.setText(text);
 		return result;
 	}
+	public static StyledText createMigReadOnlyStyledText(Composite parent,  String text, String constraint) {
+		return createMigStyledText(parent, SWT.WRAP | SWT.READ_ONLY|SWT.V_SCROLL|SWT.H_SCROLL, text, constraint);
+	}
 
 	public static org.eclipse.swt.widgets.List createMigList(Composite parent, int style, String constraint) {
 		org.eclipse.swt.widgets.List result = new org.eclipse.swt.widgets.List(parent, style);

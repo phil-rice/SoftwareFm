@@ -12,7 +12,7 @@ import org.softwarefm.core.selection.ISelectedBindingManager;
 import org.softwarefm.core.tests.SwtTest;
 import org.softwarefm.core.url.HostOffsetAndUrl;
 import org.softwarefm.core.url.IUrlStrategy;
-import org.softwarefm.eclipse.SoftwareFmPlugin;
+import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.shared.usage.IUsage;
 import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.events.IMultipleListenerList;
@@ -116,6 +116,17 @@ public class SoftwareFmPlugInTest extends SwtTest {
 		ExecutorService service3 = plugin.getExecutorService();
 		assertNotSame(service1, service3);
 		assertTrue(service1.isShutdown());
+	}
+
+	public void testSocialManager() {
+		ISocialManager manager1 = plugin.getSocialManager();
+		ISocialManager manager2 = plugin.getSocialManager();
+		assertSame(manager1, manager2);
+		plugin.dispose();
+		ISocialManager manager3 = plugin.getSocialManager();
+		ISocialManager manager4 = plugin.getSocialManager();
+		assertNotSame(manager3, manager1);
+		assertSame(manager3, manager4);
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package org.softwarefm.eclipse.views;
 
-import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -14,23 +13,23 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.ui.part.ViewPart;
 import org.softwarefm.core.SoftwareFmContainer;
-import org.softwarefm.core.jdtBinding.ArtifactData;
+import org.softwarefm.core.friends.ISocialUsageListenerWithValid;
+import org.softwarefm.core.friends.internal.SocialUsage;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.SelectedBindingAdapter;
 import org.softwarefm.core.swt.Swts;
-import org.softwarefm.core.url.IUrlStrategy;
 import org.softwarefm.eclipse.SoftwareFmPlugin;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.social.IFoundFriendsListener;
 import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.shared.usage.IUsage;
 import org.softwarefm.shared.usage.IUsageFromServerCallback;
-import org.softwarefm.shared.usage.IUsageListener;
 import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.IUsageStats;
 import org.softwarefm.shared.usage.UsageFromServer;
 import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.exceptions.Exceptions;
+import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.strings.Strings;
 
 public class DebugUsageView extends ViewPart {
@@ -43,13 +42,14 @@ public class DebugUsageView extends ViewPart {
 		final ISocialManager socialManager = container.socialManager;
 		final IUsage usage = SoftwareFmPlugin.getDefault().getUsage();
 		final UsageFromServer usageFromServer = container.usageFromServer;
-		final Composite composite = Swts.createMigComposite(parent, SWT.NULL, new MigLayout("fill", "[][]", "[][60!][60!][grow]"), null);
+		SocialUsage socialUsage = container.socialUsage;
+		final Composite composite = Swts.createMigComposite(parent, SWT.NULL, new MigLayout("fill", "[]5![]", "[]2![60!]2![60!]2![grow]"), null);
 		Composite buttons = Swts.createMigComposite(composite, SWT.NULL, new MigLayout("fill"), "span 2, wrap");
 
-		final StyledText myAndFriendsCodeUsageText = Swts.createMigStyledText(composite, SWT.WRAP | SWT.READ_ONLY, "", "span2, grow,wrap");
-		final StyledText myAndFriendsArtifactUsageText = Swts.createMigStyledText(composite, SWT.WRAP | SWT.READ_ONLY, "", "span2, grow,wrap");
-		final StyledText leftText = Swts.createMigStyledText(composite, SWT.WRAP | SWT.READ_ONLY, "", "grow, sgx");
-		final StyledText rightText = Swts.createMigStyledText(composite, SWT.WRAP | SWT.READ_ONLY, "", "grow, sgx");
+		final StyledText myAndFriendsCodeUsageText = Swts.createMigReadOnlyStyledText(composite, "", "span2, grow,wrap");
+		final StyledText myAndFriendsArtifactUsageText = Swts.createMigReadOnlyStyledText(composite, "", "span2, grow,wrap");
+		final StyledText leftText = Swts.createMigReadOnlyStyledText(composite, "", "grow, sgx");
+		final StyledText rightText = Swts.createMigReadOnlyStyledText(composite, "", "grow, sgx");
 
 		Swts.Buttons.makeMigPushButton(buttons, "Refresh", "", new Listener() {
 			@Override
@@ -89,9 +89,42 @@ public class DebugUsageView extends ViewPart {
 		});
 		rightText.setText(socialManager.serialize());
 
-		usage.addUsageListener(new IUsageListener() {
+
+		socialUsage.addSocialUsageListener(new ISocialUsageListenerWithValid() {
 			@Override
-			public void usageChanged() {
+			public void noArtifactUsage() {
+				myAndFriendsArtifactUsageText.setText("");
+			}
+
+			@Override
+			public void codeUsage(String url, UsageStatData myUsage, ISimpleMap<FriendData, UsageStatData> friendsUsage) {
+				add(myAndFriendsCodeUsageText, url, myUsage, friendsUsage);
+			}
+
+			@Override
+			public void artifactUsage(String url, UsageStatData myUsage, ISimpleMap<FriendData, UsageStatData> friendsUsage) {
+				add(myAndFriendsArtifactUsageText, url, myUsage, friendsUsage);
+			}
+
+			@Override
+			public boolean isValid() {
+				return !composite.isDisposed();
+			}
+
+			private void add(StyledText text, String url, UsageStatData myUsage, ISimpleMap<FriendData, UsageStatData> friendsUsage) {
+				text.setText(url + "\n");
+				text.append("My Usage: " + myUsage + "\n");
+				for (FriendData data : friendsUsage.keys()) {
+					UsageStatData usageStatData = friendsUsage.get(data);
+					text.append(data.name + " " + usageStatData + ", ");
+				}
+			}
+
+		});
+
+		container.selectedBindingManager.addSelectedArtifactSelectionListener(new SelectedBindingAdapter() {
+			@Override
+			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
 				try {
 					final String raw = persistance.saveUsageStats(usage.getStats());
 					final int rawBytes = raw.getBytes("UTF-8").length;
@@ -104,34 +137,6 @@ public class DebugUsageView extends ViewPart {
 					});
 				} catch (UnsupportedEncodingException e) {
 					leftText.setText(Exceptions.classAndMessage(e));
-				}
-			}
-		});
-		final IUrlStrategy urlStrategy = container.urlStrategy;
-		container.selectedBindingManager.addSelectedArtifactSelectionListener(new SelectedBindingAdapter() {
-			@Override
-			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
-				String url = urlStrategy.classAndMethodUrl(codeData).url;
-				add(myAndFriendsCodeUsageText, url);
-			}
-
-			@Override
-			public void notInAJar(File file, int selectionCount) {
-				myAndFriendsArtifactUsageText.setText("");
-			}
-
-			@Override
-			public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
-				String url = urlStrategy.versionUrl(artifactData).url;
-				add(myAndFriendsArtifactUsageText, url);
-			}
-
-			private void add(StyledText text, String url) {
-				text.setText(url+"\n");
-				for (FriendData data: socialManager.myFriends()){
-					UsageStatData usageStatData = socialManager.getUsageStats(data.name).get(url);
-					if (usageStatData != null)
-						text.append(data.name +" " + usageStatData+"\n");
 				}
 			}
 

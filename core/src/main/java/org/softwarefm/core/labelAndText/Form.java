@@ -18,6 +18,7 @@ import org.softwarefm.core.constants.TextKeys;
 import org.softwarefm.core.labelAndText.LabelAndText.LabelAndTextComposite;
 import org.softwarefm.core.labelAndText.LabelAndText.LabelAndTextHolderLayout;
 import org.softwarefm.core.swt.Swts;
+import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.utilities.collections.Lists;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.maps.Maps;
@@ -100,7 +101,8 @@ public class Form extends Composite implements IGetTextWithKey {
 				IResourceGetter resourceGetter = new ResourceGetterMock(//
 						TextKeys.btnSharedOk, "OK", TextKeys.btnSharedCancel, "Cancel",//
 						"one", "One", "two", "Two", "three", "Three", "four", "Four", "five", "Five", "six", "Six", "seven", "Seven");
-				SoftwareFmContainer<?> container = SoftwareFmContainer.makeForTests(from.getDisplay(),resourceGetter);
+				ISocialManager socialManager = null;
+				SoftwareFmContainer<?> container = SoftwareFmContainer.makeForTests(from.getDisplay(),resourceGetter, socialManager);
 				ImageRegistry imageRegistry = new ImageRegistry(from.getDisplay());
 				ImageConstants.initializeImageRegistry(from.getDisplay(), imageRegistry);
 				Form form = new Form(from, SWT.BORDER, container, IButtonConfigurator.Utils.okCancel(Runnables.sysout("ok"), Runnables.sysout("cancel")), IFormProblemHandler.Utils.sysoutHandler(), "one", "two", "three", "four", "five", "six", "seven");
