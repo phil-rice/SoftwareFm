@@ -27,14 +27,17 @@ import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.swt.Swts;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.social.ISocialManager;
+import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.functions.IFunction1;
+import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.strings.Strings;
 
 public class BrowserAndFriendsComposite extends BrowserComposite {
 
 	public final static String startOfFriendContainer = "<div class=\"user-relationship-container\">";
 	public final static String endOfFriendsContainer = "<div class=\"cleared\"></div>";
+	public final static String sitemarker = "http://data.softwarefm";
 	public final static String siteUrl = "http://data.softwarefm.com";
 	public final static String defaultImageUrlPattern = siteUrl + "{0}";
 	public final static String userUrlPattern = siteUrl + "/wiki/User:{0}";
@@ -60,36 +63,40 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 		friendsToolBar.moveAbove(browserUrlCombo.getControl());
 	}
 
-	public void setFriendData(List<FriendData> friendsData) {
+	public void setFriendData(ISimpleMap<FriendData, UsageStatData> friendsUsage) {
 		try {
-			Swts.removeAllChildren(friendsToolBar);
-			if (friendsData.size() == 0) {
+			// Swts.removeAllChildren(friendsToolBar);
+			for (int i = 0; i < friendsToolBar.getItemCount(); i++)
+				friendsToolBar.getItem(0).dispose();
+			List<FriendData> friends = friendsUsage.keys();
+			if (friends.size() != 0)
+				for (final FriendData data : friends) {
+					UsageStatData usageStatData = friendsUsage.get(data);
+					if (usageStatData.count != 0) {
+						ToolItem toolitem = new ToolItem(friendsToolBar, SWT.NULL);
+						toolitem.addListener(SWT.Selection, new Listener() {
+							@Override
+							public void handleEvent(Event event) {
+								setUrl(MessageFormat.format(userUrlPattern, data.name));
+							}
+						});
+						toolitem.setToolTipText(data.name + ": " + usageStatData.count);
 
-			} else
-				for (final FriendData data : friendsData) {
-					ToolItem toolitem = new ToolItem(friendsToolBar, SWT.NULL);
-					toolitem.addListener(SWT.Selection, new Listener() {
-						@Override
-						public void handleEvent(Event event) {
-							setUrl(MessageFormat.format(userUrlPattern, data.name));
+						String imageUrl = data.imageUrl;
+						if (imageUrl != null) {
+							Image image = imageRegistry.get(imageUrl);
+							if (image == null) {
+								ImageDescriptor createFromURL = ImageDescriptor.createFromURL(new URL(imageUrl));
+								int height = createFromURL.getImageData().height;
+								int width = createFromURL.getImageData().width;
+								int scaledWidth = 16 * width / height;
+								ImageData scaled = createFromURL.getImageData().scaledTo(scaledWidth, 16);
+								image = new Image(getComposite().getDisplay(), scaled);
+								imageRegistry.put(imageUrl, image);
+							}
+							System.out.println("Setting image: " + image);
+							toolitem.setImage(image);
 						}
-					});
-					toolitem.setToolTipText(data.name);
-
-					String imageUrl = data.imageUrl;
-					if (imageUrl != null) {
-						Image image = imageRegistry.get(imageUrl);
-						if (image == null) {
-							ImageDescriptor createFromURL = ImageDescriptor.createFromURL(new URL(imageUrl));
-							int height = createFromURL.getImageData().height;
-							int width = createFromURL.getImageData().width;
-							int scaledWidth = 16 * width / height;
-							ImageData scaled = createFromURL.getImageData().scaledTo(scaledWidth, 16);
-							image = new Image(getComposite().getDisplay(), scaled);
-							imageRegistry.put(imageUrl, image);
-						}
-						System.out.println("Setting image: " + image);
-						toolitem.setImage(image);
 					}
 				}
 			for (Control control : friendsToolBar.getChildren()) {
@@ -126,26 +133,26 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 
 		@Override
 		public void changed(LocationEvent event) {
-			if (event.location.startsWith(siteUrl)) {
+			if (event.location.startsWith(sitemarker)) {
 				socialManager.setMyName(myName());
 				String newName = myName();
 				if (!Strings.safeEquals(newName, socialManager.myName()))
 					socialManager.setFriendsData(Collections.<FriendData> emptyList());
-			}
-			if (socialManager.myName() != null && event.location.equals("http://data.softwarefm.com/wiki/User:" + socialManager.myName())) {
-				String html = browser.getText();
-				final List<FriendData> result = new ArrayList<FriendData>();
-				String container = Strings.findItem(html, startOfFriendContainer, endOfFriendsContainer);
-				AtomicInteger index = new AtomicInteger();
-				if (container != null) {
-					while (true) {
-						String name = Strings.findItem(container, "User:", "\"", index);
-						String image = Strings.findItem(container, " src=\"", "\"", index);
-						if (name == null)
-							break;
-						result.add(new FriendData(name, image == null ? null : MessageFormat.format(imageUrlPattern, image)));
+				if (socialManager.myName() != null && event.location.endsWith("/wiki/User:" + socialManager.myName())) {
+					String html = browser.getText();
+					final List<FriendData> result = new ArrayList<FriendData>();
+					String container = Strings.findItem(html, startOfFriendContainer, endOfFriendsContainer);
+					AtomicInteger index = new AtomicInteger();
+					if (container != null) {
+						while (true) {
+							String name = Strings.findItem(container, "User:", "\"", index);
+							String image = Strings.findItem(container, " src=\"", "\"", index);
+							if (name == null)
+								break;
+							result.add(new FriendData(name, image == null ? null : MessageFormat.format(imageUrlPattern, image)));
+						}
+						socialManager.setFriendsData(result);
 					}
-					socialManager.setFriendsData(result);
 				}
 			}
 		}

@@ -12,7 +12,7 @@ import org.softwarefm.utilities.functions.IFunction1;
 
 /** A composite with StackLayout in which the browserComposite can be showing, or some other composite */
 public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmComposite {
-	private final BrowserAndFriendsComposite browserComposite;
+	protected final BrowserAndFriendsComposite browserAndFriendComposite;
 	private final C control;
 	private final StackLayout layout;
 	int layoutCount;
@@ -20,7 +20,7 @@ public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmC
 
 	public StackedBrowserAndControl(Composite parent, SoftwareFmContainer<?> container, IFunction1<Composite, C> creator) {
 		super(parent, container);
-		browserComposite = new BrowserAndFriendsComposite(getComposite(), container);
+		browserAndFriendComposite = new BrowserAndFriendsComposite(getComposite(), container);
 		control = Functions.call(creator, getComposite());
 		layout = new StackLayout();
 		setLayout(layout);
@@ -41,8 +41,8 @@ public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmC
 
 	private void browserOnTop() {
 		log(this, "browserOnTop");
-		if (layout.topControl != browserComposite.getComposite()) {
-			layout.topControl = browserComposite.getComposite();
+		if (layout.topControl != browserAndFriendComposite.getComposite()) {
+			layout.topControl = browserAndFriendComposite.getComposite();
 			layout();
 		}
 	}
@@ -50,7 +50,7 @@ public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmC
 	public void setUrlAndShow(String url) {
 		log(this, "setUrlAndShow({0})", url);
 		textOrUrl = url;
-		browserComposite.setUrl(url);
+		browserAndFriendComposite.setUrl(url);
 		browserOnTop();
 	}
 
@@ -81,7 +81,7 @@ public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmC
 	}
 
 	public BrowserComposite getBrowserForTest() {
-		return browserComposite;
+		return browserAndFriendComposite;
 	}
 
 }

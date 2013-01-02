@@ -7,6 +7,9 @@ import org.softwarefm.core.browser.BrowserAndFriendsComposite;
 import org.softwarefm.core.constants.UrlConstants;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.SelectedBindingAdapter;
+import org.softwarefm.shared.social.FriendData;
+import org.softwarefm.shared.usage.UsageStatData;
+import org.softwarefm.utilities.maps.ISimpleMap;
 
 public class CodeComposite extends SoftwareFmComposite {
 
@@ -35,6 +38,12 @@ public class CodeComposite extends SoftwareFmComposite {
 				return codeComposite.getClass().getSimpleName() +"@" + System.identityHashCode(codeComposite) +" Browser: " + browser.getComposite().isDisposed() + " Url: " + url;
 			}
 
+		});
+		container.socialUsage.addSocialUsageListener(new SocialUsageAdapter(getComposite()){
+			@Override
+			public void codeUsage(String url, UsageStatData myUsage, ISimpleMap<FriendData, UsageStatData> friendsUsage) {
+				browser.setFriendData(friendsUsage);
+			}
 		});
 		browser.setUrl(UrlConstants.aboutCodeComposite);
 	}
