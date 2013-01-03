@@ -10,11 +10,12 @@ import org.junit.Test;
 import org.softwarefm.httpServer.AbstractHttpServerTest;
 import org.softwarefm.server.configurator.UsageConfigurator;
 import org.softwarefm.shared.social.FriendData;
+import org.softwarefm.shared.usage.IUsageFromServer;
 import org.softwarefm.shared.usage.IUsageFromServerCallback;
 import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.IUsageStats;
-import org.softwarefm.shared.usage.UsageFromServer;
 import org.softwarefm.shared.usage.UsageTestData;
+import org.softwarefm.shared.usage.internal.UsageFromServer;
 import org.softwarefm.utilities.tests.Tests;
 
 public class UsageFromServerTest extends AbstractHttpServerTest {
@@ -29,7 +30,7 @@ public class UsageFromServerTest extends AbstractHttpServerTest {
 		EasyMock.replay(callback, getter);
 		httpServer.start();
 
-		UsageFromServer fromServer = new UsageFromServer("localhost", port, persistance);
+		IUsageFromServer fromServer = new UsageFromServer("localhost", port, persistance);
 		final Map<String, IUsageStats> map = Collections.synchronizedMap(new HashMap<String, IUsageStats>());
 		fromServer.getStatsFor(Arrays.asList(new FriendData("fr1", null), new FriendData("fr2", "imageUrl")), new IUsageFromServerCallback() {
 			@Override

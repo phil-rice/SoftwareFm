@@ -29,8 +29,8 @@ import org.softwarefm.core.swt.Swts;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.IUrlStrategy;
 import org.softwarefm.shared.social.ISocialManager;
+import org.softwarefm.shared.usage.IUsageFromServer;
 import org.softwarefm.shared.usage.IUsagePersistance;
-import org.softwarefm.shared.usage.UsageFromServer;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.events.IMultipleListenerList;
 
@@ -69,7 +69,7 @@ public class SoftwareFmCompositeWithActionsUnit extends HasComposite {
 					ITemplateStore templateStore = ITemplateStore.Utils.templateStore(rawUrlStrategy);
 					final IMakeLink makeLink = IMakeLink.Utils.makeLink(rawUrlStrategy, templateStore, artifactDataCache);
 					ImageRegistry imageRegistry = new ImageRegistry(parent.getDisplay());
-					UsageFromServer usageFromServer = null;
+					IUsageFromServer usageFromServer = null;
 					SoftwareFmContainer<Map<String, Object>> container = SoftwareFmContainer.make(urlStrategy, //
 							manager, //
 							socialManager,//

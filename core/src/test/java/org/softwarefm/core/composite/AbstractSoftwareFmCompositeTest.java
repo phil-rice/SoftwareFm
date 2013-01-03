@@ -19,8 +19,8 @@ import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.tests.SwtTest;
 import org.softwarefm.core.url.IUrlStrategy;
 import org.softwarefm.shared.social.ISocialManager;
+import org.softwarefm.shared.usage.IUsageFromServer;
 import org.softwarefm.shared.usage.IUsagePersistance;
-import org.softwarefm.shared.usage.UsageFromServer;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.callbacks.MemoryCallback;
@@ -75,7 +75,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		assertEquals(0, initialListeners);
 		ImageRegistry imageRegistry = new ImageRegistry(display);
 		ImageConstants.initializeImageRegistry(display, imageRegistry);
-		UsageFromServer usageFromServer = null;
+		IUsageFromServer usageFromServer = null;
 		panel = makePanel(shell, SoftwareFmContainer.make(urlStrategy, //
 				selectedArtifactSelectionManager,//
 				socialManager,//

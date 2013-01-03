@@ -9,4 +9,6 @@ public class UsageConstants {
 	public static final int updatePeriod = 10 * 60 * 1000; // 10 mins
 	// public static final int updatePeriod = 60 * 60 * 1000; // 1 hour
 	public static final String preferencesNode = UsageConstants.class.getName();
+	public static final String recordUsageKey = "record.usage";
+	public static final String socialManagerFileName = "socialManager.xml";
 }
