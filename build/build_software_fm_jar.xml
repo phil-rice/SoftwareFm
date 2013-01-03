@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project server with libraries in sub-folder">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.softwarefm.server.SoftwareFmServer"/>
+                <attribute name="Class-Path" value=". SoftwareFmServer_lib/mysql-connector-java-5.1.21.jar SoftwareFmServer_lib/jdom-1.1.3.jar SoftwareFmServer_lib/httpclient-4.1.1.jar SoftwareFmServer_lib/httpcore-4.1.jar SoftwareFmServer_lib/commons-logging-1.1.1.jar SoftwareFmServer_lib/commons-codec-1.4.jar SoftwareFmServer_lib/spring-jdbc-3.1.0.RELEASE.jar SoftwareFmServer_lib/spring-beans-3.1.0.RELEASE.jar SoftwareFmServer_lib/spring-core-3.1.0.RELEASE.jar SoftwareFmServer_lib/spring-asm-3.1.0.RELEASE.jar SoftwareFmServer_lib/spring-tx-3.1.0.RELEASE.jar SoftwareFmServer_lib/aopalliance-1.0.jar SoftwareFmServer_lib/spring-aop-3.1.0.RELEASE.jar SoftwareFmServer_lib/spring-context-3.1.0.RELEASE.jar SoftwareFmServer_lib/spring-expression-3.1.0.RELEASE.jar SoftwareFmServer_lib/commons-dbcp-1.4.jar SoftwareFmServer_lib/commons-pool-1.5.4.jar SoftwareFmServer_lib/junit-4.10.jar SoftwareFmServer_lib/hamcrest-core-1.1.jar"/>
+            </manifest>
+            <fileset dir="C:/Users/Phil/git/softwareFm/server/target/classes"/>
+            <fileset dir="C:/Users/Phil/git/softwareFm/shared/target/classes"/>
+            <fileset dir="C:/Users/Phil/git/softwareFm/utilities/target/classes"/>
+            <fileset dir="C:/Users/Phil/git/softwareFm/httpServer/target/classes"/>
+        </jar>
+        <delete dir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <mkdir dir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/jdom/jdom/1.1.3/jdom-1.1.3.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/apache/httpcomponents/httpclient/4.1.1/httpclient-4.1.1.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/apache/httpcomponents/httpcore/4.1/httpcore-4.1.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/commons-codec/commons-codec/1.4/commons-codec-1.4.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-jdbc/3.1.0.RELEASE/spring-jdbc-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-beans/3.1.0.RELEASE/spring-beans-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-core/3.1.0.RELEASE/spring-core-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-asm/3.1.0.RELEASE/spring-asm-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-tx/3.1.0.RELEASE/spring-tx-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-aop/3.1.0.RELEASE/spring-aop-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-context/3.1.0.RELEASE/spring-context-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-expression/3.1.0.RELEASE/spring-expression-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/commons-pool/commons-pool/1.5.4/commons-pool-1.5.4.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/junit/junit/4.10/junit-4.10.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar" todir="C:/Users/Phil/git/softwareFm/build/SoftwareFmServer_lib"/>
+    </target>
+</project>

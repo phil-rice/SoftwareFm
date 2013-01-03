@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Softwarefm
-Bundle-SymbolicName: eclipse;singleton:=true
+Bundle-SymbolicName: org.softwarefm.eclipse;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.softwarefm.eclipse.SoftwareFmPlugin
 Bundle-Vendor: SoftwareFM

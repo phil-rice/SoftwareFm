@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.softwarefm.core.swt.Swts;
@@ -24,6 +25,7 @@ abstract public class SwtTest extends ExecutorTestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.shell = new Shell();
+		shell.setLayout(new FillLayout());
 		this.display = shell.getDisplay();
 	}
 

@@ -2,10 +2,12 @@ package org.softwarefm.core.friends.internal;
 
 import org.eclipse.swt.browser.Browser;
 import org.softwarefm.core.browser.BrowserComposite;
+import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.utilities.strings.Strings;
 
 public class WikiLoginHelperForTests {
-	public final static String loginUrl = "http://data.softwarefm.com/mediawiki/index.php?title=Special:UserLogin&returnto=Main+Page";
-	public final static String logoutUrl = "http://data.softwarefm.com/mediawiki/index.php?title=Special:UserLogout&returnto=Main+Page";
+	public final static String loginUrl = Strings.url(CommonConstants.softwareFmHost, "mediawiki/index.php?title=Special:UserLogin&returnto=Main+Page");
+	public final static String logoutUrl = Strings.url(CommonConstants.softwareFmHost, "mediawiki/index.php?title=Special:UserLogout&returnto=Main+Page");
 
 	private final BrowserComposite browserComposite;
 

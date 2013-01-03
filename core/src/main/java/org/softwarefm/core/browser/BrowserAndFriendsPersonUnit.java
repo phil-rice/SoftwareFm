@@ -11,14 +11,15 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.softwarefm.core.SoftwareFmContainer;
-import org.softwarefm.core.friends.internal.WikiDataGetter;
 import org.softwarefm.core.friends.internal.WikiLoginHelperForTests;
 import org.softwarefm.core.swt.HasComposite;
 import org.softwarefm.core.swt.Swts;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.social.IFoundFriendsListener;
 import org.softwarefm.shared.social.IFoundNameListener;
+import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.functions.IFunction1;
+import org.softwarefm.utilities.strings.Strings;
 
 /** This is a test class, allows the wiki data getter to be checked */
 public class BrowserAndFriendsPersonUnit extends HasComposite {
@@ -33,7 +34,6 @@ public class BrowserAndFriendsPersonUnit extends HasComposite {
 
 		browserAndFriendsComposite = new BrowserAndFriendsComposite(getComposite(), container);
 		browserAndFriendsComposite.setLayoutData("grow");
-		final WikiDataGetter wikiDataGetter = new WikiDataGetter(browserAndFriendsComposite, "http://data.softwarefm.com{0}");
 		final WikiLoginHelperForTests wikiLoginHelper = new WikiLoginHelperForTests(browserAndFriendsComposite);
 		Browser.clearSessions();
 		for (int i = 0; i < userAndPasswords.length; i += 2)
@@ -44,27 +44,21 @@ public class BrowserAndFriendsPersonUnit extends HasComposite {
 				wikiLoginHelper.logout();
 			}
 		}, "");
-		Swts.Buttons.makeMigButtonForTest(rowComposite, "Find name", new Listener() {
-			@Override
-			public void handleEvent(Event event) {
-				System.out.println(wikiDataGetter.myName());
-			}
-		}, "");
 		final AtomicReference<String> lastName = new AtomicReference<String>();
 		Swts.Buttons.makeMigButtonForTest(rowComposite, "User Page", new Listener() {
 			@Override
 			public void handleEvent(Event event) {
 				if (lastName.get() == null)
-					setUrl("http://data.softwarefm.com/wiki/User:NotLoggedIn");
+					setUrl(Strings.url(CommonConstants.softwareFmHost, "wiki/User:NotLoggedIn"));
 				else
-					setUrl("http://data.softwarefm.com/wiki/User:" + lastName.get());
+					setUrl(Strings.url(CommonConstants.softwareFmHost, "wiki/User:" + lastName.get()));
 			}
 		}, "");
 		Swts.Buttons.makeMigButtonForTest(rowComposite, "Path String", new Listener() {
 
 			@Override
 			public void handleEvent(Event event) {
-				browserAndFriendsComposite.setUrl("http://data.softwarefm.com/wiki/Code:Java.lang/String");
+				browserAndFriendsComposite.setUrl(Strings.url(CommonConstants.softwareFmHost, "wiki/Code:Java.lang/String"));
 			}
 		}, "");
 		container.socialManager.addFoundFriendsListener(new IFoundFriendsListener() {

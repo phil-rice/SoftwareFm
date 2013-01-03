@@ -54,7 +54,7 @@ public class BrowserComposite extends HasComposite {
 		browserToolbar.updateButtonStatus();
 	}
 
-	private void executeAndWaitToLoad(Runnable runnable) {
+	void executeAndWaitToLoad(Runnable runnable) {
 		final CountDownLatch latch = new CountDownLatch(1);
 		LocationListener listener = new LocationListener() {
 

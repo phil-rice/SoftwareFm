@@ -2,7 +2,7 @@
 <feature
       id="org.softwarefm.feature"
       label="Software FM"
-      version="1.8.1"
+      version="1.9.0"
       provider-name="SoftwareFM">
 
    <description url="http://www.example.com/description">
@@ -380,7 +380,7 @@ I HEREBY ACKNOWLEDGE THAT I HAVE READ AND UNDERSTAND THE FOREGOING GENERAL PURPO
    </requires>
 
    <plugin
-         id="org.softwarefm.softwarefm"
+         id="org.softwarefm.eclipse"
          download-size="0"
          install-size="0"
          version="0.0.0"

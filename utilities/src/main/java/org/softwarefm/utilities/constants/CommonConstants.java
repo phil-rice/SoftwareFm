@@ -14,7 +14,7 @@ public class CommonConstants {
 	public static final int maxThreadSize = 10;
 	public static final int startThreadSize = 2;
 	public static final int maxOutStandingJobs = 100;
-	public static final String softwareFmHost = local ? "localhost" : "data.softwarefm.org";
+	public static final String softwareFmHost = local ? "localhost" : "www.softwarefm.org";
 	public static final String softwareFmPageOffset = local ? "wiki" : "mediawiki/index.php";
 	public static final String softwareFmApiOffset = "mediawiki";
 	public static final String softwareFmTemplateOffset = "template";

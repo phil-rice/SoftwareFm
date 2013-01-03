@@ -53,6 +53,8 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 
 	private ISocialManager socialManager;
 
+	private int initialPanelListeners;
+
 	abstract protected P makePanel(Composite parent, SoftwareFmContainer<?> container);
 
 	public void testDisposeRemovesSelfAsListener() {
@@ -71,12 +73,11 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		socialManager = ISocialManager.Utils.socialManager(IMultipleListenerList.Utils.defaultList(), IUsagePersistance.Utils.persistance());
 		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), IArtifactDataCache.Utils.artifactDataCache(), rememberedExceptions);
 		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
-		initialListeners = listenerManager.getListeners().size();
-		assertEquals(0, initialListeners);
+
 		ImageRegistry imageRegistry = new ImageRegistry(display);
 		ImageConstants.initializeImageRegistry(display, imageRegistry);
-		IUsageFromServer usageFromServer = null;
-		panel = makePanel(shell, SoftwareFmContainer.make(urlStrategy, //
+		IUsageFromServer usageFromServer = null;	
+		SoftwareFmContainer<String> container = SoftwareFmContainer.make(urlStrategy, //
 				selectedArtifactSelectionManager,//
 				socialManager,//
 				ICallback2.Utils.<String, Integer> exception("ImportPom shouldnt be used"),//
@@ -84,7 +85,11 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 				ITemplateStore.Utils.templateStore(urlStrategy), //
 				IArtifactDataCache.Utils.artifactDataCache(),//
 				new SfmActionState(),//
-				imageRegistry,usageFromServer));
+				imageRegistry, usageFromServer);
+		initialListeners = listenerManager.getListeners().size();
+		assertEquals(1, initialListeners);
+		panel = makePanel(shell, container);
+		initialPanelListeners = listenerManager.getListeners().size();
 	}
 
 	@Override

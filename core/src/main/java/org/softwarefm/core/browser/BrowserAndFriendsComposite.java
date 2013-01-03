@@ -28,6 +28,7 @@ import org.softwarefm.core.swt.Swts;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.shared.usage.UsageStatData;
+import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.maps.ISimpleMap;
@@ -37,12 +38,12 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 
 	public final static String startOfFriendContainer = "<div class=\"user-relationship-container\">";
 	public final static String endOfFriendsContainer = "<div class=\"cleared\"></div>";
-	public final static String sitemarker = "http://data.softwarefm";
-	public final static String siteUrl = "http://data.softwarefm.com";
+	public final static String siteUrl = CommonConstants.softwareFmHost;;
+	public final static String sitemarker = Strings.allButLastSegment(siteUrl, ".");
 	public final static String defaultImageUrlPattern = siteUrl + "{0}";
 	public final static String userUrlPattern = siteUrl + "/wiki/User:{0}";
 
-	private ToolBar friendsToolBar;
+	ToolBar friendsToolBar;
 	private final ImageRegistry imageRegistry;
 	private String lastName;
 	protected List<FriendData> lastResult;
@@ -108,7 +109,6 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 			}
 			friendsToolBar.layout();
 			rowComposite.layout();
-			Swts.layoutDump(rowComposite);
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
@@ -133,7 +133,7 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 
 		@Override
 		public void changed(LocationEvent event) {
-			if (event.location.startsWith(sitemarker)) {
+			if (event.location.contains(sitemarker)) {
 				socialManager.setMyName(myName());
 				String newName = myName();
 				if (!Strings.safeEquals(newName, socialManager.myName()))
@@ -154,11 +154,18 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 						socialManager.setFriendsData(result);
 					}
 				}
+				if (event.location.contains("Special:UserLogout")) {
+					socialManager.setFriendsData(Collections.<FriendData> emptyList());
+				}
 			}
 		}
 
 		public String myName() {
 			String html = browser.getText();
+			if (html.contains("<li id=\"pt-anonlogin\">"))
+				return null;
+			if (html.contains("<li id=\"pt-login\">"))
+				return null;
 			String container = Strings.findItem(html, "<div id=\"p-personal", "</div>");
 			if (container != null) {
 				String name = Strings.findItem(container, "User:", "\"");
