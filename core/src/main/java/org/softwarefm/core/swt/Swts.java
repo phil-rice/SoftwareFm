@@ -466,6 +466,7 @@ public class Swts {
 			button.setLayoutData(constraint);
 			return button;
 		}
+
 		public static Button makeMigPushButton(Composite parent, String text, String constraint, Listener listener) {
 			Button button = new Button(parent, SWT.PUSH);
 			button.setText(text);
@@ -614,7 +615,31 @@ public class Swts {
 
 		public static void oneRowWithControlGrabbingWidth(Composite composite, Control control) {
 			Control[] children = composite.getChildren();
-			composite.setLayout(new GridLayout(children.length, false));
+			GridLayout layout = new GridLayout(children.length, false);
+			layout.marginLeft = 0;
+			layout.marginRight = 0;
+			layout.marginTop = 0;
+			layout.marginBottom = 0;
+			layout.marginHeight = 0;
+			layout.marginWidth = 0;
+			layout.verticalSpacing = 0;
+			layout.horizontalSpacing = 0;
+			composite.setLayout(layout);
+			control.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
+		}
+
+		public static void oneRowWithControlGrabbingWidthWithMargins(Composite composite, Control control, int margin) {
+			Control[] children = composite.getChildren();
+			GridLayout layout = new GridLayout(children.length, false);
+			layout.marginLeft = margin;
+			layout.marginRight = margin;
+			layout.marginTop = margin;
+			layout.marginBottom = margin;
+			layout.marginHeight = margin;
+			layout.marginWidth = margin;
+			layout.verticalSpacing = margin;
+			layout.horizontalSpacing = margin;
+			composite.setLayout(layout);
 			control.setLayoutData(new GridData(SWT.FILL, SWT.NULL, true, false));
 		}
 
@@ -1431,8 +1456,9 @@ public class Swts {
 		result.setText(text);
 		return result;
 	}
-	public static StyledText createMigReadOnlyStyledText(Composite parent,  String text, String constraint) {
-		return createMigStyledText(parent, SWT.WRAP | SWT.READ_ONLY|SWT.V_SCROLL|SWT.H_SCROLL, text, constraint);
+
+	public static StyledText createMigReadOnlyStyledText(Composite parent, String text, String constraint) {
+		return createMigStyledText(parent, SWT.WRAP | SWT.READ_ONLY | SWT.V_SCROLL | SWT.H_SCROLL, text, constraint);
 	}
 
 	public static org.eclipse.swt.widgets.List createMigList(Composite parent, int style, String constraint) {

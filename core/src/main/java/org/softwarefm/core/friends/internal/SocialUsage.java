@@ -80,8 +80,8 @@ public class SocialUsage implements ISocialUsage {
 			}
 
 			@Override
-			public boolean invalid() {
-				return false;
+			public boolean isValid() {
+				return true;
 			}
 
 		};

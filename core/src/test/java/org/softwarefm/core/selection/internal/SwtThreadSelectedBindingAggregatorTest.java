@@ -1,7 +1,6 @@
 package org.softwarefm.core.selection.internal;
 
 import java.io.File;
-import java.util.Arrays;
 
 import org.easymock.EasyMock;
 import org.softwarefm.core.jdtBinding.ArtifactData;
@@ -10,6 +9,7 @@ import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.selection.ISelectedBindingListener;
 import org.softwarefm.core.tests.SwtTest;
 import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.events.IMultipleListenerList;
 
 public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 
@@ -29,11 +29,6 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 				listener.codeSelectionOccured(codeData, 1);
 			}
 		});
-	}
-
-	private void listenersAreValid() {
-		EasyMock.expect(listener1.invalid()).andReturn(false);
-		EasyMock.expect(listener2.invalid()).andReturn(false);
 	}
 
 	public void testNotJavaElementCalledInSwtThread() throws Exception {
@@ -92,10 +87,10 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 			}
 		});
 	}
-	
-	public void testRemovesIfInvalid(){
-		EasyMock.expect(listener1.invalid()).andReturn(false);
-		EasyMock.expect(listener2.invalid()).andReturn(true);
+
+	public void testRemovesIfInvalid() {
+		EasyMock.expect(listener1.isValid()).andReturn(true);
+		EasyMock.expect(listener2.isValid()).andReturn(false);
 		listener1.unknownDigest(fileAndDigest, 1);
 		EasyMock.replay(listener1, listener2);
 		execute(new Runnable() {
@@ -103,11 +98,12 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 				swtThreadSelectedBindingAggregator.unknownDigest(fileAndDigest, 1);
 			}
 		});
-		assertEquals(Arrays.asList(listener1), swtThreadSelectedBindingAggregator.getListeners());
+		assertEquals(1, swtThreadSelectedBindingAggregator.getListeners().size());
+		assertTrue( swtThreadSelectedBindingAggregator.getListeners().contains(listener1));
 	}
 
 	public void testRemoveListener() throws Exception {
-		EasyMock.expect(listener2.invalid()).andReturn(false);
+		EasyMock.expect(listener2.isValid()).andReturn(true);
 		listener2.unknownDigest(fileAndDigest, 1);
 		EasyMock.replay(listener1, listener2);
 		swtThreadSelectedBindingAggregator.removeSelectedArtifactSelectionListener(listener1);
@@ -129,10 +125,15 @@ public class SwtThreadSelectedBindingAggregatorTest extends SwtTest {
 		});
 	}
 
+	private void listenersAreValid() {
+		EasyMock.expect(listener1.isValid()).andReturn(true);
+		EasyMock.expect(listener2.isValid()).andReturn(true);
+	}
+
 	@Override
 	protected void setUp() throws Exception {
 		super.setUp();
-		swtThreadSelectedBindingAggregator = new SwtThreadSelectedBindingAggregator<String>(display);
+		swtThreadSelectedBindingAggregator = new SwtThreadSelectedBindingAggregator<String>(display, IMultipleListenerList.Utils.defaultList());
 		listener1 = EasyMock.createMock(ISelectedBindingListener.class);
 		listener2 = EasyMock.createMock(ISelectedBindingListener.class);
 		swtThreadSelectedBindingAggregator.addSelectedArtifactSelectionListener(listener1);

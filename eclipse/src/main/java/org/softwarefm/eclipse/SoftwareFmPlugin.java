@@ -243,7 +243,8 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 		synchronized (lock) {
 			if (selectionBindingManager == null) {
 				IUrlStrategy urlStrategy = getUrlStrategy();
-				ISelectedBindingListenerAndAdderRemover<ITextSelection> listenerManager = new SwtThreadSelectedBindingAggregator<ITextSelection>(getDisplay());
+				IMultipleListenerList listenerList = getMultipleListenerList();
+				ISelectedBindingListenerAndAdderRemover<ITextSelection> listenerManager = new SwtThreadSelectedBindingAggregator<ITextSelection>(getDisplay(), listenerList);
 				IArtifactStrategy<ITextSelection> projectStrategy = new SoftwareFmArtifactStrategy<ITextSelection>(IHttpClient.Utils.builder(), new SoftwareFmArtifactHtmlRipper(), urlStrategy);
 				ISelectedBindingStrategy<ITextSelection, Expression> strategy = new EclipseSelectedBindingStrategy(projectStrategy);
 				ExecutorService executor = getExecutorService();
@@ -267,8 +268,8 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 					}
 
 					@Override
-					public boolean invalid() {
-						return false;
+					public boolean isValid() {
+						return true;
 					}
 				});
 				return selectionBindingManager;

@@ -52,10 +52,10 @@ public class SoftwareFmCompositeWithActionsUnit extends HasComposite {
 		try {
 			Swts.Show.xUnit(SoftwareFmCompositeWithActionsUnit.class.getSimpleName(), new File("src/test/resources/org/softwarefm/eclipse/composite"), "dat", new ISituationListAndBuilder<SoftwareFmCompositeWithActionsUnit, String>() {
 				public SoftwareFmCompositeWithActionsUnit makeChild(Composite parent) throws Exception {
-					final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay());
+					IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
+					final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay(), listenerList);
 					IArtifactDataCache artifactDataCache = IArtifactDataCache.Utils.artifactDataCache();
 					IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
-					IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
 					ISocialManager socialManager = ISocialManager.Utils.socialManager(listenerList, persistance);
 					SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>> manager = new SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>>(//
 							listenerManager, //

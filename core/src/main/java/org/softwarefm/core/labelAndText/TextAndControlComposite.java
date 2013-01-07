@@ -73,8 +73,8 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 				layout();
 			}
 
-			public boolean invalid() {
-				return getComposite().isDisposed();
+			public boolean isValid() {
+				return !getComposite().isDisposed();
 			}
 
 			@Override

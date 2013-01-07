@@ -57,11 +57,12 @@ abstract public class SwtTest extends ExecutorTestCase {
 	}
 
 	protected void execute(Runnable job) {
+		System.out.println("Start: " + getExecutor().getActiveCount());
 		final long initial = getExecutor().getCompletedTaskCount();
 		Future<?> future = getExecutor().submit(job);
+		System.out.println("Submitted: " + getExecutor().getActiveCount());
 		try {
 			Swts.Dispatch.dispatchUntil(display, CommonConstants.testTimeOutMs, new Callable<Boolean>() {
-				
 				public Boolean call() throws Exception {
 					long count = getExecutor().getCompletedTaskCount();
 					return count > initial;

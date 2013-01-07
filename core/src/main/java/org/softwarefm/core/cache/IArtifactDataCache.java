@@ -21,27 +21,37 @@ public interface IArtifactDataCache extends IHasCache {
 		public static IArtifactDataCache artifactDataCache() {
 			return new IArtifactDataCache() {
 				private final Map<File, CachedArtifactData> cache = Maps.newMap();
+				private final Object lock = new Object();
 
 				public void clearCaches() {
-					cache.clear();
+					synchronized (lock) {
+						cache.clear();
+					}
 				}
 
 				public CachedArtifactData projectData(File file) {
-					return cache.get(file);
+					synchronized (lock) {
+						return cache.get(file);
+					}
 				}
 
 				public void addProjectData(ArtifactData artifactData) {
-					File file = artifactData.fileAndDigest.file;
-					if (cache.containsKey(file))
-						throw new CannotAddDuplicateKeyException(file.toString());
-					cache.put(file, CachedArtifactData.found(artifactData));
+					synchronized (lock) {
+						File file = artifactData.fileAndDigest.file;
+						if (cache.containsKey(file))
+							throw new CannotAddDuplicateKeyException(file.toString());
+						cache.put(file, CachedArtifactData.found(artifactData));
+
+					}
 				}
 
 				public void addNotFound(FileAndDigest fileAndDigest) {
-					File file = fileAndDigest.file;
-					if (cache.containsKey(file))
-						throw new CannotAddDuplicateKeyException(file.toString());
-					cache.put(file, CachedArtifactData.notFound(fileAndDigest));
+					synchronized (lock) {
+						File file = fileAndDigest.file;
+						if (cache.containsKey(file))
+							throw new CannotAddDuplicateKeyException(file.toString());
+						cache.put(file, CachedArtifactData.notFound(fileAndDigest));
+					}
 
 				}
 			};

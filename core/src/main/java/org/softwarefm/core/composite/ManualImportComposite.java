@@ -87,8 +87,8 @@ final class ManualImportComposite extends TextAndFormComposite {
 				setText(TextKeys.keyManualImportVersion, "Enter Version Id");
 			}
 
-			public boolean invalid() {
-				return getComposite().isDisposed();
+			public boolean isValid() {
+				return !getComposite().isDisposed();
 			}
 			
 			@Override

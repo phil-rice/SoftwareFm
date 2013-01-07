@@ -1,9 +1,6 @@
 package org.softwarefm.core.selection.internal;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.widgets.Display;
@@ -14,24 +11,29 @@ import org.softwarefm.core.selection.ISelectedBindingListener;
 import org.softwarefm.core.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.usage.UsageStatData;
-import org.softwarefm.utilities.collections.Lists;
+import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.events.IListenerList;
+import org.softwarefm.utilities.events.IMultipleListenerList;
 
 public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingListenerAndAdderRemover<S> {
 
-	private final List<ISelectedBindingListener> listeners = Lists.newList();
+	private final IListenerList<ISelectedBindingListener> listeners;
 	private final Display display;
 
-	public SwtThreadSelectedBindingAggregator(Display display) {
+	public SwtThreadSelectedBindingAggregator(Display display, IMultipleListenerList listenerList) {
 		this.display = display;
+		this.listeners = IListenerList.Utils.list(listenerList, ISelectedBindingListener.class, this);
 	}
 
 	public void codeSelectionOccured(final CodeData codeData, final int selectionCount) {
 		display.asyncExec(new Runnable() {
 			public void run() {
-				checkListeners();
-				for (ISelectedBindingListener listener : listeners)
-					listener.codeSelectionOccured(codeData, selectionCount);
-
+				listeners.fire(new ICallback<ISelectedBindingListener>() {
+					@Override
+					public void process(ISelectedBindingListener t) throws Exception {
+						t.codeSelectionOccured(codeData, selectionCount);
+					}
+				});
 			}
 		});
 	}
@@ -39,10 +41,12 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 	public void notJavaElement(final int selectionCount) {
 		display.asyncExec(new Runnable() {
 			public void run() {
-				checkListeners();
-				for (ISelectedBindingListener listener : listeners)
-					listener.notJavaElement(selectionCount);
-
+				listeners.fire(new ICallback<ISelectedBindingListener>() {
+					@Override
+					public void process(ISelectedBindingListener t) throws Exception {
+						t.notJavaElement(selectionCount);
+					}
+				});
 			}
 		});
 	}
@@ -50,9 +54,12 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 	public void digestDetermined(final FileAndDigest fileAndDigest, final int selectionCount) {
 		display.asyncExec(new Runnable() {
 			public void run() {
-				checkListeners();
-				for (ISelectedBindingListener listener : listeners)
-					listener.digestDetermined(fileAndDigest, selectionCount);
+				listeners.fire(new ICallback<ISelectedBindingListener>() {
+					@Override
+					public void process(ISelectedBindingListener t) throws Exception {
+						t.digestDetermined(fileAndDigest, selectionCount);
+					}
+				});
 			}
 		});
 	}
@@ -60,9 +67,12 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 	public void notInAJar(final File file, final int selectionCount) {
 		display.asyncExec(new Runnable() {
 			public void run() {
-				checkListeners();
-				for (ISelectedBindingListener listener : listeners)
-					listener.notInAJar(file, selectionCount);
+				listeners.fire(new ICallback<ISelectedBindingListener>() {
+					@Override
+					public void process(ISelectedBindingListener t) throws Exception {
+						t.notInAJar(file, selectionCount);
+					}
+				});
 			}
 		});
 	}
@@ -70,9 +80,12 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 	public void artifactDetermined(final ArtifactData artifactData, final int selectionCount) {
 		display.asyncExec(new Runnable() {
 			public void run() {
-				checkListeners();
-				for (ISelectedBindingListener listener : listeners)
-					listener.artifactDetermined(artifactData, selectionCount);
+				listeners.fire(new ICallback<ISelectedBindingListener>() {
+					@Override
+					public void process(ISelectedBindingListener t) throws Exception {
+						t.artifactDetermined(artifactData, selectionCount);
+					}
+				});
 			}
 		});
 	}
@@ -80,9 +93,12 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 	public void unknownDigest(final FileAndDigest fileAndDigest, final int selectionCount) {
 		display.asyncExec(new Runnable() {
 			public void run() {
-				checkListeners();
-				for (ISelectedBindingListener listener : listeners)
-					listener.unknownDigest(fileAndDigest, selectionCount);
+				listeners.fire(new ICallback<ISelectedBindingListener>() {
+					@Override
+					public void process(ISelectedBindingListener t) throws Exception {
+						t.unknownDigest(fileAndDigest, selectionCount);
+					}
+				});
 			}
 		});
 	}
@@ -91,9 +107,12 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 	public void friendsArtifactUsage(final ArtifactData artifactData, final Map<FriendData, UsageStatData> friendsUsage) {
 		display.asyncExec(new Runnable() {
 			public void run() {
-				checkListeners();
-				for (ISelectedBindingListener listener : listeners)
-					listener.friendsArtifactUsage(artifactData, friendsUsage);
+				listeners.fire(new ICallback<ISelectedBindingListener>() {
+					@Override
+					public void process(ISelectedBindingListener t) throws Exception {
+						t.friendsArtifactUsage(artifactData, friendsUsage);
+					}
+				});
 			}
 		});
 	}
@@ -102,45 +121,34 @@ public class SwtThreadSelectedBindingAggregator<S> implements ISelectedBindingLi
 	public void friendsCodeUsage(final CodeData codeData, final Map<FriendData, UsageStatData> friendsUsage) {
 		display.asyncExec(new Runnable() {
 			public void run() {
-				checkListeners();
-				for (ISelectedBindingListener listener : listeners)
-					listener.friendsCodeUsage(codeData, friendsUsage);
+				listeners.fire(new ICallback<ISelectedBindingListener>() {
+					@Override
+					public void process(ISelectedBindingListener t) throws Exception {
+						t.friendsCodeUsage(codeData, friendsUsage);
+					}
+				});
 			}
 		});
 	}
 
-	protected void checkListeners() {
-		assert Thread.currentThread() == display.getThread();
-		for (Iterator<ISelectedBindingListener> iterator = listeners.iterator(); iterator.hasNext();) {
-			ISelectedBindingListener listener = iterator.next();
-			if (listener.invalid())
-				iterator.remove();
-		}
-
-	}
-
 	public void addSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
-		listeners.add(listener);
+		listeners.addListener(listener);
 	}
 
 	public void removeSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
-		listeners.remove(listener);
+		listeners.removeListener(listener);
 	}
 
 	public void dispose() {
 		listeners.clear();
 	}
 
-	public List<ISelectedBindingListener> getListeners() {
-		return Collections.unmodifiableList(listeners);
+	public IListenerList<ISelectedBindingListener> getListeners() {
+		return listeners;
 	}
 
-	public boolean invalid() {
-		return false;
-	}
-
-	public List<ISelectedBindingListener> listeners() {
-		return Collections.unmodifiableList(listeners);
+	public boolean isValid() {
+		return true;
 	}
 
 }

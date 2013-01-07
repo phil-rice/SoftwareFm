@@ -27,6 +27,16 @@ public class MultipleListenerList implements IMultipleListenerList {
 		Maps.removeFromList(map, source, clazz, listener);
 	}
 
+	public <L> boolean contains(Object source, java.lang.Class<L> clazz, L listener) {
+		List<L> list = (List<L>) Maps.getOrEmptyList(map, source, clazz);
+		return list.contains(listener);
+	};
+
+	public <L> int size(Object source, java.lang.Class<L> clazz) {
+		List<L> list = (List<L>) Maps.getOrEmptyList(map, source, clazz);
+		return list.size();
+	};
+
 	@SuppressWarnings("unchecked")
 	public <L> void fire(Object source, Class<L> clazz, ICallback<L> callback) {
 		List<Throwable> throwables = new ArrayList<Throwable>();
@@ -53,6 +63,13 @@ public class MultipleListenerList implements IMultipleListenerList {
 		default:
 			throw new MultipleExceptions(throwables);
 		}
+	}
+
+	@Override
+	public <L> void clear(Object source, Class<L> clazz) {
+		Map<Class<?>, List<Object>> map2 = map.get(source);
+		if (map2 != null)
+			map2.remove(clazz);
 	}
 
 }

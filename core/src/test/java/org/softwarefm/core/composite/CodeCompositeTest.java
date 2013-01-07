@@ -9,6 +9,18 @@ import org.softwarefm.core.selection.ISelectedBindingListener;
 
 public class CodeCompositeTest extends AbstractSoftwareFmCompositeTest<CodeComposite> {
 
+	public void testClassAndMethodSelectionCausesBrowserToViewUrl() throws Exception {
+		setUpMockForUnknownDigest();
+
+		execute(new Runnable() {
+			public void run() {
+				selectedArtifactSelectionManager.selectionOccured("selection");
+			}
+		});
+		EasyMock.verify(strategy);
+		assertEquals(classAndMethodNameUrl, panel.getUrl());
+	}
+
 	public void testUrlNotChangedWhenInEditingMode() {
 		panel.getBrowserForTest().setUrlAndWait(BrowserCompositeTest.editingUrl1);
 		setupMockForFoundArtifact();
@@ -18,19 +30,7 @@ public class CodeCompositeTest extends AbstractSoftwareFmCompositeTest<CodeCompo
 			}
 		});
 		EasyMock.verify(strategy);
-		assertEquals(null, panel.getUrl());//unfortunately the browser does not have getUrl method, so this is the url we have changed to with selection
-	}
-
-	public void testClassAndMethodSelectionCausesBrowserToViewUrl() throws Exception {
-		setupMockForFoundArtifact();
-
-		execute(new Runnable() {
-			public void run() {
-				selectedArtifactSelectionManager.selectionOccured("selection");
-			}
-		});
-		EasyMock.verify(strategy);
-		assertEquals(classAndMethodNameUrl, panel.getUrl());
+		assertEquals(null, panel.getUrl());// unfortunately the browser does not have getUrl method, so this is the url we have changed to with selection
 	}
 
 	public void testListenersAreNotRegisteredWhenDisposed() {
@@ -68,8 +68,6 @@ public class CodeCompositeTest extends AbstractSoftwareFmCompositeTest<CodeCompo
 		assertEquals("File " + file + " Digest 0123456789 Digest6 012345 ArtifactData " + artifactData + " GroupId groupId0 ArtifactId artifactId0 Version version0", panel.artifactDeterminedMsg(TextKeys.msgTestArtifactDetermined, artifactData));
 		assertEquals("File " + file + " Digest 0123456789 Digest6 012345", panel.unknownDigestMsg(TextKeys.msgTestUnknownDigest, fileAndDigest));
 	}
-
-
 
 	@Override
 	protected CodeComposite makePanel(Composite parent, SoftwareFmContainer<?> container) {

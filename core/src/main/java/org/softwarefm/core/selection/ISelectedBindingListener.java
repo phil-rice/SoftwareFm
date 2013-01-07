@@ -11,6 +11,7 @@ import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.usage.UsageStatData;
+import org.softwarefm.utilities.events.IValid;
 
 /**
  * When the user clicks on things in eclipse, these listeners are told about it.
@@ -31,10 +32,7 @@ import org.softwarefm.shared.usage.UsageStatData;
  * <p>
  * The selection count is so that execution can be aborted if a newer selection has been seen
  */
-public interface ISelectedBindingListener {
-
-	/** If returns true, should be removed from the listener list */
-	boolean invalid();
+public interface ISelectedBindingListener extends IValid {
 
 	void codeSelectionOccured(CodeData codeData, int selectionCount);
 

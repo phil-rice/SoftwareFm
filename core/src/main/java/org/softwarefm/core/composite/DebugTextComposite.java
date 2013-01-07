@@ -24,7 +24,6 @@ import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.runnable.Callables;
-import org.softwarefm.utilities.strings.Strings;
 
 public class DebugTextComposite extends SoftwareFmComposite {
 
@@ -94,8 +93,8 @@ public class DebugTextComposite extends SoftwareFmComposite {
 				listenerText.append("Unknown Digest: (" + selectionCount + ") " + fileAndDigest + "\n");
 			}
 
-			public boolean invalid() {
-				return getComposite().isDisposed();
+			public boolean isValid() {
+				return !getComposite().isDisposed();
 			}
 
 			@Override
@@ -118,7 +117,8 @@ public class DebugTextComposite extends SoftwareFmComposite {
 	public ICallback2<Object, String> logger() {
 		return new ICallback2<Object, String>() {
 			public void process(Object first, String second) throws Exception {
-				messageText.append(Thread.currentThread() + " " + first.getClass().getSimpleName() + " - " + second + "\n");
+				if (!messageText.isDisposed())
+					messageText.append(Thread.currentThread() + " " + first.getClass().getSimpleName() + " - " + second + "\n");
 			}
 		};
 
@@ -130,7 +130,7 @@ public class DebugTextComposite extends SoftwareFmComposite {
 
 	protected void updateListenersAndViews() {
 		ISelectedBindingManager<?> selectedBindingManager = container.selectedBindingManager;
-		String join = Strings.join(selectedBindingManager.listeners(), "\n");
+		String join = selectedBindingManager.getListeners().toString();
 		listenersText.setText(join);
 		if (viewGetter == null)
 			viewsText.setText("Not set up");

@@ -1,9 +1,8 @@
 package org.softwarefm.core.selection;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.Future;
 
+import org.softwarefm.utilities.events.IListenerList;
 import org.softwarefm.utilities.future.Futures;
 
 public interface ISelectedBindingManager<S> extends ISelectedBindingListenerAdderAndRemover {
@@ -40,8 +39,8 @@ public interface ISelectedBindingManager<S> extends ISelectedBindingListenerAdde
 				public void reselect(int selectionId) {
 				}
 
-				public List<ISelectedBindingListener> listeners() {
-					return Collections.emptyList();
+				public IListenerList<ISelectedBindingListener> getListeners() {
+					return IListenerList.Utils.empty();
 				}
 			};
 		}

@@ -142,10 +142,10 @@ public class SoftwareFmCompositeUnit {
 	}
 
 	public static SoftwareFmContainer<Map<String, Object>> makeContainer(final ExecutorService threadingPool, Display display) {
-		final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay());
+		IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
+		final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay(), listenerList);
 		IArtifactDataCache artifactDataCache = IArtifactDataCache.Utils.artifactDataCache();
 		IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
-		IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
 		ISocialManager socialManager = ISocialManager.Utils.socialManager(listenerList, persistance);
 		SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>> manager = new SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>>(//
 				listenerManager, //

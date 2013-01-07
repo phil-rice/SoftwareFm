@@ -4,10 +4,8 @@
 
 package org.softwarefm.core.selection;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.softwarefm.core.swt.IDispose;
+import org.softwarefm.utilities.events.IListenerList;
 
 public interface ISelectedBindingListenerAdderAndRemover extends IDispose {
 
@@ -15,7 +13,7 @@ public interface ISelectedBindingListenerAdderAndRemover extends IDispose {
 
 	void removeSelectedArtifactSelectionListener(ISelectedBindingListener listener);
 
-	List<ISelectedBindingListener> listeners();
+	IListenerList<ISelectedBindingListener> getListeners();
 	
 	public static class Utils {
 		public static ISelectedBindingListenerAdderAndRemover noSelectedBindingManager() {
@@ -29,8 +27,8 @@ public interface ISelectedBindingListenerAdderAndRemover extends IDispose {
 				public void dispose() {
 				}
 
-				public List<ISelectedBindingListener> listeners() {
-					return Collections.emptyList();
+				public IListenerList<ISelectedBindingListener> getListeners() {
+					return IListenerList.Utils.empty();
 				}
 			};
 		}

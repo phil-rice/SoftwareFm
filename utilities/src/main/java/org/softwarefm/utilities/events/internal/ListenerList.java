@@ -26,7 +26,22 @@ public class ListenerList<L> implements IListenerList<L> {
 
 	public void removeListener(L listener) {
 		list.removeListener(source, clazz, listener);
-		
+
+	}
+
+	@Override
+	public void clear() {
+		list.clear(source, clazz);
+	}
+
+	@Override
+	public boolean contains(L listener) {
+		return list.contains(source, clazz, listener);
+	}
+
+	@Override
+	public int size() {
+		return list.size(source, clazz);
 	}
 
 }

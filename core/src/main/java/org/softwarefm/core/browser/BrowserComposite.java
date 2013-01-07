@@ -38,7 +38,7 @@ public class BrowserComposite extends HasComposite {
 
 		addMoreControls();
 
-		Swts.Grid.oneRowWithControlGrabbingWidth(rowComposite, browserUrlCombo.getControl());
+		Swts.Grid.oneRowWithControlGrabbingWidthWithMargins(rowComposite, browserUrlCombo.getControl(), 0);
 		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildren(getComposite());
 		Swts.Grid.addGrabVerticalToGridData(browser, true);
 		Swts.addPaintListenerToDrawLineUnderChild(getComposite(), rowComposite, SWT.COLOR_GRAY);

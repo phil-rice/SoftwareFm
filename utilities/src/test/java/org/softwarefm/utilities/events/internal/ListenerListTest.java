@@ -36,6 +36,25 @@ public class ListenerListTest extends TestCase {
 	private ITestListenerAndValid mockV2;
 	private ListenerList<ITestListener> list;
 
+	public void testSize() {
+		replay();
+		assertEquals(0, list.size());
+		list.addListener(mockL1C1);
+		list.addListener(mockL2C1);
+		assertEquals(2, list.size());
+		list.clear();
+		assertEquals(0, list.size());
+	}
+	
+	public void testContains(){
+		assertEquals(0, list.size());
+		assertFalse(list.contains(mockL1C1));
+		list.addListener(mockL1C1);
+		assertTrue(list.contains(mockL1C1));
+		list.clear();
+		assertFalse(list.contains(mockL1C1));
+	}
+
 	public void testCallsFireOnAllListeners() {
 		list.addListener(mockL1C1);
 		list.addListener(mockL2C1);
@@ -74,6 +93,36 @@ public class ListenerListTest extends TestCase {
 		verify();
 		assertEquals(exceptions, actualException.getCauses());
 		assertEquals(Arrays.asList(mockL1C1, mockL2C1), actual);
+	}
+
+	public void testClearRemoversListeners() {
+		list.addListener(mockL1C1);
+		list.addListener(mockL1C2);
+		replay();
+		list.clear();
+		list.addListener(mockL2C1);
+		list.addListener(mockL2C2);
+		final List<ITestListener> actual = new ArrayList<ListenerListTest.ITestListener>();
+		list.fire(new ICallback<ITestListener>() {
+			public void process(ITestListener t) throws Exception {
+				actual.add(t);
+			}
+		});
+		assertEquals(Arrays.asList(mockL2C1, mockL2C2), actual);
+	}
+
+	public void testClearWorksWhenNoListenersWereAdded() {
+		replay();
+		list.clear();
+		list.addListener(mockL2C1);
+		list.addListener(mockL2C2);
+		final List<ITestListener> actual = new ArrayList<ListenerListTest.ITestListener>();
+		list.fire(new ICallback<ITestListener>() {
+			public void process(ITestListener t) throws Exception {
+				actual.add(t);
+			}
+		});
+		assertEquals(Arrays.asList(mockL2C1, mockL2C2), actual);
 	}
 
 	public void testThreadDeathStopsListeners() {
@@ -146,7 +195,7 @@ public class ListenerListTest extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		rawList = new MultipleListenerList();
-		list = (ListenerList<ITestListener>) IListenerList.Utils.<ITestListener> list(rawList,ITestListener.class, source);
+		list = (ListenerList<ITestListener>) IListenerList.Utils.<ITestListener> list(rawList, ITestListener.class, source);
 
 		mockL1C1 = EasyMock.createMock(ITestListener.class);
 		mockL2C1 = EasyMock.createMock(ITestListener.class);
@@ -162,7 +211,7 @@ public class ListenerListTest extends TestCase {
 
 		rawList.addListener(source, Object.class, mockL1C2);
 		rawList.addListener(source, Object.class, mockL2C2);
-		
+
 		rawList.addListener(invalidSource, ITestListener.class, mockInvalid1);
 		rawList.addListener(invalidSource, ITestListener.class, mockInvalid2);
 	}

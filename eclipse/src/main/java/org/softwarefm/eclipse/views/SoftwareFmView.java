@@ -12,21 +12,25 @@ import org.softwarefm.eclipse.SoftwareFmPlugin;
 import org.softwarefm.eclipse.action.EclipseActionBar;
 
 abstract public class SoftwareFmView<C extends SoftwareFmComposite> extends ViewPart {
+	private C panel;
+
 	abstract public C makeSoftwareFmComposite(Composite parent, SoftwareFmContainer<?> container);
 
 	@Override
 	public void createPartControl(Composite parent) {
+		System.out.println("createPartControl: " + getClass().getSimpleName());
 		SoftwareFmPlugin activator = SoftwareFmPlugin.getDefault();
 		SoftwareFmContainer<?> container = activator.getContainer();
-		C panel = makeSoftwareFmComposite(parent, container);
+		panel = makeSoftwareFmComposite(parent, container);
 		activator.addView(this, panel);
 		IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
 		configureToolbar(toolBarManager);
+		System.out.println("end of createPartControl: " + getClass().getSimpleName());
 	}
 
 	protected void configureToolbar(IToolBarManager toolBarManager) {
 	}
-	
+
 	@Override
 	public void dispose() {
 		SoftwareFmPlugin activator = SoftwareFmPlugin.getDefault();
@@ -36,6 +40,7 @@ abstract public class SoftwareFmView<C extends SoftwareFmComposite> extends View
 
 	@Override
 	public void setFocus() {
+		panel.getComposite().setFocus();
 	}
 
 	protected void configureToolbarWithProjectStuff(IToolBarManager toolBarManager) {

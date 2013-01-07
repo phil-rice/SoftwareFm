@@ -5,8 +5,6 @@
 package org.softwarefm.core.selection.internal;
 
 import java.io.File;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -21,6 +19,7 @@ import org.softwarefm.core.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.core.selection.ISelectedBindingManager;
 import org.softwarefm.core.selection.ISelectedBindingStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.events.IListenerList;
 import org.softwarefm.utilities.future.Futures;
 import org.softwarefm.utilities.runnable.Runnables;
 
@@ -164,8 +163,8 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 		listenerManager.dispose();
 	}
 
-	public List<ISelectedBindingListener> listeners() {
-		return Collections.unmodifiableList(listenerManager.listeners());
+	public IListenerList<ISelectedBindingListener> getListeners() {
+		return listenerManager.getListeners();
 	}
 
 }

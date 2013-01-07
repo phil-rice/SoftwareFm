@@ -141,8 +141,8 @@ public class DebugUsageView extends ViewPart {
 			}
 
 			@Override
-			public boolean invalid() {
-				return composite.isDisposed();
+			public boolean isValid() {
+				return !composite.isDisposed();
 			}
 		});
 	}
