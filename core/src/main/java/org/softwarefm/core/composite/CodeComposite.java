@@ -4,6 +4,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.browser.BrowserAndFriendsComposite;
+import org.softwarefm.core.browser.IEditingListener;
 import org.softwarefm.core.constants.UrlConstants;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.SelectedBindingAdapter;
@@ -15,31 +16,40 @@ public class CodeComposite extends SoftwareFmComposite {
 
 	private final BrowserAndFriendsComposite browser;
 	private String url;
+	protected boolean editing;
 
 	public CodeComposite(Composite parent, final SoftwareFmContainer<?> container) {
 		super(parent, container);
 		getComposite().setLayout(new FillLayout());
 		browser = new BrowserAndFriendsComposite(getComposite(), container);
-		addListener(new SelectedBindingAdapter() {
+		browser.addEditingListener(new IEditingListener() {
+			@Override
+			public void editingState(boolean editing) {
+				CodeComposite.this.editing = editing;
+			}
+		});
+		addSelectedBindingListener(new SelectedBindingAdapter() {
 			@Override
 			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
-				url = container.urlStrategy.classAndMethodUrl(codeData).getHostAndUrl();
-				System.out.println("ClassAndMethod: " + url);
-				browser.setUrl(url);
+				if (!editing) {
+					url = container.urlStrategy.classAndMethodUrl(codeData).getHostAndUrl();
+					browser.setUrl(url);
+					System.out.println("ClassAndMethod: " + url + ", " + " editing: " + editing);
+				}
 			}
 
 			public boolean invalid() {
 				return getComposite().isDisposed();
 			}
-			
+
 			@Override
 			public String toString() {
 				CodeComposite codeComposite = CodeComposite.this;
-				return codeComposite.getClass().getSimpleName() +"@" + System.identityHashCode(codeComposite) +" Browser: " + browser.getComposite().isDisposed() + " Url: " + url;
+				return codeComposite.getClass().getSimpleName() + "@" + System.identityHashCode(codeComposite) + " Browser: " + browser.getComposite().isDisposed() + " Url: " + url;
 			}
 
 		});
-		container.socialUsage.addSocialUsageListener(new SocialUsageAdapter(getComposite()){
+		container.socialUsage.addSocialUsageListener(new SocialUsageAdapter(getComposite()) {
 			@Override
 			public void codeUsage(String url, UsageStatData myUsage, ISimpleMap<FriendData, UsageStatData> friendsUsage) {
 				browser.setFriendData(friendsUsage);
@@ -57,9 +67,14 @@ public class CodeComposite extends SoftwareFmComposite {
 	public String getUrl() {
 		return url;
 	}
-	
+
 	@Override
 	public String toString() {
-		return getClass().getSimpleName() +" (" + getUrl() + ") " + browser;
+		return getClass().getSimpleName() + " (" + getUrl() + ") " + browser;
+	}
+
+	public BrowserAndFriendsComposite getBrowserForTest() {
+		return browser;
+
 	}
 }

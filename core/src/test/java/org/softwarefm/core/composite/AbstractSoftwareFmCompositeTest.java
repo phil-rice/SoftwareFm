@@ -29,6 +29,8 @@ import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.strings.Strings;
 
 public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmComposite> extends SwtTest {
+	protected final CodeData codeData = new CodeData("packageName", "className");
+	protected final ArtifactData artifactData = new ArtifactData(fileAndDigest, "groupId0", "artifactId0", "version0");
 
 	protected P panel;
 
@@ -40,12 +42,11 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 
 	protected final static String classAndMethodNameUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "code:packageName/className");
 	protected final static String digestUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "Digest:0123456789");
-	protected final static String projectUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "project/g/a");
+	protected final static String projectUrl = Strings.url(CommonConstants.softwareFmHostAndPrefix, "project/groupId0/artifactId0");
 	protected final static File file = new File(new File("some"), "file");
 	protected final static FileAndDigest fileAndDigest = new FileAndDigest(file, "0123456789");
-	protected final static FileAndDigest fileNameAndNoDigest = new FileAndDigest(file, null);
+	protected final static FileAndDigest fileAndNoDigest = new FileAndDigest(file, null);
 	protected final static FileAndDigest noFileNameAndNoDigest = new FileAndDigest(null, null);
-	protected final static ArtifactData artifactData = new ArtifactData(fileAndDigest, "g", "a", "v");
 	protected final static CodeData classExpressionData = new CodeData("somePackage", "someClass");
 	protected final static CodeData classAndMethodExpressionData = new CodeData("somePackage", "someClass", "someMethod");
 
@@ -99,6 +100,29 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 				e.printStackTrace();
 		assertEquals(0, rememberedExceptions.getResults().size());
 		super.tearDown();
+	}
+	protected void setUpMockForUnknownDigest() {
+		EasyMock.expect(strategy.findNode("selection", 1)).andReturn("node");
+		EasyMock.expect(strategy.findExpressionData("selection", "node", 1)).andReturn(codeData);
+		EasyMock.expect(strategy.findFile("selection", "node", 1)).andReturn(file);
+		EasyMock.expect(strategy.findDigest("selection", "node", file, 1)).andReturn(fileAndDigest);
+		EasyMock.expect(strategy.findArtifact("selection", fileAndDigest, 1)).andReturn(null);
+		EasyMock.replay(strategy);
+	}
+	protected void setupMockForFoundArtifact() {
+		EasyMock.expect(strategy.findNode("selection", 1)).andReturn("node");
+		EasyMock.expect(strategy.findExpressionData("selection", "node", 1)).andReturn(codeData);
+		EasyMock.expect(strategy.findFile("selection", "node", 1)).andReturn(file);
+		EasyMock.expect(strategy.findDigest("selection", "node", file, 1)).andReturn(fileAndDigest);
+		EasyMock.expect(strategy.findArtifact("selection", fileAndDigest, 1)).andReturn(artifactData);
+		EasyMock.replay(strategy);
+	}
+	protected void setUpMockForNoDigest() {
+		EasyMock.expect(strategy.findNode("selection", 1)).andReturn("node");
+		EasyMock.expect(strategy.findExpressionData("selection", "node", 1)).andReturn(codeData);
+		EasyMock.expect(strategy.findFile("selection", "node", 1)).andReturn(file);
+		EasyMock.expect(strategy.findDigest("selection", "node", file, 1)).andReturn(null);
+		EasyMock.replay(strategy);
 	}
 
 }

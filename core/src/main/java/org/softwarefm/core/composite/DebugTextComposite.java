@@ -68,7 +68,7 @@ public class DebugTextComposite extends SoftwareFmComposite {
 		listenersText.addFocusListener(listener);
 		viewsText.addFocusListener(listener);
 
-		addListener(new ISelectedBindingListener() {
+		addSelectedBindingListener(new ISelectedBindingListener() {
 			public void notJavaElement(int selectionCount) {
 				listenerText.append("notJavaElement: (" + selectionCount + ")\n");
 			}

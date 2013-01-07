@@ -3,19 +3,26 @@ package org.softwarefm.core.composite;
 import org.easymock.EasyMock;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.core.SoftwareFmContainer;
+import org.softwarefm.core.browser.BrowserCompositeTest;
 import org.softwarefm.core.constants.TextKeys;
-import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.ISelectedBindingListener;
 
 public class CodeCompositeTest extends AbstractSoftwareFmCompositeTest<CodeComposite> {
-	private final CodeData codeData = new CodeData("packageName", "className");
+
+	public void testUrlNotChangedWhenInEditingMode() {
+		panel.getBrowserForTest().setUrlAndWait(BrowserCompositeTest.editingUrl1);
+		setupMockForFoundArtifact();
+		execute(new Runnable() {
+			public void run() {
+				selectedArtifactSelectionManager.selectionOccured("selection");
+			}
+		});
+		EasyMock.verify(strategy);
+		assertEquals(null, panel.getUrl());//unfortunately the browser does not have getUrl method, so this is the url we have changed to with selection
+	}
 
 	public void testClassAndMethodSelectionCausesBrowserToViewUrl() throws Exception {
-		EasyMock.expect(strategy.findNode("selection", 1)).andReturn("node");
-		EasyMock.expect(strategy.findExpressionData("selection", "node", 1)).andReturn(codeData);
-		EasyMock.expect(strategy.findFile("selection", "node", 1)).andReturn(file);
-		EasyMock.expect(strategy.findDigest("selection", "node", file, 1)).andReturn(fileNameAndNoDigest);
-		EasyMock.replay(strategy);
+		setupMockForFoundArtifact();
 
 		execute(new Runnable() {
 			public void run() {
@@ -27,11 +34,7 @@ public class CodeCompositeTest extends AbstractSoftwareFmCompositeTest<CodeCompo
 	}
 
 	public void testListenersAreNotRegisteredWhenDisposed() {
-		EasyMock.expect(strategy.findNode("selection", 1)).andReturn("node");
-		EasyMock.expect(strategy.findExpressionData("selection", "node", 1)).andReturn(codeData);
-		EasyMock.expect(strategy.findFile("selection", "node", 1)).andReturn(file);
-		EasyMock.expect(strategy.findDigest("selection", "node", file, 1)).andReturn(fileNameAndNoDigest);
-		EasyMock.replay(strategy);
+		setupMockForFoundArtifact();
 		panel.dispose();
 		execute(new Runnable() {
 			public void run() {
@@ -46,7 +49,7 @@ public class CodeCompositeTest extends AbstractSoftwareFmCompositeTest<CodeCompo
 		ISelectedBindingListener listener = EasyMock.createMock(ISelectedBindingListener.class);
 		EasyMock.replay(listener);
 
-		panel.addListener(listener);
+		panel.addSelectedBindingListener(listener);
 		assertEquals(3, listenerManager.getListeners().size());
 		assertTrue(listenerManager.getListeners().contains(listener));
 		EasyMock.verify(listener);
@@ -62,9 +65,11 @@ public class CodeCompositeTest extends AbstractSoftwareFmCompositeTest<CodeCompo
 		assertEquals("SoftwareFM was unable to work out what sort of JavaElement the selected item was", panel.notJavaElementMsg());
 		assertEquals("The selected item was defined in file " + file + " which isn't a jar", panel.notInAJarMsg(file));
 		assertEquals("File " + file + " Digest 0123456789 Digest6 012345", panel.digestDeterminedMsg(TextKeys.msgTestUnknownDigest, fileAndDigest));
-		assertEquals("File " + file + " Digest 0123456789 Digest6 012345 ArtifactData " + artifactData + " GroupId g ArtifactId a Version v", panel.artifactDeterminedMsg(TextKeys.msgTestArtifactDetermined, artifactData));
+		assertEquals("File " + file + " Digest 0123456789 Digest6 012345 ArtifactData " + artifactData + " GroupId groupId0 ArtifactId artifactId0 Version version0", panel.artifactDeterminedMsg(TextKeys.msgTestArtifactDetermined, artifactData));
 		assertEquals("File " + file + " Digest 0123456789 Digest6 012345", panel.unknownDigestMsg(TextKeys.msgTestUnknownDigest, fileAndDigest));
 	}
+
+
 
 	@Override
 	protected CodeComposite makePanel(Composite parent, SoftwareFmContainer<?> container) {

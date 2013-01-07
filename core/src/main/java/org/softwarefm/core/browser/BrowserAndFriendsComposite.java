@@ -56,8 +56,10 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 		super(parent, container);
 		imageRegistry = container.imageRegistry;
 		browser.addLocationListener(new FriendsAndNameLocationListener(container.socialManager, browser, imageUrlPattern));
+		
 	}
 
+	
 	@Override
 	protected void addMoreControls() {
 		friendsToolBar = new ToolBar(rowComposite, SWT.NULL);

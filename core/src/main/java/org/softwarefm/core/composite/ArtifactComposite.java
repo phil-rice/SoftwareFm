@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.core.SoftwareFmContainer;
+import org.softwarefm.core.browser.IEditingListener;
 import org.softwarefm.core.constants.TextKeys;
 import org.softwarefm.core.constants.UrlConstants;
 import org.softwarefm.core.jdtBinding.ArtifactData;
@@ -18,49 +19,64 @@ import org.softwarefm.utilities.maps.SimpleMaps;
 
 public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
 
+	protected boolean editting;
+
 	public ArtifactComposite(Composite parent, final SoftwareFmContainer<?> container) {
 		super(parent, container, new IFunction1<Composite, LinkComposite>() {
 			public LinkComposite apply(Composite from) throws Exception {
 				return new LinkComposite(from, container);
 			}
 		});
+		getBrowser().addEditingListener(new IEditingListener() {
+			@Override
+			public void editingState(boolean editing) {
+				ArtifactComposite.this.editting = editing;
+			}
+		});
 		setUrlAndShow(UrlConstants.aboutArtifactComposite);
 		container.socialUsage.addSocialUsageListener(new SocialUsageAdapter(getControl()) {
 			@Override
 			public void noArtifactUsage() {
-				browserAndFriendComposite.setFriendData(SimpleMaps.<FriendData, UsageStatData>empty());
+				browserAndFriendComposite.setFriendData(SimpleMaps.<FriendData, UsageStatData> empty());
 			}
+
 			@Override
 			public void artifactUsage(String url, UsageStatData myUsage, ISimpleMap<FriendData, UsageStatData> friendsUsage) {
 				browserAndFriendComposite.setFriendData(friendsUsage);
 			}
 		});
-		addListener(new SelectedBindingAdapter() {
+		addSelectedBindingListener(new SelectedBindingAdapter() {
 			@Override
 			public void notJavaElement(int selectionCount) {
-				setUrlAndShow(UrlConstants.notJavaElementUrl);
+				if (!editting)
+					setUrlAndShow(UrlConstants.notJavaElementUrl);
 			}
 
 			@Override
 			public void notInAJar(File file, int selectionCount) {
-				setUrlAndShow(UrlConstants.notJarUrl);
+				if (!editting)
+					setUrlAndShow(UrlConstants.notJarUrl);
 			}
 
 			@Override
 			public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
-				setText(digestDeterminedMsg(TextKeys.msgArtifactFoundDigest, fileAndDigest) + "\n" + searchingMsg());
+				if (!editting)
+					setText(digestDeterminedMsg(TextKeys.msgArtifactFoundDigest, fileAndDigest) + "\n" + searchingMsg());
 			}
 
 			@Override
 			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
-				showSecondaryControl();
+				if (!editting)
+					showSecondaryControl();
 			}
 
 			@Override
 			public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
-				String url = urlStrategy.projectUrl(artifactData).getHostAndUrl();
-				setUrlAndShow(url);
-				container.state.setUrlSuffix(null);
+				if (!editting) {
+					String url = urlStrategy.projectUrl(artifactData).getHostAndUrl();
+					setUrlAndShow(url);
+					container.state.setUrlSuffix(null);
+				}
 			}
 
 			public boolean invalid() {

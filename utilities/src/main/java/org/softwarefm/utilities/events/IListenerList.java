@@ -7,6 +7,8 @@ public interface IListenerList<L> {
 
 	void addListener(L listener);
 
+	void removeListener(L listener);
+
 	void fire(ICallback<L> callback);
 
 	public static class Utils {

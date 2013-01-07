@@ -49,7 +49,7 @@ public class SoftwareFmServerTest extends AbstractHttpServerTest {
 		callbackAndGetter = new UsageMysqlCallbackAndGetter(datasource, ITime.Utils.system());
 		httpServer.configure(new UsageConfigurator(callbackAndGetter, callbackAndGetter, persistance));
 		MysqlTestData.template.execute("delete from usage_table");
-		MysqlTestData.template.execute("delete from friends");
+//		MysqlTestData.template.execute("delete from friends");
 		httpServer.start();
 	}
 

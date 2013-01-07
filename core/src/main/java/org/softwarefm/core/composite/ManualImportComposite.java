@@ -30,7 +30,7 @@ final class ManualImportComposite extends TextAndFormComposite {
 
 	ManualImportComposite(Composite parent, SoftwareFmContainer<?> container) {
 		super(parent, container);
-		addListener(new SelectedBindingAdapter() {
+		addSelectedBindingListener(new SelectedBindingAdapter() {
 			@Override
 			public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
 				artifactData = null;

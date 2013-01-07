@@ -80,7 +80,7 @@ public class StackedBrowserAndControl<C extends IHasControl> extends SoftwareFmC
 		super.layout();
 	}
 
-	public BrowserComposite getBrowserForTest() {
+	public BrowserComposite getBrowser() {
 		return browserAndFriendComposite;
 	}
 

@@ -44,7 +44,7 @@ abstract public class SoftwareFmComposite extends HasComposite implements IHasSe
 			ICallback2.Utils.call(logger, source, MessageFormat.format(message, args));
 	}
 
-	protected void addListener(ISelectedBindingListener listener) {
+	protected void addSelectedBindingListener(ISelectedBindingListener listener) {
 		listeners.add(listener);
 		selectionBindingManager.addSelectedArtifactSelectionListener(listener);
 	}

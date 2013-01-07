@@ -28,7 +28,7 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 		makeComponent(container, getComposite());
 		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildrenWithLastGrabingVertical(getComposite());
 		getComposite().setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
-		addListener(new ISelectedBindingListener() {
+		addSelectedBindingListener(new ISelectedBindingListener() {
 
 			public void notJavaElement(int selectionCount) {
 				TextAndControlComposite.this.notJavaElement(selectionCount);

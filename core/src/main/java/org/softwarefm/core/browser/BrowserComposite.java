@@ -6,12 +6,15 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.LocationAdapter;
 import org.eclipse.swt.browser.LocationEvent;
 import org.eclipse.swt.browser.LocationListener;
 import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.swt.HasComposite;
 import org.softwarefm.core.swt.Swts;
+import org.softwarefm.utilities.callbacks.ICallback;
+import org.softwarefm.utilities.events.IListenerList;
 import org.softwarefm.utilities.functions.IFunction1;
 
 public class BrowserComposite extends HasComposite {
@@ -20,9 +23,12 @@ public class BrowserComposite extends HasComposite {
 	protected final BrowserToolbar browserToolbar;
 	protected final Composite rowComposite;
 	protected final BrowserUrlCombo browserUrlCombo;
+	private final IListenerList<IEditingListener> editingListeners;
+	private boolean editing;
 
 	public BrowserComposite(final Composite parent, SoftwareFmContainer<?> container) {
 		super(parent);
+		editingListeners = IListenerList.Utils.list(container.listenerList, IEditingListener.class, this);
 		ImageRegistry imageRegistry = container.imageRegistry;
 		rowComposite = Swts.newComposite(getComposite(), SWT.NULL, "TopRow");
 		browser = new Browser(getComposite(), SWT.NULL);
@@ -36,6 +42,30 @@ public class BrowserComposite extends HasComposite {
 		Swts.Grid.addGrabHorizontalAndFillGridDataToAllChildren(getComposite());
 		Swts.Grid.addGrabVerticalToGridData(browser, true);
 		Swts.addPaintListenerToDrawLineUnderChild(getComposite(), rowComposite, SWT.COLOR_GRAY);
+
+		browser.addLocationListener(new LocationAdapter() {
+			@Override
+			public void changed(LocationEvent event) {
+				final boolean newEditing = event.location.contains("action=edit");
+				if (editing != newEditing)
+					editingListeners.fire(new ICallback<IEditingListener>() {
+						@Override
+						public void process(IEditingListener t) throws Exception {
+							t.editingState(newEditing);
+						}
+					});
+				editing = newEditing;
+
+			}
+		});
+	}
+
+	public void addEditingListener(IEditingListener listener) {
+		editingListeners.addListener(listener);
+	}
+
+	public void removeEditingListener(IEditingListener listener) {
+		editingListeners.removeListener(listener);
 	}
 
 	protected void addMoreControls() {
@@ -81,7 +111,7 @@ public class BrowserComposite extends HasComposite {
 	}
 
 	public Object evaluateScriptAndWaitForLoad(final String javaScript) {
-		final AtomicReference<Object>result = new AtomicReference<Object>();
+		final AtomicReference<Object> result = new AtomicReference<Object>();
 		executeAndWaitToLoad(new Runnable() {
 			public void run() {
 				Object evaluateScript = evaluateScript(javaScript);
@@ -91,10 +121,10 @@ public class BrowserComposite extends HasComposite {
 		return result.get();
 	}
 
-	
-	public String getHtml(){
+	public String getHtml() {
 		return browser.getText();
 	}
+
 	public static void main(String[] args) {
 		Swts.Show.display(BrowserComposite.class.getSimpleName(), new IFunction1<Composite, Composite>() {
 			public Composite apply(Composite from) throws Exception {
