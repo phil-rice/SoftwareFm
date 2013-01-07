@@ -2,7 +2,7 @@
 <feature
       id="org.softwarefm.feature"
       label="Software FM"
-      version="1.9.3"
+      version="1.9.4"
       provider-name="SoftwareFM">
 
    <description url="http://www.example.com/description">

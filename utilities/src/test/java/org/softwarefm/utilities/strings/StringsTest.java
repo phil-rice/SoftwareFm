@@ -14,12 +14,19 @@ import org.softwarefm.utilities.tests.Tests;
 
 public class StringsTest extends TestCase {
 
-	public void testOneLine(){
+	public void testOneLine() {
 		assertEquals("abc", Strings.oneLine("abc"));
 		assertEquals("a b c", Strings.oneLine("a\nb\nc"));
 		assertEquals("a b c", Strings.oneLine("a\rb\rc"));
 	}
-	
+
+	public void testAddDefaultPrefix() {
+		assertEquals("preItem", Strings.addDefaultPrefix("pre", "Item"));
+		assertEquals("preItem", Strings.addDefaultPrefix("pre", "preItem"));
+		assertEquals("preprItem", Strings.addDefaultPrefix("pre", "prItem"));
+		assertEquals(null, Strings.addDefaultPrefix("pre", null));
+	}
+
 	public void testFromHex() {
 		checkFromHex("00", 0);
 		checkFromHex("09", 9);
@@ -27,31 +34,30 @@ public class StringsTest extends TestCase {
 		byte[] actual = Strings.fromHex("000102030405060708090a0b0c0d0e0f101112");
 		assertTrue(Arrays.equals(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18 }, actual));
 	}
-	
-	public void testFirst(){
+
+	public void testFirst() {
 		checkFirstTail("axbcxdxe", "x", "a", "bcxdxe");
 		checkFirstTail("axbcxdxe", "q", "axbcxdxe", "");
 		checkFirstTail("axbcxdxe", "e", "axbcxdx", "");
 		checkFirstTail("", "e", "", "");
 	}
-	
+
 	private void checkFirstTail(String string, String marker, String expectedHead, String expectedTail) {
 		assertEquals(expectedHead, Strings.head(string, marker));
 		assertEquals(expectedTail, Strings.tail(string, marker));
 	}
 
-
-	public void testTrim(){
+	public void testTrim() {
 		assertEquals("bcd", Strings.trim("abcd", 'a'));
 		assertEquals("abc", Strings.trim("abcd", 'd'));
 		assertEquals("x", Strings.trim("axa", 'a'));
-		
+
 		assertEquals("axa", Strings.trim("axa", 'b'));
 		assertEquals("", Strings.trim("", 'b'));
 		assertEquals("", Strings.trim("bbbbbb", 'b'));
 		assertEquals("", Strings.trim("b", 'b'));
 	}
-	
+
 	public void testUrl() {
 		assertEquals("", Strings.url());
 		assertEquals("", Strings.url(""));
@@ -60,7 +66,7 @@ public class StringsTest extends TestCase {
 		assertEquals("a", Strings.url("a"));
 		assertEquals("a/b", Strings.url("a", "b"));
 		assertEquals("a/b", Strings.url("a", "", "b"));
-		
+
 		assertEquals("a", Strings.url("/a/"));
 		assertEquals("a/b", Strings.url("/a/", "", "/b/"));
 
@@ -125,7 +131,7 @@ public class StringsTest extends TestCase {
 		assertNull(Strings.oneStartsWith(Arrays.asList("one", "two"), " two"));
 	}
 
-	public void testZipUnZip(){
+	public void testZipUnZip() {
 		checkZipUnZip("Some Initial <Text> with <Text> some times repeated and some $%^&*()!_+<>?,./ funny <Text>");
 		checkZipUnZip("line1\nline2\nline3");
 	}
@@ -135,7 +141,7 @@ public class StringsTest extends TestCase {
 		String unzipped = Strings.unzip(zipped);
 		assertEquals(unzipped, original);
 	}
-	
+
 	public void testIsUrlFriendly() {
 		assertTrue(Strings.isUrlFriendly("www.abc"));
 		assertTrue(Strings.isUrlFriendly("www.a_c"));

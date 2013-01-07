@@ -89,7 +89,8 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 						if (imageUrl != null) {
 							Image image = imageRegistry.get(imageUrl);
 							if (image == null) {
-								ImageDescriptor createFromURL = ImageDescriptor.createFromURL(new URL(imageUrl));
+								String fullUrl = Strings.addDefaultPrefix( "http://", imageUrl);
+								ImageDescriptor createFromURL = ImageDescriptor.createFromURL(new URL(fullUrl));
 								int height = createFromURL.getImageData().height;
 								int width = createFromURL.getImageData().width;
 								int scaledWidth = 16 * width / height;

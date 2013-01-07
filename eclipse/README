@@ -32,3 +32,4 @@ RELEASE NOTES:
 1.9.1: Ensured that while editing, your edits are not killed by selection events
 1.9.2: Slightly improved layout
 1.9.3: Fixed bizarre issue with focus that causes selection events to be ignored until newly opened windows gained focus.
+1.9.4: Bug fix around friend images

@@ -619,4 +619,12 @@ public class Strings {
 		return name;
 	}
 
+	public static String addDefaultPrefix(String prefix, String string) {
+		if (string == null)
+			return null;
+		if (string.startsWith(prefix))
+			return string;
+		return prefix + string;
+	}
+
 }

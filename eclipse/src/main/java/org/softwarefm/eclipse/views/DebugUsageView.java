@@ -149,6 +149,7 @@ public class DebugUsageView extends ViewPart {
 
 	@Override
 	public void setFocus() {
+		
 	}
 
 }
