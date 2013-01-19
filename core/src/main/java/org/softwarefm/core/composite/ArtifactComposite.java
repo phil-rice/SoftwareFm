@@ -73,7 +73,7 @@ public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
 			@Override
 			public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
 				if (!editting) {
-					String url = urlStrategy.projectUrl(artifactData).getHostAndUrl();
+					String url = urlStrategy.projectUrl(artifactData).getHttpHostAndUrl();
 					setUrlAndShow(url);
 					container.state.setUrlSuffix(null);
 				}

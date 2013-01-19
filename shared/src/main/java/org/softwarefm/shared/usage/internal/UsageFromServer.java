@@ -3,7 +3,7 @@ package org.softwarefm.shared.usage.internal;
 import java.util.List;
 
 import org.apache.http.HttpStatus;
-import org.softwarefm.server.configurator.ConfiguratorConstants;
+import org.softwarefm.shared.constants.ConfiguratorConstants;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.usage.IUsageFromServer;
 import org.softwarefm.shared.usage.IUsageFromServerCallback;

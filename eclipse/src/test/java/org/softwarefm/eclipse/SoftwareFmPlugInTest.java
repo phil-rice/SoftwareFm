@@ -12,9 +12,9 @@ import org.softwarefm.core.selection.ISelectedBindingManager;
 import org.softwarefm.core.tests.SwtTest;
 import org.softwarefm.core.url.HostOffsetAndUrl;
 import org.softwarefm.core.url.IUrlStrategy;
+import org.softwarefm.shared.constants.CommonConstants;
 import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.shared.usage.IUsage;
-import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.resources.IResourceGetter;
 

@@ -2,7 +2,7 @@ package org.softwarefm.core.friends.internal;
 
 import org.eclipse.swt.browser.Browser;
 import org.softwarefm.core.browser.BrowserComposite;
-import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.shared.constants.CommonConstants;
 import org.softwarefm.utilities.strings.Strings;
 
 public class WikiLoginHelperForTests {

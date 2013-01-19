@@ -9,7 +9,7 @@ import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.selection.IArtifactHtmlRipper;
 import org.softwarefm.core.url.IUrlStrategy;
-import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.shared.constants.CommonConstants;
 import org.softwarefm.utilities.http.IHttpClient;
 import org.softwarefm.utilities.http.IResponse;
 import org.softwarefm.utilities.strings.Strings;

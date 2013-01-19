@@ -15,13 +15,13 @@ import org.softwarefm.core.constants.TemplateConstants;
 import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.link.IMakeLink;
 import org.softwarefm.core.maven.IMaven;
+import org.softwarefm.core.mediawiki.Wiki;
 import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.HostOffsetAndUrl;
 import org.softwarefm.core.url.IUrlStrategy;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.maps.IHasCache;
-import org.softwarefm.utilities.mediawiki.Wiki;
 import org.softwarefm.utilities.tests.IIntegrationTest;
 
 public class MakeLinkTest extends TestCase implements IIntegrationTest {

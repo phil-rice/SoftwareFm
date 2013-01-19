@@ -5,7 +5,7 @@ import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.selection.IArtifactHtmlRipper;
 import org.softwarefm.core.selection.IArtifactStrategy;
 import org.softwarefm.core.url.IUrlStrategy;
-import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.shared.constants.CommonConstants;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.http.IHttpClient;
 import org.softwarefm.utilities.http.IResponse;

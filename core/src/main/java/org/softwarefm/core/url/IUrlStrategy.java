@@ -5,7 +5,7 @@ import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.url.internal.UrlStrategy;
 import org.softwarefm.core.url.internal.UrlStrategyWithActionBarState;
-import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.shared.constants.CommonConstants;
 
 public interface IUrlStrategy {
 

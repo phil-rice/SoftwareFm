@@ -35,6 +35,7 @@ import org.softwarefm.utilities.strings.Strings;
 public class DebugUsageView extends ViewPart {
 
 	private final IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
+	private Composite composite;
 
 	@Override
 	public void createPartControl(Composite parent) {
@@ -43,7 +44,7 @@ public class DebugUsageView extends ViewPart {
 		final IUsage usage = SoftwareFmPlugin.getDefault().getUsage();
 		final IUsageFromServer usageFromServer = container.usageFromServer;
 		SocialUsage socialUsage = container.socialUsage;
-		final Composite composite = Swts.createMigComposite(parent, SWT.NULL, new MigLayout("fill", "[]5![]", "[]2![60!]2![60!]2![grow]"), null);
+		composite = Swts.createMigComposite(parent, SWT.NULL, new MigLayout("fill", "[]5![]", "[]2![60!]2![60!]2![grow]"), null);
 		Composite buttons = Swts.createMigComposite(composite, SWT.NULL, new MigLayout("fill"), "span 2, wrap");
 
 		final StyledText myAndFriendsCodeUsageText = Swts.createMigReadOnlyStyledText(composite, "", "span2, grow,wrap");
@@ -149,7 +150,7 @@ public class DebugUsageView extends ViewPart {
 
 	@Override
 	public void setFocus() {
-		
+		composite.setFocus();
 	}
 
 }

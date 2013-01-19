@@ -1,9 +1,9 @@
 set m2=c:\Users\phil\.m2\repository
 
-cd ../parentPom
+cd ../../parentPom
 call mvn clean install
 
-cd ../build
+cd ../softwarefm/build
 call mvn clean install
 
 cd ../eclipse

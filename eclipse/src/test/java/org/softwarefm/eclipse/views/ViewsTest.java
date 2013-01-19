@@ -3,11 +3,6 @@ package org.softwarefm.eclipse.views;
 import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.composite.SoftwareFmComposite;
 import org.softwarefm.core.tests.SwtTest;
-import org.softwarefm.eclipse.views.AllView;
-import org.softwarefm.eclipse.views.ArtifactView;
-import org.softwarefm.eclipse.views.CodeView;
-import org.softwarefm.eclipse.views.DebugTextView;
-import org.softwarefm.eclipse.views.SoftwareFmView;
 
 public class ViewsTest extends SwtTest {
 

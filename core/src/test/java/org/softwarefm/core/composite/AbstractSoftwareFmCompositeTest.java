@@ -18,13 +18,13 @@ import org.softwarefm.core.selection.internal.SwtThreadSelectedBindingAggregator
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.tests.SwtTest;
 import org.softwarefm.core.url.IUrlStrategy;
+import org.softwarefm.shared.constants.CommonConstants;
 import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.shared.usage.IUsageFromServer;
 import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.callbacks.MemoryCallback;
-import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.strings.Strings;
 

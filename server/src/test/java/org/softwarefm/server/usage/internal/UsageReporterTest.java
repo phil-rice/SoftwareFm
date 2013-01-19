@@ -7,7 +7,7 @@ import org.apache.http.util.EntityUtils;
 import org.softwarefm.httpServer.AbstractHttpServerTest;
 import org.softwarefm.httpServer.StatusAndEntity;
 import org.softwarefm.httpServer.routes.IRouteHandler;
-import org.softwarefm.server.configurator.ConfiguratorConstants;
+import org.softwarefm.shared.constants.ConfiguratorConstants;
 import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.IUsageReporter;
 import org.softwarefm.shared.usage.UsageTestData;

@@ -12,6 +12,7 @@ import org.softwarefm.httpServer.StatusAndEntity;
 import org.softwarefm.server.MySqlStrings;
 import org.softwarefm.server.MysqlTestData;
 import org.softwarefm.server.usage.internal.UsageMysqlCallbackAndGetter;
+import org.softwarefm.shared.constants.ConfiguratorConstants;
 import org.softwarefm.shared.usage.UsageTestData;
 import org.softwarefm.utilities.http.HttpMethod;
 import org.softwarefm.utilities.tests.Tests;

@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 
 import junit.framework.TestCase;
 
-import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.shared.constants.CommonConstants;
 import org.softwarefm.utilities.tests.Tests;
 
 abstract public class ExecutorTestCase extends TestCase {

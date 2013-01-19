@@ -18,7 +18,7 @@ public class CodeCompositeTest extends AbstractSoftwareFmCompositeTest<CodeCompo
 			}
 		});
 		EasyMock.verify(strategy);
-		assertEquals(classAndMethodNameUrl, panel.getUrl());
+		assertEquals("http://"+classAndMethodNameUrl, panel.getUrl());
 	}
 
 	public void testUrlNotChangedWhenInEditingMode() {

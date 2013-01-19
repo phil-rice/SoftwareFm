@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Text;
 import org.softwarefm.core.client.AbstractMigComposite;
 import org.softwarefm.core.client.IUserConnectionDetails;
 import org.softwarefm.core.swt.Swts;
-import org.softwarefm.server.configurator.ConfiguratorConstants;
+import org.softwarefm.shared.constants.ConfiguratorConstants;
 import org.softwarefm.shared.usage.IUsage;
 import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.IUsageReporter;

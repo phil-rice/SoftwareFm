@@ -12,12 +12,12 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.friends.internal.WikiLoginHelperForTests;
 import org.softwarefm.core.tests.SwtTest;
+import org.softwarefm.shared.constants.CommonConstants;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.shared.usage.UsageTestData;
-import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.maps.ISimpleMap;
 import org.softwarefm.utilities.maps.SimpleMaps;
@@ -25,6 +25,7 @@ import org.softwarefm.utilities.resources.IResourceGetter;
 import org.softwarefm.utilities.strings.Strings;
 
 public class BrowserAndFriendsCompositeTest extends SwtTest {
+	int friendCount = 3;
 
 	private static final ISimpleMap<FriendData, UsageStatData> friend1_1Usage = SimpleMaps.<FriendData, UsageStatData> makeMap(UsageTestData.friend1, new UsageStatData(1));
 	private BrowserAndFriendsComposite browserAndFriendsComposite;
@@ -54,7 +55,7 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 	public void testDoesntAddFriendsBackInWhenNotLoggedIn() {
 		login();
 		gotoMyUserPage();
-		assertEquals(2, socialManager.myFriends().size());
+		assertEquals(friendCount, socialManager.myFriends().size());
 
 		logout();
 		assertEquals(0, socialManager.myFriends().size());
@@ -72,7 +73,7 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 
 		gotoMyUserPage();
 		assertEquals("Phil", socialManager.myName());
-		assertEquals(2, socialManager.myFriends().size());
+		assertEquals(friendCount, socialManager.myFriends().size());
 	}
 
 	public void testDoesntFindFriendsFromOtherPeoplesUserPage() throws InterruptedException {
@@ -83,7 +84,7 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 		gotoMyUserPage();
 		assertEquals("Phil", socialManager.myName());
 		List<FriendData> friends = new ArrayList<FriendData>(socialManager.myFriends());
-		assertEquals(2, friends.size());
+		assertEquals(friendCount, friends.size());
 		gotoUserPage("Root");
 
 		assertEquals("Phil", socialManager.myName());
@@ -124,7 +125,7 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 
 		gotoMyUserPage();
 		assertEquals("Phil", socialManager.myName());
-		assertEquals(2, socialManager.myFriends().size());
+		assertEquals(friendCount, socialManager.myFriends().size());
 
 		logout();
 		assertEquals(null, socialManager.myName());

@@ -1,4 +1,4 @@
-package org.softwarefm.server.configurator;
+package org.softwarefm.shared.constants;
 
 public class ConfiguratorConstants {
 

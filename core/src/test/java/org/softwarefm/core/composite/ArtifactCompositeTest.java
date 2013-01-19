@@ -5,7 +5,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.browser.BrowserCompositeTest;
 import org.softwarefm.core.constants.UrlConstants;
-import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.shared.constants.CommonConstants;
 
 public class ArtifactCompositeTest extends AbstractSoftwareFmCompositeTest<ArtifactComposite> {
 
@@ -72,7 +72,7 @@ public class ArtifactCompositeTest extends AbstractSoftwareFmCompositeTest<Artif
 			}
 		});
 		EasyMock.verify(strategy);
-		assertEquals("www.softwarefm.org/mediawiki/index.php/artifact:groupId0/artifactId0", panel.getTextOrUrl());
+		assertEquals("http://www.softwarefm.org/mediawiki/index.php/artifact:groupId0/artifactId0", panel.getTextOrUrl());
 	}
 
 	public void testNoDigestCausesBrowserToNotAJar() throws Exception {
@@ -98,7 +98,7 @@ public class ArtifactCompositeTest extends AbstractSoftwareFmCompositeTest<Artif
 				listenerManager.digestDetermined(fileAndDigest, 0);
 			}
 		});
-		checkDisplaysInBrowser(CommonConstants.softwareFmHostAndPrefix + "/artifact:groupId0/artifactId0", new Runnable() {
+		checkDisplaysInBrowser("http://"+CommonConstants.softwareFmHostAndPrefix + "/artifact:groupId0/artifactId0", new Runnable() {
 			public void run() {
 				listenerManager.artifactDetermined(artifactData, 0);
 			}

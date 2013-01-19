@@ -32,7 +32,7 @@ public class CodeComposite extends SoftwareFmComposite {
 			@Override
 			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
 				if (!editing) {
-					url = container.urlStrategy.classAndMethodUrl(codeData).getHostAndUrl();
+					url = container.urlStrategy.classAndMethodUrl(codeData).getHttpHostAndUrl();
 					browser.setUrl(url);
 					System.out.println("ClassAndMethod: " + url + ", " + " editing: " + editing);
 				}

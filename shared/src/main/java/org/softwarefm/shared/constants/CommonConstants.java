@@ -1,4 +1,4 @@
-package org.softwarefm.utilities.constants;
+package org.softwarefm.shared.constants;
 
 import java.util.Arrays;
 import java.util.List;

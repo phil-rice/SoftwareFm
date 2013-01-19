@@ -14,10 +14,10 @@ import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.friends.internal.WikiLoginHelperForTests;
 import org.softwarefm.core.swt.HasComposite;
 import org.softwarefm.core.swt.Swts;
+import org.softwarefm.shared.constants.CommonConstants;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.social.IFoundFriendsListener;
 import org.softwarefm.shared.social.IFoundNameListener;
-import org.softwarefm.utilities.constants.CommonConstants;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.strings.Strings;
 

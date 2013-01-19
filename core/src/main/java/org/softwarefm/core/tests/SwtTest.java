@@ -12,7 +12,7 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.softwarefm.core.swt.Swts;
-import org.softwarefm.utilities.constants.CommonConstants;
+import org.softwarefm.shared.constants.CommonConstants;
 import org.softwarefm.utilities.exceptions.WrappedException;
 
 abstract public class SwtTest extends ExecutorTestCase {

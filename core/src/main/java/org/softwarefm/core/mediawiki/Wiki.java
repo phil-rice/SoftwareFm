@@ -1,4 +1,4 @@
-package org.softwarefm.utilities.mediawiki;
+package org.softwarefm.core.mediawiki;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
