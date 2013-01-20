@@ -1,8 +1,6 @@
 package org.softwarefm.shared.usage;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import org.softwarefm.utilities.functions.IFunction1;
@@ -14,13 +12,21 @@ public interface IUsageStats extends ISimpleMap<String, UsageStatData> {
 	public final static class Utils {
 		private static class UsageStats implements IUsageStats {
 			private final Map<String, UsageStatData> map;
+			private final ArrayList<String> keyset;
 
 			private UsageStats(Map<String, UsageStatData> map) {
 				this.map = map;
+				this.keyset = new ArrayList<String>(map.keySet());
 			}
 
-			public List<String> keys() {
-				return new ArrayList<String>(map.keySet());
+			@Override
+			public int size() {
+				return map.size();
+			}
+
+			@Override
+			public String key(int i) {
+				return keyset.get(i);
 			}
 
 			public UsageStatData get(String key) {
@@ -77,8 +83,12 @@ public interface IUsageStats extends ISimpleMap<String, UsageStatData> {
 
 		private static IUsageStats empty = new IUsageStats() {
 			@Override
-			public List<String> keys() {
-				return Collections.emptyList();
+			public String key(int i) {
+				throw new IllegalArgumentException();
+			}
+
+			public int size() {
+				return 0;
 			}
 
 			@Override

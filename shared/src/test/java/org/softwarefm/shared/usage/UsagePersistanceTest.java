@@ -12,7 +12,7 @@ public class UsagePersistanceTest extends TestCase {
 
 	public void testLoadsEmptyUsageIfStringBlank() {
 		ISimpleMap<String, UsageStatData> nullMap = usagePersistance.parse( null);
-		assertEquals(0, nullMap.keys().size());
+		assertEquals(0, nullMap.size());
 
 //		ISimpleMap<String, UsageStatData> emptyMap = usagePersistance.parse( "");
 //		assertEquals(0, emptyMap.keys().size());

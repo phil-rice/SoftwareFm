@@ -167,7 +167,10 @@ public class UsagePersistance implements IUsagePersistance {
 		Element usageElement = new Element("Usage");
 
 		usageElement.setAttribute("version", "1.0");
-		List<String> keys = new ArrayList<String>(usageStats.keys());
+
+		List<String> keys = new ArrayList<String>();
+		for (int i = 0; i < usageStats.size(); i++)
+			keys.add(usageStats.key(i));
 		Collections.sort(keys);
 		for (String key : keys) {
 			Element item = new Element("Item");

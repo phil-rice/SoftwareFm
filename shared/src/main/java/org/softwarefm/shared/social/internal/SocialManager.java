@@ -93,8 +93,8 @@ public class SocialManager implements ISocialManager {
 	public void setUsageData(String name, IUsageStats stats) {
 		if (name != null) {
 			this.stats.put(name, stats);
-			for (String url : stats.keys()) {
-				// see todo at the top...yes this is nasty, buggy and knows too much about structure
+			for (int i = 0; i < stats.size(); i++) {
+				String url = stats.key(i); // see todo at the top...yes this is nasty, buggy and knows too much about structure
 				if (url.startsWith("artifact")) {
 					String projectUrl = Strings.allButLastSegment(url, "/");
 					Maps.add(artifactStats, projectUrl, name, stats.get(url).count);
@@ -151,7 +151,7 @@ public class SocialManager implements ISocialManager {
 		Map<String, Integer> map = artifactStats.get(projectUrl);
 		if (map != null) {
 			Integer integer = map.get(name);
-			if (integer !=null)
+			if (integer != null)
 				return new UsageStatData(integer);
 		}
 		return empty;

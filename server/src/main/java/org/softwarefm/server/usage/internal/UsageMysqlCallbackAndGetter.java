@@ -27,8 +27,10 @@ public class UsageMysqlCallbackAndGetter implements IUsageCallbackAndGetter {
 
 	@Override
 	public void process(String ip, String user, IUsageStats usageStats) {
-		for (String key: usageStats.keys())
-			template.update(MySqlStrings.insertIntoUsage, ip, user,key, usageStats.get(key).count, time.getNow());
+		for (int i = 0; i < usageStats.size(); i++) {
+			String key = usageStats.key(i);
+			template.update(MySqlStrings.insertIntoUsage, ip, user, key, usageStats.get(key).count, time.getNow());
+		}
 	}
 
 	@Override

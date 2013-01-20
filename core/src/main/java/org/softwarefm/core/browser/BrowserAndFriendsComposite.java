@@ -56,10 +56,9 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 		super(parent, container);
 		imageRegistry = container.imageRegistry;
 		browser.addLocationListener(new FriendsAndNameLocationListener(container.socialManager, browser, imageUrlPattern));
-		
+
 	}
 
-	
 	@Override
 	protected void addMoreControls() {
 		friendsToolBar = new ToolBar(rowComposite, SWT.NULL);
@@ -71,38 +70,37 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 			// Swts.removeAllChildren(friendsToolBar);
 			for (int i = 0; i < friendsToolBar.getItemCount(); i++)
 				friendsToolBar.getItem(0).dispose();
-			List<FriendData> friends = friendsUsage.keys();
-			if (friends.size() != 0)
-				for (final FriendData data : friends) {
-					UsageStatData usageStatData = friendsUsage.get(data);
-					if (usageStatData.count != 0) {
-						ToolItem toolitem = new ToolItem(friendsToolBar, SWT.NULL);
-						toolitem.addListener(SWT.Selection, new Listener() {
-							@Override
-							public void handleEvent(Event event) {
-								setUrl(MessageFormat.format(userUrlPattern, data.name));
-							}
-						});
-						toolitem.setToolTipText(data.name + ": " + usageStatData.count);
-
-						String imageUrl = data.imageUrl;
-						if (imageUrl != null) {
-							Image image = imageRegistry.get(imageUrl);
-							if (image == null) {
-								String fullUrl = Strings.addDefaultPrefix( "http://", imageUrl);
-								ImageDescriptor createFromURL = ImageDescriptor.createFromURL(new URL(fullUrl));
-								int height = createFromURL.getImageData().height;
-								int width = createFromURL.getImageData().width;
-								int scaledWidth = 16 * width / height;
-								ImageData scaled = createFromURL.getImageData().scaledTo(scaledWidth, 16);
-								image = new Image(getComposite().getDisplay(), scaled);
-								imageRegistry.put(imageUrl, image);
-							}
-							System.out.println("Setting image: " + image);
-							toolitem.setImage(image);
+			for (int i = 0; i < friendsUsage.size(); i++) {
+				final FriendData data = friendsUsage.key(i);
+				UsageStatData usageStatData = friendsUsage.get(data);
+				if (usageStatData.count != 0) {
+					ToolItem toolitem = new ToolItem(friendsToolBar, SWT.NULL);
+					toolitem.addListener(SWT.Selection, new Listener() {
+						@Override
+						public void handleEvent(Event event) {
+							setUrl(MessageFormat.format(userUrlPattern, data.name));
 						}
+					});
+					toolitem.setToolTipText(data.name + ": " + usageStatData.count);
+
+					String imageUrl = data.imageUrl;
+					if (imageUrl != null) {
+						Image image = imageRegistry.get(imageUrl);
+						if (image == null) {
+							String fullUrl = Strings.addDefaultPrefix("http://", imageUrl);
+							ImageDescriptor createFromURL = ImageDescriptor.createFromURL(new URL(fullUrl));
+							int height = createFromURL.getImageData().height;
+							int width = createFromURL.getImageData().width;
+							int scaledWidth = 16 * width / height;
+							ImageData scaled = createFromURL.getImageData().scaledTo(scaledWidth, 16);
+							image = new Image(getComposite().getDisplay(), scaled);
+							imageRegistry.put(imageUrl, image);
+						}
+						System.out.println("Setting image: " + image);
+						toolitem.setImage(image);
 					}
 				}
+			}
 			for (Control control : friendsToolBar.getChildren()) {
 				if (control instanceof Label) {
 					Image image = ((Label) control).getImage();

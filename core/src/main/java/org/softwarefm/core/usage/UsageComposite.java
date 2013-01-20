@@ -75,7 +75,9 @@ public class UsageComposite extends AbstractMigComposite {
 		getComposite().getDisplay().syncExec(new Runnable() {
 			public void run() {
 				list.removeAll();
-				ArrayList<String> paths = new ArrayList<String>(stats.keys());
+				ArrayList<String> paths = new ArrayList<String>();
+				for (int i = 0; i<stats.size(); i++)
+					paths.add(stats.key(i));
 				Collections.sort(paths);
 				for (String path : paths)
 					list.add(path + " " + stats.get(path).count);

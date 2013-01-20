@@ -220,7 +220,7 @@ public class SocialManagerTest extends TestCase {
 		replay();
 		socialManager.setUsageData(null, UsageTestData.statsa1b3);
 		assertEquals(0, socialManager.names().size());
-		assertEquals(0, socialManager.getUsageStats(null).keys().size());
+		assertEquals(0, socialManager.getUsageStats(null).size());
 	}
 
 	private void replay() {
