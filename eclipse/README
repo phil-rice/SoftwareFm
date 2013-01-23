@@ -34,3 +34,4 @@ RELEASE NOTES:
 1.9.3: Fixed bizarre issue with focus that causes selection events to be ignored until newly opened windows gained focus.
 1.9.4: Bug fix around friend images
 1.9.5: Added http:// to urls, so that they work with Safari
+1.9.6: Better exception handling: tied to the eclipse logging framework instead of popups

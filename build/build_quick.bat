@@ -3,7 +3,7 @@ set m2=c:\Users\phil\.m2\repository
 cd ../../parentPom
 call mvn -Dmaven.test.skip=true  install
 
-cd ../utilities
+cd ../softwareFmUtilities
 call mvn -Dmaven.test.skip=true  install
 
 cd ../softwarefm/build

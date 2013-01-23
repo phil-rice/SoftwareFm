@@ -86,7 +86,6 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 
 	private static Display displayForTests;
 	private final Object lock = new Object();
-	private final Object socialFilelock = new Object();
 
 	private ISelectedBindingManager<ITextSelection> selectionBindingManager;
 
@@ -123,8 +122,12 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 		new Thread() {
 			@Override
 			public void run() {
-				setName("Initialising Selection Binding Manager");
-				getSelectionBindingManager();
+				try {
+					setName("Initialising Selection Binding Manager");
+					getSelectionBindingManager();
+				} catch (Exception e) {
+					logException(e, "Initialising Selection Binding Manager");
+				}
 			}
 		}.start();
 	}
@@ -144,8 +147,13 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 
 	@Override
 	protected void initializeImageRegistry(ImageRegistry reg) {
-		super.initializeImageRegistry(reg);
-		ImageConstants.initializeImageRegistry(getDisplay(), reg);
+		try {
+			super.initializeImageRegistry(reg);
+			ImageConstants.initializeImageRegistry(getDisplay(), reg);
+		} catch (Exception e) {
+			logException(e, "initializeImageRegistry");
+			throw WrappedException.wrap(e);
+		}
 	}
 
 	public static SoftwareFmPlugin getDefault() {
@@ -162,6 +170,7 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 
 	public ICallback2<Object, String> getLogger() {
 		return new ICallback2<Object, String>() {
+			@Override
 			public void process(Object arg0, String arg1) throws Exception {
 				if (logger != null)
 					logger.process(arg0, arg1);
@@ -188,13 +197,18 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 		synchronized (lock) {
 			if (usage != null)
 				return usage;
-			System.out.println("Starting makeUsage");
+			log(Status.INFO, "Starting sendUsage Job");
 			final Usage usage = new Usage();
-			final Job job = new Job("Long Running Job") {
+			final Job job = new Job("Send Usage Job") {
 				@Override
 				protected IStatus run(IProgressMonitor monitor) {
 					try {
+						log(Status.INFO, "sendingUsage");
 						sendUsage();
+						log(Status.INFO, "sentUsage");
+						return Status.OK_STATUS;
+					} catch (Exception e) {
+						logException(e, "sendUsage");
 						return Status.OK_STATUS;
 					} finally {
 						schedule(UsageConstants.updatePeriod);
@@ -223,7 +237,15 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	public IMultipleListenerList getMultipleListenerList() {
-		return multipleListenerList == null ? multipleListenerList = IMultipleListenerList.Utils.defaultList() : multipleListenerList;
+		return multipleListenerList == null ? makeMultipleListenerList() : multipleListenerList;
+	}
+
+	private IMultipleListenerList makeMultipleListenerList() {
+		synchronized (lock) {
+			if (multipleListenerList == null)
+				multipleListenerList = IMultipleListenerList.Utils.defaultList();
+			return multipleListenerList;
+		}
 	}
 
 	public void addView(IViewPart part, SoftwareFmComposite composite) {
@@ -238,21 +260,29 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 		return Collections.unmodifiableMap(views);
 	}
 
-	@SuppressWarnings("unused")
 	private ISelectedBindingManager<ITextSelection> makeSelectionBindingManager() {
 		synchronized (lock) {
 			if (selectionBindingManager == null) {
+				log(Status.INFO, "makeSelectionBindingManager");
 				IUrlStrategy urlStrategy = getUrlStrategy();
 				IMultipleListenerList listenerList = getMultipleListenerList();
 				ISelectedBindingListenerAndAdderRemover<ITextSelection> listenerManager = new SwtThreadSelectedBindingAggregator<ITextSelection>(getDisplay(), listenerList);
 				IArtifactStrategy<ITextSelection> projectStrategy = new SoftwareFmArtifactStrategy<ITextSelection>(IHttpClient.Utils.builder(), new SoftwareFmArtifactHtmlRipper(), urlStrategy);
 				ISelectedBindingStrategy<ITextSelection, Expression> strategy = new EclipseSelectedBindingStrategy(projectStrategy);
 				ExecutorService executor = getExecutorService();
-				SelectedArtifactSelectionManager<ITextSelection, Expression> selectionBindingManager = new SelectedArtifactSelectionManager<ITextSelection, Expression>(listenerManager, strategy, executor, getArtifactDataCache(), ICallback.Utils.sysErrCallback());
+				ICallback<Throwable> sysErrCallback = new ICallback<Throwable>() {
+					@Override
+					public void process(Throwable t) throws Exception {
+						logException(t, "SelectedArtifactSelectionManager");
+					}
+				};
+				SelectedArtifactSelectionManager<ITextSelection, Expression> selectionBindingManager = new SelectedArtifactSelectionManager<ITextSelection, Expression>(listenerManager, strategy, executor, getArtifactDataCache(), sysErrCallback);
+				log(Status.INFO, "adding Listeners");
 				new WorkbenchWindowListenerManager(selectionBindingManager);
 				selectionBindingManager.addSelectedArtifactSelectionListener(new SelectedBindingAdapter() {
 					@Override
 					public void codeSelectionOccured(CodeData codeData, int selectionCount) {
+						log(Status.INFO, "codeSelectionOccured: " + codeData);
 						if (codeData != null && codeData.className != null) {
 							HostOffsetAndUrl url = getContainer().urlStrategy.classAndMethodUrl(codeData);
 							IUsage usage = getUsage();
@@ -262,6 +292,7 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 
 					@Override
 					public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+						log(Status.INFO, "artifactDetermined: " + artifactData);
 						HostOffsetAndUrl url = container.urlStrategy.versionUrl(artifactData);
 						IUsage usage = getUsage();
 						usage.selected(url.url);
@@ -280,7 +311,15 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	ExecutorService getExecutorService() {
-		return executor == null ? executor = new ThreadPoolExecutor(CommonConstants.startThreadSize, CommonConstants.maxThreadSize, CommonConstants.threadStayAliveTimeMs, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(CommonConstants.maxOutStandingJobs)) : executor;
+		return executor == null ? executor = makeExecutorService() : executor;
+	}
+
+	private ExecutorService makeExecutorService() {
+		synchronized (lock) {
+			if (executor == null)
+				executor = new ThreadPoolExecutor(CommonConstants.startThreadSize, CommonConstants.maxThreadSize, CommonConstants.threadStayAliveTimeMs, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(CommonConstants.maxOutStandingJobs));
+			return executor;
+		}
 	}
 
 	public ISocialManager getSocialManager() {
@@ -303,6 +342,7 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 		synchronized (lock) {
 			if (container != null)
 				return container;
+			log(Status.INFO, "makeContainer");
 			IResourceGetter resourceGetter = getResourceGetter();
 			IMaven maven = IMaven.Utils.makeImport();
 			IUrlStrategy urlStrategy = getUrlStrategy();
@@ -321,12 +361,11 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 			File socialFile = getSocialFile();
 			if (socialFile.exists()) {
 				try {
-					synchronized (socialFilelock) {
-						System.out.println("Loading social manager from file");
-						socialManager.populate(Files.getText(socialFile));
-					}
+					log(Status.INFO, "Loading social manager from file");
+					socialManager.populate(Files.getText(socialFile));
+					log(Status.INFO, "Loaded social manager from file");
 				} catch (Exception e) {
-					e.printStackTrace();
+					logException(e, "");
 					socialManager.clearUsageData();
 				}
 			}
@@ -341,8 +380,9 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 			socialManager.addFoundFriendsListener(new IFoundFriendsListener() {
 				@Override
 				public void foundFriends(final List<FriendData> friends) {
+					log(Status.INFO, "found friends: " + friends);
 					loadUsageFor(friends);
-
+					log(Status.INFO, "finished found friends: " + friends);
 				}
 			});
 			SoftwareFmContainer<ITextSelection> softwareFmContainer = new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState(), imageRegistry, listenerList, persistance, usageFromServer, socialManager);
@@ -350,41 +390,61 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 		}
 	}
 
+	public void log(int status, String message) {
+		getLog().log(new Status(status, PLUGIN_ID, message));
+	}
+
+	public void logException(Throwable e, String message) {
+		getLog().log(new Status(Status.ERROR, PLUGIN_ID, message, e));
+	}
+
 	private void loadUsageFor(final String name) {
 		Jobs.run("Find Usage for " + name, new Runnable() {
+			@Override
 			public void run() {
-				System.out.println("In job find Usage for " + name);
-				getContainer().usageFromServer.getStatsFor(name, new IUsageFromServerCallback() {
-					@Override
-					public void foundStats(String name, IUsageStats usageStats) {
-						socialManager.setUsageData(name, usageStats);
-					}
-				});
-				saveSocialManager();
+				try {
+					log(Status.INFO, "In job find Usage for " + name);
+					getContainer().usageFromServer.getStatsFor(name, new IUsageFromServerCallback() {
+						@Override
+						public void foundStats(String name, IUsageStats usageStats) {
+							getSocialManager().setUsageData(name, usageStats);
+						}
+					});
+					saveSocialManager();
+					log(Status.INFO, "Finished find Usage for " + name);
+				} catch (Exception e) {
+					logException(e, "loadUsageFor" + name);
+				}
 			}
 		});
 	}
 
 	private void loadUsageFor(final List<FriendData> friends) {
-		Jobs.run("Find Usage for Friends of " + socialManager.myName(), new Runnable() {
+		final String myName = getSocialManager().myName();
+		Jobs.run("Find Usage for Friends of " + myName, new Runnable() {
 			@Override
 			public void run() {
-				System.out.println("In job find Usage for friends");
-				getContainer().usageFromServer.getStatsFor(friends, new IUsageFromServerCallback() {
-					@Override
-					public void foundStats(String name, IUsageStats usageStats) {
-						socialManager.setUsageData(name, usageStats);
-					}
-				});
-				saveSocialManager();
+				try {
+					System.out.println("In job find Usage for friends");
+					getContainer().usageFromServer.getStatsFor(friends, new IUsageFromServerCallback() {
+						@Override
+						public void foundStats(String name, IUsageStats usageStats) {
+							getSocialManager().setUsageData(name, usageStats);
+						}
+					});
+					saveSocialManager();
+
+				} catch (Exception e) {
+					logException(e, "findUsageForFriendsOf" + myName + ", " + friends);
+				}
 			}
 
 		});
 	}
 
 	private void saveSocialManager() {
-		synchronized (socialFilelock) {
-			System.out.println("Saving social manager");
+		synchronized (lock) {
+			log(Status.INFO, "Saving social manager");
 			File socialFile = getSocialFile();
 			socialFile.getParentFile().mkdirs();
 			Files.setText(socialFile, getSocialManager().serialize());
@@ -434,6 +494,7 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 			executor = null;
 			if (displayForTests == null)
 				Plugins.walkSelectionServices(new ICallback<ISelectionService>() {
+					@Override
 					public void process(ISelectionService t) throws Exception {
 						t.removePostSelectionListener(selectionListener);
 					}

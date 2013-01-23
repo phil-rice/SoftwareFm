@@ -68,6 +68,7 @@ public class DebugUsageView extends ViewPart {
 						usageFromServer.getStatsFor(myFriends, callback);
 						usageFromServer.getStatsFor(socialManager.myName(), callback);
 						Swts.asyncExec(rightText, new Runnable() {
+							@Override
 							public void run() {
 								rightText.setText(socialManager.serialize());
 							}
@@ -89,7 +90,6 @@ public class DebugUsageView extends ViewPart {
 			}
 		});
 		rightText.setText(socialManager.serialize());
-
 
 		socialUsage.addSocialUsageListener(new ISocialUsageListenerWithValid() {
 			@Override
@@ -115,7 +115,8 @@ public class DebugUsageView extends ViewPart {
 			private void add(StyledText text, String url, UsageStatData myUsage, ISimpleMap<FriendData, UsageStatData> friendsUsage) {
 				text.setText(url + "\n");
 				text.append("My Usage: " + myUsage + "\n");
-				for (FriendData data : friendsUsage.keys()) {
+				for (int i = 0; i < friendsUsage.size(); i++) {
+					FriendData data = friendsUsage.key(i);
 					UsageStatData usageStatData = friendsUsage.get(data);
 					text.append(data.name + " " + usageStatData + ", ");
 				}
@@ -131,6 +132,7 @@ public class DebugUsageView extends ViewPart {
 					final int rawBytes = raw.getBytes("UTF-8").length;
 					final int zippedBytes = Strings.zip(raw).length;
 					Swts.asyncExec(leftText, new Runnable() {
+						@Override
 						public void run() {
 							leftText.setText("Raw: " + rawBytes + " Zipped: " + zippedBytes + "\n" + raw);
 							rightText.setText(socialManager.serialize());

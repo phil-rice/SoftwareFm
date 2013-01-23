@@ -37,7 +37,11 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 		this.listenerManager = listenerManager;
 		this.cache = cache;
 		this.exceptionHandler = exceptionHandler;
+		this.executor = executor;
+		if (executor == null)
+			throw new NullPointerException();
 		this.strategy = new ISelectedBindingStrategy<S, N>() {
+			@Override
 			public ArtifactData findArtifact(S selection, FileAndDigest fileAndDigest, int selectionCount) {
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
@@ -45,20 +49,21 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
 				if (fileAndDigest.digest != null)
-					if (artifactData == null){
+					if (artifactData == null) {
 						listenerManager.unknownDigest(fileAndDigest, selectionCount);
-					}
-					else
+					} else
 						listenerManager.artifactDetermined(artifactData, selectionCount);
 				return artifactData;
 			}
 
+			@Override
 			public N findNode(S selection, int selectionCount) {
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
 				return strategy.findNode(selection, selectionCount);
 			}
 
+			@Override
 			public CodeData findExpressionData(S selection, N node, int selectionCount) {
 				if (node == null || currentSelectionCount.get() > selectionCount)
 					return null;
@@ -67,6 +72,7 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 				return codeData;
 			}
 
+			@Override
 			public File findFile(S selection, N node, int selectionCount) {
 				if (node == null || currentSelectionCount.get() > selectionCount)
 					return null;
@@ -78,6 +84,7 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 				return file;
 			}
 
+			@Override
 			public FileAndDigest findDigest(S selection, N node, File file, int selectionCount) {
 				if (node == null || currentSelectionCount.get() > selectionCount)
 					return null;
@@ -89,9 +96,9 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 				return fileAndDigest;
 			}
 		};
-		this.executor = executor;
 	}
 
+	@Override
 	public Future<?> selectionOccured(S selection) {
 		this.lastSelection = selection;
 		final int thisSelectionCount = currentSelectionCount.incrementAndGet();
@@ -116,6 +123,7 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 			CachedArtifactData cachedArtifactData = cache.projectData(file);
 			if (cachedArtifactData == null)
 				return new Runnable() {
+					@Override
 					public void run() {
 						try {
 							FileAndDigest fileAndDigest = strategy.findDigest(selection, node, file, thisSelectionCount);
@@ -140,18 +148,22 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 		return Runnables.noRunnable;
 	}
 
+	@Override
 	public void addSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
 		listenerManager.addSelectedArtifactSelectionListener(listener);
 	}
 
+	@Override
 	public void removeSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
 		listenerManager.removeSelectedArtifactSelectionListener(listener);
 	}
 
+	@Override
 	public int currentSelectionId() {
 		return currentSelectionCount.get();
 	}
 
+	@Override
 	public void reselect(int selectionId) {
 		int currentSelectionId = currentSelectionId();
 		if (selectionId == currentSelectionId)
@@ -159,10 +171,12 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 
 	}
 
+	@Override
 	public void dispose() {
 		listenerManager.dispose();
 	}
 
+	@Override
 	public IListenerList<ISelectedBindingListener> getListeners() {
 		return listenerManager.getListeners();
 	}
