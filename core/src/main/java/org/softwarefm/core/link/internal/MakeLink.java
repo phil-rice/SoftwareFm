@@ -45,7 +45,6 @@ public class MakeLink implements IMakeLink {
 				throw new NullPointerException("Digest was null");
 			String template = templateStore.getTemplate(TemplateConstants.digestTemplate);
 			String entity = MessageFormat.format(template, artifactData.groupId, artifactData.artifactId, artifactData.version, artifactData.fileAndDigest.file.getName(), projectUrl.url, versionUrl.url);
-			System.out.println("Entity:\n" + entity);
 
 			HostOffsetAndUrl digestUrl = urlStrategy.digestUrl(digest);
 			set(digestUrl.url, entity);

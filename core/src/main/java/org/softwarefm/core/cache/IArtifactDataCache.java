@@ -56,6 +56,24 @@ public interface IArtifactDataCache extends IHasCache {
 				}
 			};
 		}
+
+		public static IArtifactDataCache noCache() {
+			return new IArtifactDataCache() {
+
+				public void clearCaches() {
+				}
+
+				public CachedArtifactData projectData(File file) {
+					return null;
+				}
+
+				public void addProjectData(ArtifactData artifactData) {
+				}
+
+				public void addNotFound(FileAndDigest fileAndDigest) {
+				}
+			};
+		}
 	}
 
 }

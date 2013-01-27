@@ -17,13 +17,19 @@ import org.softwarefm.utilities.collections.Files;
 
 public interface IMaven {
 
-	Model pomToModel(String pomUrl) throws Exception;
+	Model pomToModel(String pomUrl) ;
 
-	File downloadJar(Model model) throws Exception;
+	File downloadJar(Model model) ;
 
 	URL jarUrl(Model model) throws MalformedURLException;
 
 	File jarFile(Model model);
+
+	String groupId(Model model);
+
+	String artifactId(Model model);
+
+	String version(Model model);
 
 	public static class Utils {
 		public static IMaven makeImport() {
@@ -84,7 +90,7 @@ public interface IMaven {
 					FileAndDigest fileAndDigest = new FileAndDigest(jarFile, Files.digestAsHexString(jarFile));
 					makeLink.makeDigestLink(new ArtifactData(fileAndDigest, IMaven.Utils.getGroupId(model), IMaven.Utils.getArtifactId(model), IMaven.Utils.getVersion(model)));
 					manager.reselect(thisSelectionId);
-					
+
 				}
 			};
 		}

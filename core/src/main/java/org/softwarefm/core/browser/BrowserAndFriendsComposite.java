@@ -137,7 +137,7 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 			if (event.location.contains(sitemarker)) {
 				socialManager.setMyName(myName());
 				String newName = myName();
-				if (!Strings.safeEquals(newName, socialManager.myName()))
+				if (newName != null && !Strings.safeEquals(newName, socialManager.myName()))
 					socialManager.setFriendsData(Collections.<FriendData> emptyList());
 				if (socialManager.myName() != null && event.location.endsWith("/wiki/User:" + socialManager.myName())) {
 					String html = browser.getText();
@@ -156,6 +156,7 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 					}
 				}
 				if (event.location.contains("Special:UserLogout")) {
+					socialManager.clearMyName();
 					socialManager.setFriendsData(Collections.<FriendData> emptyList());
 				}
 			}

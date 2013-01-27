@@ -29,6 +29,8 @@ public interface ISocialManager extends ISocial {
 
 	void populate(String serializedForm);
 
+	void clearMyName();
+
 	public static class Utils {
 
 		public static ISocialManager socialManager(IMultipleListenerList listenerList, IUsagePersistance persistance) {

@@ -35,6 +35,34 @@ public class SocialManagerTest extends TestCase {
 		assertEquals(Collections.emptyList(), socialManager.myFriends());
 	}
 
+	public void testSettingNameAsNullFails() {
+		addListeners();
+		foundNameListener1.foundName("someName");
+		foundNameListener2.foundName("someName");
+		foundNameListener1.foundName("someName1");
+		foundNameListener2.foundName("someName1");
+		replay();
+
+		socialManager.setMyName("someName");
+		socialManager.setMyName(null);
+		assertEquals("someName", socialManager.myName());
+		socialManager.setMyName("someName1");
+		assertEquals("someName1", socialManager.myName());
+	}
+
+	public void testClearingName() {
+		addListeners();
+		foundNameListener1.foundName("someName");
+		foundNameListener2.foundName("someName");
+		foundNameListener1.foundName(null);
+		foundNameListener2.foundName(null);
+		replay();
+
+		socialManager.setMyName("someName");
+		socialManager.clearMyName();
+		assertEquals(null, socialManager.myName());
+	}
+
 	public void testSettingNameFiresListeners() {
 		addListeners();
 		foundNameListener1.foundName("someName");

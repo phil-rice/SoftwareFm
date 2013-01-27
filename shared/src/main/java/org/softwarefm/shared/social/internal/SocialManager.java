@@ -50,8 +50,12 @@ public class SocialManager implements ISocialManager {
 
 	@Override
 	public void setMyName(final String name) {
-		if (Strings.safeEquals(name, this.name))
+		if (name == null || Strings.safeEquals(name, this.name))
 			return;
+		setMyNameInternal(name);
+	}
+
+	private void setMyNameInternal(final String name) {
 		this.name = name;
 		listenerList.fire(this, IFoundNameListener.class, new ICallback<IFoundNameListener>() {
 			@Override
@@ -59,6 +63,11 @@ public class SocialManager implements ISocialManager {
 				t.foundName(name);
 			}
 		});
+	}
+
+	@Override
+	public void clearMyName() {
+		setMyNameInternal(null);
 	}
 
 	@Override

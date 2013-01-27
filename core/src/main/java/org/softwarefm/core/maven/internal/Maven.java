@@ -13,6 +13,7 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.softwarefm.core.maven.IMaven;
 import org.softwarefm.utilities.collections.Files;
+import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.strings.Strings;
 
 public class Maven implements IMaven {
@@ -35,15 +36,19 @@ public class Maven implements IMaven {
 			return new File(m2HomeProperty);
 	}
 
-	public Model pomToModel(String pomUrl) throws Exception {
-		String realPomUrl = getRealPomUrl(pomUrl);
-		URL url = new URL(realPomUrl);
-		InputStream stream = url.openStream();
+	public Model pomToModel(String pomUrl)  {
 		try {
-			Model model = new MavenXpp3Reader().read(stream);
-			return model;
-		} finally {
-			stream.close();
+			String realPomUrl = getRealPomUrl(pomUrl);
+			URL url = new URL(realPomUrl);
+			InputStream stream = url.openStream();
+			try {
+				Model model = new MavenXpp3Reader().read(stream);
+				return model;
+			} finally {
+				stream.close();
+			}
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
 		}
 	}
 
@@ -53,7 +58,7 @@ public class Maven implements IMaven {
 		List<String> segments = Strings.splitIgnoreBlanks(pomUrl, "/");
 		if (segments.size() != 6)
 			return pomUrl;
-//		String protocol = segments.get(0);
+		// String protocol = segments.get(0);
 		String base = segments.get(1);
 		if (!base.equals("mvnrepository.com"))
 			return pomUrl;
@@ -66,11 +71,15 @@ public class Maven implements IMaven {
 		return IMaven.Utils.makePomUrlForMvnRepository(groupId, artifactId, version);
 	}
 
-	public URL jarUrl(Model model) throws MalformedURLException {
+	public URL jarUrl(Model model)  {
 		try {
 			return getJarUrl(model, true);
 		} catch (Exception e) {
-			return getJarUrl(model, false);
+			try {
+				return getJarUrl(model, false);
+			} catch (MalformedURLException e1) {
+				throw WrappedException.wrap(e1);
+			}
 		}
 	}
 
@@ -103,13 +112,36 @@ public class Maven implements IMaven {
 		return result;
 	}
 
-	public File downloadJar(Model model) throws Exception {
+	public File downloadJar(Model model)  {
 		URL url = jarUrl(model);
 		File file = jarFile(model);
 		Files.downLoadFile(url, file);
 		return file;
 	}
 
+	@Override
+	public String artifactId(Model model) {
+		return model.getArtifactId();
+	}
+
+	@Override
+	public String groupId(Model model) {
+		String raw = model.getGroupId();
+		if (raw == null)
+			return model.getParent().getGroupId();
+		else
+			return raw;
+	}
+
+	@Override
+	public String version(Model model) {
+		String raw = model.getVersion();
+		if (raw == null)
+			return model.getParent().getVersion();
+		else
+			return raw;
+	}
+	
 	public static void main(String[] args) throws Exception {
 		String pomUrl = "http://repo1.maven.org/maven2/org/apache/maven/maven-model-v3/2.0/maven-model-v3-2.0.pom";
 		Maven maven = new Maven();
