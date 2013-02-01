@@ -14,27 +14,24 @@ import org.softwarefm.core.cache.IArtifactDataCache;
 import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.FileAndDigest;
-import org.softwarefm.core.selection.ISelectedBindingListener;
-import org.softwarefm.core.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.core.selection.ISelectedBindingManager;
 import org.softwarefm.core.selection.ISelectedBindingStrategy;
 import org.softwarefm.utilities.callbacks.ICallback;
-import org.softwarefm.utilities.events.IListenerList;
+import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.future.Futures;
 import org.softwarefm.utilities.runnable.Runnables;
 
 /** I have tried to keep this eclipse agnostic. */
-public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingManager<S> {
+public class SelectedArtifactSelectionManager<S, N> extends SelectedBindingListenerAndAdderRemover<S> implements ISelectedBindingManager<S> {
 	private final AtomicInteger currentSelectionCount = new AtomicInteger();
 	private ISelectedBindingStrategy<S, N> strategy;
 	private final ExecutorService executor;
 	private final ICallback<Throwable> exceptionHandler;
 	private final IArtifactDataCache cache;
 	private S lastSelection;
-	private ISelectedBindingListenerAndAdderRemover<S> listenerManager;
 
-	public SelectedArtifactSelectionManager(final ISelectedBindingListenerAndAdderRemover<S> listenerManager, final ISelectedBindingStrategy<S, N> strategy, ExecutorService executor, IArtifactDataCache cache, ICallback<Throwable> exceptionHandler) {
-		this.listenerManager = listenerManager;
+	public SelectedArtifactSelectionManager(final IMultipleListenerList listenerList, final ISelectedBindingStrategy<S, N> strategy, ExecutorService executor, IArtifactDataCache cache, ICallback<Throwable> exceptionHandler) {
+		super(listenerList);
 		this.cache = cache;
 		this.exceptionHandler = exceptionHandler;
 		this.executor = executor;
@@ -45,15 +42,15 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 			public ArtifactData findArtifact(S selection, FileAndDigest fileAndDigest, int selectionCount) {
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
-				
+
 				ArtifactData artifactData = strategy.findArtifact(selection, fileAndDigest, selectionCount);
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
 				if (fileAndDigest.digest != null)
 					if (artifactData == null) {
-						listenerManager.unknownDigest(selectionCount, fileAndDigest);
+						unknownDigest(selectionCount, fileAndDigest);
 					} else
-						listenerManager.artifactDetermined(selectionCount, artifactData);
+						artifactDetermined(selectionCount, artifactData);
 				return artifactData;
 			}
 
@@ -69,7 +66,7 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 				if (node == null || currentSelectionCount.get() > selectionCount)
 					return null;
 				CodeData codeData = strategy.findExpressionData(selection, node, selectionCount);
-				listenerManager.codeSelectionOccured(selectionCount, codeData);
+				codeSelectionOccured(selectionCount, codeData);
 				return codeData;
 			}
 
@@ -81,7 +78,7 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 				if (currentSelectionCount.get() > selectionCount)
 					return null;
 				if (file == null)
-					listenerManager.notJavaElement(selectionCount);
+					notJavaElement(selectionCount);
 				return file;
 			}
 
@@ -91,9 +88,9 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 					return null;
 				FileAndDigest fileAndDigest = strategy.findDigest(selection, node, file, selectionCount);
 				if (fileAndDigest == null)
-					listenerManager.notInAJar(selectionCount, file);
+					notInAJar(selectionCount, file);
 				else
-					listenerManager.digestDetermined(selectionCount, fileAndDigest);
+					digestDetermined(selectionCount, fileAndDigest);
 				return fileAndDigest;
 			}
 		};
@@ -108,7 +105,7 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 
 	private Future<?> selectionRaw(S selection, final int thisSelectionCount) {
 		if (selection == null) {
-			listenerManager.notJavaElement(thisSelectionCount);
+			notJavaElement(thisSelectionCount);
 			return Futures.doneFuture(null);
 		} else {
 			final N node = strategy.findNode(selection, thisSelectionCount);
@@ -142,21 +139,11 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 					}
 				};
 			if (cachedArtifactData.found())
-				listenerManager.artifactDetermined(thisSelectionCount, cachedArtifactData.artifactData);
+				artifactDetermined(thisSelectionCount, cachedArtifactData.artifactData);
 			else
-				listenerManager.unknownDigest(thisSelectionCount, cachedArtifactData.fileAndDigest);
+				unknownDigest(thisSelectionCount, cachedArtifactData.fileAndDigest);
 		}
 		return Runnables.noRunnable;
-	}
-
-	@Override
-	public void addSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
-		listenerManager.addSelectedArtifactSelectionListener(listener);
-	}
-
-	@Override
-	public void removeSelectedArtifactSelectionListener(ISelectedBindingListener listener) {
-		listenerManager.removeSelectedArtifactSelectionListener(listener);
 	}
 
 	@Override
@@ -170,16 +157,6 @@ public class SelectedArtifactSelectionManager<S, N> implements ISelectedBindingM
 		if (selectionId == currentSelectionId)
 			selectionRaw(lastSelection, selectionId);
 
-	}
-
-	@Override
-	public void dispose() {
-		listenerManager.dispose();
-	}
-
-	@Override
-	public IListenerList<ISelectedBindingListener> getListeners() {
-		return listenerManager.getListeners();
 	}
 
 }

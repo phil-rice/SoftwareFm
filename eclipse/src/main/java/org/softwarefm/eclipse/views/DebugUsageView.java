@@ -126,7 +126,7 @@ public class DebugUsageView extends ViewPart {
 
 		container.selectedBindingManager.addSelectedArtifactSelectionListener(new SelectedBindingAdapter() {
 			@Override
-			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
+			public void codeSelectionOccured(int selectionCount, CodeData codeData ) {
 				try {
 					final String raw = persistance.saveUsageStats(usage.getStats());
 					final int rawBytes = raw.getBytes("UTF-8").length;

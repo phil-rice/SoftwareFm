@@ -7,8 +7,9 @@ import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.usage.UsageStatData;
+import org.softwarefm.utilities.events.IValid;
 
-abstract public class SelectedBindingAdapter implements ISelectedBindingListener {
+abstract public class SelectedBindingAdapter implements ISelectedBindingListener, IValid {
 
 	public void codeSelectionOccured(int selectionCount, CodeData codeData) {
 	}

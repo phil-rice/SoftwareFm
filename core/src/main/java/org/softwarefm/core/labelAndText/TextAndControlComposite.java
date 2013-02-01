@@ -73,9 +73,6 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 				layout();
 			}
 
-			public boolean isValid() {
-				return !getComposite().isDisposed();
-			}
 
 			@Override
 			public String toString() {

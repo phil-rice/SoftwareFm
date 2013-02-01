@@ -8,19 +8,19 @@ public class LinkCompositeTest extends AbstractSoftwareFmCompositeTest<LinkCompo
 
 	public void testMessages() {
 		assertEquals("", panel.getText());// initial
-		listenerManager.codeSelectionOccured(0, classExpressionData);
+		selectedArtifactSelectionManager.codeSelectionOccured(0, classExpressionData);
 		dispatchUntilQueueEmpty();
 		assertEquals("Searching...", panel.getText());
 
-		listenerManager.digestDetermined(0, fileAndDigest);
+		selectedArtifactSelectionManager.digestDetermined(0, fileAndDigest);
 		dispatchUntilQueueEmpty();
 		assertEquals("Searching...", panel.getText());
 
-		listenerManager.artifactDetermined(0, artifactData);
+		selectedArtifactSelectionManager.artifactDetermined(0, artifactData);
 		dispatchUntilQueueEmpty();
 		assertEquals("File: " + fileAndDigest.file + "\nDigest " + fileAndDigest.digest + "\nIf you think that the jar has been linked to the wrong project, you can edit it below", panel.getText());
 
-		listenerManager.unknownDigest(0, fileAndDigest);
+		selectedArtifactSelectionManager.unknownDigest(0, fileAndDigest);
 		dispatchUntilQueueEmpty();
 		assertEquals("File: " + fileAndDigest.file + "\nDigest: " + fileAndDigest.digest + "\n" + //
 				"This has not been added to SoftwareFm\n" + //
@@ -31,32 +31,32 @@ public class LinkCompositeTest extends AbstractSoftwareFmCompositeTest<LinkCompo
 	public void testEventsChangeSelectedTab() {
 		checkDoesntChangeTab(new Runnable() {
 			public void run() {
-				listenerManager.codeSelectionOccured(0, classExpressionData);
+				selectedArtifactSelectionManager.codeSelectionOccured(0, classExpressionData);
 			}
 		});
 		checkDoesntChangeTab(new Runnable() {
 			public void run() {
-				listenerManager.notInAJar(0, file);
+				selectedArtifactSelectionManager.notInAJar(0, file);
 			}
 		});
 		checkDoesntChangeTab(new Runnable() {
 			public void run() {
-				listenerManager.notJavaElement( 0);
+				selectedArtifactSelectionManager.notJavaElement( 0);
 			}
 		});
 		checkDoesntChangeTab(new Runnable() {
 			public void run() {
-				listenerManager.digestDetermined(0,  fileAndDigest);
+				selectedArtifactSelectionManager.digestDetermined(0,  fileAndDigest);
 			}
 		});
 		checkChangesTabTo(panel.manualImportTabItem, new Runnable() {
 			public void run() {
-				listenerManager.artifactDetermined(0,  artifactData);
+				selectedArtifactSelectionManager.artifactDetermined(0,  artifactData);
 			}
 		});
 		checkChangesTabTo(panel.mavenImportTabItem, new Runnable() {
 			public void run() {
-				listenerManager.unknownDigest(0, fileAndDigest);
+				selectedArtifactSelectionManager.unknownDigest(0, fileAndDigest);
 			}
 		});
 	}

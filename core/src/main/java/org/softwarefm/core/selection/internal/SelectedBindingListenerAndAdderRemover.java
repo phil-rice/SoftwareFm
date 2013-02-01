@@ -1,17 +1,20 @@
-package org.softwarefm.core.selection;
+package org.softwarefm.core.selection.internal;
 
 import java.io.File;
 import java.util.Map;
 
 import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
+import org.softwarefm.core.selection.FileAndDigest;
+import org.softwarefm.core.selection.ISelectedBindingListener;
+import org.softwarefm.core.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.events.IListenerList;
 import org.softwarefm.utilities.events.IMultipleListenerList;
 
-public class SelectedBindingListenerAndAdderRemover<S> implements ISelectedBindingListenerAndAdderRemover<S> {
+ class SelectedBindingListenerAndAdderRemover<S> implements ISelectedBindingListenerAndAdderRemover<S> {
 
 	private final IListenerList<ISelectedBindingListener> list;
 
@@ -139,10 +142,7 @@ public class SelectedBindingListenerAndAdderRemover<S> implements ISelectedBindi
 		});
 	}
 
-	@Override
-	public boolean isValid() {
-		return true;
-	}
+
 
 	@Override
 	public void addSelectedArtifactSelectionListener(ISelectedBindingListener listener) {

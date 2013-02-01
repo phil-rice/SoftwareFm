@@ -18,8 +18,8 @@ import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.FileAndDigest;
-import org.softwarefm.core.selection.ISelectedBindingListener;
 import org.softwarefm.core.selection.ISelectedBindingManager;
+import org.softwarefm.core.selection.SelectedBindingAdapter;
 import org.softwarefm.shared.social.FriendData;
 import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.callbacks.ICallback2;
@@ -67,28 +67,34 @@ public class DebugTextComposite extends SoftwareFmComposite {
 		listenersText.addFocusListener(listener);
 		viewsText.addFocusListener(listener);
 
-		addSelectedBindingListener(new ISelectedBindingListener() {
+		addSelectedBindingListener(new SelectedBindingAdapter() {
+			@Override
 			public void notJavaElement(int selectionCount) {
 				listenerText.append("notJavaElement: (" + selectionCount + ")\n");
 			}
 
+			@Override
 			public void artifactDetermined(int selectionCount, ArtifactData artifactData) {
 				listenerText.append("projectDetermined: (" + selectionCount + ")\n" + artifactData + "\nUrl: " + container.urlStrategy.projectUrl(artifactData) + "\n");
 			}
 
+			@Override
 			public void notInAJar(int selectionCount, File file) {
 				listenerText.append("Not In A Jar: (" + selectionCount + ") file is: " + file + "\n");
 			}
 
+			@Override
 			public void digestDetermined(int selectionCount, FileAndDigest fileAndDigest) {
 				listenerText.append("Digest: (" + selectionCount + ") " + fileAndDigest + "\nUrl: " + container.urlStrategy.digestUrl(fileAndDigest.digest) + "\n");
 			}
 
+			@Override
 			public void codeSelectionOccured(int selectionCount, CodeData codeData) {
 				updateListenersAndViews();
 				listenerText.setText("Class and method: (" + selectionCount + ")\n" + codeData + "\nUrl: " + container.urlStrategy.classAndMethodUrl(codeData) + "\n");
 			}
 
+			@Override
 			public void unknownDigest(int selectionCount, FileAndDigest fileAndDigest) {
 				listenerText.append("Unknown Digest: (" + selectionCount + ") " + fileAndDigest + "\n");
 			}

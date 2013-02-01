@@ -35,14 +35,14 @@ import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.link.IMakeLink;
 import org.softwarefm.core.maven.IMaven;
 import org.softwarefm.core.selection.IArtifactStrategy;
-import org.softwarefm.core.selection.ISelectedBindingListenerAndAdderRemover;
+import org.softwarefm.core.selection.ISelectedBindingListener;
 import org.softwarefm.core.selection.ISelectedBindingManager;
 import org.softwarefm.core.selection.ISelectedBindingStrategy;
 import org.softwarefm.core.selection.SelectedBindingAdapter;
 import org.softwarefm.core.selection.internal.SelectedArtifactSelectionManager;
 import org.softwarefm.core.selection.internal.SoftwareFmArtifactHtmlRipper;
 import org.softwarefm.core.selection.internal.SoftwareFmArtifactStrategy;
-import org.softwarefm.core.selection.internal.SwtThreadSelectedBindingAggregator;
+import org.softwarefm.core.selection.internal.SwtThreadExecutor;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.HostOffsetAndUrl;
 import org.softwarefm.core.url.IUrlStrategy;
@@ -129,6 +129,12 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 					logException(e, "Initialising Selection Binding Manager");
 				}
 			}
+
+			@Override
+			public String toString() {
+				return "[Thread: " + getName() + "]";
+			}
+
 		}.start();
 	}
 
@@ -175,6 +181,11 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 				if (logger != null)
 					logger.process(arg0, arg1);
 			}
+
+			@Override
+			public String toString() {
+				return "[SoftwareFmPlugin$Logger]";
+			}
 		};
 	}
 
@@ -213,6 +224,11 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 					} finally {
 						schedule(UsageConstants.updatePeriod);
 					}
+				}
+
+				@Override
+				public String toString() {
+					return "[Job " + getName() + "]";
 				}
 			};
 			job.setSystem(true);
@@ -266,7 +282,10 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 				log(Status.INFO, "makeSelectionBindingManager");
 				IUrlStrategy urlStrategy = getUrlStrategy();
 				IMultipleListenerList listenerList = getMultipleListenerList();
-				ISelectedBindingListenerAndAdderRemover<ITextSelection> listenerManager = new SwtThreadSelectedBindingAggregator<ITextSelection>(getDisplay(), listenerList);
+
+				listenerList.registerExecutor(ISelectedBindingListener.class, new SwtThreadExecutor(getDisplay()));
+				listenerList.addGlobalListener(IMultipleListenerList.Utils.sysoutProfiler());
+
 				IArtifactStrategy<ITextSelection> projectStrategy = new SoftwareFmArtifactStrategy<ITextSelection>(IHttpClient.Utils.builder(), new SoftwareFmArtifactHtmlRipper(), urlStrategy);
 				ISelectedBindingStrategy<ITextSelection, Expression> strategy = new EclipseSelectedBindingStrategy(projectStrategy);
 				ExecutorService executor = getExecutorService();
@@ -275,13 +294,18 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 					public void process(Throwable t) throws Exception {
 						logException(t, "SelectedArtifactSelectionManager");
 					}
+
+					@Override
+					public String toString() {
+						return "LoggingExceptionCallback";
+					}
 				};
-				SelectedArtifactSelectionManager<ITextSelection, Expression> selectionBindingManager = new SelectedArtifactSelectionManager<ITextSelection, Expression>(listenerManager, strategy, executor, getArtifactDataCache(), sysErrCallback);
+				SelectedArtifactSelectionManager<ITextSelection, Expression> selectionBindingManager = new SelectedArtifactSelectionManager<ITextSelection, Expression>(listenerList, strategy, executor, getArtifactDataCache(), sysErrCallback);
 				log(Status.INFO, "adding Listeners");
 				new WorkbenchWindowListenerManager(selectionBindingManager);
 				selectionBindingManager.addSelectedArtifactSelectionListener(new SelectedBindingAdapter() {
 					@Override
-					public void codeSelectionOccured(CodeData codeData, int selectionCount) {
+					public void codeSelectionOccured(int selectionCount, CodeData codeData) {
 						log(Status.INFO, "codeSelectionOccured: " + codeData);
 						if (codeData != null && codeData.className != null) {
 							HostOffsetAndUrl url = getContainer().urlStrategy.classAndMethodUrl(codeData);
@@ -291,7 +315,7 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 					}
 
 					@Override
-					public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+					public void artifactDetermined(int selectionCount, ArtifactData artifactData) {
 						log(Status.INFO, "artifactDetermined: " + artifactData);
 						HostOffsetAndUrl url = container.urlStrategy.versionUrl(artifactData);
 						IUsage usage = getUsage();
@@ -301,6 +325,11 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 					@Override
 					public boolean isValid() {
 						return true;
+					}
+
+					@Override
+					public String toString() {
+						return "SelectedBindingListenerThatUpdatesUsage";
 					}
 				});
 				return selectionBindingManager;
@@ -376,6 +405,10 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 					loadUsageFor(name);
 				}
 
+				@Override
+				public String toString() {
+					return "[FoundNameListener that loadsUsageFor(String name)]";
+				}
 			});
 			socialManager.addFoundFriendsListener(new IFoundFriendsListener() {
 				@Override
@@ -383,6 +416,11 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 					log(Status.INFO, "found friends: " + friends);
 					loadUsageFor(friends);
 					log(Status.INFO, "finished found friends: " + friends);
+				}
+
+				@Override
+				public String toString() {
+					return "[FoundNameListener that loadsUsageFor(List<FriendData> friends)]";
 				}
 			});
 			SoftwareFmContainer<ITextSelection> softwareFmContainer = new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState(), imageRegistry, listenerList, persistance, usageFromServer, socialManager);
@@ -399,7 +437,8 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 	}
 
 	private void loadUsageFor(final String name) {
-		Jobs.run("Find Usage for " + name, new Runnable() {
+		final String jobName = "Find Usage for " + name;
+		Jobs.run(jobName, new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -416,12 +455,18 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 					logException(e, "loadUsageFor" + name);
 				}
 			}
+
+			@Override
+			public String toString() {
+				return "[Job " + jobName + "]";
+			}
 		});
 	}
 
 	private void loadUsageFor(final List<FriendData> friends) {
 		final String myName = getSocialManager().myName();
-		Jobs.run("Find Usage for Friends of " + myName, new Runnable() {
+		final String jobName = "Find Usage for Friends of " + myName;
+		Jobs.run(jobName, new Runnable() {
 			@Override
 			public void run() {
 				try {
@@ -439,6 +484,10 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 				}
 			}
 
+			@Override
+			public String toString() {
+				return "[Job " + jobName+"]";
+			}
 		});
 	}
 

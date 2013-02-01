@@ -45,13 +45,13 @@ public class CodeCompositeTest extends AbstractSoftwareFmCompositeTest<CodeCompo
 	}
 
 	public void testAddListenerDelegatesToManager() {
-		assertEquals(2, listenerManager.getListeners().size());
+		assertEquals(2, selectedArtifactSelectionManager.getListeners().size());
 		ISelectedBindingListener listener = EasyMock.createMock(ISelectedBindingListener.class);
 		EasyMock.replay(listener);
 
 		panel.addSelectedBindingListener(listener);
-		assertEquals(3, listenerManager.getListeners().size());
-		assertTrue(listenerManager.getListeners().contains(listener));
+		assertEquals(3, selectedArtifactSelectionManager.getListeners().size());
+		assertTrue(selectedArtifactSelectionManager.getListeners().contains(listener));
 		EasyMock.verify(listener);
 	}
 

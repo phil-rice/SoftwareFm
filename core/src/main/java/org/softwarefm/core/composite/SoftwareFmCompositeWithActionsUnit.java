@@ -18,10 +18,8 @@ import org.softwarefm.core.actions.internal.SfmActionBarConfigurator;
 import org.softwarefm.core.cache.IArtifactDataCache;
 import org.softwarefm.core.link.IMakeLink;
 import org.softwarefm.core.maven.IMaven;
-import org.softwarefm.core.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.core.selection.ISelectedBindingManager;
 import org.softwarefm.core.selection.ISelectedBindingStrategy;
-import org.softwarefm.core.selection.SelectedBindingListenerAndAdderRemover;
 import org.softwarefm.core.selection.internal.SelectedArtifactSelectionManager;
 import org.softwarefm.core.swt.HasComposite;
 import org.softwarefm.core.swt.ISituationListAndBuilder;
@@ -57,9 +55,8 @@ public class SoftwareFmCompositeWithActionsUnit extends HasComposite {
 					IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
 					ISocialManager socialManager = ISocialManager.Utils.socialManager(listenerList, persistance);
 					
-					ISelectedBindingListenerAndAdderRemover<Map<String, Object>> listenerManager = new SelectedBindingListenerAndAdderRemover<Map<String,Object>>(listenerList);
 					SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>> manager = new SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>>(//
-							listenerManager, //
+							listenerList, //
 							ISelectedBindingStrategy.Utils.fromMap(), //
 							threadingPool, //
 							artifactDataCache, //

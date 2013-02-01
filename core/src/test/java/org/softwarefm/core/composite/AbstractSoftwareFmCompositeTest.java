@@ -13,9 +13,7 @@ import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.selection.ISelectedBindingListener;
-import org.softwarefm.core.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.core.selection.ISelectedBindingStrategy;
-import org.softwarefm.core.selection.SelectedBindingListenerAndAdderRemover;
 import org.softwarefm.core.selection.internal.SelectedArtifactSelectionManager;
 import org.softwarefm.core.selection.internal.SwtThreadExecutor;
 import org.softwarefm.core.templates.ITemplateStore;
@@ -39,7 +37,6 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 
 	protected ISelectedBindingStrategy<String, String> strategy;
 	protected SelectedArtifactSelectionManager<String, String> selectedArtifactSelectionManager;
-	protected ISelectedBindingListenerAndAdderRemover<String> listenerManager;
 
 	private MemoryCallback<Throwable> rememberedExceptions;
 
@@ -63,7 +60,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 
 	public void testDisposeRemovesSelfAsListener() {
 		panel.dispose();
-		assertEquals(listenerManager.getListeners().toString(), initialListeners, listenerManager.getListeners().size());
+		assertEquals(selectedArtifactSelectionManager.getListeners().toString(), initialListeners, selectedArtifactSelectionManager.getListeners().size());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -73,12 +70,11 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
 		listenerList.registerExecutor(ISelectedBindingListener.class, new SwtThreadExecutor(display));
 		
-		listenerManager = new SelectedBindingListenerAndAdderRemover<String>(listenerList);
 		strategy = EasyMock.createMock(ISelectedBindingStrategy.class);
 		EasyMock.makeThreadSafe(strategy, true);
 		rememberedExceptions = ICallback.Utils.<Throwable> memory();
 		socialManager = ISocialManager.Utils.socialManager(listenerList, IUsagePersistance.Utils.persistance());
-		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerManager, strategy, getExecutor(), IArtifactDataCache.Utils.artifactDataCache(), rememberedExceptions);
+		selectedArtifactSelectionManager = new SelectedArtifactSelectionManager<String, String>(listenerList, strategy, getExecutor(), IArtifactDataCache.Utils.artifactDataCache(), rememberedExceptions);
 		IUrlStrategy urlStrategy = IUrlStrategy.Utils.urlStrategy();
 
 		ImageRegistry imageRegistry = new ImageRegistry(display);
@@ -93,10 +89,10 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 				IArtifactDataCache.Utils.artifactDataCache(),//
 				new SfmActionState(),//
 				imageRegistry, usageFromServer);
-		initialListeners = listenerManager.getListeners().size();
+		initialListeners = selectedArtifactSelectionManager.getListeners().size();
 		assertEquals(1, initialListeners);
 		panel = makePanel(shell, container);
-		initialPanelListeners = listenerManager.getListeners().size();
+		initialPanelListeners = selectedArtifactSelectionManager.getListeners().size();
 	}
 
 	@Override
