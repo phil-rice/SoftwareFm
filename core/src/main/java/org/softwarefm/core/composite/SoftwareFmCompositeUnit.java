@@ -13,7 +13,6 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.softwarefm.core.SoftwareFmContainer;
@@ -23,10 +22,11 @@ import org.softwarefm.core.constants.ImageConstants;
 import org.softwarefm.core.link.IMakeLink;
 import org.softwarefm.core.maven.IMaven;
 import org.softwarefm.core.selection.IHasSelectionBindingManager;
+import org.softwarefm.core.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.core.selection.ISelectedBindingManager;
 import org.softwarefm.core.selection.ISelectedBindingStrategy;
+import org.softwarefm.core.selection.SelectedBindingListenerAndAdderRemover;
 import org.softwarefm.core.selection.internal.SelectedArtifactSelectionManager;
-import org.softwarefm.core.selection.internal.SwtThreadSelectedBindingAggregator;
 import org.softwarefm.core.swt.HasComposite;
 import org.softwarefm.core.swt.ISituationListAndBuilder;
 import org.softwarefm.core.swt.Swts;
@@ -143,7 +143,7 @@ public class SoftwareFmCompositeUnit {
 
 	public static SoftwareFmContainer<Map<String, Object>> makeContainer(final ExecutorService threadingPool, Display display) {
 		IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
-		final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay(), listenerList);
+		ISelectedBindingListenerAndAdderRemover<Map<String, Object>> listenerManager = new SelectedBindingListenerAndAdderRemover(listenerList);
 		IArtifactDataCache artifactDataCache = IArtifactDataCache.Utils.artifactDataCache();
 		IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
 		ISocialManager socialManager = ISocialManager.Utils.socialManager(listenerList, persistance);

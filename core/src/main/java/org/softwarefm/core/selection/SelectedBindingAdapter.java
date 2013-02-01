@@ -10,19 +10,19 @@ import org.softwarefm.shared.usage.UsageStatData;
 
 abstract public class SelectedBindingAdapter implements ISelectedBindingListener {
 
-	public void codeSelectionOccured(CodeData codeData, int selectionCount) {
+	public void codeSelectionOccured(int selectionCount, CodeData codeData) {
 	}
 
-	public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
+	public void digestDetermined(int selectionCount, FileAndDigest fileAndDigest) {
 	}
 
-	public void notInAJar(File file, int selectionCount) {
+	public void notInAJar(int selectionCount, File file) {
 	}
 
-	public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+	public void artifactDetermined(int selectionCount, ArtifactData artifactData) {
 	}
 
-	public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
+	public void unknownDigest(int selectionCount, FileAndDigest fileAndDigest) {
 	}
 
 	public void notJavaElement(int selectionCount) {

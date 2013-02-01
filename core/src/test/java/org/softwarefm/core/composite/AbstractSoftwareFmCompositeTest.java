@@ -12,9 +12,12 @@ import org.softwarefm.core.constants.ImageConstants;
 import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.FileAndDigest;
+import org.softwarefm.core.selection.ISelectedBindingListener;
+import org.softwarefm.core.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.core.selection.ISelectedBindingStrategy;
+import org.softwarefm.core.selection.SelectedBindingListenerAndAdderRemover;
 import org.softwarefm.core.selection.internal.SelectedArtifactSelectionManager;
-import org.softwarefm.core.selection.internal.SwtThreadSelectedBindingAggregator;
+import org.softwarefm.core.selection.internal.SwtThreadExecutor;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.tests.SwtTest;
 import org.softwarefm.core.url.IUrlStrategy;
@@ -36,7 +39,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 
 	protected ISelectedBindingStrategy<String, String> strategy;
 	protected SelectedArtifactSelectionManager<String, String> selectedArtifactSelectionManager;
-	protected SwtThreadSelectedBindingAggregator<String> listenerManager;
+	protected ISelectedBindingListenerAndAdderRemover<String> listenerManager;
 
 	private MemoryCallback<Throwable> rememberedExceptions;
 
@@ -68,7 +71,9 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 	protected void setUp() throws Exception {
 		super.setUp();
 		IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
-		listenerManager = new SwtThreadSelectedBindingAggregator<String>(display, listenerList);
+		listenerList.registerExecutor(ISelectedBindingListener.class, new SwtThreadExecutor(display));
+		
+		listenerManager = new SelectedBindingListenerAndAdderRemover<String>(listenerList);
 		strategy = EasyMock.createMock(ISelectedBindingStrategy.class);
 		EasyMock.makeThreadSafe(strategy, true);
 		rememberedExceptions = ICallback.Utils.<Throwable> memory();

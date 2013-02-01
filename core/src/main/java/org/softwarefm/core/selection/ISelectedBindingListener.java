@@ -34,17 +34,17 @@ import org.softwarefm.utilities.events.IValid;
  */
 public interface ISelectedBindingListener extends IValid {
 
-	void codeSelectionOccured(CodeData codeData, int selectionCount);
+	void codeSelectionOccured(int selectionCount, CodeData codeData);
 
 	void notJavaElement(int selectionCount);
 
-	void digestDetermined(FileAndDigest fileAndDigest, int selectionCount);
+	void digestDetermined(int selectionCount, FileAndDigest fileAndDigest);
 
-	void notInAJar(File file, int selectionCount);
+	void notInAJar(int selectionCount, File file);
 
-	void artifactDetermined(ArtifactData artifactData, int selectionCount);
+	void artifactDetermined(int selectionCount, ArtifactData artifactData);
 
-	void unknownDigest(FileAndDigest fileAndDigest, int selectionCount);
+	void unknownDigest(int selectionCount, FileAndDigest fileAndDigest);
 
 	void friendsArtifactUsage(ArtifactData artifactData, Map<FriendData, UsageStatData> friendsUsage);
 

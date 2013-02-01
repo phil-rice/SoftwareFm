@@ -34,7 +34,7 @@ public class SocialUsage implements ISocialUsage {
 	SelectedBindingAdapter makeListener() {
 		SelectedBindingAdapter listener = new SelectedBindingAdapter() {
 			@Override
-			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
+			public void codeSelectionOccured(int selectionCount, CodeData codeData) {
 				final String url = strategy.classAndMethodUrl(codeData).url;
 				listenerList.fire(new ICallback<ISocialUsageListener>() {
 					@Override
@@ -47,7 +47,7 @@ public class SocialUsage implements ISocialUsage {
 			}
 
 			@Override
-			public void notInAJar(File file, int selectionCount) {
+			public void notInAJar(int selectionCount, File file) {
 				listenerList.fire(new ICallback<ISocialUsageListener>() {
 					@Override
 					public void process(ISocialUsageListener t) throws Exception {
@@ -57,7 +57,7 @@ public class SocialUsage implements ISocialUsage {
 			}
 
 			@Override
-			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
+			public void unknownDigest(int selectionCount, FileAndDigest fileAndDigest) {
 				listenerList.fire(new ICallback<ISocialUsageListener>() {
 					@Override
 					public void process(ISocialUsageListener t) throws Exception {
@@ -67,7 +67,7 @@ public class SocialUsage implements ISocialUsage {
 			}
 
 			@Override
-			public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+			public void artifactDetermined(int selectionCount, ArtifactData artifactData) {
 				final String url = strategy.projectUrl(artifactData).url;
 				listenerList.fire(new ICallback<ISocialUsageListener>() {
 					@Override

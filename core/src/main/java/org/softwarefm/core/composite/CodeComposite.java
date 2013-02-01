@@ -30,7 +30,7 @@ public class CodeComposite extends SoftwareFmComposite {
 		});
 		addSelectedBindingListener(new SelectedBindingAdapter() {
 			@Override
-			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
+			public void codeSelectionOccured(int selectionCount, CodeData codeData) {
 				if (!editing) {
 					url = container.urlStrategy.classAndMethodUrl(codeData).getHttpHostAndUrl();
 					browser.setUrl(url);

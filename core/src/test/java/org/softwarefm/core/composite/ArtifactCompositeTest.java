@@ -89,22 +89,22 @@ public class ArtifactCompositeTest extends AbstractSoftwareFmCompositeTest<Artif
 
 	public void testMessages() {
 		assertEquals(UrlConstants.aboutArtifactComposite, panel.getTextOrUrl());// initial
-		listenerManager.codeSelectionOccured(classExpressionData, 0);
+		listenerManager.codeSelectionOccured(0, classExpressionData);
 		assertEquals(UrlConstants.aboutArtifactComposite, panel.getTextOrUrl());// initial
 		assertEquals(panel.getBrowser().getControl(), panel.getTopControl());
 
 		checkDisplaysInBrowser("The selected item was defined in file " + file + "\nSearching...", new Runnable() {
 			public void run() {
-				listenerManager.digestDetermined(fileAndDigest, 0);
+				listenerManager.digestDetermined(0, fileAndDigest);
 			}
 		});
 		checkDisplaysInBrowser("http://"+CommonConstants.softwareFmHostAndPrefix + "/artifact:groupId0/artifactId0", new Runnable() {
 			public void run() {
-				listenerManager.artifactDetermined(artifactData, 0);
+				listenerManager.artifactDetermined(0, artifactData);
 			}
 		});
 
-		listenerManager.unknownDigest(fileAndDigest, 0);
+		listenerManager.unknownDigest(0, fileAndDigest);
 		dispatchUntilQueueEmpty();
 		assertEquals(panel.getSecondaryControl().getControl(), panel.getTopControl());
 	}

@@ -32,13 +32,13 @@ final class ManualImportComposite extends TextAndFormComposite {
 		super(parent, container);
 		addSelectedBindingListener(new SelectedBindingAdapter() {
 			@Override
-			public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
+			public void digestDetermined(int selectionCount, FileAndDigest fileAndDigest) {
 				artifactData = null;
 				ManualImportComposite.this.fileAndDigest = fileAndDigest;
 			}
 
 			@Override
-			public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+			public void artifactDetermined(int selectionCount, ArtifactData artifactData) {
 				ManualImportComposite.this.artifactData = artifactData;
 				fileAndDigest = artifactData.fileAndDigest;
 				setText(unknownDigestMsg(TextKeys.msgManualImportArtifactDetermined, artifactData.fileAndDigest));
@@ -63,13 +63,13 @@ final class ManualImportComposite extends TextAndFormComposite {
 			}
 
 			@Override
-			public void notInAJar(File file, int selectionCount) {
+			public void notInAJar(int selectionCount, File file) {
 				setText(msg(TextKeys.msgManualImportNotAJar));
 				clearForm();
 			}
 
 			@Override
-			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
+			public void codeSelectionOccured(int selectionCount, CodeData codeData) {
 				artifactData = null;
 				setText(TextKeys.keyManualImportGroupId, "<Searching>");
 				setText(TextKeys.keyManualImportArtifactId, "<Searching>");
@@ -77,7 +77,7 @@ final class ManualImportComposite extends TextAndFormComposite {
 			}
 
 			@Override
-			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
+			public void unknownDigest(int selectionCount, FileAndDigest fileAndDigest) {
 				ManualImportComposite.this.fileAndDigest = fileAndDigest;
 				artifactData = null;
 

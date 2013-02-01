@@ -36,21 +36,21 @@ public class SocialUsageTest extends TestCase {
 		listener1.codeUsage("code:pack/class1", new UsageStatData(2), friendsCodeUsage);
 		listener2.codeUsage("code:pack/class1", new UsageStatData(2), friendsCodeUsage);
 		EasyMock.replay(listener1, listener2);
-		socialUsageListener.codeSelectionOccured(new CodeData("pack", "class1"), 0);
+		socialUsageListener.codeSelectionOccured(0, new CodeData("pack", "class1"));
 	}
 
 	public void testNotInAJarCausesNoArtifactUsage() {
 		listener1.noArtifactUsage();
 		listener2.noArtifactUsage();
 		EasyMock.replay(listener1, listener2);
-		socialUsageListener.notInAJar(null, 0);
+		socialUsageListener.notInAJar(0, null);
 	}
 
 	public void testUnknownDigestCausesNoArtifactUsage() {
 		listener1.noArtifactUsage();
 		listener2.noArtifactUsage();
 		EasyMock.replay(listener1, listener2);
-		socialUsageListener.unknownDigest(null, 0);
+		socialUsageListener.unknownDigest(0, null);
 	}
 
 	public void testProjectCausesArtifactUsage() {
@@ -60,7 +60,7 @@ public class SocialUsageTest extends TestCase {
 		listener1.artifactUsage("artifact:group/artifact", new UsageStatData(8), friendsCodeUsage);
 		listener2.artifactUsage("artifact:group/artifact", new UsageStatData(8), friendsCodeUsage);
 		EasyMock.replay(listener1, listener2);
-		socialUsageListener.artifactDetermined(new ArtifactData(null, "group", "artifact", "v1"), 0);
+		socialUsageListener.artifactDetermined(0, new ArtifactData(null, "group", "artifact", "v1"));
 	}
 
 	@Override

@@ -11,7 +11,6 @@ import java.util.concurrent.Executors;
 
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Shell;
 import org.softwarefm.core.SoftwareFmContainer;
 import org.softwarefm.core.actions.SfmActionState;
 import org.softwarefm.core.actions.internal.ActionBarComposite;
@@ -19,10 +18,11 @@ import org.softwarefm.core.actions.internal.SfmActionBarConfigurator;
 import org.softwarefm.core.cache.IArtifactDataCache;
 import org.softwarefm.core.link.IMakeLink;
 import org.softwarefm.core.maven.IMaven;
+import org.softwarefm.core.selection.ISelectedBindingListenerAndAdderRemover;
 import org.softwarefm.core.selection.ISelectedBindingManager;
 import org.softwarefm.core.selection.ISelectedBindingStrategy;
+import org.softwarefm.core.selection.SelectedBindingListenerAndAdderRemover;
 import org.softwarefm.core.selection.internal.SelectedArtifactSelectionManager;
-import org.softwarefm.core.selection.internal.SwtThreadSelectedBindingAggregator;
 import org.softwarefm.core.swt.HasComposite;
 import org.softwarefm.core.swt.ISituationListAndBuilder;
 import org.softwarefm.core.swt.Swts;
@@ -53,10 +53,11 @@ public class SoftwareFmCompositeWithActionsUnit extends HasComposite {
 			Swts.Show.xUnit(SoftwareFmCompositeWithActionsUnit.class.getSimpleName(), new File("src/test/resources/org/softwarefm/eclipse/composite"), "dat", new ISituationListAndBuilder<SoftwareFmCompositeWithActionsUnit, String>() {
 				public SoftwareFmCompositeWithActionsUnit makeChild(Composite parent) throws Exception {
 					IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
-					final SwtThreadSelectedBindingAggregator<Map<String, Object>> listenerManager = new SwtThreadSelectedBindingAggregator<Map<String, Object>>(new Shell().getDisplay(), listenerList);
 					IArtifactDataCache artifactDataCache = IArtifactDataCache.Utils.artifactDataCache();
 					IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
 					ISocialManager socialManager = ISocialManager.Utils.socialManager(listenerList, persistance);
+					
+					ISelectedBindingListenerAndAdderRemover<Map<String, Object>> listenerManager = new SelectedBindingListenerAndAdderRemover<Map<String,Object>>(listenerList);
 					SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>> manager = new SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>>(//
 							listenerManager, //
 							ISelectedBindingStrategy.Utils.fromMap(), //

@@ -45,10 +45,10 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(codeData);
 		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
 		EasyMock.expect(strategy.findDigest("selection", "node", file, count)).andReturn(fileAndDigest);
-		listenerManager.codeSelectionOccured(codeData, count);
-		listenerManager.digestDetermined(fileAndDigest, count);
+		listenerManager.codeSelectionOccured(count, codeData);
+		listenerManager.digestDetermined(count, fileAndDigest);
 		EasyMock.expect(strategy.findArtifact("selection", fileAndDigest, count)).andReturn(artifactData);
-		listenerManager.artifactDetermined(artifactData, count);
+		listenerManager.artifactDetermined(count, artifactData);
 		EasyMock.replay(listenerManager, strategy);
 
 		assertEquals(0, selectionManager.currentSelectionId());
@@ -64,10 +64,10 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(codeData);
 		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
 		EasyMock.expect(strategy.findDigest("selection", "node", file, count)).andReturn(fileAndDigest);
-		listenerManager.codeSelectionOccured(codeData, count);
-		listenerManager.digestDetermined(fileAndDigest, count);
+		listenerManager.codeSelectionOccured(count, codeData);
+		listenerManager.digestDetermined(count, fileAndDigest);
 		EasyMock.expect(strategy.findArtifact("selection", fileAndDigest, count)).andReturn(artifactData);
-		listenerManager.artifactDetermined(artifactData, count);
+		listenerManager.artifactDetermined(count, artifactData);
 		EasyMock.replay(listenerManager, strategy);
 
 		assertEquals(0, selectionManager.currentSelectionId());
@@ -85,11 +85,11 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 			EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
 			EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(codeData);
 			EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
-			listenerManager.codeSelectionOccured(codeData, count);
-			listenerManager.artifactDetermined(artifactData, count);
+			listenerManager.codeSelectionOccured(count, codeData);
+			listenerManager.artifactDetermined(count, artifactData);
 		}
 		EasyMock.expect(strategy.findDigest("selection", "node", file, count)).andReturn(fileAndDigest);
-		listenerManager.digestDetermined(fileAndDigest, count);
+		listenerManager.digestDetermined(count, fileAndDigest);
 		EasyMock.expect(strategy.findArtifact("selection", fileAndDigest, count)).andReturn(artifactData);
 		EasyMock.replay(listenerManager, strategy);
 
@@ -107,7 +107,7 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
 		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(codeData);
 		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(null);
-		listenerManager.codeSelectionOccured(codeData, count);
+		listenerManager.codeSelectionOccured(count, codeData);
 		listenerManager.notJavaElement(count);
 		EasyMock.replay(listenerManager, strategy);
 
@@ -122,8 +122,8 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(codeData);
 		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
 		EasyMock.expect(strategy.findDigest("selection", "node", file, count)).andReturn(null);
-		listenerManager.codeSelectionOccured(codeData, count);
-		listenerManager.notInAJar(file, count);
+		listenerManager.codeSelectionOccured(count, codeData);
+		listenerManager.notInAJar(count, file);
 		EasyMock.replay(listenerManager, strategy);
 
 		selectionManager.selectionOccured("selection").get();
@@ -138,9 +138,9 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
 		EasyMock.expect(strategy.findDigest("selection", "node", file, count)).andReturn(fileAndDigest);
 		EasyMock.expect(strategy.findArtifact("selection", fileAndDigest, count)).andReturn(null);
-		listenerManager.codeSelectionOccured(codeData, count);
-		listenerManager.digestDetermined(fileAndDigest, count);
-		listenerManager.unknownDigest(fileAndDigest, count);
+		listenerManager.codeSelectionOccured(count, codeData);
+		listenerManager.digestDetermined(count, fileAndDigest);
+		listenerManager.unknownDigest(count, fileAndDigest);
 		EasyMock.replay(listenerManager, strategy);
 
 		selectionManager.selectionOccured("selection").get();
@@ -153,8 +153,8 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
 		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(codeData);
 		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
-		listenerManager.codeSelectionOccured(codeData, count);
-		listenerManager.artifactDetermined(artifactData, count);
+		listenerManager.codeSelectionOccured(count, codeData);
+		listenerManager.artifactDetermined(count, artifactData);
 		EasyMock.replay(listenerManager, strategy);
 
 		artifactDataCache.addProjectData(artifactData);
@@ -167,8 +167,8 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		EasyMock.expect(strategy.findNode("selection", count)).andReturn("node");
 		EasyMock.expect(strategy.findExpressionData("selection", "node", count)).andReturn(codeData);
 		EasyMock.expect(strategy.findFile("selection", "node", count)).andReturn(file);
-		listenerManager.codeSelectionOccured(codeData, count);
-		listenerManager.unknownDigest(fileAndDigest, count);
+		listenerManager.codeSelectionOccured(count, codeData);
+		listenerManager.unknownDigest(count, fileAndDigest);
 		EasyMock.replay(listenerManager, strategy);
 
 		artifactDataCache.addNotFound(fileAndDigest);

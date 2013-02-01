@@ -35,27 +35,27 @@ abstract public class TextAndControlComposite<C> extends SoftwareFmComposite {
 				layout();
 			}
 
-			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
+			public void unknownDigest(int selectionCount, FileAndDigest fileAndDigest) {
 				TextAndControlComposite.this.unknownDigest(fileAndDigest, selectionCount);
 				layout();
 			}
 
-			public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+			public void artifactDetermined(int selectionCount, ArtifactData artifactData) {
 				TextAndControlComposite.this.artifactDetermined(artifactData, selectionCount);
 				layout();
 			}
 
-			public void notInAJar(File file, int selectionCount) {
+			public void notInAJar(int selectionCount, File file) {
 				TextAndControlComposite.this.notInAJar(file, selectionCount);
 				layout();
 			}
 
-			public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
+			public void digestDetermined(int selectionCount, FileAndDigest fileAndDigest) {
 				TextAndControlComposite.this.digestDetermined(fileAndDigest, selectionCount);
 				layout();
 			}
 
-			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
+			public void codeSelectionOccured(int selectionCount, CodeData codeData) {
 				TextAndControlComposite.this.classAndMethodSelectionOccured(codeData, selectionCount);
 				layout();
 

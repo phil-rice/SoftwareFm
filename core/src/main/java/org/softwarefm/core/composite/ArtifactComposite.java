@@ -53,25 +53,25 @@ public class ArtifactComposite extends StackedBrowserAndControl<LinkComposite> {
 			}
 
 			@Override
-			public void notInAJar(File file, int selectionCount) {
+			public void notInAJar(int selectionCount, File file) {
 				if (!editting)
 					setUrlAndShow(UrlConstants.notJarUrl);
 			}
 
 			@Override
-			public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
+			public void digestDetermined(int selectionCount, FileAndDigest fileAndDigest) {
 				if (!editting)
 					setText(digestDeterminedMsg(TextKeys.msgArtifactFoundDigest, fileAndDigest) + "\n" + searchingMsg());
 			}
 
 			@Override
-			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
+			public void unknownDigest(int selectionCount, FileAndDigest fileAndDigest) {
 				if (!editting)
 					showSecondaryControl();
 			}
 
 			@Override
-			public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+			public void artifactDetermined(int selectionCount, ArtifactData artifactData) {
 				if (!editting) {
 					String url = urlStrategy.projectUrl(artifactData).getHttpHostAndUrl();
 					setUrlAndShow(url);

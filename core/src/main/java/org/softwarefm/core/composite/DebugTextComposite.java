@@ -72,24 +72,24 @@ public class DebugTextComposite extends SoftwareFmComposite {
 				listenerText.append("notJavaElement: (" + selectionCount + ")\n");
 			}
 
-			public void artifactDetermined(ArtifactData artifactData, int selectionCount) {
+			public void artifactDetermined(int selectionCount, ArtifactData artifactData) {
 				listenerText.append("projectDetermined: (" + selectionCount + ")\n" + artifactData + "\nUrl: " + container.urlStrategy.projectUrl(artifactData) + "\n");
 			}
 
-			public void notInAJar(File file, int selectionCount) {
+			public void notInAJar(int selectionCount, File file) {
 				listenerText.append("Not In A Jar: (" + selectionCount + ") file is: " + file + "\n");
 			}
 
-			public void digestDetermined(FileAndDigest fileAndDigest, int selectionCount) {
+			public void digestDetermined(int selectionCount, FileAndDigest fileAndDigest) {
 				listenerText.append("Digest: (" + selectionCount + ") " + fileAndDigest + "\nUrl: " + container.urlStrategy.digestUrl(fileAndDigest.digest) + "\n");
 			}
 
-			public void codeSelectionOccured(CodeData codeData, int selectionCount) {
+			public void codeSelectionOccured(int selectionCount, CodeData codeData) {
 				updateListenersAndViews();
 				listenerText.setText("Class and method: (" + selectionCount + ")\n" + codeData + "\nUrl: " + container.urlStrategy.classAndMethodUrl(codeData) + "\n");
 			}
 
-			public void unknownDigest(FileAndDigest fileAndDigest, int selectionCount) {
+			public void unknownDigest(int selectionCount, FileAndDigest fileAndDigest) {
 				listenerText.append("Unknown Digest: (" + selectionCount + ") " + fileAndDigest + "\n");
 			}
 
