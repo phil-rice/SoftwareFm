@@ -13,6 +13,8 @@ import org.softwarefm.utilities.strings.Strings;
 public interface IMavenStore {
 
 	public void store(String pomUrl);
+	
+	public boolean hasPomUrlStartingWith(String prefix);
 
 	public static class Utils {
 

@@ -69,7 +69,7 @@ public class MavenRip {
 	}
 
 	private List<String> ripDirectoryFindChildren(String url) {
-		List<String> listedItems = null;
+		List<String> listedItems = Collections.emptyList();
 		try {
 			listedItems = listedItems(url);
 			List<String> poms = pomUrls(url, listedItems);
@@ -77,8 +77,21 @@ public class MavenRip {
 			return childDirectorys(listedItems);
 		} catch (Exception e) {
 			ICallback.Utils.call(errorCallback, e);
-			return listedItems == null ? Collections.<String> emptyList() : listedItems;
+			return listedItems;
 		}
+	}
+
+	/** Pretty rubbish filter that skips over a directory if have already anything from it. */
+	public void ripUrlAndBelowWhenNotPresent(String url) {
+		List<String> childDirectorys = ripDirectoryFindChildren(url);
+		for (String child : childDirectorys) {
+			String childUrl = "http://" +Strings.url(host, url, child);
+			boolean present = mavenStore.hasPomUrlStartingWith(childUrl);
+			System.out.println("Checking: " + childUrl +", "  + present);
+			if (!present)
+				ripUrlAndBelow(Strings.url(url, child));
+		}
+
 	}
 
 	public static void main(String[] args) {
@@ -88,6 +101,7 @@ public class MavenRip {
 		IMavenStore mavenStore = IMavenStore.Utils.mysqlStoreWithSysout(dataSource);
 		ICallback<Throwable> errorCallback = ICallback.Utils.sysErrCallback();
 		MavenRip mavenRip = new MavenRip(host, 80, mavenStore, errorCallback);
-		mavenRip.ripUrlAndBelow(url);
+		// mavenRip.ripUrlAndBelow(url);
+		mavenRip.ripUrlAndBelowWhenNotPresent(url);
 	}
 }

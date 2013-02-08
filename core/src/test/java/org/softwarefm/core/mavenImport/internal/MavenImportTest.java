@@ -55,7 +55,7 @@ public class MavenImportTest extends TestCase {
 		final IMaven maven = new Maven();
 		String pomMod = getClass().getPackage().getName().replace(".", "/") + "/" + pom;
 		String pomUrl = getClass().getClassLoader().getResource(pomMod).toExternalForm();
-		Model model = maven.pomToModel(pomUrl);
+		Model model = maven.pomUrlToModel(pomUrl);
 		return model;
 	}
 

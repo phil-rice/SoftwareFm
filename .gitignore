@@ -1,5 +1,6 @@
 *.class
 */target/*
+*/neo4j/*
 *.jar
 *.zip
 

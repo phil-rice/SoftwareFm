@@ -16,10 +16,11 @@ import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.collections.Files;
 
 public interface IMaven {
+	Model pomStringToModel(String pom, String encoding);
 
-	Model pomToModel(String pomUrl) ;
+	Model pomUrlToModel(String pomUrl);
 
-	File downloadJar(Model model) ;
+	File downloadJar(Model model);
 
 	URL jarUrl(Model model) throws MalformedURLException;
 
@@ -80,7 +81,7 @@ public interface IMaven {
 			return new ICallback2<String, Integer>() {
 				public void process(String pomUrl, Integer thisSelectionId) throws Exception {
 					System.out.println("Downloading pom: " + pomUrl);
-					Model model = maven.pomToModel(pomUrl);
+					Model model = maven.pomUrlToModel(pomUrl);
 					System.out.println("Loaded pom");
 					System.out.println("Jar url: " + maven.jarUrl(model));
 					File jarFile = maven.jarFile(model);

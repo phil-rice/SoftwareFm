@@ -19,7 +19,6 @@ public class SoftwareFmArtifactStrategy<S> implements IArtifactStrategy<S> {
 		this.htmlRipper = htmlRipper;
 		this.urlStrategy = urlStrategy;
 		this.client = client.host(urlStrategy.host());
-
 	}
 
 	public ArtifactData findArtifact(S selection, FileAndDigest fileAndDigest, int selectionCount) {

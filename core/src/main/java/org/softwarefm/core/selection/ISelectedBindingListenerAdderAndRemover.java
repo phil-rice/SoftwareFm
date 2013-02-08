@@ -4,8 +4,8 @@
 
 package org.softwarefm.core.selection;
 
-import org.softwarefm.core.swt.IDispose;
 import org.softwarefm.utilities.events.IListenerList;
+import org.softwarefm.utilities.lifecycle.IDispose;
 
 public interface ISelectedBindingListenerAdderAndRemover extends IDispose {
 

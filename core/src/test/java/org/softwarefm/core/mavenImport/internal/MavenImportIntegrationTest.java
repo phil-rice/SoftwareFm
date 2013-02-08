@@ -28,7 +28,7 @@ public class MavenImportIntegrationTest extends TestCase  implements IIntegratio
 
 	private void checkRealImport(String pomUrl, String expected) throws Exception {
 		Maven maven = new Maven();
-		Model model = maven.pomToModel(pomUrl);
+		Model model = maven.pomUrlToModel(pomUrl);
 		File jarFile = maven.jarFile(model);
 		jarFile.delete();
 

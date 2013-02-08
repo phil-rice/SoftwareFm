@@ -77,7 +77,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 
 		IMaven maven = IMaven.Utils.makeImport();
 		URL resource = getClass().getResource("pomWithLittleData.xml");
-		Model model = maven.pomToModel(resource.toURI().toString());
+		Model model = maven.pomUrlToModel(resource.toURI().toString());
 		makeLink.populateProjectIfBlank(artifactData, model);
 		checkPageForWikiTextAndProjectEnd(makeLink, projectUrl.url, "{{Template:Artifact\n" + //
 				"|groupId=someGroupId\n" + //
@@ -96,7 +96,7 @@ public class MakeLinkTest extends TestCase implements IIntegrationTest {
 
 		IMaven maven = IMaven.Utils.makeImport();
 		URL resource = getClass().getResource("populatedPom.xml");
-		Model model = maven.pomToModel(resource.toURI().toString());
+		Model model = maven.pomUrlToModel(resource.toURI().toString());
 		makeLink.populateProjectIfBlank(artifactData, model);
 		checkPageForWikiTextAndProjectEnd(makeLink, projectUrl.url, "{{Template:Artifact\n" + //
 				"|groupId=someGroupId\n" + //

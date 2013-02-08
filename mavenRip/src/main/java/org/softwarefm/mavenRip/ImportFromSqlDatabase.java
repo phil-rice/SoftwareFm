@@ -34,7 +34,7 @@ public class ImportFromSqlDatabase {
 					String artifactId = rs.getString("artifactId");
 					String version = rs.getString("version");
 					String pomUrl = rs.getString("pomUrl");
-					Model model = maven.pomToModel(pomUrl);
+					Model model = maven.pomUrlToModel(pomUrl);
 					File file = maven.downloadJar(model);
 					String digest = Files.digestAsHexString(file);
 					ArtifactData artifactData = new ArtifactData(new FileAndDigest(file, digest), groupId, artifactId, version);

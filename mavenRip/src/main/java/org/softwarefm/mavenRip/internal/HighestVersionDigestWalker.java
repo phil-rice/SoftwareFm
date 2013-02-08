@@ -45,7 +45,7 @@ public class HighestVersionDigestWalker implements IMavenDigestWalker {
 				Collections.sort(versions, Strings.invertedVersionComparator);
 				String highestVersion = versions.get(0);
 				String pomUrl = versionToPomUrl.get(highestVersion);
-				Model model = maven.pomToModel(pomUrl);
+				Model model = maven.pomUrlToModel(pomUrl);
 				List<String> existingDigest = template.queryForList("select digest from maven where pomUrl = ?", String.class, pomUrl);
 				File jarFile = maven.jarFile(model);
 				String digest = existingDigest.get(0);

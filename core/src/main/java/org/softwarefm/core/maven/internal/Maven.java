@@ -1,5 +1,6 @@
 package org.softwarefm.core.maven.internal;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -36,7 +37,21 @@ public class Maven implements IMaven {
 			return new File(m2HomeProperty);
 	}
 
-	public Model pomToModel(String pomUrl)  {
+	public Model pomStringToModel(String pom, String encoding) {
+		try {
+			InputStream stream = new ByteArrayInputStream(pom.getBytes(encoding));
+			try {
+				Model model = new MavenXpp3Reader().read(stream);
+				return model;
+			} finally {
+				stream.close();
+			}
+		} catch (Exception e) {
+			throw WrappedException.wrap(e);
+		}
+	}
+
+	public Model pomUrlToModel(String pomUrl) {
 		try {
 			String realPomUrl = getRealPomUrl(pomUrl);
 			URL url = new URL(realPomUrl);
@@ -71,7 +86,7 @@ public class Maven implements IMaven {
 		return IMaven.Utils.makePomUrlForMvnRepository(groupId, artifactId, version);
 	}
 
-	public URL jarUrl(Model model)  {
+	public URL jarUrl(Model model) {
 		try {
 			return getJarUrl(model, true);
 		} catch (Exception e) {
@@ -112,7 +127,7 @@ public class Maven implements IMaven {
 		return result;
 	}
 
-	public File downloadJar(Model model)  {
+	public File downloadJar(Model model) {
 		URL url = jarUrl(model);
 		File file = jarFile(model);
 		Files.downLoadFile(url, file);
@@ -141,12 +156,12 @@ public class Maven implements IMaven {
 		else
 			return raw;
 	}
-	
+
 	public static void main(String[] args) throws Exception {
 		String pomUrl = "http://repo1.maven.org/maven2/org/apache/maven/maven-model-v3/2.0/maven-model-v3-2.0.pom";
 		Maven maven = new Maven();
 		System.out.println(pomUrl);
-		Model model = maven.pomToModel(pomUrl);
+		Model model = maven.pomUrlToModel(pomUrl);
 		System.out.println(model);
 		System.out.println(maven.jarUrl(model));
 		File jarFile = maven.jarFile(model);

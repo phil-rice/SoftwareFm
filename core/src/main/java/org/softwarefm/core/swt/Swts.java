@@ -84,6 +84,7 @@ import org.softwarefm.utilities.functions.Functions;
 import org.softwarefm.utilities.functions.IFunction1;
 import org.softwarefm.utilities.future.GatedMockFuture;
 import org.softwarefm.utilities.indent.Indent;
+import org.softwarefm.utilities.lifecycle.IDispose;
 import org.softwarefm.utilities.resources.IResourceGetter;
 import org.softwarefm.utilities.strings.Strings;
 

@@ -20,13 +20,18 @@ public class MysqlMavenStore implements IMavenStore {
 	}
 
 	public void store(String pomUrl) {
-		Model model = maven.pomToModel(pomUrl);
+		Model model = maven.pomUrlToModel(pomUrl);
 		String groupId = maven.groupId(model);
 		String artifactId = maven.artifactId(model);
 		String version = maven.version(model);
 		template.update("insert into maven (groupId, artifactId, version, pomUrl) values(?,?,?,?)", groupId, artifactId, version, pomUrl);
 		if (sysout)
 			System.out.println(pomUrl);
+	}
+
+	@Override
+	public boolean hasPomUrlStartingWith(String prefix) {
+		return template.queryForInt("select count(*) from maven where pomUrl like ?", prefix+"%")>0;
 	}
 
 }
