@@ -10,7 +10,9 @@ public class Neo4SfmConstants {
 	public static final String pomProperty = "pom";
 	
 	public static final String fullIdProperty = "fullId";
-	public static final String groupArtifactidProperty = "groupArtifactId";
 	public static final String fullIdIndexName = "fullId";
+
+	public static final String groupArtifactidProperty = "groupArtifactId";
+	public static final String groupArtifactIdIndexName = "groupArtifactId";
 
 }

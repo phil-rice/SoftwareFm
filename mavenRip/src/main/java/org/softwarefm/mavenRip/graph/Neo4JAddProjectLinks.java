@@ -13,7 +13,7 @@ import org.softwarefm.utilities.callbacks.ICallback;
 
 public class Neo4JAddProjectLinks {
 	public static void main(String[] args) {
-		INeo4Sfm neo4Sfm = INeo4Sfm.Utils.neo4Sfm("neo4j");
+		final INeo4Sfm neo4Sfm = INeo4Sfm.Utils.neo4Sfm("neo4j");
 		final Node groupReference = neo4Sfm.graphReference();
 		TraversalDescription description = INeo4Sfm.Utils.groupIdArtifactVersionDigest();
 		final IMaven maven = IMaven.Utils.makeImport(new File("mavenRip"));
@@ -38,7 +38,7 @@ public class Neo4JAddProjectLinks {
 							neo4Sfm.execute(new ICallback<GraphDatabaseService>() {
 								@Override
 								public void process(GraphDatabaseService t) throws Exception {
-									INeo4Sfm.Utils.addDependency(versionNode, targetNode);
+									neo4Sfm.addDependency(versionNode, targetNode);
 									System.out.println("Linking " + versionNode.getProperty(Neo4SfmConstants.fullIdProperty) + " to " + targetNode.getProperty(Neo4SfmConstants.fullIdProperty));
 								}
 

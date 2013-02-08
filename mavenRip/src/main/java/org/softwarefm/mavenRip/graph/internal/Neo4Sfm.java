@@ -3,8 +3,11 @@ package org.softwarefm.mavenRip.graph.internal;
 import java.text.MessageFormat;
 import java.util.Iterator;
 
+import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
+import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
@@ -29,8 +32,8 @@ public class Neo4Sfm implements INeo4Sfm {
 	public Neo4Sfm(GraphDatabaseService graphDb) {
 		this.graphDb = graphDb;
 		groupReferenceIndex = graphDb.index().forNodes("groupReference");
-		fullIdIndex = graphDb.index().forNodes("fullId");
-		artifactIndex = graphDb.index().forNodes("artifact");
+		fullIdIndex = graphDb.index().forNodes(Neo4SfmConstants.fullIdIndexName);
+		artifactIndex = graphDb.index().forNodes(Neo4SfmConstants.groupArtifactIdIndexName);
 		groupReference = findOrCreateGroupReference(groupReferenceIndex);
 	}
 
@@ -133,10 +136,28 @@ public class Neo4Sfm implements INeo4Sfm {
 		versionNode.setProperty(Neo4SfmConstants.pomUrlProperty, pomUrl);
 		versionNode.setProperty(Neo4SfmConstants.pomProperty, pomText);
 		versionNode.setProperty(Neo4SfmConstants.fullIdProperty, fullId);
+		artifactNode.setProperty(Neo4SfmConstants.groupArtifactidProperty, groupArtifactId);
 		fullIdIndex.add(versionNode, Neo4SfmConstants.fullIdProperty, fullId);
 		artifactIndex.add(artifactNode, Neo4SfmConstants.groupArtifactidProperty, groupArtifactId);
 		return versionNode;
 	}
+
+	@Override
+	public void addDependency(Node parentVersionNode, Node dependencyVersionNode) {
+		Node artifactNode = INeo4Sfm.Utils.getArtifactFromVersion(parentVersionNode);
+		Node targetArtifactNode = INeo4Sfm.Utils.getArtifactFromVersion(dependencyVersionNode);
+		createRelationshipifDoesntExist(artifactNode, SoftwareFmRelationshipTypes.DEPENDS_ON, targetArtifactNode);
+		createRelationshipifDoesntExist(parentVersionNode, SoftwareFmRelationshipTypes.DEPENDS_ON, dependencyVersionNode);
+	}
+	
+	private void createRelationshipifDoesntExist(Node from, RelationshipType relationshipType, Node dependent){
+		for (Relationship relation: from.getRelationships(Direction.OUTGOING, relationshipType)){
+			if (relation.getEndNode().getId()== dependent.getId())
+				return;
+		}
+		from.createRelationshipTo(dependent, relationshipType);
+	}
+
 	@Override
 	public Node getNodeOrNull(Index<Node> index, String property, Object value) {
 		IndexHits<Node> indexHits = index.get(property, value);
@@ -154,6 +175,5 @@ public class Neo4Sfm implements INeo4Sfm {
 			indexHits.close();
 		}
 	}
-
 
 }

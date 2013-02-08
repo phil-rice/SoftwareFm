@@ -24,7 +24,8 @@ public interface INeo4Sfm {
 
 	/** Returns the version node */
 	Node addGroupArtifactVersionDigest(String groupId, String artifactId, String version, String pomUrl, String pom, String digest);
-
+	void addDependency(final Node parentVersionNode, final Node dependencyVersionNode);
+	
 	void execute(ICallback<GraphDatabaseService> callback);
 
 	<T> T execute(IFunction1<GraphDatabaseService, T> fn);
@@ -62,12 +63,6 @@ public interface INeo4Sfm {
 			return description;
 		}
 
-		public static void addDependency(final Node parentVersionNode, final Node dependencyVersionNode) {
-			Node artifactNode = getArtifactFromVersion(parentVersionNode);
-			Node targetArtifactNode = getArtifactFromVersion(dependencyVersionNode);
-			artifactNode.createRelationshipTo(targetArtifactNode, SoftwareFmRelationshipTypes.DEPENDS_ON);
-			parentVersionNode.createRelationshipTo(dependencyVersionNode, SoftwareFmRelationshipTypes.DEPENDS_ON);
-		}
 
 		public static Node getArtifactFromVersion(Node versionNode) {
 			Node artifactNode = Iterables.getOnly(versionNode.getRelationships(SoftwareFmRelationshipTypes.HAS_VERSION, Direction.INCOMING)).getStartNode();
