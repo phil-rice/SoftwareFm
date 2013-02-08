@@ -63,10 +63,20 @@ public interface INeo4Sfm {
 		}
 
 		public static void addDependency(final Node parentVersionNode, final Node dependencyVersionNode) {
-			Node artifactNode = Iterables.getOnly(parentVersionNode.getRelationships(SoftwareFmRelationshipTypes.HAS_VERSION, Direction.INCOMING)).getStartNode();
-			Node targetArtifactNode = Iterables.getOnly(dependencyVersionNode.getRelationships(SoftwareFmRelationshipTypes.HAS_VERSION, Direction.INCOMING)).getStartNode();
+			Node artifactNode = getArtifactFromVersion(parentVersionNode);
+			Node targetArtifactNode = getArtifactFromVersion(dependencyVersionNode);
 			artifactNode.createRelationshipTo(targetArtifactNode, SoftwareFmRelationshipTypes.DEPENDS_ON);
 			parentVersionNode.createRelationshipTo(dependencyVersionNode, SoftwareFmRelationshipTypes.DEPENDS_ON);
+		}
+
+		public static Node getArtifactFromVersion(Node versionNode) {
+			Node artifactNode = Iterables.getOnly(versionNode.getRelationships(SoftwareFmRelationshipTypes.HAS_VERSION, Direction.INCOMING)).getStartNode();
+			return artifactNode;
+
+		}
+
+		public static String makeGroupArtifactId(String groupId, String artifactId) {
+			return groupId + ":" + artifactId;
 		}
 	}
 

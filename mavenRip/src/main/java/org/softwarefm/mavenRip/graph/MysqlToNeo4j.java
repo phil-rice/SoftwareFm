@@ -17,7 +17,6 @@ public class MysqlToNeo4j {
 
 	public static void main(String[] args) {
 		final INeo4Sfm neo4Sfm = INeo4Sfm.Utils.neo4Sfm("neo4j");
-		final Node groupReference = neo4Sfm.graphReference();
 
 		final IMaven maven = IMaven.Utils.makeImport(new File("mavenRip"));
 		final JdbcTemplate template = new JdbcTemplate(MavenRip.dataSource);

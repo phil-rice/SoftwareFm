@@ -24,11 +24,13 @@ public class Neo4Sfm implements INeo4Sfm {
 	private final Node groupReference;
 	final Index<Node> groupReferenceIndex;
 	private final Index<Node> fullIdIndex;
+	private final Index<Node> artifactIndex;
 
 	public Neo4Sfm(GraphDatabaseService graphDb) {
 		this.graphDb = graphDb;
 		groupReferenceIndex = graphDb.index().forNodes("groupReference");
 		fullIdIndex = graphDb.index().forNodes("fullId");
+		artifactIndex = graphDb.index().forNodes("artifact");
 		groupReference = findOrCreateGroupReference(groupReferenceIndex);
 	}
 
@@ -120,8 +122,8 @@ public class Neo4Sfm implements INeo4Sfm {
 
 	@Override
 	public Node addGroupArtifactVersionDigest(String groupId, String artifactId, String version, String pomUrl, String pomText, String digest) {
+		String groupArtifactId = INeo4Sfm.Utils.makeGroupArtifactId(groupId, artifactId);
 		String fullId = INeo4Sfm.Utils.makeFullId(groupId, artifactId, version);
-		IndexHits<Node> index = fullIdIndex.get(Neo4SfmConstants.fullIdProperty, fullId);
 
 		Node groupNode = findOrCreate(groupReference, SoftwareFmRelationshipTypes.HAS_GROUP, Neo4SfmConstants.groupIdProperty, groupId);
 		Node artifactNode = findOrCreate(groupNode, SoftwareFmRelationshipTypes.HAS_ARTIFACT, Neo4SfmConstants.artifactIdProperty, artifactId);
@@ -132,6 +134,7 @@ public class Neo4Sfm implements INeo4Sfm {
 		versionNode.setProperty(Neo4SfmConstants.pomProperty, pomText);
 		versionNode.setProperty(Neo4SfmConstants.fullIdProperty, fullId);
 		fullIdIndex.add(versionNode, Neo4SfmConstants.fullIdProperty, fullId);
+		artifactIndex.add(artifactNode, Neo4SfmConstants.groupArtifactidProperty, groupArtifactId);
 		return versionNode;
 	}
 	@Override

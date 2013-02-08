@@ -43,7 +43,7 @@ public class MavenImportJob implements ICallback2<String, Integer> {
 					monitor.beginTask("MavenImport: " + Strings.lastSegment(pomUrl, "/"), 5);
 
 					monitor.subTask("Download POM");
-					Model model = maven.pomToModel(pomUrl);
+					Model model = maven.pomUrlToModel(pomUrl);
 					File jarFile = maven.jarFile(model);
 					monitor.internalWorked(1);
 
