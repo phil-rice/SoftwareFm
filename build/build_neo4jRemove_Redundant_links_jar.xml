@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project mavenRip with libraries in sub-folder">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+        <jar destfile="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.softwarefm.mavenRip.graph.Neo4JRemoveRedundantLinks"/>
+                <attribute name="Class-Path" value=". neo4RemoveRedundantLinks_lib/httpclient-4.1.1.jar neo4RemoveRedundantLinks_lib/httpcore-4.1.jar neo4RemoveRedundantLinks_lib/commons-logging-1.1.1.jar neo4RemoveRedundantLinks_lib/commons-codec-1.4.jar neo4RemoveRedundantLinks_lib/jdom-1.1.3.jar neo4RemoveRedundantLinks_lib/org.eclipse.swt.win32.win32.x86_64-3.7.2.jar neo4RemoveRedundantLinks_lib/jface-3.3.0-I20070606-0010.jar neo4RemoveRedundantLinks_lib/swt-3.3.0-v3346.jar neo4RemoveRedundantLinks_lib/commands-3.3.0-I20070605-0010.jar neo4RemoveRedundantLinks_lib/common-3.3.0-v20070426.jar neo4RemoveRedundantLinks_lib/maven-plugin-api-3.0.jar neo4RemoveRedundantLinks_lib/maven-model-3.0.jar neo4RemoveRedundantLinks_lib/plexus-utils-2.0.4.jar neo4RemoveRedundantLinks_lib/maven-artifact-3.0.jar neo4RemoveRedundantLinks_lib/sisu-inject-plexus-1.4.2.jar neo4RemoveRedundantLinks_lib/plexus-component-annotations-1.5.4.jar neo4RemoveRedundantLinks_lib/plexus-classworlds-2.2.3.jar neo4RemoveRedundantLinks_lib/sisu-inject-bean-1.4.2.jar neo4RemoveRedundantLinks_lib/sisu-guice-2.1.7-noaop.jar neo4RemoveRedundantLinks_lib/miglayout-swt-4.2.jar neo4RemoveRedundantLinks_lib/miglayout-core-4.2.jar neo4RemoveRedundantLinks_lib/spring-jdbc-3.1.0.RELEASE.jar neo4RemoveRedundantLinks_lib/spring-beans-3.1.0.RELEASE.jar neo4RemoveRedundantLinks_lib/spring-core-3.1.0.RELEASE.jar neo4RemoveRedundantLinks_lib/spring-asm-3.1.0.RELEASE.jar neo4RemoveRedundantLinks_lib/spring-tx-3.1.0.RELEASE.jar neo4RemoveRedundantLinks_lib/aopalliance-1.0.jar neo4RemoveRedundantLinks_lib/spring-aop-3.1.0.RELEASE.jar neo4RemoveRedundantLinks_lib/spring-context-3.1.0.RELEASE.jar neo4RemoveRedundantLinks_lib/spring-expression-3.1.0.RELEASE.jar neo4RemoveRedundantLinks_lib/commons-dbcp-1.4.jar neo4RemoveRedundantLinks_lib/commons-pool-1.5.4.jar neo4RemoveRedundantLinks_lib/mysql-connector-java-5.1.21.jar neo4RemoveRedundantLinks_lib/neo4j-1.8.1.jar neo4RemoveRedundantLinks_lib/neo4j-kernel-1.8.1.jar neo4RemoveRedundantLinks_lib/neo4j-lucene-index-1.8.1.jar neo4RemoveRedundantLinks_lib/lucene-core-3.5.0.jar neo4RemoveRedundantLinks_lib/neo4j-graph-algo-1.8.1.jar neo4RemoveRedundantLinks_lib/neo4j-udc-1.8.1.jar neo4RemoveRedundantLinks_lib/neo4j-graph-matching-1.8.1.jar neo4RemoveRedundantLinks_lib/neo4j-cypher-1.8.1.jar neo4RemoveRedundantLinks_lib/scala-library-2.9.1-1.jar neo4RemoveRedundantLinks_lib/concurrentlinkedhashmap-lru-1.3.1.jar neo4RemoveRedundantLinks_lib/neo4j-jmx-1.8.1.jar neo4RemoveRedundantLinks_lib/geronimo-jta_1.1_spec-1.1.1.jar neo4RemoveRedundantLinks_lib/junit-4.10.jar neo4RemoveRedundantLinks_lib/hamcrest-core-1.1.jar"/>
+            </manifest>
+            <fileset dir="C:/Users/Phil/git/softwareFm/mavenRip/target/classes"/>
+            <fileset dir="C:/Users/Phil/git/softwareFmUtilities/target/classes"/>
+            <fileset dir="C:/Users/Phil/git/softwareFm/core/target/classes"/>
+            <fileset dir="C:/Users/Phil/git/softwareFm/shared/target/classes"/>
+        </jar>
+        <delete dir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <mkdir dir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/apache/httpcomponents/httpclient/4.1.1/httpclient-4.1.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/apache/httpcomponents/httpcore/4.1/httpcore-4.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/commons-codec/commons-codec/1.4/commons-codec-1.4.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/jdom/jdom/1.1.3/jdom-1.1.3.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/eclipse/swt/org.eclipse.swt.win32.win32.x86_64/3.7.2/org.eclipse.swt.win32.win32.x86_64-3.7.2.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/eclipse/jface/3.3.0-I20070606-0010/jface-3.3.0-I20070606-0010.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/eclipse/swt/3.3.0-v3346/swt-3.3.0-v3346.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/eclipse/core/commands/3.3.0-I20070605-0010/commands-3.3.0-I20070605-0010.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/eclipse/equinox/common/3.3.0-v20070426/common-3.3.0-v20070426.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/apache/maven/maven-plugin-api/3.0/maven-plugin-api-3.0.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/apache/maven/maven-model/3.0/maven-model-3.0.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/codehaus/plexus/plexus-utils/2.0.4/plexus-utils-2.0.4.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/apache/maven/maven-artifact/3.0/maven-artifact-3.0.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/sonatype/sisu/sisu-inject-plexus/1.4.2/sisu-inject-plexus-1.4.2.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/codehaus/plexus/plexus-component-annotations/1.5.4/plexus-component-annotations-1.5.4.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/codehaus/plexus/plexus-classworlds/2.2.3/plexus-classworlds-2.2.3.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/sonatype/sisu/sisu-inject-bean/1.4.2/sisu-inject-bean-1.4.2.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/sonatype/sisu/sisu-guice/2.1.7/sisu-guice-2.1.7-noaop.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/com/miglayout/miglayout-swt/4.2/miglayout-swt-4.2.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/com/miglayout/miglayout-core/4.2/miglayout-core-4.2.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-jdbc/3.1.0.RELEASE/spring-jdbc-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-beans/3.1.0.RELEASE/spring-beans-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-core/3.1.0.RELEASE/spring-core-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-asm/3.1.0.RELEASE/spring-asm-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-tx/3.1.0.RELEASE/spring-tx-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/aopalliance/aopalliance/1.0/aopalliance-1.0.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-aop/3.1.0.RELEASE/spring-aop-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-context/3.1.0.RELEASE/spring-context-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/springframework/spring-expression/3.1.0.RELEASE/spring-expression-3.1.0.RELEASE.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/commons-dbcp/commons-dbcp/1.4/commons-dbcp-1.4.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/commons-pool/commons-pool/1.5.4/commons-pool-1.5.4.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/mysql/mysql-connector-java/5.1.21/mysql-connector-java-5.1.21.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/neo4j/neo4j/1.8.1/neo4j-1.8.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/neo4j/neo4j-kernel/1.8.1/neo4j-kernel-1.8.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/neo4j/neo4j-lucene-index/1.8.1/neo4j-lucene-index-1.8.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/apache/lucene/lucene-core/3.5.0/lucene-core-3.5.0.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/neo4j/neo4j-graph-algo/1.8.1/neo4j-graph-algo-1.8.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/neo4j/neo4j-udc/1.8.1/neo4j-udc-1.8.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/neo4j/neo4j-graph-matching/1.8.1/neo4j-graph-matching-1.8.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/neo4j/neo4j-cypher/1.8.1/neo4j-cypher-1.8.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/scala-lang/scala-library/2.9.1-1/scala-library-2.9.1-1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/com/googlecode/concurrentlinkedhashmap/concurrentlinkedhashmap-lru/1.3.1/concurrentlinkedhashmap-lru-1.3.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/neo4j/neo4j-jmx/1.8.1/neo4j-jmx-1.8.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/apache/geronimo/specs/geronimo-jta_1.1_spec/1.1.1/geronimo-jta_1.1_spec-1.1.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/junit/junit/4.10/junit-4.10.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+        <copy file="C:/Users/Phil/.m2/repository/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar" todir="C:/Users/Phil/git/softwareFm/mavenRip/neo4RemoveRedundantLinks_lib"/>
+    </target>
+</project>

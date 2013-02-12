@@ -2,6 +2,9 @@ package org.softwarefm.mavenRip.graph.internal;
 
 import java.text.MessageFormat;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -15,12 +18,14 @@ import org.neo4j.graphdb.traversal.TraversalDescription;
 import org.neo4j.graphdb.traversal.Traverser;
 import org.neo4j.kernel.Traversal;
 import org.neo4j.kernel.Uniqueness;
+import org.softwarefm.mavenRip.graph.INeo4JGroupArtifactVersionDigestVistor;
 import org.softwarefm.mavenRip.graph.INeo4Sfm;
 import org.softwarefm.mavenRip.graph.Neo4SfmConstants;
 import org.softwarefm.mavenRip.graph.SoftwareFmRelationshipTypes;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.functions.IFunction1;
+import org.softwarefm.utilities.maps.Maps;
 
 public class Neo4Sfm implements INeo4Sfm {
 	private final GraphDatabaseService graphDb;
@@ -149,10 +154,10 @@ public class Neo4Sfm implements INeo4Sfm {
 		createRelationshipifDoesntExist(artifactNode, SoftwareFmRelationshipTypes.DEPENDS_ON, targetArtifactNode);
 		createRelationshipifDoesntExist(parentVersionNode, SoftwareFmRelationshipTypes.DEPENDS_ON, dependencyVersionNode);
 	}
-	
-	private void createRelationshipifDoesntExist(Node from, RelationshipType relationshipType, Node dependent){
-		for (Relationship relation: from.getRelationships(Direction.OUTGOING, relationshipType)){
-			if (relation.getEndNode().getId()== dependent.getId())
+
+	private void createRelationshipifDoesntExist(Node from, RelationshipType relationshipType, Node dependent) {
+		for (Relationship relation : from.getRelationships(Direction.OUTGOING, relationshipType)) {
+			if (relation.getEndNode().getId() == dependent.getId())
 				return;
 		}
 		from.createRelationshipTo(dependent, relationshipType);
@@ -176,4 +181,56 @@ public class Neo4Sfm implements INeo4Sfm {
 		}
 	}
 
+	@Override
+	public void removeRedundantRelations(Node from) {
+		Map<RelationshipType, Map<Node, List<Relationship>>> outputs = getRelationshipsMap(from);
+		for (Entry<RelationshipType, Map<Node, List<Relationship>>> typeNodeEntry : outputs.entrySet()) {
+			for (Entry<Node, List<Relationship>> nodeListEntry : typeNodeEntry.getValue().entrySet()) {
+				List<Relationship> relationShips = nodeListEntry.getValue();
+				for (int i = 1; i < relationShips.size(); i++)
+					relationShips.get(i).delete();
+			}
+		}
+	}
+
+	@Override
+	public boolean hasRedundantRelations(Node from) {
+		Map<RelationshipType, Map<Node, List<Relationship>>> outputs = getRelationshipsMap(from);
+		for (Entry<RelationshipType, Map<Node, List<Relationship>>> typeNodeEntry : outputs.entrySet()) {
+			for (Entry<Node, List<Relationship>> nodeListEntry : typeNodeEntry.getValue().entrySet()) {
+				List<Relationship> relationShips = nodeListEntry.getValue();
+				if (relationShips.size()>1)
+					return true;
+			}
+		}
+		return false;
+	}
+	private Map<RelationshipType, Map<Node, List<Relationship>>> getRelationshipsMap(Node from) {
+		Map<RelationshipType, Map<Node, List<Relationship>>> outputs = Maps.newMap();
+		for (Relationship r : from.getRelationships())
+			Maps.addToList(outputs, r.getType(), r.getEndNode(), r);
+		return outputs;
+	}
+	@Override
+	public void accept(INeo4JGroupArtifactVersionDigestVistor visitor) {
+		for (Relationship r1 : groupReference.getRelationships(Direction.OUTGOING, SoftwareFmRelationshipTypes.HAS_GROUP)) {
+			Node groupNode = r1.getEndNode();
+			visitor.accept(groupNode);
+			for (Relationship r2 : groupNode.getRelationships(Direction.OUTGOING, SoftwareFmRelationshipTypes.HAS_ARTIFACT)) {
+				Node artifactNode = r2.getEndNode();
+				visitor.accept(groupNode, artifactNode);
+				for (Relationship r3 : artifactNode.getRelationships(Direction.OUTGOING, SoftwareFmRelationshipTypes.HAS_VERSION)) {
+					Node versionNode = r3.getEndNode();
+					visitor.accept(groupNode, artifactNode, versionNode);
+					for (Relationship r4 : versionNode.getRelationships(Direction.OUTGOING, SoftwareFmRelationshipTypes.HAS_DIGEST)) {
+						Node digestNode = r4.getEndNode();
+						visitor.accept(groupNode, artifactNode, versionNode, digestNode);
+					}
+				}
+			}
+		}
+	}
+
+
+	
 }

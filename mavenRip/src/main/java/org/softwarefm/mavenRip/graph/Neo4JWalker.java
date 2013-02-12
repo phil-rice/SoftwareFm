@@ -17,16 +17,20 @@ public class Neo4JWalker {
 		for (Path path : description.traverse(groupReference)) {
 			// System.out.println(path);
 			Node endNode = path.endNode();
-			print("{0}", Neo4SfmConstants.groupIdProperty, endNode);
-			print("  {0}", Neo4SfmConstants.artifactIdProperty, endNode);
-			print("    {0}", Neo4SfmConstants.versionProperty, endNode);
-			print("      {0}", Neo4SfmConstants.digestProperty, endNode);
+			print(endNode);
 			for (Relationship relation : endNode.getRelationships(Direction.OUTGOING, SoftwareFmRelationshipTypes.DEPENDS_ON)) {
 				Node dependant = relation.getEndNode();
 				print("  Depends on {0}", Neo4SfmConstants.groupArtifactidProperty, dependant);
 				print("    Depends on {0}", Neo4SfmConstants.fullIdProperty, dependant);
 			}
 		}
+	}
+
+	public static void print(Node endNode) {
+		print("{0}", Neo4SfmConstants.groupIdProperty, endNode);
+		print("  {0}", Neo4SfmConstants.artifactIdProperty, endNode);
+		print("    {0}", Neo4SfmConstants.versionProperty, endNode);
+		print("      {0}", Neo4SfmConstants.digestProperty, endNode);
 	}
 
 	private static void print(String pattern, String property, Node node) {

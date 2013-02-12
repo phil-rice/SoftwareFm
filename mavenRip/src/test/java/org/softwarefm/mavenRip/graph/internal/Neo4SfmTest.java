@@ -1,12 +1,16 @@
 package org.softwarefm.mavenRip.graph.internal;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.index.Index;
+import org.softwarefm.mavenRip.graph.INeo4JGroupArtifactVersionDigestVistor;
 import org.softwarefm.mavenRip.graph.INeo4Sfm;
 import org.softwarefm.mavenRip.graph.Neo4SfmConstants;
 import org.softwarefm.mavenRip.graph.SoftwareFmRelationshipTypes;
@@ -247,5 +251,80 @@ public class Neo4SfmTest extends AbstractNeo4SfmTest {
 		assertEquals(n111.getId(), relationship.getStartNode().getId());
 		assertEquals(n112.getId(), relationship.getEndNode().getId());
 
+	}
+
+	public void testRemoveRedundantRelationships() {
+		neo4Sfm.execute(new ICallback<GraphDatabaseService>() {
+			@Override
+			public void process(GraphDatabaseService db) throws Exception {
+				Node n111 = neo4Sfm.addGroupArtifactVersionDigest("g1", "a1", "v1", "pomUrl", "pomText", "digest");
+				Node n112 = neo4Sfm.addGroupArtifactVersionDigest("g1", "a1", "v2", "pomUrl", "pomText", "digest");
+				neo4Sfm.addDependency(n111, n112);
+				assertEquals(1, Iterables.size(n111.getRelationships(Direction.OUTGOING, SoftwareFmRelationshipTypes.DEPENDS_ON)));
+				assertFalse(neo4Sfm.hasRedundantRelations(n111));
+				// now add redundants
+				n111.createRelationshipTo(n112, SoftwareFmRelationshipTypes.DEPENDS_ON);
+				assertTrue(neo4Sfm.hasRedundantRelations(n111));
+				n111.createRelationshipTo(n112, SoftwareFmRelationshipTypes.DEPENDS_ON);
+				assertTrue(neo4Sfm.hasRedundantRelations(n111));
+				assertEquals(3, Iterables.size(n111.getRelationships(Direction.OUTGOING, SoftwareFmRelationshipTypes.DEPENDS_ON)));
+				neo4Sfm.removeRedundantRelations(n111);
+				assertFalse(neo4Sfm.hasRedundantRelations(n111));
+				assertEquals(1, Iterables.size(n111.getRelationships(Direction.OUTGOING, SoftwareFmRelationshipTypes.DEPENDS_ON)));
+			}
+		});
+	}
+
+	public void testWalker() {
+		final List<String> log = new ArrayList<String>();
+		neo4Sfm.execute(new ICallback<GraphDatabaseService>() {
+			@Override
+			public void process(GraphDatabaseService db) throws Exception {
+				neo4Sfm.addGroupArtifactVersionDigest("g1", "a1", "v1", "pomUrl", "pomText", "digest");
+				neo4Sfm.addGroupArtifactVersionDigest("g1", "a1", "v2", "pomUrl", "pomText", "digest");
+				neo4Sfm.addGroupArtifactVersionDigest("g1", "a1", "v2", "pomUrl", "pomText", "digest2");
+				neo4Sfm.addGroupArtifactVersionDigest("g2", "a1", "v1", "pomUrl", "pomText", "digest");
+			}
+		});
+		neo4Sfm.accept(new INeo4JGroupArtifactVersionDigestVistor() {
+			@Override
+			public void accept(Node groupNode, Node artifactNode, Node versionNode, Node digestNode) {
+				log.add(groupName(groupNode) + ":" + artifactName(artifactNode) + ":" + versionName(versionNode) + ":" + digestName(digestNode));
+			}
+
+			@Override
+			public void accept(Node groupNode, Node artifactNode, Node versionNode) {
+				log.add(groupName(groupNode) + ":" + artifactName(artifactNode) + ":" + versionName(versionNode));
+			}
+
+			@Override
+			public void accept(Node groupNode, Node artifactNode) {
+				log.add(groupName(groupNode) + ":" + artifactName(artifactNode));
+			}
+
+			@Override
+			public void accept(Node groupNode) {
+				log.add(groupName(groupNode));
+			}
+		});
+		Tests.assertListEquals(log, //
+				"g1", "g1:a1", "g1:a1:v1", "g1:a1:v1:digest", "g1:a1:v2", "g1:a1:v2:digest", "g1:a1:v2:digest2",//
+				"g2", "g2:a1", "g2:a1:v1", "g2:a1:v1:digest");
+	}
+
+	private String groupName(Node node) {
+		return (String) node.getProperty(Neo4SfmConstants.groupIdProperty);
+	}
+
+	private String artifactName(Node node) {
+		return (String) node.getProperty(Neo4SfmConstants.artifactIdProperty);
+	}
+
+	private String versionName(Node node) {
+		return (String) node.getProperty(Neo4SfmConstants.versionProperty);
+	}
+
+	private String digestName(Node node) {
+		return (String) node.getProperty(Neo4SfmConstants.digestProperty);
 	}
 }

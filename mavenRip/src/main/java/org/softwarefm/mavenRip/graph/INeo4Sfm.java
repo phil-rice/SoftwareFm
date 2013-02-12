@@ -13,7 +13,7 @@ import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.collections.Iterables;
 import org.softwarefm.utilities.functions.IFunction1;
 
-public interface INeo4Sfm {
+public interface INeo4Sfm extends INeo4JGroupArtifactVersionDigestWalker {
 
 	Node graphReference();
 
@@ -24,15 +24,21 @@ public interface INeo4Sfm {
 
 	/** Returns the version node */
 	Node addGroupArtifactVersionDigest(String groupId, String artifactId, String version, String pomUrl, String pom, String digest);
+
 	void addDependency(final Node parentVersionNode, final Node dependencyVersionNode);
-	
+
 	void execute(ICallback<GraphDatabaseService> callback);
 
 	<T> T execute(IFunction1<GraphDatabaseService, T> fn);
 
 	Node getNodeOrNull(Index<Node> index, String property, Object value);
 
+	boolean hasRedundantRelations(Node from);
+
+	void removeRedundantRelations(Node from);
+
 	public static class Utils {
+
 		public static INeo4Sfm neo4Sfm(String root) {
 			final GraphDatabaseService graphDb = new GraphDatabaseFactory().newEmbeddedDatabase(root);
 			Runtime.getRuntime().addShutdownHook(new Thread() {
@@ -52,17 +58,26 @@ public interface INeo4Sfm {
 			return groupId + ":" + artifactId + ":" + version;
 		}
 
-		public static TraversalDescription groupIdArtifactVersionDigest() {
+		public static TraversalDescription groupIdArtifact() {
 			TraversalDescription description = Traversal.description().//
 					depthFirst().//
 					relationships(SoftwareFmRelationshipTypes.HAS_GROUP, Direction.OUTGOING).//
 					relationships(SoftwareFmRelationshipTypes.HAS_ARTIFACT, Direction.OUTGOING).//
-					relationships(SoftwareFmRelationshipTypes.HAS_VERSION, Direction.OUTGOING).//
-					relationships(SoftwareFmRelationshipTypes.HAS_DIGEST, Direction.OUTGOING).//
 					uniqueness(Uniqueness.RELATIONSHIP_GLOBAL);
 			return description;
 		}
 
+		public static TraversalDescription groupIdArtifactVersion() {
+			TraversalDescription description = groupIdArtifactVersion().//
+					relationships(SoftwareFmRelationshipTypes.HAS_VERSION, Direction.OUTGOING);
+			return description;
+		}
+
+		public static TraversalDescription groupIdArtifactVersionDigest() {
+			TraversalDescription description = groupIdArtifactVersion().//
+					relationships(SoftwareFmRelationshipTypes.HAS_DIGEST, Direction.OUTGOING);
+			return description;
+		}
 
 		public static Node getArtifactFromVersion(Node versionNode) {
 			Node artifactNode = Iterables.getOnly(versionNode.getRelationships(SoftwareFmRelationshipTypes.HAS_VERSION, Direction.INCOMING)).getStartNode();
@@ -70,9 +85,15 @@ public interface INeo4Sfm {
 
 		}
 
+		public static Node getGroupFromArtifact(Node artifactNode) {
+			Node groupNode = Iterables.getOnly(artifactNode.getRelationships(SoftwareFmRelationshipTypes.HAS_ARTIFACT, Direction.INCOMING)).getStartNode();
+			return groupNode;
+		}
+
 		public static String makeGroupArtifactId(String groupId, String artifactId) {
 			return groupId + ":" + artifactId;
 		}
+
 	}
 
 }
