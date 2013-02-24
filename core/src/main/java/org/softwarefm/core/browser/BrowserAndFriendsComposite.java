@@ -38,14 +38,13 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 
 	public final static String startOfFriendContainer = "<div class=\"user-relationship-container\">";
 	public final static String endOfFriendsContainer = "<div class=\"cleared\"></div>";
-	public final static String siteUrl = CommonConstants.softwareFmHost;;
+	public final static String siteUrl = CommonConstants.softwareFmHost;
 	public final static String sitemarker = Strings.allButLastSegment(siteUrl, ".");
 	public final static String defaultImageUrlPattern = siteUrl + "{0}";
 	public final static String userUrlPattern = siteUrl + "/wiki/User:{0}";
 
 	ToolBar friendsToolBar;
 	private final ImageRegistry imageRegistry;
-	private String lastName;
 	protected List<FriendData> lastResult;
 
 	public BrowserAndFriendsComposite(Composite parent, SoftwareFmContainer<?> container) {

@@ -29,7 +29,7 @@ public class Neo4JRemoveRedundantLinks {
 						@Override
 						public void process(GraphDatabaseService t) throws Exception {
 							System.out.print("Cleaning ");
-							Neo4JWalker.print(node);
+							INeo4Sfm.Utils.print(node);
 							neo4Sfm.removeRedundantRelations(node);
 						}
 					});

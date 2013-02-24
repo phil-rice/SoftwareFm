@@ -54,8 +54,6 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 
 	private ISocialManager socialManager;
 
-	private int initialPanelListeners;
-
 	abstract protected P makePanel(Composite parent, SoftwareFmContainer<?> container);
 
 	public void testDisposeRemovesSelfAsListener() {
@@ -92,7 +90,6 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 		initialListeners = selectedArtifactSelectionManager.getListeners().size();
 		assertEquals(1, initialListeners);
 		panel = makePanel(shell, container);
-		initialPanelListeners = selectedArtifactSelectionManager.getListeners().size();
 	}
 
 	@Override

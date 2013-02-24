@@ -66,6 +66,7 @@ public class UsagePersistance implements IUsagePersistance {
 		return elementToString(usageElement);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void populate(ISocialManager manager, String saved) {
 		Element root = getRootElementFromText(saved);

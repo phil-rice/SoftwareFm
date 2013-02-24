@@ -276,6 +276,7 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 		return Collections.unmodifiableMap(views);
 	}
 
+	@SuppressWarnings("unused")
 	private ISelectedBindingManager<ITextSelection> makeSelectionBindingManager() {
 		synchronized (lock) {
 			if (selectionBindingManager == null) {

@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.easymock.EasyMock;
-import org.junit.Test;
 import org.softwarefm.httpServer.AbstractHttpServerTest;
 import org.softwarefm.server.configurator.UsageConfigurator;
 import org.softwarefm.shared.social.FriendData;

@@ -12,8 +12,6 @@ import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.selection.ISelectedBindingListener;
 import org.softwarefm.core.selection.ISelectedBindingStrategy;
 import org.softwarefm.core.tests.ExecutorTestCase;
-import org.softwarefm.shared.social.ISocialManager;
-import org.softwarefm.shared.usage.IUsagePersistance;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.events.IMultipleListenerList;
 
@@ -27,7 +25,6 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 	private final FileAndDigest fileAndDigest = new FileAndDigest(file, "digest");
 	private final ArtifactData artifactData = new ArtifactData(fileAndDigest, "g", "a", "v");
 	private IArtifactDataCache artifactDataCache;
-	private ISocialManager socialManager;
 
 	public void testWhenSelectionIsNull() throws Exception {
 		int count = 1;
@@ -186,7 +183,6 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 		EasyMock.makeThreadSafe(strategy, true);
 		artifactDataCache = IArtifactDataCache.Utils.artifactDataCache();
 		IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
-		socialManager = ISocialManager.Utils.socialManager(listenerList, IUsagePersistance.Utils.persistance());
 		selectionManager = new SelectedArtifactSelectionManager<String, String>(listenerList, strategy, getExecutor(), artifactDataCache, ICallback.Utils.rethrow());
 		selectionManager.addSelectedArtifactSelectionListener(listener);
 	}

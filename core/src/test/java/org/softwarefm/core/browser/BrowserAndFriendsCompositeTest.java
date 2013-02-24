@@ -66,7 +66,7 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 		assertEquals(null, socialManager.myName());
 	}
 
-	public void testFindsFriendsFromUserPage() throws InterruptedException {
+	public void testFindsFriendsFromUserPage()  {
 		login();
 		assertEquals("Phil", socialManager.myName());
 		assertEquals(Arrays.asList(), socialManager.myFriends());
@@ -76,7 +76,7 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 		assertEquals(friendCount, socialManager.myFriends().size());
 	}
 
-	public void testDoesntFindFriendsFromOtherPeoplesUserPage() throws InterruptedException {
+	public void testDoesntFindFriendsFromOtherPeoplesUserPage()  {
 		login();
 		assertEquals("Phil", socialManager.myName());
 		assertEquals(Arrays.asList(), socialManager.myFriends());
@@ -136,9 +136,9 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 		browserAndFriendsComposite.setUrlAndWait(Strings.url(CommonConstants.softwareFmHost, "wiki/User:" + name));
 	}
 
-	private void gotoMainPage() {
-		browserAndFriendsComposite.setUrlAndWait(Strings.url(CommonConstants.softwareFmHost, "wiki/MainPage"));
-	}
+//	private void gotoMainPage() {
+//		browserAndFriendsComposite.setUrlAndWait(Strings.url(CommonConstants.softwareFmHost, "wiki/MainPage"));
+//	}
 
 	public void login() {
 		wikiLoginHelperForTests.login("Phil", "password");

@@ -151,7 +151,7 @@ public class Neo4SfmTest extends AbstractNeo4SfmTest {
 		checkHaveNodes(initial + 2);
 	}
 
-	public void testFind() {
+	public void testFind3() {
 		assertNull(neo4Sfm.find("g", "a", "v"));
 		Node node = neo4Sfm.execute(new IFunction1<GraphDatabaseService, Node>() {
 			@Override
@@ -161,6 +161,19 @@ public class Neo4SfmTest extends AbstractNeo4SfmTest {
 		});
 		assertEquals(node.getId(), neo4Sfm.find("g", "a", "v").getId());
 		assertEquals(node.getId(), neo4Sfm.find("g", "a", "v").getId());
+	}
+
+	public void testFind2() {
+		assertNull(neo4Sfm.find("g", "a"));
+		Node versionNode = neo4Sfm.execute(new IFunction1<GraphDatabaseService, Node>() {
+			@Override
+			public Node apply(GraphDatabaseService t) throws Exception {
+				return neo4Sfm.addGroupArtifactVersionDigest("g", "a", "v", "pomUrl", "pomText", "digest");
+			}
+		});
+		Node node = INeo4Sfm.Utils.getArtifactFromVersion(versionNode);
+		assertEquals(node.getId(), neo4Sfm.find("g", "a").getId());
+		assertEquals(node.getId(), neo4Sfm.find("g", "a").getId());
 	}
 
 	public void testWalkIndexWhenZeroHitsReturnsNull() {
@@ -187,7 +200,6 @@ public class Neo4SfmTest extends AbstractNeo4SfmTest {
 
 	public void testaddGroupArtifactVersionDigestAddsArtifactAndVersionToIndices() {
 		final AtomicReference<Node> version1 = new AtomicReference<Node>();
-		final AtomicReference<Node> version2 = new AtomicReference<Node>();
 		neo4Sfm.execute(new ICallback<GraphDatabaseService>() {
 			@Override
 			public void process(GraphDatabaseService db) throws Exception {
@@ -231,6 +243,7 @@ public class Neo4SfmTest extends AbstractNeo4SfmTest {
 		assertEquals("pomUrl2", version1Node.getProperty(Neo4SfmConstants.pomUrlProperty));
 		assertEquals("pomText2", version1Node.getProperty(Neo4SfmConstants.pomProperty));
 		assertEquals("g1:a1:v1", version1Node.getProperty(Neo4SfmConstants.fullIdProperty));
+		assertEquals("v1", version1Node.getProperty(Neo4SfmConstants.versionProperty));
 		assertEquals("g1:a1", artifact1.getProperty(Neo4SfmConstants.groupArtifactidProperty));
 	}
 
@@ -240,8 +253,8 @@ public class Neo4SfmTest extends AbstractNeo4SfmTest {
 			public void process(GraphDatabaseService db) throws Exception {
 				Node n111 = neo4Sfm.addGroupArtifactVersionDigest("g1", "a1", "v1", "pomUrl", "pomText", "digest");
 				Node n112 = neo4Sfm.addGroupArtifactVersionDigest("g1", "a1", "v2", "pomUrl", "pomText", "digest");
-				neo4Sfm.addDependency(n111, n112);
-				neo4Sfm.addDependency(n111, n112);
+				neo4Sfm.addVersionDependency(n111, n112);
+				neo4Sfm.addVersionDependency(n111, n112);
 			}
 		});
 
@@ -259,7 +272,7 @@ public class Neo4SfmTest extends AbstractNeo4SfmTest {
 			public void process(GraphDatabaseService db) throws Exception {
 				Node n111 = neo4Sfm.addGroupArtifactVersionDigest("g1", "a1", "v1", "pomUrl", "pomText", "digest");
 				Node n112 = neo4Sfm.addGroupArtifactVersionDigest("g1", "a1", "v2", "pomUrl", "pomText", "digest");
-				neo4Sfm.addDependency(n111, n112);
+				neo4Sfm.addVersionDependency(n111, n112);
 				assertEquals(1, Iterables.size(n111.getRelationships(Direction.OUTGOING, SoftwareFmRelationshipTypes.DEPENDS_ON)));
 				assertFalse(neo4Sfm.hasRedundantRelations(n111));
 				// now add redundants

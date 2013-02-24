@@ -70,11 +70,16 @@ public class Neo4Sfm implements INeo4Sfm {
 
 	@Override
 	public Node find(String groupId, String artifactId, String version) {
-
-		Node group = find(groupReference, SoftwareFmRelationshipTypes.HAS_GROUP, Neo4SfmConstants.groupIdProperty, groupId);
-		Node artifact = find(group, SoftwareFmRelationshipTypes.HAS_ARTIFACT, Neo4SfmConstants.artifactIdProperty, artifactId);
+		Node artifact = find(groupId, artifactId);
 		Node versionNode = find(artifact, SoftwareFmRelationshipTypes.HAS_VERSION, Neo4SfmConstants.versionProperty, version);
 		return versionNode;
+	}
+
+	@Override
+	public Node find(String groupId, String artifactId) {
+		Node group = find(groupReference, SoftwareFmRelationshipTypes.HAS_GROUP, Neo4SfmConstants.groupIdProperty, groupId);
+		Node artifact = find(group, SoftwareFmRelationshipTypes.HAS_ARTIFACT, Neo4SfmConstants.artifactIdProperty, artifactId);
+		return artifact;
 	}
 
 	private Node find(Node firstNode, SoftwareFmRelationshipTypes relationShip, String property, String value) {
@@ -86,8 +91,13 @@ public class Neo4Sfm implements INeo4Sfm {
 				uniqueness(Uniqueness.RELATIONSHIP_GLOBAL);
 		Traverser traverse = description.traverse(firstNode);
 		for (Node secondNode : traverse.nodes()) {
-			if (value.equals(secondNode.getProperty(property, null))) {
-				return secondNode;
+			try {
+				Object actual = secondNode.getProperty(property, null);
+				if (value == actual || value.equals(actual)) {
+					return secondNode;
+				}
+			} catch (Exception e) {
+				throw new RuntimeException("Error accessing node: " + secondNode + "(" + INeo4Sfm.Utils.allProperties(secondNode) + ")", e);
 			}
 		}
 		return null;
@@ -121,8 +131,8 @@ public class Neo4Sfm implements INeo4Sfm {
 			callback.process(graphDb);
 			tx.success();
 		} catch (Exception e) {
+			e.printStackTrace();
 			tx.failure();
-			throw WrappedException.wrap(e);
 		} finally {
 			tx.finish();
 		}
@@ -148,10 +158,13 @@ public class Neo4Sfm implements INeo4Sfm {
 	}
 
 	@Override
-	public void addDependency(Node parentVersionNode, Node dependencyVersionNode) {
-		Node artifactNode = INeo4Sfm.Utils.getArtifactFromVersion(parentVersionNode);
-		Node targetArtifactNode = INeo4Sfm.Utils.getArtifactFromVersion(dependencyVersionNode);
-		createRelationshipifDoesntExist(artifactNode, SoftwareFmRelationshipTypes.DEPENDS_ON, targetArtifactNode);
+	public void addArtifactDependency(Node parentArtifactNode, Node dependencyArtifactNode) {
+		createRelationshipifDoesntExist(parentArtifactNode, SoftwareFmRelationshipTypes.DEPENDS_ON, dependencyArtifactNode);
+
+	}
+
+	@Override
+	public void addVersionDependency(Node parentVersionNode, Node dependencyVersionNode) {
 		createRelationshipifDoesntExist(parentVersionNode, SoftwareFmRelationshipTypes.DEPENDS_ON, dependencyVersionNode);
 	}
 
@@ -199,18 +212,20 @@ public class Neo4Sfm implements INeo4Sfm {
 		for (Entry<RelationshipType, Map<Node, List<Relationship>>> typeNodeEntry : outputs.entrySet()) {
 			for (Entry<Node, List<Relationship>> nodeListEntry : typeNodeEntry.getValue().entrySet()) {
 				List<Relationship> relationShips = nodeListEntry.getValue();
-				if (relationShips.size()>1)
+				if (relationShips.size() > 1)
 					return true;
 			}
 		}
 		return false;
 	}
+
 	private Map<RelationshipType, Map<Node, List<Relationship>>> getRelationshipsMap(Node from) {
 		Map<RelationshipType, Map<Node, List<Relationship>>> outputs = Maps.newMap();
 		for (Relationship r : from.getRelationships())
 			Maps.addToList(outputs, r.getType(), r.getEndNode(), r);
 		return outputs;
 	}
+
 	@Override
 	public void accept(INeo4JGroupArtifactVersionDigestVistor visitor) {
 		for (Relationship r1 : groupReference.getRelationships(Direction.OUTGOING, SoftwareFmRelationshipTypes.HAS_GROUP)) {
@@ -231,6 +246,4 @@ public class Neo4Sfm implements INeo4Sfm {
 		}
 	}
 
-
-	
 }
