@@ -32,6 +32,18 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 	private ISocialManager socialManager;
 	private WikiLoginHelperForTests wikiLoginHelperForTests;
 
+	private SoftwareFmContainer<Object> container;
+
+	public void testFindsFriendsFromUserPage() {
+		login();
+		assertEquals("Test", socialManager.myName());
+		assertEquals(Arrays.asList(), socialManager.myFriends());
+
+		gotoMyUserPage();
+		assertEquals("Test", socialManager.myName());
+		assertEquals(friendCount, socialManager.myFriends().size());
+	}
+
 	public void testPutsFriendsIntoImages() {
 		browserAndFriendsComposite.setFriendData(friend1_1Usage);
 		ToolBar friendsToolBar = browserAndFriendsComposite.friendsToolBar;
@@ -48,7 +60,7 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 				friendItem1.notifyListeners(SWT.Selection, new Event());
 			}
 		});
-		assertEquals("http://"+Strings.url(CommonConstants.softwareFmHost, "wiki/User:" +Strings.upperCaseFirstCharacter(UsageTestData.friend1.name)), browserAndFriendsComposite.browser.getUrl());
+		assertEquals("http://" + Strings.url(CommonConstants.softwareFmHost, "wiki/User:" + Strings.upperCaseFirstCharacter(UsageTestData.friend1.name)), browserAndFriendsComposite.browser.getUrl());
 
 	}
 
@@ -66,28 +78,18 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 		assertEquals(null, socialManager.myName());
 	}
 
-	public void testFindsFriendsFromUserPage()  {
+	public void testDoesntFindFriendsFromOtherPeoplesUserPage() {
 		login();
-		assertEquals("Phil", socialManager.myName());
+		assertEquals("Test", socialManager.myName());
 		assertEquals(Arrays.asList(), socialManager.myFriends());
 
 		gotoMyUserPage();
-		assertEquals("Phil", socialManager.myName());
-		assertEquals(friendCount, socialManager.myFriends().size());
-	}
-
-	public void testDoesntFindFriendsFromOtherPeoplesUserPage()  {
-		login();
-		assertEquals("Phil", socialManager.myName());
-		assertEquals(Arrays.asList(), socialManager.myFriends());
-
-		gotoMyUserPage();
-		assertEquals("Phil", socialManager.myName());
+		assertEquals("Test", socialManager.myName());
 		List<FriendData> friends = new ArrayList<FriendData>(socialManager.myFriends());
 		assertEquals(friendCount, friends.size());
 		gotoUserPage("Root");
 
-		assertEquals("Phil", socialManager.myName());
+		assertEquals("Test", socialManager.myName());
 		assertEquals(friends, socialManager.myFriends());
 	}
 
@@ -99,7 +101,7 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 
 	public void testFindsNameFromPage() {
 		login();
-		assertEquals("Phil", socialManager.myName());
+		assertEquals("Test", socialManager.myName());
 	}
 
 	public void testFindsNullIfLoggedOut() {
@@ -112,7 +114,7 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 		assertNull(socialManager.myName());
 
 		login();
-		assertEquals("Phil", socialManager.myName());
+		assertEquals("Test", socialManager.myName());
 
 		logout();
 		assertNull(socialManager.myName());
@@ -120,11 +122,11 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 
 	public void testClearsFriendsWhenLogOut() {
 		login();
-		assertEquals("Phil", socialManager.myName());
+		assertEquals("Test", socialManager.myName());
 		assertEquals(Arrays.asList(), socialManager.myFriends());
 
 		gotoMyUserPage();
-		assertEquals("Phil", socialManager.myName());
+		assertEquals("Test", socialManager.myName());
 		assertEquals(friendCount, socialManager.myFriends().size());
 
 		logout();
@@ -136,12 +138,12 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 		browserAndFriendsComposite.setUrlAndWait(Strings.url(CommonConstants.softwareFmHost, "wiki/User:" + name));
 	}
 
-//	private void gotoMainPage() {
-//		browserAndFriendsComposite.setUrlAndWait(Strings.url(CommonConstants.softwareFmHost, "wiki/MainPage"));
-//	}
+	// private void gotoMainPage() {
+	// browserAndFriendsComposite.setUrlAndWait(Strings.url(CommonConstants.softwareFmHost, "wiki/MainPage"));
+	// }
 
 	public void login() {
-		wikiLoginHelperForTests.login("Phil", "password");
+		wikiLoginHelperForTests.login("test", "testtest");
 	}
 
 	public void logout() {
@@ -154,8 +156,8 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 		socialManager = ISocialManager.Utils.socialManager(IMultipleListenerList.Utils.defaultList(), IUsagePersistance.Utils.persistance());
 		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources();
 		Browser.clearSessions();
-		SoftwareFmContainer<Object> container = SoftwareFmContainer.makeForTests(display, resourceGetter, socialManager);
-		browserAndFriendsComposite = new BrowserAndFriendsComposite(shell, container);
+		container = SoftwareFmContainer.makeForTests(display, resourceGetter, socialManager);
+		browserAndFriendsComposite = new BrowserAndFriendsComposite(shell, container) ;
 		wikiLoginHelperForTests = new WikiLoginHelperForTests(browserAndFriendsComposite);
 	}
 

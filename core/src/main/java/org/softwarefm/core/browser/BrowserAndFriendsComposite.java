@@ -57,6 +57,7 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 		browser.addLocationListener(new FriendsAndNameLocationListener(container.socialManager, browser, imageUrlPattern));
 
 	}
+	
 
 	@Override
 	protected void addMoreControls() {
@@ -134,8 +135,8 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 		@Override
 		public void changed(LocationEvent event) {
 			if (event.location.contains(sitemarker)) {
-				socialManager.setMyName(myName());
 				String newName = myName();
+				socialManager.setMyName(newName);
 				if (newName != null && !Strings.safeEquals(newName, socialManager.myName()))
 					socialManager.setFriendsData(Collections.<FriendData> emptyList());
 				if (socialManager.myName() != null && event.location.endsWith("/wiki/User:" + socialManager.myName())) {
@@ -167,7 +168,7 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 				return null;
 			if (html.contains("<li id=\"pt-login\">"))
 				return null;
-			String container = Strings.findItem(html, "<div id=\"p-personal", "</div>");
+			String container = Strings.findItem(html, "<h6>My pages</h6>", "</div>");//<div id=\"p-personal", "</div>");
 			if (container != null) {
 				String name = Strings.findItem(container, "User:", "\"");
 				return name;

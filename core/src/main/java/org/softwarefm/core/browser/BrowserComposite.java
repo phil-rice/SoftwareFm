@@ -80,7 +80,7 @@ public class BrowserComposite extends HasComposite {
 	}
 
 	public void setUrl(String url) {
-		browser.setUrl(url);
+		browser.setUrl(url, "", new String[]{});
 		browserToolbar.updateButtonStatus();
 	}
 

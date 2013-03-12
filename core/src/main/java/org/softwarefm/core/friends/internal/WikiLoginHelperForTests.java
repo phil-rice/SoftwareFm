@@ -14,7 +14,7 @@ public class WikiLoginHelperForTests {
 	public WikiLoginHelperForTests(BrowserComposite browserComposite) {
 		this.browserComposite = browserComposite;
 	}
-
+	
 	public void login(String user, String password) {
 		browserComposite.setUrlAndWait(loginUrl);
 		browserComposite.evaluateScript("document.getElementById('wpName1').value='" + user + "'");

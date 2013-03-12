@@ -25,18 +25,19 @@ import org.softwarefm.shared.usage.UsageStatData;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.runnable.Callables;
 
-public class DebugTextComposite extends SoftwareFmComposite {
+public class DebugTextComposite extends SoftwareFmComposite implements IDebugText {
 
 	private TabFolder tabFolder;
 	private StyledText listenersText;
 	private StyledText viewsText;
 	private Callable<Map<Object, List<Object>>> viewGetter;
 	private StyledText messageText;
+	private StyledText listenerText;
 
 	public DebugTextComposite(Composite parent, final SoftwareFmContainer<?> container) {
 		super(parent, container);
 		TabItem listenerItem = new TabItem(tabFolder, SWT.NULL);
-		final StyledText listenerText = new StyledText(tabFolder, SWT.WRAP | SWT.READ_ONLY);
+		listenerText = new StyledText(tabFolder, SWT.WRAP | SWT.READ_ONLY);
 		listenerItem.setText("Listener");
 		listenerItem.setControl(listenerText);
 
@@ -69,34 +70,34 @@ public class DebugTextComposite extends SoftwareFmComposite {
 
 		addSelectedBindingListener(new SelectedBindingAdapter() {
 			@Override
+			public void codeSelectionOccured(int selectionCount, CodeData codeData) {
+				updateListenersAndViews();
+				startEvent("Class and method: (" + selectionCount + ")\n" + codeData + "\nUrl: " + container.urlStrategy.classAndMethodUrl(codeData));
+			}
+
+			@Override
 			public void notJavaElement(int selectionCount) {
-				listenerText.append("notJavaElement: (" + selectionCount + ")\n");
+				continueEvent("notJavaElement: (" + selectionCount + ")\n");
 			}
 
 			@Override
 			public void artifactDetermined(int selectionCount, ArtifactData artifactData) {
-				listenerText.append("projectDetermined: (" + selectionCount + ")\n" + artifactData + "\nUrl: " + container.urlStrategy.projectUrl(artifactData) + "\n");
+				continueEvent("projectDetermined: (" + selectionCount + ")\n" + artifactData + "\nUrl: " + container.urlStrategy.projectUrl(artifactData));
 			}
 
 			@Override
 			public void notInAJar(int selectionCount, File file) {
-				listenerText.append("Not In A Jar: (" + selectionCount + ") file is: " + file + "\n");
+				continueEvent("Not In A Jar: (" + selectionCount + ") file is: " + file);
 			}
 
 			@Override
 			public void digestDetermined(int selectionCount, FileAndDigest fileAndDigest) {
-				listenerText.append("Digest: (" + selectionCount + ") " + fileAndDigest + "\nUrl: " + container.urlStrategy.digestUrl(fileAndDigest.digest) + "\n");
-			}
-
-			@Override
-			public void codeSelectionOccured(int selectionCount, CodeData codeData) {
-				updateListenersAndViews();
-				listenerText.setText("Class and method: (" + selectionCount + ")\n" + codeData + "\nUrl: " + container.urlStrategy.classAndMethodUrl(codeData) + "\n");
+				continueEvent("Digest: (" + selectionCount + ") " + fileAndDigest + "\nUrl: " + container.urlStrategy.digestUrl(fileAndDigest.digest));
 			}
 
 			@Override
 			public void unknownDigest(int selectionCount, FileAndDigest fileAndDigest) {
-				listenerText.append("Unknown Digest: (" + selectionCount + ") " + fileAndDigest + "\n");
+				continueEvent("Unknown Digest: (" + selectionCount + ") " + fileAndDigest);
 			}
 
 			public boolean isValid() {
@@ -110,12 +111,12 @@ public class DebugTextComposite extends SoftwareFmComposite {
 
 			@Override
 			public void friendsArtifactUsage(ArtifactData artifactData, Map<FriendData, UsageStatData> friendsUsage) {
-				listenerText.append("friendsArtifactUsage: (" + artifactData + "," + friendsUsage + ")\n");
+				continueEvent("friendsArtifactUsage: (" + artifactData + "," + friendsUsage + ")\n");
 			}
 
 			@Override
 			public void friendsCodeUsage(CodeData codeData, Map<FriendData, UsageStatData> friendsUsage) {
-				listenerText.append("friendsArtifactUsage: (" + codeData + "," + friendsUsage + ")\n");
+				continueEvent("friendsArtifactUsage: (" + codeData + "," + friendsUsage + ")\n");
 			}
 		});
 	}
@@ -162,6 +163,16 @@ public class DebugTextComposite extends SoftwareFmComposite {
 	@Override
 	protected Composite makeComposite(Composite parent, ImageRegistry imageRegistry) {
 		return tabFolder = new TabFolder(parent, SWT.NULL);
+	}
+
+	@Override
+	public void startEvent(String text) {
+		listenerText.setText(text + "\n");
+	}
+
+	@Override
+	public void continueEvent(String text) {
+		listenerText.append("  " + text + "\n");
 	}
 
 }
