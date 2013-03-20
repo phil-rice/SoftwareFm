@@ -1,7 +1,6 @@
-package org.softwarefm.helloannotations.annotations.internal;
+package org.softwarefm.eclipse.annotations;
 
 import org.softwarefm.core.mediawiki.Wiki;
-import org.softwarefm.helloannotations.annotations.IMarkerStore;
 import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.strings.Strings;

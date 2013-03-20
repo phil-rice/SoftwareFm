@@ -1,4 +1,4 @@
-package org.softwarefm.helloannotations.annotations;
+package org.softwarefm.eclipse.annotations;
 
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;

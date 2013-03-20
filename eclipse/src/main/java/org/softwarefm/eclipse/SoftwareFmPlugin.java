@@ -9,6 +9,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -21,8 +22,10 @@ import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISelectionService;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import org.osgi.framework.BundleContext;
 import org.softwarefm.core.Marker;
 import org.softwarefm.core.SoftwareFmContainer;
@@ -46,9 +49,13 @@ import org.softwarefm.core.selection.internal.SwtThreadExecutor;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.HostOffsetAndUrl;
 import org.softwarefm.core.url.IUrlStrategy;
+import org.softwarefm.eclipse.annotations.IMarkerStore;
+import org.softwarefm.eclipse.annotations.MarkUpResource;
+import org.softwarefm.eclipse.annotations.WikiMarkerStore;
 import org.softwarefm.eclipse.jobs.Jobs;
 import org.softwarefm.eclipse.jobs.ManualImportJob;
 import org.softwarefm.eclipse.jobs.MavenImportJob;
+import org.softwarefm.eclipse.plugins.AllWorkbenchDoer;
 import org.softwarefm.eclipse.plugins.Plugins;
 import org.softwarefm.eclipse.plugins.WorkbenchWindowListenerManager;
 import org.softwarefm.eclipse.selection.internal.EclipseSelectedBindingStrategy;
@@ -118,6 +125,17 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 		System.out.println(getClass().getSimpleName() + ".start");
 		super.start(context);
 		plugin = this;
+		final IWorkbench workbench = PlatformUI.getWorkbench();
+		AllWorkbenchDoer.forEveryEditorNowAndWhenOpens(workbench, new ICallback2<IFile, AbstractDecoratedTextEditor>() {
+			@Override
+			public void process(final IFile file, final AbstractDecoratedTextEditor editor) throws Exception {
+				final IMarkerStore store = IMarkerStore.Utils.mock(//
+						"org.softwarefm.httpServer/IRegistryConfigurator", "This is the new value for IRegistryConfig");
+				WikiMarkerStore wikiStore = new WikiMarkerStore(CommonConstants.softwareFmHost, CommonConstants.softwareFmApiOffset);
+				MarkUpResource markUpResource = new MarkUpResource(wikiStore, "org.softwarefm.code.marker");
+				markUpResource.markup(file, editor);
+			}
+		});
 		views = Maps.newMap();
 		new Thread() {
 			@Override
@@ -487,7 +505,7 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 
 			@Override
 			public String toString() {
-				return "[Job " + jobName+"]";
+				return "[Job " + jobName + "]";
 			}
 		});
 	}

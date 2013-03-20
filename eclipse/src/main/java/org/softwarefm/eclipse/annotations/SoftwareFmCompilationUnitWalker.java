@@ -1,4 +1,4 @@
-package org.softwarefm.helloannotations.annotations;
+package org.softwarefm.eclipse.annotations;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;

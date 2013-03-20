@@ -1,4 +1,4 @@
-package org.softwarefm.helloannotations.annotations;
+package org.softwarefm.eclipse.annotations;
 
 public interface IAnnotationFoundCallback {
 

@@ -2,62 +2,116 @@
 <?eclipse version="3.4"?>
 <plugin>
 
-   <extension
-         point="org.eclipse.ui.views">
-      <category
-            name="Software FM"
-            id="org.softwarefm">
-      </category>
-      <view
-            name="Code"
-            icon="icons/class.png"
-            category="org.softwarefm"
-            class="org.softwarefm.eclipse.views.CodeView"
-            id="org.softwarefm.eclipse.views.ClassAndMethodView">
-      </view>
+	<extension
+			point="org.eclipse.ui.views">
+		<category
+				name="Software FM"
+				id="org.softwarefm">
+		</category>
+		<view
+				name="Code"
+				icon="icons/class.png"
+				category="org.softwarefm"
+				class="org.softwarefm.eclipse.views.CodeView"
+				id="org.softwarefm.eclipse.views.ClassAndMethodView">
+		</view>
 
-      <view
-            name="Artifact"
-            icon="icons/project.png"
-            category="org.softwarefm"
-            class="org.softwarefm.eclipse.views.ArtifactView"
-            id="org.softwarefm.eclipse.views.ProjectView">
-      </view>
-      <view
-            name="SoftwareFM"
-            icon="icons/all.png"
-            category="org.softwarefm"
-            class="org.softwarefm.eclipse.views.AllView"
-            id="org.softwarefm.eclipse.views.AllView">
-      </view>
-      <view
-            name="Debug - Text"
-            icon="icons/debug.png"
-            category="org.softwarefm"
-            class="org.softwarefm.eclipse.views.DebugTextView"
-            id="org.softwarefm.eclipse.views.SoftwareFmDebugView">
-      </view>
-      <view
-            name="Debug - Link"
-            icon="icons/debug.png"
-            category="org.softwarefm"
-            class="org.softwarefm.eclipse.views.DebugLinkView"
-            id="org.softwarefm.eclipse.views.DebugLinkView">
-      </view>
-      <view
-            name="Debug - Usage"
-            icon="icons/debug.png"
-            category="org.softwarefm"
-            class="org.softwarefm.eclipse.views.DebugUsageView"
-            id="org.softwarefm.eclipse.views.DebugUsageView">
-      </view>
-   </extension>
-   <extension point="org.eclipse.ui.preferencePages">
-	 	<page 
-	 	    id="org.softwarefm.preference.Page"
-	 		name="SoftwareFM" class="org.softwarefm.eclipse.preference.SoftwareFMPreferencePage">
-	   	</page>
+		<view
+				name="Artifact"
+				icon="icons/project.png"
+				category="org.softwarefm"
+				class="org.softwarefm.eclipse.views.ArtifactView"
+				id="org.softwarefm.eclipse.views.ProjectView">
+		</view>
+		<view
+				name="SoftwareFM"
+				icon="icons/all.png"
+				category="org.softwarefm"
+				class="org.softwarefm.eclipse.views.AllView"
+				id="org.softwarefm.eclipse.views.AllView">
+		</view>
+		<view
+				name="Debug - Text"
+				icon="icons/debug.png"
+				category="org.softwarefm"
+				class="org.softwarefm.eclipse.views.DebugTextView"
+				id="org.softwarefm.eclipse.views.SoftwareFmDebugView">
+		</view>
+		<view
+				name="Debug - Link"
+				icon="icons/debug.png"
+				category="org.softwarefm"
+				class="org.softwarefm.eclipse.views.DebugLinkView"
+				id="org.softwarefm.eclipse.views.DebugLinkView">
+		</view>
+		<view
+				name="Debug - Usage"
+				icon="icons/debug.png"
+				category="org.softwarefm"
+				class="org.softwarefm.eclipse.views.DebugUsageView"
+				id="org.softwarefm.eclipse.views.DebugUsageView">
+		</view>
+	</extension>
+	<extension point="org.eclipse.ui.preferencePages">
+		<page 
+				id="org.softwarefm.preference.Page"
+				name="SoftwareFM" class="org.softwarefm.eclipse.preference.SoftwareFMPreferencePage">
+		</page>
 
 	</extension>
-	 <extension point="org.eclipse.ui.startup" />
+	<extension point="org.eclipse.core.resources.markers" id="org.softwarefm.code.marker"
+			name="Code Marker">
+		<super type="org.eclipse.core.resources.textmarker"/>
+		<super type="org.eclipse.core.resources.marker"/>
+		<persistent value="false"/>
+	</extension>
+
+	<extension point="org.eclipse.ui.editors.annotationTypes">
+		<type markerSeverity="0"
+				super="org.eclipse.ui.workbench.texteditor.info"
+				name="org.softwarefm.code.annotation"
+				markerType="org.softwarefm.code.marker"/>
+	</extension>
+
+	<extension point="org.eclipse.ui.editors.markerAnnotationSpecification"
+			id="org.softwarefm.code.specification" name="SoftwareFMAnnotation">
+		<specification annotationType="org.softwarefm.code.annotation"
+				label="Software FM code"
+				icon="icons/signpost.gif"
+				overviewRulerPreferenceKey="clruler"
+				overviewRulerPreferenceValue="true"
+				colorPreferenceKey="clcolor"
+				colorPreferenceValue="255,255,0"
+				textPreferenceKey="cltext"
+				textPreferenceValue="true"
+				verticalRulerPreferenceKey="clvertical"
+				verticalRulerPreferenceValue="true"
+				textStylePreferenceKey="clstyle"
+				textStylePreferenceValue="BOX">
+		</specification>
+	</extension>
+	<extension point="org.eclipse.ui.popupMenus">
+		<!-- add to editor context menu -->
+		<objectContribution
+				id="Plugin.EditorContribution"
+				objectClass="org.eclipse.ui.IEditorInput"
+				nameFilter="*.*">
+			<menu
+					label="Software FM"
+					path="additions"
+					id="org.softwarefm.editor.menu">
+				<separator 	name="group"></separator>
+			</menu>
+			<!-- add a sub menu item called "Do Stuff" -->
+			<!-- that calls the class plugin.actions.DoStuff -->
+			<action
+					label="Code"
+					class="org.softwaremf.helloannotations.actions.CodeAction"
+					menubarPath="org.softwarefm.editor.menu/group"
+					enablesFor="1"
+					id="org.softwaremf.helloannotations.actions.codeAction">
+			</action>
+		</objectContribution>        
+	</extension>
+	<extension point="org.eclipse.ui.startup" />
 </plugin>

@@ -1,4 +1,4 @@
-package org.softwarefm.helloannotations;
+package org.softwarefm.eclipse.resources;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.IJavaElement;

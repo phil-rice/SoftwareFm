@@ -1,4 +1,4 @@
-package org.softwarefm.helloannotations.annotations;
+package org.softwarefm.eclipse.annotations;
 
 import java.util.Map;
 import java.util.Map.Entry;
