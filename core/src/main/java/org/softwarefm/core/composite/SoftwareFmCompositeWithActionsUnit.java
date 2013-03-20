@@ -35,7 +35,6 @@ import org.softwarefm.utilities.events.IMultipleListenerList;
 public class SoftwareFmCompositeWithActionsUnit extends HasComposite {
 	private final SoftwareFmContainer<?> container;
 
-	@SuppressWarnings("unused")
 	public SoftwareFmCompositeWithActionsUnit(Composite parent, SoftwareFmContainer<?> container, SfmActionState state) {
 		super(parent);
 		this.container = container;
@@ -49,12 +48,13 @@ public class SoftwareFmCompositeWithActionsUnit extends HasComposite {
 		final ExecutorService threadingPool = Executors.newCachedThreadPool();
 		try {
 			Swts.Show.xUnit(SoftwareFmCompositeWithActionsUnit.class.getSimpleName(), new File("src/test/resources/org/softwarefm/eclipse/composite"), "dat", new ISituationListAndBuilder<SoftwareFmCompositeWithActionsUnit, String>() {
+				@Override
 				public SoftwareFmCompositeWithActionsUnit makeChild(Composite parent) throws Exception {
 					IMultipleListenerList listenerList = IMultipleListenerList.Utils.defaultList();
 					IArtifactDataCache artifactDataCache = IArtifactDataCache.Utils.artifactDataCache();
 					IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
 					ISocialManager socialManager = ISocialManager.Utils.socialManager(listenerList, persistance);
-					
+
 					SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>> manager = new SelectedArtifactSelectionManager<Map<String, Object>, Map<String, Object>>(//
 							listenerList, //
 							ISelectedBindingStrategy.Utils.fromMap(), //
@@ -82,6 +82,7 @@ public class SoftwareFmCompositeWithActionsUnit extends HasComposite {
 					return softwareFmComposite;
 				}
 
+				@Override
 				@SuppressWarnings("unchecked")
 				public void selected(SoftwareFmCompositeWithActionsUnit control, String context, String value) throws Exception {
 					ISelectedBindingManager<Map<String, Object>> selectionBindingManager = (ISelectedBindingManager<Map<String, Object>>) control.container.selectedBindingManager;

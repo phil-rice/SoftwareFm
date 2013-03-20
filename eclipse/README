@@ -40,3 +40,4 @@ RELEASE NOTES:
 1.9.9: Added profiling, changed how listeners interact with SWT thread
 1.9.10: new skin added. This skin requires scrapping differently
 1.9.11: Fixing build issue with 1.9.10
+1.10.1: Annotations added

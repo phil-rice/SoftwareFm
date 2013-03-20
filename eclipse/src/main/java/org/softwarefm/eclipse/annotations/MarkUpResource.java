@@ -55,8 +55,9 @@ public class MarkUpResource {
 			}
 		});
 		Jobs.run("Loading markers for " + file.getFullPath(), new Runnable() {
+			@Override
 			public void run() {
-				for (Entry<String, ICallback<String>> entry: callbacks.entrySet())
+				for (Entry<String, ICallback<String>> entry : callbacks.entrySet())
 					store.makerFor(entry.getKey(), entry.getValue());
 			}
 		});
@@ -69,6 +70,7 @@ public class MarkUpResource {
 			public void process(final String markerValue) throws Exception {
 				if (markerValue != null)
 					Display.getDefault().asyncExec(new Runnable() {
+						@Override
 						public void run() {
 							try {
 								IMarker marker = findExistingMarkerOrNull(file, sfmId);
@@ -91,7 +93,6 @@ public class MarkUpResource {
 		};
 	}
 
-	@SuppressWarnings("unchecked")
 	private IMarker findExistingMarkerOrNull(IFile file, String typeString) throws CoreException {
 		for (IMarker marker : file.findMarkers(markerType, true, IResource.DEPTH_ZERO)) {
 			Object existingId = marker.getAttribute("SfmId");

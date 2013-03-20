@@ -55,6 +55,7 @@ public class SoftwareFmCompositeUnit {
 			return tabFolder = new TabFolder(parent, SWT.NULL);
 		}
 
+		@Override
 		@SuppressWarnings("unchecked")
 		public <S> ISelectedBindingManager<S> getBindingManager() {
 			return (ISelectedBindingManager<S>) bindingManager;
@@ -70,6 +71,7 @@ public class SoftwareFmCompositeUnit {
 		final ExecutorService threadingPool = Executors.newCachedThreadPool();
 		try {
 			Swts.Show.xUnit(title, new File("src/test/resources/org/softwarefm/eclipse/composite"), "dat", new ISituationListAndBuilder<Holder, String>() {
+				@Override
 				public Holder makeChild(Composite parent) throws Exception {
 					SoftwareFmContainer<Map<String, Object>> container = makeContainer(threadingPool, parent.getDisplay());
 					Holder holder = new Holder(parent, container.selectedBindingManager);
@@ -82,6 +84,7 @@ public class SoftwareFmCompositeUnit {
 					return holder;
 				}
 
+				@Override
 				@SuppressWarnings("unchecked")
 				public void selected(Holder control, String context, String value) throws Exception {
 					ISelectedBindingManager<Map<String, Object>> selectionBindingManager = control.getBindingManager();
@@ -101,31 +104,37 @@ public class SoftwareFmCompositeUnit {
 	}
 
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> allCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
+		@Override
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
 			return new AllComposite(parent, container);
 		}
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> classAndMethodCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
+		@Override
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
 			return new CodeComposite(parent, container);
 		}
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> projectCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
+		@Override
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
 			return new ArtifactComposite(parent, container);
 		}
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> manualImportCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
+		@Override
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
 			return new LinkComposite(parent, container);
 		}
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> mavenImportCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
+		@Override
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
 			return new MavenImportComposite(parent, container);
 		}
 	};
 	public static final IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite> debugCreator = new IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>() {
+		@Override
 		public SoftwareFmComposite apply(Composite parent, SoftwareFmContainer<Map<String, Object>> container) throws Exception {
 			return new DebugTextComposite(parent, container);
 		}
@@ -134,7 +143,6 @@ public class SoftwareFmCompositeUnit {
 	@SuppressWarnings("unchecked")
 	public static IFunction2<Composite, SoftwareFmContainer<Map<String, Object>>, SoftwareFmComposite>[] creators = new IFunction2[] { allCreator, classAndMethodCreator, projectCreator, manualImportCreator, mavenImportCreator, debugCreator };
 
-	@SuppressWarnings({ "unused" })
 	public static void main(String[] args) {
 		new SoftwareFmCompositeUnit(SoftwareFmCompositeUnit.class.getName(), creators);
 	}

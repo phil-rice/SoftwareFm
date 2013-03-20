@@ -47,7 +47,7 @@ import javax.security.auth.login.LoginException;
  * @author MER-C and contributors
  * @version 0.26
  */
-@SuppressWarnings({"unchecked", "rawtypes", "null", "unused"})
+@SuppressWarnings({ "unchecked", "rawtypes", "unused" })
 public class Wiki implements Serializable {
 	// NAMESPACES
 
@@ -5310,6 +5310,7 @@ public class Wiki implements Serializable {
 		 * @return whether this object is equal to
 		 * @since 0.18
 		 */
+		@Override
 		public int compareTo(Wiki.LogEntry other) {
 			if (timestamp.equals(other.timestamp))
 				return 0; // might not happen, but
@@ -5635,6 +5636,7 @@ public class Wiki implements Serializable {
 		 * @return whether this object is equal to
 		 * @since 0.18
 		 */
+		@Override
 		public int compareTo(Wiki.Revision other) {
 			if (timestamp.equals(other.timestamp))
 				return 0; // might not happen, but

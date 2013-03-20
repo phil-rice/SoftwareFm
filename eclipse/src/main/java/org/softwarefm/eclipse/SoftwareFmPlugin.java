@@ -49,7 +49,6 @@ import org.softwarefm.core.selection.internal.SwtThreadExecutor;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.HostOffsetAndUrl;
 import org.softwarefm.core.url.IUrlStrategy;
-import org.softwarefm.eclipse.annotations.IMarkerStore;
 import org.softwarefm.eclipse.annotations.MarkUpResource;
 import org.softwarefm.eclipse.annotations.WikiMarkerStore;
 import org.softwarefm.eclipse.jobs.Jobs;
@@ -129,8 +128,8 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 		AllWorkbenchDoer.forEveryEditorNowAndWhenOpens(workbench, new ICallback2<IFile, AbstractDecoratedTextEditor>() {
 			@Override
 			public void process(final IFile file, final AbstractDecoratedTextEditor editor) throws Exception {
-				final IMarkerStore store = IMarkerStore.Utils.mock(//
-						"org.softwarefm.httpServer/IRegistryConfigurator", "This is the new value for IRegistryConfig");
+				// final IMarkerStore store = IMarkerStore.Utils.mock(//
+				// "org.softwarefm.httpServer/IRegistryConfigurator", "This is the new value for IRegistryConfig");
 				WikiMarkerStore wikiStore = new WikiMarkerStore(CommonConstants.softwareFmHost, CommonConstants.softwareFmApiOffset);
 				MarkUpResource markUpResource = new MarkUpResource(wikiStore, "org.softwarefm.code.marker");
 				markUpResource.markup(file, editor);
@@ -294,7 +293,6 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 		return Collections.unmodifiableMap(views);
 	}
 
-	@SuppressWarnings("unused")
 	private ISelectedBindingManager<ITextSelection> makeSelectionBindingManager() {
 		synchronized (lock) {
 			if (selectionBindingManager == null) {

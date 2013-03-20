@@ -90,8 +90,7 @@
 				textStylePreferenceValue="BOX">
 		</specification>
 	</extension>
-	<extension point="org.eclipse.ui.popupMenus">
-		<!-- add to editor context menu -->
+	<!-- <extension point="org.eclipse.ui.popupMenus">
 		<objectContribution
 				id="Plugin.EditorContribution"
 				objectClass="org.eclipse.ui.IEditorInput"
@@ -102,8 +101,6 @@
 					id="org.softwarefm.editor.menu">
 				<separator 	name="group"></separator>
 			</menu>
-			<!-- add a sub menu item called "Do Stuff" -->
-			<!-- that calls the class plugin.actions.DoStuff -->
 			<action
 					label="Code"
 					class="org.softwaremf.helloannotations.actions.CodeAction"
@@ -112,6 +109,6 @@
 					id="org.softwaremf.helloannotations.actions.codeAction">
 			</action>
 		</objectContribution>        
-	</extension>
+	</extension> -->
 	<extension point="org.eclipse.ui.startup" />
 </plugin>
