@@ -38,14 +38,14 @@ public class HttpRegistry implements IHttpRegistry {
 	public void register(HttpMethod method, IRouteHandler routeHandler, String routePattern, String... params) {
 		IRouteMatcher matcher = factory.makeMatcherFor(method, IRegistryConfigurator.Utils.defn(routePattern, params));
 		routes.add(new RouteMatcherAndRouteHandler(matcher, routeHandler));
-	}
+	} 
 
 	public StatusAndEntity process(HttpMethod method, String uri, HttpEntity httpEntity) throws Exception {
 		List<String> routeFragments = Strings.splitIgnoreBlanks(uri, "/");
 		Map<String, String> parameters = new HashMap<String, String>();
 		IRouteHandler routeHandler = findRouteHandlerAndUpdateParameters(parameters, method, uri, routeFragments);
 		logger.info(MessageFormat.format("Processing {0} {1} {2} {3}", method, uri, routeHandler.getClass().getName(), parameters));
-		if (routeHandler instanceof IRouteHandlerWithParameters)
+		if (routeHandler instanceof IRouteHandlerWithParameters) 
 			addParameters(parameters, httpEntity);
 
 		StatusAndEntity statusAndEntity = routeHandler.execute(method, parameters, httpEntity);

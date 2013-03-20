@@ -4,13 +4,11 @@ import java.io.File;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.IClassFile;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeRoot;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Expression;
@@ -18,13 +16,11 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.NodeFinder;
 import org.eclipse.jdt.internal.core.ResolvedBinaryMethod;
 import org.eclipse.jdt.internal.core.ResolvedBinaryType;
 import org.eclipse.jdt.internal.core.ResolvedSourceMethod;
 import org.eclipse.jdt.internal.core.ResolvedSourceType;
 import org.eclipse.jdt.ui.JavaUI;
-import org.eclipse.jdt.ui.SharedASTProvider;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -37,8 +33,8 @@ import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.selection.IArtifactStrategy;
 import org.softwarefm.core.selection.ISelectedBindingStrategy;
+import org.softwarefm.eclipse.Jdts;
 import org.softwarefm.utilities.collections.Files;
-import org.softwarefm.utilities.exceptions.WrappedException;
 
 /** This file hopefully contains all the eclipse specific stuff. */
 
@@ -54,39 +50,25 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 	@Override
 	public Expression findNode(ITextSelection textSelection, int selectionCount) {
 		IWorkbench workbench = PlatformUI.getWorkbench();
-		System.out.println("IWorkbench: " + workbench);
 		IWorkbenchWindow activeWorkbenchWindow = workbench.getActiveWorkbenchWindow();
-		System.out.println("IWorkbenchWindow: " + activeWorkbenchWindow);
 		if (activeWorkbenchWindow != null) {
 			IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
-			System.out.println("IWorkbenchPage: " + activePage);
 			if (activePage != null) {
 				IEditorPart editor = activePage.getActiveEditor();
 				ITypeRoot typeRoot = getJavaInput(editor);
-				if (typeRoot instanceof ICompilationUnit) {
-					ICompilationUnit cu = (ICompilationUnit) typeRoot;
-					CompilationUnit root = SharedASTProvider.getAST(cu, SharedASTProvider.WAIT_NO, null);
-					if (root != null) {
-						ASTNode node = NodeFinder.perform(root, textSelection.getOffset(), textSelection.getLength());
-						if (node instanceof Expression)
-							return (Expression) node;
-					}
-				} else if (typeRoot instanceof IClassFile) {
-					IClassFile cf = (IClassFile) typeRoot;
-					try {
-						IJavaElement elementAt = cf.getElementAt(textSelection.getOffset());
-						System.out.println(elementAt);
-					} catch (JavaModelException e) {
-						throw WrappedException.wrap(e);
-					}
-					CompilationUnit root = SharedASTProvider.getAST(cf, SharedASTProvider.WAIT_NO, null);
-					if (root != null) {
-						ASTNode node = NodeFinder.perform(root, textSelection.getOffset(), textSelection.getLength());
-						if (node instanceof Expression)
-							return (Expression) node;
-					}
-				}
+				ICompilationUnit cu = (ICompilationUnit) typeRoot;
+				return findExpressionFor(cu, textSelection);
 			}
+		}
+		return null;
+	}
+
+	private Expression findExpressionFor(ITypeRoot typeRoot, ITextSelection textSelection) {
+		CompilationUnit root = Jdts.findCompilationUnitFrom(typeRoot);
+		if (root != null) {
+			ASTNode node = Jdts.findAstNodeFor(textSelection, root);
+			if (node instanceof Expression)
+				return (Expression) node;
 		}
 		return null;
 	}
@@ -122,7 +104,7 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 		return null;
 	}
 
-	// At this point we sigh in sadness about Java's weak class system, and regret the inability to modify Expression in anyway. Clojure multimethods where are you know
+	// At this point we sigh in sadness about Java's weak class system, and regret the inability to modify Expression in anyway. "Clojure multimethods where are you now?"
 	public CodeData findSimplifiedCodeData(IJavaElement javaElement, Expression expression) {
 		if (expression instanceof IMethodBinding) {// javaElement instanceof IMethod
 			String packageName = ((IMethodBinding) expression).getDeclaringClass().getPackage().getName();
@@ -141,7 +123,6 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 			String className = classFile.getElementName();
 			String methodName = resolvedSourceMethod.getElementName();
 			return new CodeData(packageName, className, methodName);
-
 		} else if (javaElement instanceof ResolvedBinaryMethod) {
 			ResolvedBinaryMethod resolvedBinaryMethod = (ResolvedBinaryMethod) javaElement;
 			IType classFile = resolvedBinaryMethod.getDeclaringType();
@@ -150,7 +131,6 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 			String className = classFile.getElementName();
 			String methodName = resolvedBinaryMethod.getElementName();
 			return new CodeData(packageName, className, methodName);
-
 		} else if (javaElement instanceof ResolvedBinaryType) {
 			ResolvedBinaryType resolvedBinaryType = (ResolvedBinaryType) javaElement;
 			IPackageFragment packageFragment = resolvedBinaryType.getPackageFragment();
@@ -165,7 +145,6 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 			return new CodeData(packageName, className);
 		}
 		return null;
-
 	}
 
 	@Override

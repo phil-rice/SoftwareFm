@@ -11,22 +11,24 @@ import org.softwarefm.utilities.strings.Strings;
 
 public class StatusAndEntity {
 	public final int status;
-	public final HttpEntity entity;
+	public final    HttpEntity entity;
 	public final boolean zipped;
 
 	public static StatusAndEntity ok(String string, boolean zip) {
 		if (!zip)
 			return ok(string);
 		else
-			return new StatusAndEntity(HttpStatus.SC_OK, string == null ? null : new ByteArrayEntity(Strings.zip(string)), true);
-	}
-
+			return new StatusAndEntity(HttpStatus.SC_OK, string == null ? null
+					: new ByteArrayEntity(Strings.zip(string)), true);
+	}  
+ 
 	public static StatusAndEntity ok(String string) {
 		try {
-			return new StatusAndEntity(HttpStatus.SC_OK, string == null ? null : new StringEntity(string), false);
+			return new StatusAndEntity(HttpStatus.SC_OK, string == null ? null
+					: new StringEntity(string), false);
 		} catch (UnsupportedEncodingException e) {
 			throw WrappedException.wrap(e);
-		}
+		} 
 	}
 
 	public static StatusAndEntity ok() {
@@ -41,8 +43,8 @@ public class StatusAndEntity {
 
 	@Override
 	public String toString() {
-		return "StatusAndEntity [status=" + status + ", entity=" + entity + ", zipped=" + zipped + "]";
+		return "StatusAndEntity [status=" + status + ", entity=" + entity
+				+ ", zipped=" + zipped + "]";
 	}
-
 
 }

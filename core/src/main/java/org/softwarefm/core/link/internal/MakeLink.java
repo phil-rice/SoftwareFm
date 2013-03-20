@@ -60,6 +60,7 @@ public class MakeLink implements IMakeLink {
 				login();
 			wiki.edit(url, entity, "");
 		} catch (Exception e) {
+			loggedIn = false;
 			throw WrappedException.wrap(e);
 		}
 	}

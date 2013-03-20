@@ -13,7 +13,7 @@ import org.softwarefm.utilities.http.IResponse;
 import org.softwarefm.utilities.maps.Maps;
 
 public abstract class AbstractHttpServerTest extends TestCase {
-
+  
 	protected final int port = 8190;
 	protected IHttpServer httpServer;
 	protected MemoryCallback<Throwable> memoryThrowable;

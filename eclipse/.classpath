@@ -20,10 +20,10 @@
 	<classpathentry kind="lib" path="lib/sisu-guice-2.1.7-noaop.jar"/>
 	<classpathentry kind="lib" path="lib/sisu-inject-bean-1.4.2.jar"/>
 	<classpathentry kind="lib" path="lib/sisu-inject-plexus-1.4.2.jar"/>
-	<classpathentry kind="lib" path="lib/utilities-0.0.1-SNAPSHOT.jar" sourcepath="/utilities"/>
-	<classpathentry kind="lib" path="lib/miglayout-core-4.2.jar"/>
-	<classpathentry kind="lib" path="lib/miglayout-swt-4.2.jar"/>
-	<classpathentry kind="lib" path="lib/core-0.0.1-SNAPSHOT.jar" sourcepath="/core"/>
-	<classpathentry kind="lib" path="lib/shared-0.0.1-SNAPSHOT.jar" sourcepath="/shared"/>
+	<classpathentry exported="true" kind="lib" path="lib/utilities-0.0.1-SNAPSHOT.jar" sourcepath="/utilities"/>
+	<classpathentry exported="true" kind="lib" path="lib/miglayout-core-4.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/miglayout-swt-4.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/core-0.0.1-SNAPSHOT.jar" sourcepath="/core"/>
+	<classpathentry exported="true" kind="lib" path="lib/shared-0.0.1-SNAPSHOT.jar" sourcepath="/shared"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
