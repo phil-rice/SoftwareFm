@@ -90,6 +90,30 @@
 				textStylePreferenceValue="BOX">
 		</specification>
 	</extension>
+
+	<extension point="org.eclipse.ui.editorActions">
+		<editorContribution
+				targetID="org.eclipse.jdt.ui.CompilationUnitEditor"
+				id="org.softwarefm.eclipse.annotations.rulerActions">
+			<action
+					label="Not Used"
+					class="org.softwarefm.eclipse.annotations.DoubleClickAction"
+					style="push"
+					actionID="RulerClick"
+					id="org.softwarefm.eclipse.annotations.DoubleClickAction"/>
+		</editorContribution>
+	</extension>
+
+	<extension
+			point="org.eclipse.ui.workbench.texteditor.hyperlinkDetectors">
+		<hyperlinkDetector
+				id="org.eclipse.example.jdt.internal.debug.ui.JavaHyperlinkDetector"
+				targetId="org.eclipse.jdt.ui.javaCode"
+				class="org.softwarefm.eclipse.annotations.MarkerHyperlinkDetector"
+				name="SoftwareFmHyperlinkDetector">
+		</hyperlinkDetector>
+	</extension>
+
 	<!-- <extension point="org.eclipse.ui.popupMenus">
 		<objectContribution
 				id="Plugin.EditorContribution"

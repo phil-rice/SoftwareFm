@@ -49,6 +49,7 @@ import org.softwarefm.core.selection.internal.SwtThreadExecutor;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.HostOffsetAndUrl;
 import org.softwarefm.core.url.IUrlStrategy;
+import org.softwarefm.eclipse.annotations.IJavaElementToUrl;
 import org.softwarefm.eclipse.annotations.MarkUpResource;
 import org.softwarefm.eclipse.annotations.WikiMarkerStore;
 import org.softwarefm.eclipse.jobs.Jobs;
@@ -582,6 +583,10 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 	@Override
 	public void earlyStartup() {
 		System.out.println(getClass().getSimpleName() + ".earlyStartup");
+	}
+
+	public IJavaElementToUrl getJavaElementToUrl() {
+		return IJavaElementToUrl.Utils.javaElementToUrl();
 	}
 
 }
