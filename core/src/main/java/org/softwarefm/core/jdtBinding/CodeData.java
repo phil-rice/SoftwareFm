@@ -6,27 +6,16 @@ package org.softwarefm.core.jdtBinding;
 
 public class CodeData {
 
-	public final String packageName;
-	public final String className;
-	public final String methodName;
+	public final String sfmId;
 
-	public CodeData(String packageName, String className, String methodName) {
+	public CodeData(String sfmId) {
 		super();
-		this.packageName = packageName;
-		this.className = className;
-		this.methodName = methodName;
-	}
-
-	public CodeData(String packageName, String className) {
-		super();
-		this.packageName = packageName;
-		this.className = className;
-		this.methodName = null;
+		this.sfmId = sfmId;
 	}
 
 	@Override
 	public String toString() {
-		return "CodeData [packageName=" + packageName + ", className=" + className + ", methodName=" + methodName + "]";
+		return "CodeData [sfmId=" + sfmId + "]";
 	}
 
 }

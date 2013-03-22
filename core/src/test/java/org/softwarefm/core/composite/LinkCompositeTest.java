@@ -8,7 +8,7 @@ public class LinkCompositeTest extends AbstractSoftwareFmCompositeTest<LinkCompo
 
 	public void testMessages() {
 		assertEquals("", panel.getText());// initial
-		selectedArtifactSelectionManager.codeSelectionOccured(0, classExpressionData);
+		selectedArtifactSelectionManager.codeSelectionOccured(0, classData);
 		dispatchUntilQueueEmpty();
 		assertEquals("Searching...", panel.getText());
 
@@ -31,7 +31,7 @@ public class LinkCompositeTest extends AbstractSoftwareFmCompositeTest<LinkCompo
 	public void testEventsChangeSelectedTab() {
 		checkDoesntChangeTab(new Runnable() {
 			public void run() {
-				selectedArtifactSelectionManager.codeSelectionOccured(0, classExpressionData);
+				selectedArtifactSelectionManager.codeSelectionOccured(0, classData);
 			}
 		});
 		checkDoesntChangeTab(new Runnable() {

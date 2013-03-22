@@ -11,8 +11,7 @@ public class UrlStrategyTest extends TestCase {
 	private final static UrlStrategy urlStrategy = (UrlStrategy) IUrlStrategy.Utils.urlStrategy("someHost", "offset");
 
 	public void testClassAndMethodUrl() {
-		assertEquals(new HostOffsetAndUrl("someHost", "offset","code:package/class"), urlStrategy.classAndMethodUrl(new CodeData("package", "class")));
-		assertEquals(new HostOffsetAndUrl("someHost", "offset", "code:package/class/meth"), urlStrategy.classAndMethodUrl(new CodeData("package", "class", "meth")));
+		assertEquals(new HostOffsetAndUrl("someHost", "offset","code:someSfmId"), urlStrategy.classAndMethodUrl(new CodeData("someSfmId")));
 	}
 
 	public void testDigest() {

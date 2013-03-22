@@ -1,6 +1,7 @@
 package org.softwarefm.eclipse;
 
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.internal.core.BinaryMember;
 import org.eclipse.jdt.internal.core.BinaryType;
 import org.eclipse.jdt.internal.core.ClassFile;
 import org.eclipse.jdt.internal.core.CompilationUnit;
@@ -8,8 +9,6 @@ import org.eclipse.jdt.internal.core.JavaModel;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.core.PackageFragment;
 import org.eclipse.jdt.internal.core.PackageFragmentRoot;
-import org.eclipse.jdt.internal.core.ResolvedBinaryMethod;
-import org.eclipse.jdt.internal.core.ResolvedBinaryType;
 import org.eclipse.jdt.internal.core.SourceMethod;
 import org.eclipse.jdt.internal.core.SourceType;
 
@@ -61,18 +60,14 @@ public class JavaElementAdapter<T> implements IJavaElementVisitor<T> {
 		return null;
 	}
 
-	@Override
-	public T from(ResolvedBinaryMethod method) {
-		return null;
-	}
-
-	@Override
-	public T from(ResolvedBinaryType type) {
-		return null;
-	}
 
 	@Override
 	public T from(BinaryType element) {
+		return null;
+	}
+
+	@Override
+	public T from(BinaryMember element) {
 		return null;
 	}
 

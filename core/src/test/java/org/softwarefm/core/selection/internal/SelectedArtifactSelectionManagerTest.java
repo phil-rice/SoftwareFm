@@ -20,7 +20,7 @@ public class SelectedArtifactSelectionManagerTest extends ExecutorTestCase {
 	private ISelectedBindingStrategy<String, String> strategy;
 	private ISelectedBindingListener listener;
 	private SelectedArtifactSelectionManager<String, String> selectionManager;
-	private final CodeData codeData = new CodeData("package", "class");
+	private final CodeData codeData = new CodeData("someSfmId");
 	private final File file = new File(new File("some"), "file");
 	private final FileAndDigest fileAndDigest = new FileAndDigest(file, "digest");
 	private final ArtifactData artifactData = new ArtifactData(fileAndDigest, "g", "a", "v");

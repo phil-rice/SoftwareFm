@@ -30,7 +30,7 @@ import org.softwarefm.utilities.events.IMultipleListenerList;
 import org.softwarefm.utilities.strings.Strings;
 
 public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmComposite> extends SwtTest {
-	protected final CodeData codeData = new CodeData("packageName", "className");
+	protected final CodeData codeData = new CodeData("packageName/className");
 	protected final ArtifactData artifactData = new ArtifactData(fileAndDigest, "groupId0", "artifactId0", "version0");
 
 	protected P panel;
@@ -47,8 +47,7 @@ public abstract class AbstractSoftwareFmCompositeTest<P extends SoftwareFmCompos
 	protected final static FileAndDigest fileAndDigest = new FileAndDigest(file, "0123456789");
 	protected final static FileAndDigest fileAndNoDigest = new FileAndDigest(file, null);
 	protected final static FileAndDigest noFileNameAndNoDigest = new FileAndDigest(null, null);
-	protected final static CodeData classExpressionData = new CodeData("somePackage", "someClass");
-	protected final static CodeData classAndMethodExpressionData = new CodeData("somePackage", "someClass", "someMethod");
+	protected final static CodeData classData = new CodeData("packageName/className");
 
 	private int initialListeners;
 

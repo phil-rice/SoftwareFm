@@ -10,13 +10,13 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.NodeFinder;
+import org.eclipse.jdt.internal.core.BinaryMember;
 import org.eclipse.jdt.internal.core.BinaryType;
 import org.eclipse.jdt.internal.core.ClassFile;
 import org.eclipse.jdt.internal.core.JavaModel;
+import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.core.PackageFragment;
 import org.eclipse.jdt.internal.core.PackageFragmentRoot;
-import org.eclipse.jdt.internal.core.ResolvedBinaryMethod;
-import org.eclipse.jdt.internal.core.ResolvedBinaryType;
 import org.eclipse.jdt.internal.core.SourceMethod;
 import org.eclipse.jdt.internal.core.SourceType;
 import org.eclipse.jdt.ui.SharedASTProvider;
@@ -44,9 +44,9 @@ public class Jdts {
 		return javaElement;
 	}
 
-	public static String foldParents(IJavaElement javaElement, IFoldFunction<IJavaElement, String> iFoldFunction) {
+	public static <T> T foldParents(IJavaElement javaElement, T initial, IFoldFunction<IJavaElement, T> iFoldFunction) {
 		try {
-			String accumulator = "";
+			T accumulator = initial;
 			IJavaElement element = javaElement;
 			while (element != null) {
 				accumulator = iFoldFunction.apply(element, accumulator);
@@ -59,6 +59,8 @@ public class Jdts {
 	}
 
 	public static <T> T visitJavaElement(IJavaElement element, IJavaElementVisitor<T> visitor) {
+		if (element instanceof JavaProject)
+			return visitor.from((JavaProject) element);
 		if (element instanceof JavaModel)
 			return visitor.from((JavaModel) element);
 		else if (element instanceof PackageFragmentRoot)
@@ -69,16 +71,14 @@ public class Jdts {
 			return visitor.from((org.eclipse.jdt.internal.core.CompilationUnit) element);
 		else if (element instanceof SourceType)
 			return visitor.from((SourceType) element);
+		else if (element instanceof BinaryType)
+			return visitor.from((BinaryType) element);
+		else if (element instanceof BinaryMember)
+			return visitor.from((BinaryMember) element);
 		else if (element instanceof SourceMethod)
 			return visitor.from((SourceMethod) element);
 		else if (element instanceof ClassFile)
 			return visitor.from((ClassFile) element);
-		else if (element instanceof ResolvedBinaryMethod)
-			return visitor.from((ResolvedBinaryMethod) element);
-		else if (element instanceof ResolvedBinaryType)
-			return visitor.from((ResolvedBinaryType) element);
-		else if (element instanceof BinaryType)
-			return visitor.from((BinaryType) element);
 		else
 			return visitor.other(element);
 
@@ -93,7 +93,7 @@ public class Jdts {
 
 			@Override
 			public String from(SourceType sourceType) {
-				return name(sourceType);
+				return typeName(sourceType);
 			}
 
 			@Override
@@ -102,28 +102,50 @@ public class Jdts {
 			}
 
 			@Override
-			public String from(ResolvedBinaryMethod method) {
-				return name(method);
-			}
-
-			@Override
 			public String from(BinaryType type) {
-				return name(type);
+				return typeName(type);
 			}
 
 			@Override
-			public String from(ResolvedBinaryType type) {
-				return name(type);
+			public String from(BinaryMember element) {
+				return name(element);
 			}
 
-			private String name(IJavaElement javaElement) {
-				return javaElement.getElementName();
+			@Override
+			public String from(JavaModel model) {
+				return null;
+			}
+
+			@Override
+			public String from(JavaProject project) {
+				return null;
 			}
 
 			@Override
 			public String other(IJavaElement element) {
 				return "[" + element.getElementName() + "/" + element.getClass().getSimpleName() + "]";
 			}
+
+			private String name(IJavaElement javaElement) {
+				return javaElement.getElementName();
+			}
+
+			private String typeName(IJavaElement javaElement) {
+				String elementName = javaElement.getElementName();
+				if (elementName .length()==0)
+					return visitJavaElement(javaElement, new JavaElementAdapter<String>() {
+						@Override
+						public String from(BinaryType element) {
+							return element.getTypeQualifiedName();
+						}
+						@Override
+						public String from(SourceType sourceType) {
+							return sourceType.getTypeQualifiedName();
+						}
+					});
+				return elementName;
+			}
+
 		};
 	}
 

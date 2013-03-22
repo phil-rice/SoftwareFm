@@ -21,10 +21,7 @@ public class UrlStrategy implements IUrlStrategy {
 	}
 
 	public HostOffsetAndUrl classAndMethodUrl(CodeData codeData) {
-		String rl = codeData.methodName == null //
-		? Strings.url("code:" + codeData.packageName, codeData.className)
-				: Strings.url("code:" + codeData.packageName, codeData.className, codeData.methodName);
-		return new HostOffsetAndUrl(hostname, pageOffset, rl);
+		return new HostOffsetAndUrl(hostname, pageOffset, Strings.url("code:" + codeData.sfmId));
 	}
 
 	public HostOffsetAndUrl digestUrl(String digest) {

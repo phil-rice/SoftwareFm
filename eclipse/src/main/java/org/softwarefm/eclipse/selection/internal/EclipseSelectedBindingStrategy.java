@@ -6,8 +6,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IPackageFragment;
-import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -16,10 +14,6 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.internal.core.ResolvedBinaryMethod;
-import org.eclipse.jdt.internal.core.ResolvedBinaryType;
-import org.eclipse.jdt.internal.core.ResolvedSourceMethod;
-import org.eclipse.jdt.internal.core.ResolvedSourceType;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.ui.IEditorInput;
@@ -34,17 +28,19 @@ import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.selection.IArtifactStrategy;
 import org.softwarefm.core.selection.ISelectedBindingStrategy;
 import org.softwarefm.eclipse.Jdts;
+import org.softwarefm.eclipse.annotations.IJavaElementToUrl;
 import org.softwarefm.utilities.collections.Files;
 
 /** This file hopefully contains all the eclipse specific stuff. */
 
-@SuppressWarnings("restriction")
 public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<ITextSelection, Expression> {
 
 	private final IArtifactStrategy<ITextSelection> artifactStrategy;
+	private final IJavaElementToUrl javaElementToUrl;
 
-	public EclipseSelectedBindingStrategy(IArtifactStrategy<ITextSelection> artifactStrategy) {
+	public EclipseSelectedBindingStrategy(IArtifactStrategy<ITextSelection> artifactStrategy, IJavaElementToUrl javaElementToUrl) {
 		this.artifactStrategy = artifactStrategy;
+		this.javaElementToUrl = javaElementToUrl;
 	}
 
 	@Override
@@ -106,44 +102,9 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 
 	// At this point we sigh in sadness about Java's weak class system, and regret the inability to modify Expression in anyway. "Clojure multimethods where are you now?"
 	public CodeData findSimplifiedCodeData(IJavaElement javaElement, Expression expression) {
-		if (expression instanceof IMethodBinding) {// javaElement instanceof IMethod
-			String packageName = ((IMethodBinding) expression).getDeclaringClass().getPackage().getName();
-			String className = javaElement.getParent().getElementName();
-			String methodName = javaElement.getElementName();
-			return new CodeData(packageName, className, methodName);
-		} else if (expression instanceof ITypeBinding) {// javaElement instanceof IClassFile
-			String packageName = ((ITypeBinding) expression).getPackage().getName();
-			String className = javaElement.getElementName();
-			return new CodeData(packageName, className);
-		} else if (javaElement instanceof ResolvedSourceMethod) {
-			ResolvedSourceMethod resolvedSourceMethod = (ResolvedSourceMethod) javaElement;
-			IType classFile = resolvedSourceMethod.getDeclaringType();
-			IPackageFragment packageFragment = classFile.getPackageFragment();
-			String packageName = packageFragment.getElementName();
-			String className = classFile.getElementName();
-			String methodName = resolvedSourceMethod.getElementName();
-			return new CodeData(packageName, className, methodName);
-		} else if (javaElement instanceof ResolvedBinaryMethod) {
-			ResolvedBinaryMethod resolvedBinaryMethod = (ResolvedBinaryMethod) javaElement;
-			IType classFile = resolvedBinaryMethod.getDeclaringType();
-			IPackageFragment packageFragment = classFile.getPackageFragment();
-			String packageName = packageFragment.getElementName();
-			String className = classFile.getElementName();
-			String methodName = resolvedBinaryMethod.getElementName();
-			return new CodeData(packageName, className, methodName);
-		} else if (javaElement instanceof ResolvedBinaryType) {
-			ResolvedBinaryType resolvedBinaryType = (ResolvedBinaryType) javaElement;
-			IPackageFragment packageFragment = resolvedBinaryType.getPackageFragment();
-			String packageName = packageFragment.getElementName();
-			String className = resolvedBinaryType.getElementName();
-			return new CodeData(packageName, className);
-		} else if (javaElement instanceof ResolvedSourceType) {
-			ResolvedSourceType resolvedSourceType = (ResolvedSourceType) javaElement;
-			IPackageFragment packageFragment = resolvedSourceType.getPackageFragment();
-			String packageName = packageFragment.getElementName();
-			String className = resolvedSourceType.getElementName();
-			return new CodeData(packageName, className);
-		}
+		String url = javaElementToUrl.findUrl(javaElement);
+		if (url.length()>0)
+			return new CodeData(url);
 		return null;
 	}
 

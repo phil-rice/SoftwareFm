@@ -89,7 +89,7 @@ public class ArtifactCompositeTest extends AbstractSoftwareFmCompositeTest<Artif
 
 	public void testMessages() {
 		assertEquals(UrlConstants.aboutArtifactComposite, panel.getTextOrUrl());// initial
-		selectedArtifactSelectionManager.codeSelectionOccured(0, classExpressionData);
+		selectedArtifactSelectionManager.codeSelectionOccured(0, classData);
 		assertEquals(UrlConstants.aboutArtifactComposite, panel.getTextOrUrl());// initial
 		assertEquals(panel.getBrowser().getControl(), panel.getTopControl());
 

@@ -44,7 +44,7 @@ public interface ISelectedBindingStrategy<S, N> extends IArtifactStrategy<S> {
 				}
 
 				public CodeData findExpressionData(Map<String, Object> selection, Map<String, Object> node, int selectionCount) {
-					return new CodeData((String) selection.get("package"), (String) selection.get("class"), (String) selection.get("method"));
+					return new CodeData((String) selection.get("sfmId"));
 				}
 
 				public ArtifactData findArtifact(Map<String, Object> selection, FileAndDigest fileAndDigest, int selectionCount) {

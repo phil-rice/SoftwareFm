@@ -305,7 +305,7 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 				listenerList.addGlobalListener(IMultipleListenerList.Utils.sysoutProfiler());
 
 				IArtifactStrategy<ITextSelection> projectStrategy = new SoftwareFmArtifactStrategy<ITextSelection>(IHttpClient.Utils.builder(), new SoftwareFmArtifactHtmlRipper(), urlStrategy);
-				ISelectedBindingStrategy<ITextSelection, Expression> strategy = new EclipseSelectedBindingStrategy(projectStrategy);
+				ISelectedBindingStrategy<ITextSelection, Expression> strategy = new EclipseSelectedBindingStrategy(projectStrategy, IJavaElementToUrl.Utils.javaElementToUrl());
 				ExecutorService executor = getExecutorService();
 				ICallback<Throwable> sysErrCallback = new ICallback<Throwable>() {
 					@Override
@@ -325,7 +325,7 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 					@Override
 					public void codeSelectionOccured(int selectionCount, CodeData codeData) {
 						log(Status.INFO, "codeSelectionOccured: " + codeData);
-						if (codeData != null && codeData.className != null) {
+						if (codeData != null && codeData.sfmId != null) {
 							HostOffsetAndUrl url = getContainer().urlStrategy.classAndMethodUrl(codeData);
 							IUsage usage = getUsage();
 							usage.selected(url.url);

@@ -13,17 +13,15 @@ public class UrlStrategyWithActionBarStateTest extends TestCase {
 	private SfmActionState state;
 	private IUrlStrategy urlStrategy;
 
-	public void testClassAndMethodUrl() {
-		assertEquals(new HostOffsetAndUrl("someHost", "offset", "code:package/class"), urlStrategy.classAndMethodUrl(new CodeData("package", "class")));
-		assertEquals(new HostOffsetAndUrl("someHost", "offset", "code:package/class/meth"), urlStrategy.classAndMethodUrl(new CodeData("package", "class", "meth")));
+	public void testClassAndMethodUrlAreUnaffectedByState() {
+		assertEquals(new HostOffsetAndUrl("someHost", "offset", "code:someSfmId"), urlStrategy.classAndMethodUrl(new CodeData("someSfmId")));
 
 		state.setUrlSuffix("someSuffix");
 
-		assertEquals(new HostOffsetAndUrl("someHost", "offset", "code:package/class"), urlStrategy.classAndMethodUrl(new CodeData("package", "class")));
-		assertEquals(new HostOffsetAndUrl("someHost", "offset", "code:package/class/meth"), urlStrategy.classAndMethodUrl(new CodeData("package", "class", "meth")));
+		assertEquals(new HostOffsetAndUrl("someHost", "offset", "code:someSfmId"), urlStrategy.classAndMethodUrl(new CodeData("someSfmId")));
 	}
 
-	public void testDigest() {
+	public void testDigestIsUnaffectedByState() {
 		assertEquals(new HostOffsetAndUrl("someHost", "offset", "Digest:someDigest"), urlStrategy.digestUrl("someDigest"));
 		state.setUrlSuffix("someSuffix");
 		assertEquals(new HostOffsetAndUrl("someHost", "offset", "Digest:someDigest"), urlStrategy.digestUrl("someDigest"));

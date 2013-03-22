@@ -29,14 +29,14 @@ public class SocialUsageTest extends TestCase {
 	private ISocialUsageListener listener1;
 	private ISocialUsageListener listener2;
 
-	public void testCodeSelectionCausesCodeUsage() {
+	public void testCodeSelectionCausesCodeUsage() throws Exception {
 		ISimpleMap<FriendData, UsageStatData> friendsCodeUsage = SimpleMaps.<FriendData, UsageStatData> makeMap(//
 				UsageTestData.friend1, new UsageStatData(7), //
 				UsageTestData.friend2, new UsageStatData(0));
 		listener1.codeUsage("code:pack/class1", new UsageStatData(2), friendsCodeUsage);
 		listener2.codeUsage("code:pack/class1", new UsageStatData(2), friendsCodeUsage);
 		EasyMock.replay(listener1, listener2);
-		socialUsageListener.codeSelectionOccured(0, new CodeData("pack", "class1"));
+		socialUsageListener.codeSelectionOccured(0, new CodeData("pack/class1"));
 	}
 
 	public void testNotInAJarCausesNoArtifactUsage() {
@@ -74,7 +74,7 @@ public class SocialUsageTest extends TestCase {
 		listener2 = EasyMock.createMock(ISocialUsageListener.class);
 
 		socialUsage.addSocialUsageListener(listener1);
-		 socialUsage.addSocialUsageListener(listener2);
+		socialUsage.addSocialUsageListener(listener2);
 
 		socialManager.setMyName("me");
 		socialManager.setFriendsData(UsageTestData.friends);
