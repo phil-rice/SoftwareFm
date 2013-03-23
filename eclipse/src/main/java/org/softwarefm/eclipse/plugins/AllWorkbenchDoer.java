@@ -19,12 +19,11 @@ import org.softwarefm.utilities.exceptions.WrappedException;
 public class AllWorkbenchDoer {
 	public static void addPartListener(IWorkbench workbench, final IPartListener partListener) {
 		for (IWorkbenchWindow window : workbench.getWorkbenchWindows())
-			if (window != null)
-				window.getActivePage().addPartListener(partListener);
+			addListener(partListener, window);
 		workbench.addWindowListener(new IWindowListener() {
 			@Override
 			public void windowOpened(IWorkbenchWindow window) {
-				window.getActivePage().addPartListener(partListener);
+				addListener(partListener, window);
 			}
 
 			@Override
@@ -43,6 +42,14 @@ public class AllWorkbenchDoer {
 
 			}
 		});
+	}
+
+	private static void addListener(final IPartListener partListener, IWorkbenchWindow window) {
+		if (window != null) {
+			IWorkbenchPage activePage = window.getActivePage();
+			if (activePage != null)
+				activePage.addPartListener(partListener);
+		}
 	}
 
 	public static void forEveryEditorNow(IWorkbench workbench, final ICallback2<IFile, AbstractDecoratedTextEditor> editorCallback) {

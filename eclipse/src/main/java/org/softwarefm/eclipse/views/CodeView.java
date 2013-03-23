@@ -6,9 +6,16 @@ import org.softwarefm.core.composite.CodeComposite;
 
 public class CodeView extends SoftwareFmView<CodeComposite> {
 
+	private CodeComposite codeComposite;
+
 	@Override
 	public CodeComposite makeSoftwareFmComposite(Composite parent, SoftwareFmContainer<?> container) {
-		return new CodeComposite(parent, container);
+		return codeComposite = new CodeComposite(parent, container);
+	}
+
+	public void setUrl(String url) {
+		codeComposite.setUrl(url);
+
 	}
 
 }

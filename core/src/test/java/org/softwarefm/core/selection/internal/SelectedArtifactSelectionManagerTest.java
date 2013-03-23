@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 import org.easymock.EasyMock;
-import org.softwarefm.core.cache.CachedArtifactData;
 import org.softwarefm.core.cache.IArtifactDataCache;
+import org.softwarefm.core.cache.internal.CachedArtifactData;
 import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.FileAndDigest;

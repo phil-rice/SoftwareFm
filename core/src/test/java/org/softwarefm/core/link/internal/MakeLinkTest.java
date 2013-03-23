@@ -20,8 +20,8 @@ import org.softwarefm.core.selection.FileAndDigest;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.HostOffsetAndUrl;
 import org.softwarefm.core.url.IUrlStrategy;
+import org.softwarefm.utilities.cache.IHasCache;
 import org.softwarefm.utilities.exceptions.WrappedException;
-import org.softwarefm.utilities.maps.IHasCache;
 import org.softwarefm.utilities.tests.IIntegrationTest;
 
 public class MakeLinkTest extends TestCase implements IIntegrationTest {

@@ -9,8 +9,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.softwarefm.core.cache.CachedArtifactData;
 import org.softwarefm.core.cache.IArtifactDataCache;
+import org.softwarefm.core.cache.internal.CachedArtifactData;
 import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.selection.FileAndDigest;

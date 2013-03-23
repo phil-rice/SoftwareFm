@@ -16,7 +16,7 @@ public class JavaElementToUrl implements IJavaElementToUrl {
 				if (name == null)
 					return string;
 				else
-					return name + "/" + string;
+					return string.equals("") ? name : name + "/" + string;
 			}
 		});
 		return result;

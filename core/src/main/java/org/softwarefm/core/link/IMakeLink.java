@@ -6,8 +6,8 @@ import org.softwarefm.core.link.internal.MakeLink;
 import org.softwarefm.core.selection.ISelectedBindingManager;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.IUrlStrategy;
+import org.softwarefm.utilities.cache.IHasCache;
 import org.softwarefm.utilities.callbacks.ICallback2;
-import org.softwarefm.utilities.maps.IHasCache;
 
 public interface IMakeLink {
 

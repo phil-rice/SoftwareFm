@@ -13,7 +13,6 @@ import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import org.softwarefm.eclipse.Jdts;
 import org.softwarefm.eclipse.jobs.Jobs;
@@ -29,15 +28,6 @@ public class MarkUpResource {
 	public MarkUpResource(IMarkerStore store, String markerType) {
 		this.store = store;
 		this.markerType = markerType;
-	}
-
-	public IPartListener markUpListener() {
-		return new JavaFilePartAdapter() {
-			@Override
-			protected void javaEditorOpened(AbstractDecoratedTextEditor editor, IFile file) {
-				markup(file, editor);
-			}
-		};
 	}
 
 	public void markup(final IFile file, AbstractDecoratedTextEditor editor) {

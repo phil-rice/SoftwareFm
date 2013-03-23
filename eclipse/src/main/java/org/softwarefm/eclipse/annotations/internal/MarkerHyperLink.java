@@ -3,8 +3,10 @@ package org.softwarefm.eclipse.annotations.internal;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.jface.text.hyperlink.IHyperlink;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
+import org.softwarefm.eclipse.views.CodeView;
 import org.softwarefm.utilities.exceptions.WrappedException;
 
 public class MarkerHyperLink implements IHyperlink {
@@ -28,7 +30,10 @@ public class MarkerHyperLink implements IHyperlink {
 	public void open() {
 		try {
 			System.out.println("Opening: " + url);
-			activePage.showView("org.softwarefm.eclipse.views.ClassAndMethodView");
+			IViewPart view = activePage.showView("org.softwarefm.eclipse.views.ClassAndMethodView");
+			if (url != null && view instanceof CodeView)
+				((CodeView)view).setUrl(url);
+			
 			
 		} catch (PartInitException e) {
 			throw WrappedException.wrap(e);
@@ -42,7 +47,7 @@ public class MarkerHyperLink implements IHyperlink {
 
 	@Override
 	public String getHyperlinkText() {
-		return "SoftwareFm";
+		return  "SoftwareFm";
 	}
 
 }

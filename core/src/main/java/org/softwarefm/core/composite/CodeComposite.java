@@ -32,8 +32,7 @@ public class CodeComposite extends SoftwareFmComposite {
 			@Override
 			public void codeSelectionOccured(int selectionCount, CodeData codeData) {
 				if (!editing) {
-					url = container.urlStrategy.classAndMethodUrl(codeData).getHttpHostAndUrl();
-					browser.setUrl(url);
+					setUrl(container.urlStrategy.classAndMethodUrl(codeData).getHttpHostAndUrl());
 					System.out.println("ClassAndMethod: " + url + ", " + " editing: " + editing);
 				}
 			}
@@ -55,13 +54,18 @@ public class CodeComposite extends SoftwareFmComposite {
 				browser.setFriendData(friendsUsage);
 			}
 		});
-		browser.setUrl(UrlConstants.aboutCodeComposite);
+		setUrl(UrlConstants.aboutCodeComposite);
 	}
 
 	@Override
 	public void dispose() {
 		System.out.println("CodeComposite dispose called");
 		super.dispose();
+	}
+
+	public void setUrl(String url) {
+		browser.setUrl(url);
+		this.url = url;
 	}
 
 	public String getUrl() {

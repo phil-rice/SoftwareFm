@@ -14,9 +14,9 @@ import org.softwarefm.shared.constants.CommonConstants;
 import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.shared.usage.IUsageFromServer;
 import org.softwarefm.shared.usage.IUsagePersistance;
+import org.softwarefm.utilities.cache.IHasCache;
 import org.softwarefm.utilities.callbacks.ICallback2;
 import org.softwarefm.utilities.events.IMultipleListenerList;
-import org.softwarefm.utilities.maps.IHasCache;
 import org.softwarefm.utilities.resources.IResourceGetter;
 
 public class SoftwareFmContainer<S> implements IHasCache {

@@ -1,4 +1,4 @@
-package org.softwarefm.core.cache;
+package org.softwarefm.core.cache.internal;
 
 import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.selection.FileAndDigest;

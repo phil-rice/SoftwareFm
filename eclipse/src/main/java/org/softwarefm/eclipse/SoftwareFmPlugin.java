@@ -131,29 +131,14 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 			public void process(final IFile file, final AbstractDecoratedTextEditor editor) throws Exception {
 				// final IMarkerStore store = IMarkerStore.Utils.mock(//
 				// "org.softwarefm.httpServer/IRegistryConfigurator", "This is the new value for IRegistryConfig");
-				WikiMarkerStore wikiStore = new WikiMarkerStore(CommonConstants.softwareFmHost, CommonConstants.softwareFmApiOffset);
+				IArtifactDataCache artifactDataCache = getContainer().artifactDataCache;
+				WikiMarkerStore wikiStore = new WikiMarkerStore(artifactDataCache, CommonConstants.softwareFmHost, CommonConstants.softwareFmApiOffset);
 				MarkUpResource markUpResource = new MarkUpResource(wikiStore, "org.softwarefm.code.marker");
 				markUpResource.markup(file, editor);
 			}
 		});
 		views = Maps.newMap();
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					setName("Initialising Selection Binding Manager");
-					getSelectionBindingManager();
-				} catch (Exception e) {
-					logException(e, "Initialising Selection Binding Manager");
-				}
-			}
-
-			@Override
-			public String toString() {
-				return "[Thread: " + getName() + "]";
-			}
-
-		}.start();
+	
 	}
 
 	@Override

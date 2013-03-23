@@ -109,7 +109,7 @@
 		<hyperlinkDetector
 				id="org.eclipse.example.jdt.internal.debug.ui.JavaHyperlinkDetector"
 				targetId="org.eclipse.jdt.ui.javaCode"
-				class="org.softwarefm.eclipse.annotations.MarkerHyperlinkDetector"
+				class="org.softwarefm.eclipse.annotations.internal.MarkerHyperlinkDetector"
 				name="SoftwareFmHyperlinkDetector">
 		</hyperlinkDetector>
 	</extension>
