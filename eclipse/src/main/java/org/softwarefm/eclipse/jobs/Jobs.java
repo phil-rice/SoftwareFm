@@ -5,18 +5,24 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 
+//TODO Better error handling with jobs
 public class Jobs {
 
 	public static Job run(String title, final IJobWithSections jobWithSections) {
 		final Job job = new Job(title) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				while (jobWithSections.hasMoreWorkToDo()) {
-					jobWithSections.doNextSection();
-					if (monitor.isCanceled())
-						return Status.CANCEL_STATUS;
+				try {
+					while (jobWithSections.hasMoreWorkToDo()) {
+						jobWithSections.doNextSection();
+						if (monitor.isCanceled())
+							return Status.CANCEL_STATUS;
+					}
+					return Status.OK_STATUS;
+				} catch (Exception e) {
+					e.printStackTrace();
+					return Status.CANCEL_STATUS;
 				}
-				return Status.OK_STATUS;
 			}
 		};
 		job.schedule();
@@ -27,10 +33,15 @@ public class Jobs {
 		final Job job = new Job(title) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				runnable.run();
-				if (monitor.isCanceled())
+				try {
+					runnable.run();
+					if (monitor.isCanceled())
+						return Status.CANCEL_STATUS;
+					return Status.OK_STATUS;
+				} catch (Exception e) {
+					e.printStackTrace();
 					return Status.CANCEL_STATUS;
-				return Status.OK_STATUS;
+				}
 			}
 		};
 		job.schedule();
