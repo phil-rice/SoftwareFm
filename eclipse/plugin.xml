@@ -104,7 +104,7 @@
 			id="org.softwarefm.code.specification" name="SoftwareFMAnnotation">
 		<specification annotationType="org.softwarefm.code.annotation.global"
 				label="Software FM code"
-				icon="icons/signCode.gif"
+				icon="icons/signGlobal.gif"
 				overviewRulerPreferenceKey="clruler"
 				overviewRulerPreferenceValue="true"
 				colorPreferenceKey="clcolor"
@@ -122,7 +122,7 @@
 			id="org.softwarefm.code.specification" name="SoftwareFMAnnotation">
 		<specification annotationType="org.softwarefm.code.annotation.personal"
 				label="Software FM code"
-				icon="icons/signUser.gif"
+				icon="icons/signPersonal.gif"
 				overviewRulerPreferenceKey="clruler"
 				overviewRulerPreferenceValue="true"
 				colorPreferenceKey="clcolor"
