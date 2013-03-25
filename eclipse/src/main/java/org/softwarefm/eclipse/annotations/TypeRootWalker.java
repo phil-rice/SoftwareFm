@@ -1,5 +1,6 @@
 package org.softwarefm.eclipse.annotations;
 
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
@@ -38,6 +39,8 @@ public class TypeRootWalker {
 	public static void visit(ClassFile classFile, ITypeRootVistor visitor, IJavaElementToUrl javaElementToUrl) {
 		try {
 			IJavaElement primaryElement = classFile.getType();
+			IResource resource1 = primaryElement.getResource();
+			IResource resource2 = classFile.getResource();
 			String sfmTypeId = javaElementToUrl.findUrl(primaryElement);
 			if (primaryElement instanceof IType) {
 				IType type = (IType) primaryElement;

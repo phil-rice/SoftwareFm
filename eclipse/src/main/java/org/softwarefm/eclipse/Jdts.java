@@ -169,10 +169,10 @@ public class Jdts {
 	}
 
 	public static ITypeRoot getTypeRoot(IFile file, AbstractDecoratedTextEditor editor) {
-		if (file != null)
-			return getTypeRoot(file.getFullPath());
 		if (editor.getEditorInput() instanceof InternalClassFileEditorInput)
 			return ((InternalClassFileEditorInput) editor.getEditorInput()).getClassFile();
+		if (file != null)
+			return getTypeRoot(file.getFullPath());
 		throw new IllegalArgumentException("Don't know how to get root for editor with no file and a class of " + editor.getClass().getName());
 	}
 

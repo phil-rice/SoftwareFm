@@ -7,6 +7,6 @@ public interface ITypeRootVistor {
 
 	void visitType(String sfmTypeId, IType type) throws Exception;
 
-	void visitMethod(String sfmMethodId, IType type, IMethod method)throws Exception;
+	void  visitMethod(String sfmMethodId, IType type, IMethod method)throws Exception;
 
 }

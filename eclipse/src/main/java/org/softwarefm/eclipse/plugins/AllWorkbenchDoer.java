@@ -109,12 +109,20 @@ public class AllWorkbenchDoer {
 		try {
 			if (part instanceof AbstractDecoratedTextEditor) {
 				IEditorInput editorInput = ((AbstractDecoratedTextEditor) part).getEditorInput();
-				IResource resource = ResourceUtil.getResource(editorInput);
-				if (editorInput instanceof InternalClassFileEditorInput||resource instanceof IFile)  
+				IResource resource = getResource(editorInput);
+				if ( resource instanceof IFile)
 					editorCallback.process((IFile) resource, (AbstractDecoratedTextEditor) part);
 			}
 		} catch (Exception e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	private static IResource getResource(IEditorInput editorInput) {
+		if (editorInput instanceof InternalClassFileEditorInput) {
+			IResource resource = ((InternalClassFileEditorInput) editorInput).getClassFile().getResource();
+			return resource;
+		}
+		return ResourceUtil.getResource(editorInput);
 	}
 }
