@@ -1,9 +1,9 @@
 package org.softwarefm.eclipse;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.JavaCore;
@@ -19,18 +19,20 @@ import org.eclipse.jdt.internal.core.PackageFragment;
 import org.eclipse.jdt.internal.core.PackageFragmentRoot;
 import org.eclipse.jdt.internal.core.SourceMethod;
 import org.eclipse.jdt.internal.core.SourceType;
+import org.eclipse.jdt.internal.ui.javaeditor.InternalClassFileEditorInput;
 import org.eclipse.jdt.ui.SharedASTProvider;
 import org.eclipse.jface.text.ITextSelection;
+import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.functions.IFoldFunction;
 
 @SuppressWarnings("restriction")
 public class Jdts {
-	public static ICompilationUnit getCompilationUnit(IPath path) {
+	public static ITypeRoot getTypeRoot(IPath path) {
 		IJavaElement javaElement = getJavaElement(path);
-		if (!(javaElement instanceof ICompilationUnit))
+		if (!(javaElement instanceof ITypeRoot))
 			return null;
-		return (ICompilationUnit) javaElement;
+		return (ITypeRoot) javaElement;
 	}
 
 	public static IJavaElement getJavaElement(IPath path) {
@@ -132,12 +134,13 @@ public class Jdts {
 
 			private String typeName(IJavaElement javaElement) {
 				String elementName = javaElement.getElementName();
-				if (elementName .length()==0)
+				if (elementName.length() == 0)
 					return visitJavaElement(javaElement, new JavaElementAdapter<String>() {
 						@Override
 						public String from(BinaryType element) {
 							return element.getTypeQualifiedName();
 						}
+
 						@Override
 						public String from(SourceType sourceType) {
 							return sourceType.getTypeQualifiedName();
@@ -150,8 +153,9 @@ public class Jdts {
 	}
 
 	public static CompilationUnit findCompilationUnitFrom(ITypeRoot compilationUnit) {
-		CompilationUnit root = SharedASTProvider.getAST(compilationUnit, SharedASTProvider.WAIT_NO, null);
-		return root;
+		if (compilationUnit != null)
+			return SharedASTProvider.getAST(compilationUnit, SharedASTProvider.WAIT_NO, null);
+		return null;
 	}
 
 	public static ASTNode findAstNodeFor(ASTNode root, int offset, int length) {
@@ -162,6 +166,14 @@ public class Jdts {
 	public static ASTNode findAstNodeFor(ITextSelection textSelection, CompilationUnit root) {
 		ASTNode node = Jdts.findAstNodeFor(root, textSelection.getOffset(), textSelection.getLength());
 		return node;
+	}
+
+	public static ITypeRoot getTypeRoot(IFile file, AbstractDecoratedTextEditor editor) {
+		if (file != null)
+			return getTypeRoot(file.getFullPath());
+		if (editor.getEditorInput() instanceof InternalClassFileEditorInput)
+			return ((InternalClassFileEditorInput) editor.getEditorInput()).getClassFile();
+		throw new IllegalArgumentException("Don't know how to get root for editor with no file and a class of " + editor.getClass().getName());
 	}
 
 }

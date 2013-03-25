@@ -2,7 +2,9 @@ package org.softwarefm.eclipse.plugins;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jdt.internal.ui.javaeditor.InternalClassFileEditorInput;
 import org.eclipse.jface.text.source.IAnnotationModel;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPartListener;
@@ -102,11 +104,13 @@ public class AllWorkbenchDoer {
 		});
 	}
 
+	@SuppressWarnings("null")
 	private static void call(final ICallback2<IFile, AbstractDecoratedTextEditor> editorCallback, IWorkbenchPart part) {
 		try {
 			if (part instanceof AbstractDecoratedTextEditor) {
-				IResource resource = ResourceUtil.getResource(((AbstractDecoratedTextEditor) part).getEditorInput());
-				if (resource instanceof IFile)
+				IEditorInput editorInput = ((AbstractDecoratedTextEditor) part).getEditorInput();
+				IResource resource = ResourceUtil.getResource(editorInput);
+				if (editorInput instanceof InternalClassFileEditorInput||resource instanceof IFile)  
 					editorCallback.process((IFile) resource, (AbstractDecoratedTextEditor) part);
 			}
 		} catch (Exception e) {

@@ -1,5 +1,6 @@
 package org.softwarefm.eclipse.annotations;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -7,10 +8,10 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.ISourceRange;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
@@ -29,9 +30,9 @@ public class MarkUpResource {
 	}
 
 	public void markup(final IFile file, AbstractDecoratedTextEditor editor) {
-		ICompilationUnit compilationUnit = Jdts.getCompilationUnit(file.getFullPath());
-		final Map<String, IMarkerCallback> callbacks = Maps.newMap();
-		SoftwareFmCompilationUnitWalker.visit(compilationUnit, new ISoftwareFmCompilationUnitVistor() {
+		ITypeRoot typeRoot = Jdts.getTypeRoot(file, editor);
+		final Map<String, IMarkerCallback> callbacks = Maps.newMap(LinkedHashMap.class);//linked for debugging
+		TypeRootWalker.visit(typeRoot, new ITypeRootVistor() {
 			@Override
 			public void visitType(String sfmTypeId, final IType type) throws JavaModelException {
 				callbacks.put(sfmTypeId, mark(file, sfmTypeId, type.getNameRange()));
@@ -42,7 +43,7 @@ public class MarkUpResource {
 				callbacks.put(sfmMethodId, mark(file, sfmMethodId, method.getNameRange()));
 			}
 		}, javaElementToUrl);
-		Jobs.run("Loading markers for " + file.getFullPath(), new Runnable() {
+		Jobs.run("Loading markers for " + (file == null?" internal ":file.getFullPath()), new Runnable() {
 			@Override
 			public void run() {
 				for (Entry<String, IMarkerCallback> entry : callbacks.entrySet())
@@ -56,7 +57,7 @@ public class MarkUpResource {
 		return new IMarkerCallback() {
 			@Override
 			public void mark(final String type, final String sfmId, final String markerValue) {
-				if (markerValue != null)
+				if (markerValue != null && file != null) //TODO 'Internal classes come here with a null file - because they were a null file, don't know how to add annotations to them
 					Display.getDefault().asyncExec(new Runnable() {
 						@Override
 						public void run() {
