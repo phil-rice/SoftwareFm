@@ -16,12 +16,14 @@ import org.softwarefm.core.url.HostOffsetAndUrl;
 import org.softwarefm.core.url.IUrlStrategy;
 import org.softwarefm.eclipse.SoftwareFmPlugin;
 import org.softwarefm.eclipse.annotations.IJavaElementToUrl;
+import org.softwarefm.shared.social.ISocialManager;
 import org.softwarefm.utilities.exceptions.WrappedException;
 
 @SuppressWarnings("restriction")
 public class MarkerHyperlinkDetector extends AbstractHyperlinkDetector {
 
 	private IUrlStrategy urlStrategy;
+	private ISocialManager socialManager;
 
 	@Override
 	public IHyperlink[] detectHyperlinks(ITextViewer textViewer, IRegion region, boolean canShowMultipleHyperlinks) {
@@ -34,13 +36,20 @@ public class MarkerHyperlinkDetector extends AbstractHyperlinkDetector {
 			HostOffsetAndUrl classAndMethodUrl = getUlStrategy().classAndMethodUrl(codeData);
 			if (classAndMethodUrl.url.equals("code:"))// TODO Bodge...code explicitly coded in
 				return null;
-			String url = classAndMethodUrl.getHttpHostAndUrl();
+			HostOffsetAndUrl myCodeUrl = getUlStrategy().myCodeUrl(getSocialManager().myName(), codeData);
 			IRegion wordRegion = JavaWordFinder.findWord(textViewer.getDocument(), region.getOffset());
 			IWorkbenchPage activePage = textEditor.getSite().getWorkbenchWindow().getActivePage();
-			return new IHyperlink[] { new MarkerHyperLink(element, wordRegion, activePage, url) };
+			return new IHyperlink[] { new MarkerHyperLink(element, wordRegion, activePage, classAndMethodUrl.getHttpHostAndUrl(), "SoftwareFM"),//
+					new MarkerHyperLink(element, wordRegion, activePage, myCodeUrl.getHttpHostAndUrl(), "My Comment") //
+			};
 		} catch (JavaModelException e) {
 			throw WrappedException.wrap(e);
 		}
+	}
+
+	private ISocialManager getSocialManager() {
+		return socialManager == null ? socialManager = SoftwareFmPlugin.getDefault().getContainer().socialManager : socialManager;
+
 	}
 
 	private IUrlStrategy getUlStrategy() {

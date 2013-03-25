@@ -132,8 +132,8 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 				// final IMarkerStore store = IMarkerStore.Utils.mock(//
 				// "org.softwarefm.httpServer/IRegistryConfigurator", "This is the new value for IRegistryConfig");
 				IArtifactDataCache artifactDataCache = getContainer().artifactDataCache;
-				WikiMarkerStore wikiStore = new WikiMarkerStore(artifactDataCache, CommonConstants.softwareFmHost, CommonConstants.softwareFmApiOffset);
-				MarkUpResource markUpResource = new MarkUpResource(wikiStore, "org.softwarefm.code.marker");
+				WikiMarkerStore wikiStore = new WikiMarkerStore(artifactDataCache, getSocialManager(), CommonConstants.softwareFmHost, CommonConstants.softwareFmApiOffset);
+				MarkUpResource markUpResource = new MarkUpResource(wikiStore);
 				markUpResource.markup(file, editor);
 			}
 		});

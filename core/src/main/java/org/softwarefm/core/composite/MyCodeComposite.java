@@ -6,14 +6,15 @@ import org.softwarefm.core.constants.UrlConstants;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.url.HostOffsetAndUrl;
 
-public class CodeComposite extends AbstractCodeComposite {
+public class MyCodeComposite extends AbstractCodeComposite {
 
-	public CodeComposite(Composite parent, SoftwareFmContainer<?> container) {
-		super(parent, container,UrlConstants.aboutCodeComposite);
+	public MyCodeComposite(Composite parent, SoftwareFmContainer<?> container) {
+		super(parent, container,UrlConstants.aboutMyCodeComposite);
 	}
 
 	@Override
 	protected HostOffsetAndUrl getClassAndMethodUrl(SoftwareFmContainer<?> container, CodeData codeData) {
-		return container.urlStrategy.classAndMethodUrl(codeData);
+		String myName = container.socialManager.myName();
+		return container.urlStrategy.myCodeUrl(myName, codeData);
 	}
 }

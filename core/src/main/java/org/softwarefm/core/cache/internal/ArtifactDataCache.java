@@ -12,11 +12,14 @@ import org.softwarefm.utilities.maps.Maps;
 public class ArtifactDataCache implements IArtifactDataCache {
 	private final Map<File, CachedArtifactData> cachedArtifactData = Maps.newMap(LinkedHashMap.class); // Linked to make writing tests easier
 	private final Map<String, String> cachedCodeData = Maps.newMap(LinkedHashMap.class);
+	private final Map<String, Map<String, String>> cachedMyCodeData = Maps.newMap(LinkedHashMap.class);
 	private final Object lock = new Object();
 
 	public void clearCaches() {
 		synchronized (lock) {
 			cachedArtifactData.clear();
+			cachedCodeData.clear();
+			cachedMyCodeData.clear();
 		}
 	}
 
@@ -52,6 +55,21 @@ public class ArtifactDataCache implements IArtifactDataCache {
 	public void putCodeHtml(String sfmId, String codeHtml) {
 		synchronized (lock) {
 			Maps.putNoDuplicates(cachedCodeData, sfmId, codeHtml);
+		}
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public String myCodeHtml(String myName, String sfmId) {
+		synchronized (lock) {
+			return Maps.getOrNull((Map) cachedMyCodeData, myName, sfmId);
+		}
+	}
+
+	@Override
+	public void putMyCodeHtml(String myName, String sfmId, String codeHtml) {
+		synchronized (lock) {
+			Maps.put(cachedMyCodeData, myName, sfmId, codeHtml);
 		}
 	}
 }

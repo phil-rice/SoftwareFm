@@ -14,11 +14,13 @@ public class MarkerHyperLink implements IHyperlink {
 	private final IRegion wordRegion;
 	private final IWorkbenchPage activePage;
 	private final String url;
+	private final String link;
 
-	public MarkerHyperLink(IJavaElement element, IRegion wordRegion, IWorkbenchPage activePage, String url) {
+	public MarkerHyperLink(IJavaElement element, IRegion wordRegion, IWorkbenchPage activePage, String url, String link) {
 		this.wordRegion = wordRegion;
 		this.activePage = activePage;
 		this.url = url;
+		this.link = link;
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class MarkerHyperLink implements IHyperlink {
 
 	@Override
 	public String getHyperlinkText() {
-		return  "SoftwareFm";
+		return  link;
 	}
 
 }

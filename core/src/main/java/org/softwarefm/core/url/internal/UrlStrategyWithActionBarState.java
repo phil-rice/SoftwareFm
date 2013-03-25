@@ -29,6 +29,10 @@ public class UrlStrategyWithActionBarState implements IUrlStrategy {
 	public HostOffsetAndUrl digestUrl(String digest) {
 		return urlStrategy.digestUrl(digest);
 	}
+	@Override
+	public HostOffsetAndUrl myCodeUrl(String myName, CodeData codeData) {
+		return urlStrategy.myCodeUrl(myName, codeData);
+	}
 
 	public HostOffsetAndUrl projectUrl(ArtifactData artifactData) {
 		return addSuffix(urlStrategy.projectUrl(artifactData), state.getUrlSuffix());
@@ -54,5 +58,6 @@ public class UrlStrategyWithActionBarState implements IUrlStrategy {
 		this.urlStrategy = urlStrategy;
 		this.state = state;
 	}
+
 
 }
