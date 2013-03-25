@@ -7,14 +7,14 @@ import org.softwarefm.utilities.exceptions.WrappedException;
 
 public class SoftwareFmCompilationUnitWalker {
 
-	public static void visit(ICompilationUnit compilationUnit, ISoftwareFmCompilationUnitVistor visitor) {
+	public static void visit(ICompilationUnit compilationUnit, ISoftwareFmCompilationUnitVistor visitor, IJavaElementToUrl javaElementToUrl) {
 		try {
 			for (IType type : compilationUnit.getAllTypes()) {
-				String sfmTypeId = type.getPackageFragment().getElementName() + "/" + type.getElementName();
+				String sfmTypeId = javaElementToUrl.findUrl(type);
 				
 				visitor.visitType(sfmTypeId, type);
 				for (IMethod method : type.getMethods()) {
-					String sfmMethodId = sfmTypeId + "/" + method.getElementName();
+					String sfmMethodId =  javaElementToUrl.findUrl(method);
 					visitor.visitMethod(sfmMethodId, type, method);
 				}
 			}

@@ -43,3 +43,4 @@ RELEASE NOTES:
 1.10.1: Annotations added
 1.10.2: Hyperlink detection added
 1.10.3: Personal comments and markers added, Refresh of caches when 'action=submit' in LocationListener
+1.10.4: Improved naming for markers

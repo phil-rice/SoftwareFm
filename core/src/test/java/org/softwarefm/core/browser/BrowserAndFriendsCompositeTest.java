@@ -134,6 +134,10 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 		assertEquals(0, socialManager.myFriends().size());
 	}
 
+	public void testVisitingPageWithActionSubmitCausesRefresh() {
+		fail();
+	}
+
 	private void gotoUserPage(String name) {
 		browserAndFriendsComposite.setUrlAndWait(Strings.url(CommonConstants.softwareFmHost, "wiki/User:" + name));
 	}
@@ -157,7 +161,7 @@ public class BrowserAndFriendsCompositeTest extends SwtTest {
 		IResourceGetter resourceGetter = IResourceGetter.Utils.noResources();
 		Browser.clearSessions();
 		container = SoftwareFmContainer.makeForTests(display, resourceGetter, socialManager);
-		browserAndFriendsComposite = new BrowserAndFriendsComposite(shell, container) ;
+		browserAndFriendsComposite = new BrowserAndFriendsComposite(shell, container);
 		wikiLoginHelperForTests = new WikiLoginHelperForTests(browserAndFriendsComposite);
 	}
 

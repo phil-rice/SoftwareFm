@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.dom.ASTNode;
@@ -52,8 +51,7 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 			if (activePage != null) {
 				IEditorPart editor = activePage.getActiveEditor();
 				ITypeRoot typeRoot = getJavaInput(editor);
-				ICompilationUnit cu = (ICompilationUnit) typeRoot;
-				return findExpressionFor(cu, textSelection);
+				return findExpressionFor(typeRoot, textSelection);
 			}
 		}
 		return null;
@@ -103,7 +101,7 @@ public class EclipseSelectedBindingStrategy implements ISelectedBindingStrategy<
 	// At this point we sigh in sadness about Java's weak class system, and regret the inability to modify Expression in anyway. "Clojure multimethods where are you now?"
 	public CodeData findSimplifiedCodeData(IJavaElement javaElement, Expression expression) {
 		String url = javaElementToUrl.findUrl(javaElement);
-		if (url.length()>0)
+		if (url.length() > 0)
 			return new CodeData(url);
 		return null;
 	}

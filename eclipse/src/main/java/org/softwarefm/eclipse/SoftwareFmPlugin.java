@@ -37,6 +37,8 @@ import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.link.IMakeLink;
 import org.softwarefm.core.maven.IMaven;
+import org.softwarefm.core.refresh.IRefresh;
+import org.softwarefm.core.refresh.IRefreshManager;
 import org.softwarefm.core.selection.IArtifactStrategy;
 import org.softwarefm.core.selection.ISelectedBindingListener;
 import org.softwarefm.core.selection.ISelectedBindingManager;
@@ -126,19 +128,28 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 		super.start(context);
 		plugin = this;
 		final IWorkbench workbench = PlatformUI.getWorkbench();
-		AllWorkbenchDoer.forEveryEditorNowAndWhenOpens(workbench, new ICallback2<IFile, AbstractDecoratedTextEditor>() {
+		final ICallback2<IFile, AbstractDecoratedTextEditor> editorCallback = new ICallback2<IFile, AbstractDecoratedTextEditor>() {
 			@Override
 			public void process(final IFile file, final AbstractDecoratedTextEditor editor) throws Exception {
 				// final IMarkerStore store = IMarkerStore.Utils.mock(//
 				// "org.softwarefm.httpServer/IRegistryConfigurator", "This is the new value for IRegistryConfig");
 				IArtifactDataCache artifactDataCache = getContainer().artifactDataCache;
 				WikiMarkerStore wikiStore = new WikiMarkerStore(artifactDataCache, getSocialManager(), CommonConstants.softwareFmHost, CommonConstants.softwareFmApiOffset);
-				MarkUpResource markUpResource = new MarkUpResource(wikiStore);
+				MarkUpResource markUpResource = new MarkUpResource(wikiStore, getJavaElementToUrl());
 				markUpResource.markup(file, editor);
+			}
+
+		};
+		AllWorkbenchDoer.forEveryEditorNowAndWhenOpens(workbench, editorCallback);
+		getContainer().refreshManager.addRefreshListener(new IRefresh() {
+			@Override
+			public void refresh() {
+				// TODO Remove my very own denial of service attack
+				AllWorkbenchDoer.forEveryEditorNow(workbench, editorCallback);
 			}
 		});
 		views = Maps.newMap();
-	
+
 	}
 
 	@Override
@@ -426,7 +437,7 @@ public class SoftwareFmPlugin extends AbstractUIPlugin implements IStartup {
 					return "[FoundNameListener that loadsUsageFor(List<FriendData> friends)]";
 				}
 			});
-			SoftwareFmContainer<ITextSelection> softwareFmContainer = new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState(), imageRegistry, listenerList, persistance, usageFromServer, socialManager);
+			SoftwareFmContainer<ITextSelection> softwareFmContainer = new SoftwareFmContainer<ITextSelection>(resourceGetter, selectionBindingManager, mavenImport, manualImport, urlStrategy, templateStore, projectDataCache, getActionState(), imageRegistry, listenerList, persistance, usageFromServer, socialManager, IRefreshManager.Utils.refreshManager(listenerList));
 			return softwareFmContainer;
 		}
 	}

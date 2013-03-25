@@ -20,16 +20,17 @@ import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.maps.Maps;
 
 public class MarkUpResource {
+	private final IMarkerStore store;
+	private final IJavaElementToUrl javaElementToUrl;
 
-	IMarkerStore store;
-
-	public MarkUpResource(IMarkerStore store) {
+	public MarkUpResource(IMarkerStore store, IJavaElementToUrl javaElementToUrl) {
 		this.store = store;
+		this.javaElementToUrl = javaElementToUrl;
 	}
 
 	public void markup(final IFile file, AbstractDecoratedTextEditor editor) {
 		ICompilationUnit compilationUnit = Jdts.getCompilationUnit(file.getFullPath());
-		final Map<String,IMarkerCallback> callbacks = Maps.newMap();
+		final Map<String, IMarkerCallback> callbacks = Maps.newMap();
 		SoftwareFmCompilationUnitWalker.visit(compilationUnit, new ISoftwareFmCompilationUnitVistor() {
 			@Override
 			public void visitType(String sfmTypeId, final IType type) throws JavaModelException {
@@ -40,7 +41,7 @@ public class MarkUpResource {
 			public void visitMethod(final String sfmMethodId, IType type, final IMethod method) throws JavaModelException {
 				callbacks.put(sfmMethodId, mark(file, sfmMethodId, method.getNameRange()));
 			}
-		});
+		}, javaElementToUrl);
 		Jobs.run("Loading markers for " + file.getFullPath(), new Runnable() {
 			@Override
 			public void run() {
@@ -78,7 +79,6 @@ public class MarkUpResource {
 
 					});
 			}
-
 
 		};
 	}

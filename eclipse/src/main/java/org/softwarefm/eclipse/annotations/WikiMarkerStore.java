@@ -71,6 +71,7 @@ public class WikiMarkerStore implements IMarkerStore {
 		if (!value.contains(" (page does not exist)")) {
 			String title = Strings.findItem(value, "<p>", "</p>");
 			markerFoundCallback.mark(type, sfmId, title);
+			System.out.println("Marker: " + type + "  " + sfmId + " / " + title);
 		}
 	}
 }

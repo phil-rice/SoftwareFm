@@ -7,6 +7,8 @@ import org.softwarefm.core.cache.IArtifactDataCache;
 import org.softwarefm.core.constants.ImageConstants;
 import org.softwarefm.core.friends.internal.SocialUsage;
 import org.softwarefm.core.jdtBinding.ArtifactData;
+import org.softwarefm.core.refresh.IRefresh;
+import org.softwarefm.core.refresh.IRefreshManager;
 import org.softwarefm.core.selection.ISelectedBindingManager;
 import org.softwarefm.core.templates.ITemplateStore;
 import org.softwarefm.core.url.IUrlStrategy;
@@ -24,7 +26,7 @@ public class SoftwareFmContainer<S> implements IHasCache {
 	public static <S> SoftwareFmContainer<S> make(IUrlStrategy urlStrategy, ISelectedBindingManager<S> manager, ISocialManager socialManager, ICallback2<String, Integer> importPom, ICallback2<ArtifactData, Integer> importManually, ITemplateStore templateStore, IArtifactDataCache artifactDataCache, SfmActionState state, ImageRegistry imageRegistry, IUsageFromServer usageFromServer) {
 		IMultipleListenerList list = IMultipleListenerList.Utils.defaultList();
 		IUsagePersistance persistance = IUsagePersistance.Utils.persistance();
-		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), manager, importPom, importManually, urlStrategy, templateStore, artifactDataCache, state, imageRegistry, list, persistance, usageFromServer, socialManager);
+		return new SoftwareFmContainer<S>(IResourceGetter.Utils.resourceGetter(Marker.class, "text"), manager, importPom, importManually, urlStrategy, templateStore, artifactDataCache, state, imageRegistry, list, persistance, usageFromServer, socialManager, IRefreshManager.Utils.refreshManager(list));
 	}
 
 	public static <S> SoftwareFmContainer<S> makeForTests(Display display, IResourceGetter resourceGetter, ISocialManager socialManager) {
@@ -41,7 +43,7 @@ public class SoftwareFmContainer<S> implements IHasCache {
 				urlStrategy,//
 				ITemplateStore.Utils.templateStore(urlStrategy),//
 				IArtifactDataCache.Utils.artifactDataCache(), //
-				new SfmActionState(), imageRegistry, list, persistance, usageFromServer, socialManager);
+				new SfmActionState(), imageRegistry, list, persistance, usageFromServer, socialManager, IRefreshManager.Utils.refreshManager(list));
 	}
 
 	public static <S> SoftwareFmContainer<S> makeForTests(Display display) {
@@ -61,8 +63,9 @@ public class SoftwareFmContainer<S> implements IHasCache {
 	public final IUsagePersistance persistance;
 	public final IUsageFromServer usageFromServer;
 	public final SocialUsage socialUsage;
+	public final IRefreshManager refreshManager;
 
-	public SoftwareFmContainer(IResourceGetter resourceGetter, ISelectedBindingManager<S> selectedBindingManager, ICallback2<String, Integer> importPom, ICallback2<ArtifactData, Integer> importManually, IUrlStrategy urlStrategy, ITemplateStore templateStore, IArtifactDataCache artifactDataCache, SfmActionState state, ImageRegistry imageRegistry, IMultipleListenerList listenerList, IUsagePersistance persistance, IUsageFromServer usageFromServer, ISocialManager socialManager) {
+	public SoftwareFmContainer(IResourceGetter resourceGetter, ISelectedBindingManager<S> selectedBindingManager, ICallback2<String, Integer> importPom, ICallback2<ArtifactData, Integer> importManually, IUrlStrategy urlStrategy, ITemplateStore templateStore, IArtifactDataCache artifactDataCache, SfmActionState state, ImageRegistry imageRegistry, IMultipleListenerList listenerList, IUsagePersistance persistance, IUsageFromServer usageFromServer, ISocialManager socialManager, IRefreshManager refreshManager) {
 		this.resourceGetter = resourceGetter;
 		this.selectedBindingManager = selectedBindingManager;
 		this.importPom = importPom;
@@ -75,7 +78,14 @@ public class SoftwareFmContainer<S> implements IHasCache {
 		this.socialManager = socialManager;
 		this.persistance = persistance;
 		this.usageFromServer = usageFromServer;
+		this.refreshManager = refreshManager;
 		this.socialUsage = new SocialUsage(listenerList, urlStrategy, selectedBindingManager, socialManager);
+		refreshManager.addRefreshListener(new IRefresh() {
+			@Override
+			public void refresh() {
+				clearCaches();
+			}
+		});
 	}
 
 	public void clearCaches() {

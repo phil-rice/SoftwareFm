@@ -61,12 +61,11 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 			public void changing(LocationEvent event) {
 				String location = event.location;
 				if (location != null && location.contains("action=submit"))
-					container.clearCaches();
+					container.refreshManager.refresh();
 			}
 
 			@Override
 			public void changed(LocationEvent event) {
-
 			}
 		});
 	}
