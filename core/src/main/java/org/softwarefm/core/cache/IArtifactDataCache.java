@@ -16,9 +16,13 @@ public interface IArtifactDataCache extends IHasCache {
 
 	CachedArtifactData projectData(File file);
 
-
 	String codeHtml(String sfmId);
+
+	String myCodeHtml(String myName, String sfmId);
+
 	void putCodeHtml(String sfmId, String codeHtml);
+
+	void putMyCodeHtml(String myName, String sfmId, String codeHtml);
 
 	public static class Utils {
 		public static IArtifactDataCache artifactDataCache() {
@@ -48,6 +52,15 @@ public interface IArtifactDataCache extends IHasCache {
 
 				@Override
 				public void putCodeHtml(String sfmId, String codeHtml) {
+				}
+
+				@Override
+				public String myCodeHtml(String myName, String sfmId) {
+					return null;
+				}
+
+				@Override
+				public void putMyCodeHtml(String myName, String sfmId, String codeHtml) {
 				}
 			};
 		}

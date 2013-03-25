@@ -19,6 +19,8 @@ public interface IUrlStrategy {
 
 	HostOffsetAndUrl classAndMethodUrl(CodeData codeData);
 
+	HostOffsetAndUrl myCodeUrl(String myName, CodeData codeData);
+
 	HostOffsetAndUrl digestUrl(String digest);
 
 	HostOffsetAndUrl projectUrl(ArtifactData artifactData);
@@ -31,8 +33,8 @@ public interface IUrlStrategy {
 		public static IUrlStrategy urlStrategy() {
 			return new UrlStrategy(CommonConstants.softwareFmHost, CommonConstants.softwareFmPageOffset, CommonConstants.softwareFmApiOffset, CommonConstants.softwareFmTemplateOffset);
 		}
-		
-		public static IUrlStrategy withActionBarState(IUrlStrategy urlStrategy, SfmActionState state){
+
+		public static IUrlStrategy withActionBarState(IUrlStrategy urlStrategy, SfmActionState state) {
 			return new UrlStrategyWithActionBarState(urlStrategy, state);
 		}
 

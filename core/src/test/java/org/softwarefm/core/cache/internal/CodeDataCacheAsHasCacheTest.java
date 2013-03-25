@@ -3,11 +3,12 @@ package org.softwarefm.core.cache.internal;
 import org.softwarefm.core.cache.IArtifactDataCache;
 import org.softwarefm.utilities.cache.AbstractHasCacheTest;
 
-public class CodeDataCacheTest extends AbstractHasCacheTest<String, String> {
+public class CodeDataCacheAsHasCacheTest extends AbstractHasCacheTest<String, String> {
 	private ArtifactDataCache cache;
 
 	@Override
 	public void clearCaches() {
+		cache.clearCaches();
 	}
 
 	@Override

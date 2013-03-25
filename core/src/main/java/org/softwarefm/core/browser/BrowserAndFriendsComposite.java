@@ -51,13 +51,25 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 		this(parent, container, defaultImageUrlPattern);
 	}
 
-	public BrowserAndFriendsComposite(Composite parent, SoftwareFmContainer<?> container, final String imageUrlPattern) {
+	public BrowserAndFriendsComposite(Composite parent, final SoftwareFmContainer<?> container, final String imageUrlPattern) {
 		super(parent, container);
 		imageRegistry = container.imageRegistry;
 		browser.addLocationListener(new FriendsAndNameLocationListener(container.socialManager, browser, imageUrlPattern));
+		browser.addLocationListener(new LocationListener() {
 
+			@Override
+			public void changing(LocationEvent event) {
+				String location = event.location;
+				if (location != null && location.contains("action=submit"))
+					container.clearCaches();
+			}
+
+			@Override
+			public void changed(LocationEvent event) {
+
+			}
+		});
 	}
-	
 
 	@Override
 	protected void addMoreControls() {
@@ -168,7 +180,7 @@ public class BrowserAndFriendsComposite extends BrowserComposite {
 				return null;
 			if (html.contains("<li id=\"pt-login\">"))
 				return null;
-			String container = Strings.findItem(html, "<h6>My pages</h6>", "</div>");//<div id=\"p-personal", "</div>");
+			String container = Strings.findItem(html, "<h6>My pages</h6>", "</div>");// <div id=\"p-personal", "</div>");
 			if (container != null) {
 				String name = Strings.findItem(container, "User:", "\"");
 				return name;

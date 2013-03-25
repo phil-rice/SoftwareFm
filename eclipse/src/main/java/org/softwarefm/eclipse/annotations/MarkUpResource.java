@@ -16,23 +16,20 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.texteditor.AbstractDecoratedTextEditor;
 import org.softwarefm.eclipse.Jdts;
 import org.softwarefm.eclipse.jobs.Jobs;
-import org.softwarefm.utilities.callbacks.ICallback;
 import org.softwarefm.utilities.exceptions.WrappedException;
 import org.softwarefm.utilities.maps.Maps;
 
 public class MarkUpResource {
 
 	IMarkerStore store;
-	private final String markerType;
 
-	public MarkUpResource(IMarkerStore store, String markerType) {
+	public MarkUpResource(IMarkerStore store) {
 		this.store = store;
-		this.markerType = markerType;
 	}
 
 	public void markup(final IFile file, AbstractDecoratedTextEditor editor) {
 		ICompilationUnit compilationUnit = Jdts.getCompilationUnit(file.getFullPath());
-		final Map<String, ICallback<String>> callbacks = Maps.newMap();
+		final Map<String,IMarkerCallback> callbacks = Maps.newMap();
 		SoftwareFmCompilationUnitWalker.visit(compilationUnit, new ISoftwareFmCompilationUnitVistor() {
 			@Override
 			public void visitType(String sfmTypeId, final IType type) throws JavaModelException {
@@ -47,28 +44,29 @@ public class MarkUpResource {
 		Jobs.run("Loading markers for " + file.getFullPath(), new Runnable() {
 			@Override
 			public void run() {
-				for (Entry<String, ICallback<String>> entry : callbacks.entrySet())
+				for (Entry<String, IMarkerCallback> entry : callbacks.entrySet())
 					store.makerFor(entry.getKey(), entry.getValue());
 			}
 		});
 
 	}
 
-	private ICallback<String> mark(final IFile file, final String sfmId, final ISourceRange nameRange) {
-		return new ICallback<String>() {
+	private IMarkerCallback mark(final IFile file, final String sfmId, final ISourceRange nameRange) {
+		return new IMarkerCallback() {
 			@Override
-			public void process(final String markerValue) throws Exception {
+			public void mark(final String type, final String sfmId, final String markerValue) {
 				if (markerValue != null)
 					Display.getDefault().asyncExec(new Runnable() {
 						@Override
 						public void run() {
 							try {
-								IMarker marker = findExistingMarkerOrNull(file, sfmId);
+								IMarker marker = findExistingMarkerOrNull(file, sfmId, type);
 								if (marker == null) {
-									marker = file.createMarker(markerType);
+									marker = file.createMarker(type);
 									marker.setAttribute(IMarker.PRIORITY, IMarker.PRIORITY_HIGH);
 									marker.setAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
 									marker.setAttribute("SfmId", sfmId);
+									marker.setAttribute("SfmType", type);
 								}
 								marker.setAttribute(IMarker.MESSAGE, markerValue);
 								marker.setAttribute(IMarker.CHAR_START, nameRange.getOffset());
@@ -80,13 +78,16 @@ public class MarkUpResource {
 
 					});
 			}
+
+
 		};
 	}
 
-	private IMarker findExistingMarkerOrNull(IFile file, String typeString) throws CoreException {
-		for (IMarker marker : file.findMarkers(markerType, true, IResource.DEPTH_ZERO)) {
+	private IMarker findExistingMarkerOrNull(IFile file, String typeString, String type) throws CoreException {
+		for (IMarker marker : file.findMarkers(type, true, IResource.DEPTH_ZERO)) {
 			Object existingId = marker.getAttribute("SfmId");
-			if (typeString.equals(existingId))
+			Object existingType = marker.getAttribute("SfmType");
+			if (typeString.equals(existingId) && type.equals(existingType))
 				return marker;
 		}
 		return null;

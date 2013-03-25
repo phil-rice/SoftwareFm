@@ -1,5 +1,6 @@
 package org.softwarefm.core.url.internal;
 
+import org.softwarefm.core.constants.UrlConstants;
 import org.softwarefm.core.jdtBinding.ArtifactData;
 import org.softwarefm.core.jdtBinding.CodeData;
 import org.softwarefm.core.url.HostOffsetAndUrl;
@@ -22,6 +23,14 @@ public class UrlStrategy implements IUrlStrategy {
 
 	public HostOffsetAndUrl classAndMethodUrl(CodeData codeData) {
 		return new HostOffsetAndUrl(hostname, pageOffset, Strings.url("code:" + codeData.sfmId));
+	}
+
+	@Override
+	public HostOffsetAndUrl myCodeUrl(String myName, CodeData codeData) {
+		if (myName == null || myName.length() == 0)
+			return new HostOffsetAndUrl(hostname, pageOffset, UrlConstants.helpMyComposite);
+		else
+			return new HostOffsetAndUrl(hostname, pageOffset, Strings.url("myCode:" + myName, codeData.sfmId));
 	}
 
 	public HostOffsetAndUrl digestUrl(String digest) {

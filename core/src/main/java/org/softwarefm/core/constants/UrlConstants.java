@@ -9,5 +9,7 @@ public class UrlConstants {
 	public static final String notJarUrl = "http://" + Strings.url(CommonConstants.softwareFmHostAndPrefix, "notJar");
 	public static final String aboutArtifactComposite = "http://" + Strings.url(CommonConstants.softwareFmHostAndPrefix, "Help:ArtifactComposite");
 	public static final String aboutCodeComposite = "http://" + Strings.url(CommonConstants.softwareFmHostAndPrefix, "Help:CodeComposite");
+	public static final String helpMyComposite = "Help:MyCodeComposite";
+	public static final String aboutMyCodeComposite = "http://" + Strings.url(CommonConstants.softwareFmHostAndPrefix, helpMyComposite);
 
 }
